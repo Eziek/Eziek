@@ -148,7 +148,7 @@ Wszystkie liczby są do balansowania.
 - **Wynurzenie potwora:** rzadko. Prosi o ofiarę (np. 5 dyń) i daje coś unikalnego.
 - **Świecące ryby:** tylko w nocy, do złowienia, składnik do klatki z ognikiem.
 
-### 4.8 Ekonomia i ulepszenia (szkic)
+### 4.8 Ekonomia i ulepszenia (szkic, pełna wersja w §11)
 - Waluta: monety (ze sprzedaży plonów).
 - Zakupy: nasiona, lampy, słój Esencji (pojemność), **powiększenie wyspy** (nowe pola i odsunięcie mgły).
 - Surowce rzadkie: plony nocne, odłamki gwiazd, świecące ryby, dary potwora.
@@ -234,7 +234,11 @@ kluczy, a wersję mroczną nakłada `run_dark_palette.py`.
 - [ ] Zasady stawiania lamp (dowolnie czy na slotach) i jak liczyć oświetlenie pól.
 - [ ] Noc: stałe godziny, ustawiane w opcjach czy wschód i zachód z lokalizacji.
 - [ ] Rozmiar okna i jak rośnie przy powiększaniu wyspy.
-- [ ] Czy łowienie ryb wchodzi do gry.
+- [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
+- [ ] Progi rytmu pracy (seria 25 min, przerwa 5 min, zmęczenie 8 h/10 h) do sprawdzenia w praktyce.
+- [ ] Mutacje: które pary roślin dają które hybrydy.
+- [ ] Tabela łupów wypraw łodzią.
+- [ ] Treść lore (historia wyspy, mgły, potwora).
 
 ---
 
@@ -279,6 +283,10 @@ Obrazki referencyjne (kopie): `docs/img/`
    zdarzenia nocne.
 10. Start kodu: **Unity 6.3 LTS**. Gracz kopiuje `Assets/_Project` do projektu z szablonu Universal 2D.
     Etap 1 to szkielet systemów + scena budowana z menu „Wyspa”.
+11. Przyjęty **cały system ulepszeń i progresji** (§11): automatyzacja, rytm pracy (seria skupienia, bonus za przerwę,
+    zmęczenie), powiększanie wyspy ze strefami, lampy z trzema kierunkami ulepszeń, mutacje i jakość, morze i wyprawy,
+    rytuały z cyklem księżycowym zamiast prestiżu, kolekcje i lore, opcje wygody.
+    Główna gałąź repo powstanie z pusha z Unity. Gałąź Claude zostaje osobno.
 
 ---
 
@@ -309,7 +317,111 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 Wartości startowe (do balansu): marchew 600 s / 5 / 12, zboże 900 s / 8 / 18, dynia 1500 s / 15 / 40 (wzrost / cena nasiona / cena sprzedaży).
 Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5), grzyby 0.
 
-**Następne etapy (propozycja):**
-2. Shadery: kołysanie (UV o całe teksele), woda (mapa odległości), mgła. Cząsteczki: monety, iskierki, listki.
-3. Rośliny nocy (grafiki i dane), sklep, ulepszenie słoja, powiększanie wyspy.
-4. Zdarzenia nocne, docelowe UI pixel art, światło pasmowe z ditheringiem.
+**Następne etapy:** patrz §11.7.
+
+---
+
+## 11. Ulepszenia i progresja (przyjęte)
+
+### 11.1 Zasady
+1. **Każde ulepszenie widać na wyspie** (nowy obiekt, efekt, światło). Gracz zerka na okienko i widzi postęp.
+2. **Wybory zamiast samych liczb** (np. lampa: zasięg ALBO oszczędność).
+3. **Tempo w dniach i tygodniach pracy**, nie w minutach.
+4. **Zero kar i FOMO.** Przegapione nie przepada.
+5. **Gra nie nagradza przepracowania** (zmęczenie, bonus za przerwy).
+
+### 11.2 Waluty
+| Waluta | Źródło | Zastosowanie |
+|---|---|---|
+| Monety | sprzedaż plonów dnia | podstawowe zakupy |
+| Esencja | aktywna praca | lampy, rytuały, przyspieszenia |
+| Plony nocy | rośliny nocne | ulepszenia magiczne, automatyzacja |
+| Odłamki gwiazd | spadające gwiazdy | lampy wyższego poziomu, latarnia morska |
+| Łuski / świecące ryby | łowienie, sieci | klatka z ognikiem, latarnia morska |
+| Dary z głębin | wynurzenia potwora | unikaty, końcówka Księgi rytuałów |
+
+### 11.3 Drzewka
+
+**A. Wyspa**
+- **Powiększenia (4 stopnie):** +4 grządki każde, mgła się cofa, okno rośnie albo da się je przewijać. Koszt: 200 / 800 / 3000 / 10000 monet.
+- **Strefy:** cmentarzysko (rośliny nocy ×1.5), bagno (grzyby, dziwne zioła), ruiny (miejsce na ołtarz).
+- **Kompostownik:** niesprzedane i zepsute plony zamienia w nawóz (+25% szybkości wzrostu na jedną uprawę, +1 gwiazdka jakości).
+
+**B. Esencja i rytm pracy (wyróżnik gry)**
+- **Słój:** pojemność 60, potem 120, 240, 480. Koszt: 100 / 400 / 1500 monet.
+- **Seria skupienia:** po 25 min pracy bez przerwy (przerwy < 2 min się nie liczą) Esencja +25%, aż do przerwy.
+- **Bonus za przerwę („odświeżony”):** przerwa 5–30 min daje +15% Esencji przez następne 25 min.
+- **Zmęczenie:** po 8 h aktywności w dobie Esencja ×0.5, po 10 h ×0.25. Doba resetuje się o 4:00. Łagodnie, bez kar.
+- **Statystyki:** przepracowane dziś / w tygodniu, najdłuższa seria, liczba przerw.
+
+**C. Lampy:** każda ma 3 kierunki ulepszeń (gracz wybiera):
+- **Knot:** zużycie −30% / −50%.
+- **Soczewka:** zasięg +25% / +50%.
+- **Kolor ognia** (efekt specjalny): czerwony nie przeszkadza roślinom nocy, zielony przyciąga ćmy (+Esencja), biały przyspiesza dojrzewanie.
+- **Latarnia morska** (2000 monet + 10 odłamków): rozświetla mgłę, zdarzenia i kupiec przychodzą częściej.
+
+**D. Rośliny**
+- Kolejne nasiona dnia i nocy (sklep i kupiec-widmo).
+- **Mutacje:** przy zbiorze, jeśli sąsiednia grządka (4 kierunki) ma inną roślinę, jest 3% szansy na nasiono hybrydy
+  (np. dynia-upiór). Hybrydy wyglądają inaczej i są droższe.
+- **Jakość 1–3 gwiazdki:** baza 1, +1 za nawóz, +1 za wzrost w świetle ognika. Cena ×1 / ×1.5 / ×2.5. Kupiec składa zamówienia na jakość.
+
+**E. Automatyzacja (kamienie milowe, bez niej gra przeszkadza w pracy)**
+1. **Ognik-ogrodnik** (300 monet + 5 plonów nocy): co 30 s zbiera dojrzałe plony do skrzyni (pojemność 20).
+2. **Pamięć ziemi** (500 monet): po zbiorze grządka sama sadzi to samo (płaci za nasiono z portfela).
+3. **Skrzynia kupca** (800 monet): raz na godzinę sama sprzedaje zawartość skrzyni (90% ceny).
+4. **Sieci rybackie** (wymagają pomostu): bierny połów co godzinę.
+
+**F. Morze**
+- **Pomost** (400 monet): łowienie (klik w rybę przy brzegu).
+- **Łódź i wyprawy** (800 monet): łódź płynie w mgłę na N godzin **aktywnej pracy** (np. 4 h) i wraca z nasionami, surowcami
+  i fragmentami lore. Jedna wyprawa naraz, a ulepszenia łodzi skracają czas i powiększają ładownię.
+- **Ołtarz ofiarny na brzegu:** wymiana z potworem.
+
+**G. Rytuały i księżyc (późna gra)**
+- **Księga rytuałów:** stałe pasywne bonusy za rzadkie surowce (np. „rośliny nocy rosną też o zmierzchu”).
+- **Cykl księżycowy zamiast prestiżu:** co prawdziwe 29,5 dnia (od nowiu do nowiu) cykl się zamyka i daje punkty do Księgi
+  za osiągnięcia z tego cyklu. **Wyspa nic nie traci** (świadomie bez resetu postępu).
+
+**H. Kolekcje i lore**
+- **Bestiariusz:** ryby, rośliny, hybrydy, zdarzenia, potwór. Ukończenie kategorii daje nagrody.
+- **Lore z wypraw i wraków** stopniowo odsłania historię wyspy, mgły i potwora (narracja bez postaci i dialogów).
+
+**I. Wygoda (opcje, nie sklep)**
+- Okno: przezroczyste, zawsze na wierzchu, przyklejone do rogu ekranu, mini-tryb.
+- Ikona w zasobniku systemowym i powiadomienie „plony dojrzały”.
+- Suwak jasności nocy, dźwięki ambientu (fale, ogień) z głośnością.
+
+### 11.4 Tempo rozwoju (cel)
+| Okres | Zawartość |
+|---|---|
+| Dzień 1–3 | 3 rośliny dnia, pierwsza latarnia, słój, 1. powiększenie |
+| Tydzień 1 | rośliny nocy, kupiec-widmo, pomost i łowienie, **ognik-ogrodnik** |
+| Tydzień 2–4 | strefy (cmentarzysko), mutacje, wyprawy łodzią, latarnia morska |
+| Miesiąc+ | Księga rytuałów, cykle księżyca, bestiariusz, potwór i lore |
+
+### 11.5 Priorytety (kolejność wdrażania)
+1. Automatyzacja (ognik-ogrodnik, pamięć ziemi).
+2. Rytm pracy (seria, przerwa, zmęczenie).
+3. Powiększanie wyspy i cofanie mgły.
+4. Wyprawy łodzią.
+5. Mutacje.
+
+### 11.6 Technicznie (plan)
+- `UpgradeDefinition` (SO): id, nazwa, opis, kategoria, poziomy (koszt w wielu walutach), wymagania (inne ulepszenia), efekt.
+- `UpgradeState`: posiadane poziomy (w zapisie). Efekty jako małe klasy/strategie odpytywane przez systemy
+  (np. `EssenceStore` pyta o mnożnik, `Lamp` o zużycie i zasięg), żeby nie rozsiewać `if`-ów po kodzie.
+- `Currencies`: jeden portfel na wiele walut (enum), zamiast osobnych klas.
+- `WorkRhythm`: śledzi serię, przerwę i dzienną sumę aktywności, zwraca mnożnik Esencji.
+- `HarvestCrate` + `WispGardener`: automatyczny zbiór do skrzyni, `AutoSeller`.
+- `Expedition`: stan łodzi (licznik aktywnych sekund, tabela łupów).
+- `Mutation`: tabela par roślin i hybrydy, rzut przy zbiorze.
+
+### 11.7 Etapy implementacji
+- **Etap 1 (gotowy):** szkielet systemów (§10).
+- **Etap 2:** fundament ulepszeń (`UpgradeDefinition`/`UpgradeState`/`Currencies`), sklep (proste UI), słój,
+  **rytm pracy**, **ognik-ogrodnik + skrzynia + pamięć ziemi + skrzynia kupca**.
+- **Etap 3:** shadery (kołysanie, woda, mgła), cząsteczki (monety, iskierki, listki), powiększanie wyspy z cofaniem mgły.
+- **Etap 4:** rośliny nocy (grafiki), kupiec-widmo, pomost i łowienie, łódź i wyprawy, mutacje i jakość.
+- **Etap 5:** strefy, latarnia morska, Księga rytuałów i cykle księżyca, bestiariusz, lore, potwór.
+- **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
