@@ -3,18 +3,24 @@ import math, random
 import sprites3 as S3          # paleta mroczna + emisyjna
 from sprites import Sprite, EARTH
 import ui_kit as K
+import sprites
+
+# dodatkowe kolory dla drzew: jaśniejsze, nasłonecznione liście i odblask owoców
+for k, v in {'g4': "#7a9564", 'ro': "#d9725a"}.items():
+    sprites.PAL[k] = v
+    sprites.RGB[k] = tuple(int(v[i:i + 2], 16) for i in (1, 3, 5))
 
 SPECIES = {
     # trunk: rampa kory, leaf: rampa liści, shape: kształt korony, fruit: (kolory owocu: ciemny, środek, światło), n: liczba owoców
-    'apple':     dict(name="Jabłoń", trunk=['e0', 'e1', 'e2', 'e3'], leaf=['g0', 'g1', 'g2', 'g3'], shape='round',
-                      fruit=('o', 'co', 'or'), n=7),
-    'elder':     dict(name="Czarny bez", trunk=['e0', 'e1', 'e2', 'e2'], leaf=['g0', 'g0', 'g1', 'g2'], shape='bush',
-                      fruit=('o', 'p1', 'mu'), n=9),
-    'ghostpear': dict(name="Upiorna grusza", trunk=['b1', 'b3', 'fo', 'fo'], leaf=['p0', 'b1', 'b2', 'b3'], shape='oval',
+    'apple':     dict(name="Jabłoń", trunk=['e0', 'e1', 'e2', 'e3'], leaf=['g0', 'g1', 'g2', 'g3', 'g4'], shape='round',
+                      fruit=('p2', 'ro', 'or'), n=7),
+    'elder':     dict(name="Czarny bez", trunk=['e0', 'e1', 'e2', 'e2'], leaf=['g0', 'g1', 'g2', 'g3'], shape='bush',
+                      fruit=('o', 'p2', 'mu'), n=9),
+    'ghostpear': dict(name="Upiorna grusza", trunk=['b1', 'b3', 'fo', 'fo'], leaf=['p0', 'b1', 'b2', 'b3', 'fo'], shape='oval',
                       fruit=('b2', 'wi', 'wl'), n=6),
-    'rowan':     dict(name="Krwawa jarzębina", trunk=['e0', 'e1', 'e2', 'e3'], leaf=['g0', 'g1', 'g2', 'p2'], shape='airy',
-                      fruit=('p2', 'co', 'or'), n=8),
-    'moon':      dict(name="Drzewo księżyca", trunk=['b1', 'b3', 'fo', 'fo'], leaf=['p0', 'p1', 'mu', 'fo'], shape='weep',
+    'rowan':     dict(name="Krwawa jarzębina", trunk=['e0', 'e1', 'e2', 'e3'], leaf=['g0', 'g1', 'p2', 'co', 'or'], shape='airy',
+                      fruit=('p2', 'ro', 'or'), n=8),
+    'moon':      dict(name="Drzewo księżyca", trunk=['b1', 'b3', 'fo', 'fo'], leaf=['p0', 'p1', 'mu', 'fo', 'cr'], shape='weep',
                       fruit=('fo', 'wl', 'wl'), n=6),
 }
 
@@ -129,3 +135,10 @@ def fruit_icon(species):
 
 def sapling_icon():
     return K.from_map(SAPLING_ICON)
+
+
+# Świecące owoce rozjaśniają okolicę w nocy (jak mała lampa): (kolor RGB-mnożnik, promień px, przesunięcie od zaczepienia)
+TREE_LIGHT = {
+    'ghostpear': ((0.45, 1.15, 1.05), 34, (0, -24)),
+    'moon': ((0.9, 0.85, 1.25), 40, (0, -20)),
+}

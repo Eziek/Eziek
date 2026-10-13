@@ -195,6 +195,7 @@ Gracz odrzucił wersję „cukierkową”.
 | `fl fx` | płomień (emisja) | `#ffe08a #f08a3a` |
 | `wi wl` | ognik, świecące ryby (emisja) | `#5fcfb8 #d2fff0` |
 | `mu ml` | świecące grzyby | `#7a4f9a #d49af0` |
+| `g4 ro` | drzewa: nasłonecznione liście, odblask owoców (dodane na prośbę: więcej koloru) | `#7a9564 #d9725a` |
 
 Wcześniejsza jasna paleta („cukierkowa”) została odrzucona. Jest w `tools/pixel-proto/sprites.py` (`PAL`) jako baza
 kluczy, a wersję mroczną nakłada `run_dark_palette.py`.
@@ -325,6 +326,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     z którego są materiały drewno i kamień.
 17. Drewno i kamień przyjęte jako materiały. **Na później:** różne drzewa do sadzenia i zbierania owoców (§15).
 18. Sprite'y 5 drzew owocowych gotowe (mechanika na później).
+19. Drzewa: więcej koloru, a świecące drzewa (grusza, drzewo księżyca) dają światło w nocy.
 
 ---
 
@@ -682,4 +684,13 @@ Pętla: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna to
 - **Assety gotowe** (`Assets/_Project/Art/Sprites/Trees`, ikony w `UI/Icons`): fazy 0–3 każdego gatunku,
   przewracanie dorosłego (`tree_<gatunek>_fall_0..3`), ikony owoców i sadzonki. Po zbiorze owoców drzewo wraca do sprite'a „dorosłe”,
   a po wycięciu zostaje pień z `Removal`.
+- **Więcej koloru** (prośba gracza): jaśniejsze, nasłonecznione liście (`g4`), żywsze owoce (`ro`),
+  jarzębina w jesiennych czerwieniach i pomarańczach.
+- **Świecące drzewa rozjaśniają okolicę w nocy:** owocujące upiorna grusza i drzewo księżyca są małym źródłem światła
+  (pasma z ditheringiem jak lampy):
+  - grusza: turkus `(0.45, 1.15, 1.05)`, promień 34 px;
+  - drzewo księżyca: lawenda `(0.9, 0.85, 1.25)`, promień 40 px.
+
+  W Unity to Point Light 2D na drzewie, włączany w nocy, gdy drzewo owocuje.
+  Do decyzji: czy to światło liczy się jak lampa dla wzrostu roślin (wtedy grusza to darmowa lampa, ale gasi rośliny nocy obok).
 - Mechanika czeka na swój etap (kod jeszcze nie istnieje).

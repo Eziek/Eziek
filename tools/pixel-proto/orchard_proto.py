@@ -8,6 +8,25 @@ from sprites3 import RGB, EMISSIVE
 import ui_kit as K
 
 
+def light(img, amb, amb_col, sources):
+    """Jak daynight.light: 3 pasma światła z ditheringiem Bayera, ale z dowolnych źródeł."""
+    px = img.load()
+    W, H = img.size
+    for y in range(H):
+        for x in range(W):
+            mr, mg, mb = (amb * c for c in amb_col)
+            th = (DN.BAYER[y % 4][x % 4] + 0.5) / 16
+            for lx, ly, col, r in sources:
+                d = ((x - lx) ** 2 + ((y - ly) * 1.6) ** 2) ** 0.5
+                if d >= r: continue
+                lvl = min(3, int((1 - d / r) * 3 + th)) / 3
+                k = lvl * (1 - amb) * 1.35
+                mr += col[0] * k; mg += col[1] * k; mb += col[2] * k
+            c = px[x, y]
+            px[x, y] = (min(255, int(c[0] * min(mr, 1.25))), min(255, int(c[1] * min(mg, 1.25))),
+                        min(255, int(c[2] * min(mb, 1.25))), 255)
+
+
 def main():
     TP.OX, TP.OY = 8, 4
     tiles = {(c, r): 'grass' for c in range(4, 13) for r in range(4, 9)}
@@ -22,7 +41,13 @@ def main():
     isl = TP.build(tiles, seed=9)
     day = TP.render(isl, objs)
     night = TP.render(isl, objs)
-    DN.light(night.img, 0, 0.34, (0.48, 0.55, 0.95), False)
+    sources = []
+    for i, (s, st, p) in enumerate(trees):
+        if st == 3 and s in S5.TREE_LIGHT:
+            col, r, (ox, oy) = S5.TREE_LIGHT[s]
+            x, y = at(*p)
+            sources.append((x + ox, y + oy, col, r))
+    light(night.img, 0.34, (0.48, 0.55, 0.95), sources)
     for spr, x, y in objs:                      # emisja ponad ciemnością
         for (sx, sy), k in spr.px.items():
             if k in EMISSIVE:
