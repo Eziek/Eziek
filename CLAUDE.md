@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Projekt gry w Unity: idle w okienku na pulpicie, wyspa w klimacie dark fantasy. Rośliny rosną od pracy gracza przy komputerze,
+**Pockland**: gra w Unity, idle w okienku na pulpicie, wyspa w klimacie dark fantasy. Rośliny rosną od pracy gracza przy komputerze,
 a lampy zasilane Esencją oświetlają wyspę w nocy (pora dnia z zegara komputera).
 
 ## Zanim cokolwiek zrobisz

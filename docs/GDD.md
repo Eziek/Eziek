@@ -1,4 +1,4 @@
-# GDD: Wyspa (robocza nazwa)
+# GDD: Pockland
 
 > **Status:** Etap 1: szkielet systemów w C# (`Assets/_Project/`) gotowy do skopiowania do Unity,
 > instrukcja w `docs/UNITY_SETUP.md`. Prototyp wizualny: `tools/pixel-proto/` i `docs/img/`.
@@ -247,7 +247,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 
 ## 7. Otwarte decyzje
 - [ ] Siatka 16 px czy 32 px (rekomendacja: 32).
-- [ ] Nazwa energii (Esencja / Żar / Dusza) i nazwa gry.
+- [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
+- [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.3 LTS (6000.3.26f1)**.
 - [ ] Liczby balansu (przychód Esencji, zużycie lamp, czasy wzrostu, ceny).
 - [ ] Zasady stawiania lamp (dowolnie czy na slotach) i jak liczyć oświetlenie pól.
@@ -262,9 +263,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Mutacje: które pary roślin dają które hybrydy.
 - [ ] Tabela łupów wypraw łodzią.
 - [ ] Treść lore (historia wyspy, mgły, potwora).
-- [ ] Chiński: tylko uproszczony (zh-Hans), czy także tradycyjny (zh-Hant: Tajwan, Hongkong)?
-- [ ] Nazwa gry: wspólna marka we wszystkich językach czy tłumaczona?
-- [ ] Rozmiar fontu tekstu: 10 px czy 12 px (test w Unity, §16.3).
+- [x] Chiński: **uproszczony (zh-Hans)**.
+- [ ] Rozmiar fontu tekstu: 10 px czy 12 px. Sprawdzimy później w Unity (§16.3).
 - [x] Drewno i kamień jako materiały do budowli (§14.3). Odnawialne drewno i owoce: drzewa do sadzenia, na później (§15).
 
 ---
@@ -332,6 +332,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 19. Drzewa: więcej koloru, a świecące drzewa (grusza, drzewo księżyca) dają światło w nocy.
 20. Światło świecących drzew **liczy się jak lampa** dla wzrostu (bez kosztu Esencji, tylko gdy owocują).
 21. **Lokalizacja: PL, EN, DE, JA, ZH** (§16). Font dla JA/ZH: Fusion Pixel Font (OFL 1.1).
+22. **Nazwa gry: Pockland.** Chiński: uproszczony. Rozmiar fontu sprawdzimy później.
 
 ---
 
@@ -706,8 +707,7 @@ Pętla: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna to
 ---
 
 ## 16. Lokalizacja
-**Języki (decyzja gracza):** polski, angielski, niemiecki, japoński, chiński.
-Proponuję chiński uproszczony (zh-Hans), a tradycyjny później, jeśli będzie potrzeba.
+**Języki (decyzja gracza):** polski, angielski, niemiecki, japoński, **chiński uproszczony (zh-Hans)**.
 Pliki: `docs/localization/glossary.csv` (słownik terminów), `docs/localization/strings_sample.csv` (przykłady z odmianą).
 
 ### 16.1 Zasady
@@ -762,3 +762,13 @@ Pliki: `docs/localization/glossary.csv` (słownik terminów), `docs/localization
 - **Klucze:** `obszar.element[.wariant]`, np. `crop.carrot.name`, `crop.carrot.desc`, `toast.wisp_harvested`, `ui.shop.title`.
 - **Tłumaczenia:** eksport i import CSV z Unity Localization, ten sam format co `strings_sample.csv`.
 - **Lore** (dłuższe teksty) w osobnej tabeli, żeby tłumacz mógł pracować nad nim osobno.
+
+### 16.5 Nazwa gry: Pockland
+- **Jedna marka we wszystkich językach.** Logo i tytuł zawsze łacinką „Pockland”.
+  - JA: na stronie sklepu można dodać czytanie ポックランド.
+  - ZH: nie tłumaczymy fonetycznie (np. „波克兰” myli się z „波兰”, czyli Polską). Zostaje „Pockland”,
+    ewentualnie z opisowym podtytułem do ustalenia z native speakerem.
+- **Ryzyko do sprawdzenia przed publikacją:** nazwa brzmi podobnie do **„Pokéland”**, gry mobilnej The Pokémon Company
+  zapowiedzianej w 2017 roku (o wyspach). The Pokémon Company pilnuje swoich znaków towarowych.
+  Przed wydaniem trzeba sprawdzić bazy znaków towarowych (EUIPO, USPTO, WIPO) i Steam. Najlepiej skonsultować to
+  z prawnikiem, jeśli gra ma być komercyjna. Wyszukiwanie z 2026-10-13 nie znalazło gry o nazwie „Pockland”.
