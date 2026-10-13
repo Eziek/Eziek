@@ -258,7 +258,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Mutacje: które pary roślin dają które hybrydy.
 - [ ] Tabela łupów wypraw łodzią.
 - [ ] Treść lore (historia wyspy, mgły, potwora).
-- [ ] Drewno i kamień jako nowe materiały do budowli (propozycja w §14.3). Odnawialne źródło drewna: sadzonki?
+- [x] Drewno i kamień jako materiały do budowli (§14.3). Odnawialne drewno i owoce: drzewa do sadzenia, na później (§15).
 
 ---
 
@@ -319,7 +319,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     Esencja zostaje w koszcie kafelka. Krzywa cen zmieniona na kwadratową (wykładnicza nie pasuje do 1024 kafelków).
 15. ~~Zarysy stref we mgle~~ **odrzucone**: strefy odkrywa się bez podpowiedzi.
 16. Strefy dostały własne podłoża i zestawy dekoracji (§13.8). Dodane **usuwanie dekoracji** (§14),
-    z którego są materiały drewno i kamień (propozycja).
+    z którego są materiały drewno i kamień.
+17. Drewno i kamień przyjęte jako materiały. **Na później:** różne drzewa do sadzenia i zbierania owoców (§15).
 
 ---
 
@@ -372,8 +373,8 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 | Odłamki gwiazd | spadające gwiazdy | lampy wyższego poziomu, latarnia morska |
 | Łuski / świecące ryby | łowienie, sieci | klatka z ognikiem, latarnia morska |
 | Dary z głębin | wynurzenia potwora | unikaty, końcówka Księgi rytuałów |
-| Drewno *(propozycja)* | usuwanie drzew, krzaków, pni | budowle drewniane: pomost, skrzynie, kompostownik, łódź |
-| Kamień *(propozycja)* | usuwanie kamieni, gruzu, nagrobków | budowle kamienne: ołtarz, latarnia morska, palenisko |
+| Drewno | usuwanie drzew, krzaków, pni | budowle drewniane: pomost, skrzynie, kompostownik, łódź |
+| Kamień | usuwanie kamieni, gruzu, nagrobków | budowle kamienne: ołtarz, latarnia morska, palenisko |
 
 ### 11.3 Drzewka
 
@@ -650,10 +651,28 @@ Podgląd: `docs/img/wyspa_strefy.png` (drzewo w trakcie wycinki), `docs/img/arku
 | Nagrobek | 3 | 2 kamienia | kości / fragment lore 10% |
 | Gruz | 2 | 1 kamień | |
 
-**Materiały (propozycja):** drewno i kamień jako nowe waluty do budowli (patrz §11.2).
-Daje to pętlę: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna do rozważenia: sadzonka drzewa jako długo rosnąca „roślina”.
+**Materiały (przyjęte):** drewno i kamień to waluty do budowli (patrz §11.2).
+Pętla: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna to drzewa sadzone przez gracza (§15, na później).
 
 ### 14.4 Technicznie
 - `Decoration` (MonoBehaviour) + `DecorationDefinition` (SO): koszt, nagrody, szansa znaleziska, klatki usuwania,
   sprite pozostałości, flaga `isLandmark` (nieusuwalne).
 - Zapis: lista dekoracji na kafelkach (typ + stan: cała / pień / usunięta).
+
+---
+
+## 15. Na później (backlog)
+
+### 15.1 Drzewa do sadzenia i owoce
+- **Sadzonki różnych drzew** kupowane w sklepie albo znajdowane (gniazdo pod wyciętym drzewem, wyprawy).
+  Drzewo zajmuje 1 kafelek.
+- **Wzrost długi** (dni aktywnej pracy, np. 2–5). Fazy: sadzonka, młode drzewo, dorosłe, owocujące.
+- **Owoce odrastają cyklicznie** z dojrzałego drzewa: zbiór kliknięciem, a później przez ognika-ogrodnika. Drzewo się nie zużywa.
+- **Wycięcie dorosłego drzewa** daje więcej drewna niż dzikie. To odnawialne źródło drewna, ale tracisz owoce.
+- Szkic gatunków w klimacie dark fantasy (do decyzji):
+  - jabłoń (zwykłe owoce, dzień);
+  - czarny bez (owoce na mikstury lub rytuały);
+  - upiorna grusza (owocuje nocą, owoce świecą);
+  - krwawa jarzębina (rośnie lepiej na cmentarzu);
+  - drzewo księżyca (srebrne owoce tylko w pełnię).
+- Potrzebne assety (później): sadzonki i fazy wzrostu dla każdego gatunku, owoce na gałęziach (do zbioru), ikony owoców.
