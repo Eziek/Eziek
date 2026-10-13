@@ -1,6 +1,76 @@
 {
   "items": [
     {
+      "name": "altar",
+      "x": 0.51923,
+      "y": 0.04545
+    },
+    {
+      "name": "altar_glow",
+      "x": 0.51923,
+      "y": 0.04545
+    },
+    {
+      "name": "boat",
+      "x": 0.51667,
+      "y": 0.0625
+    },
+    {
+      "name": "boat_glow",
+      "x": 0.51667,
+      "y": 0.0625
+    },
+    {
+      "name": "broken_pillar",
+      "x": 0.53571,
+      "y": 0.03571
+    },
+    {
+      "name": "bubble",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "bush",
+      "x": 0.52778,
+      "y": 0.07143
+    },
+    {
+      "name": "coin",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "compost",
+      "x": 0.52273,
+      "y": 0.05556
+    },
+    {
+      "name": "crate",
+      "x": 0.525,
+      "y": 0.05556
+    },
+    {
+      "name": "crop_bloodrose_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_bloodrose_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_bloodrose_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_bloodrose_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
       "name": "crop_carrot_0",
       "x": 0.52273,
       "y": 0.11538
@@ -21,22 +91,97 @@
       "y": 0.11538
     },
     {
-      "name": "crop_wheat_0",
+      "name": "crop_corpseshroom_0",
       "x": 0.52273,
       "y": 0.11538
     },
     {
-      "name": "crop_wheat_1",
+      "name": "crop_corpseshroom_1",
       "x": 0.52273,
       "y": 0.11538
     },
     {
-      "name": "crop_wheat_2",
+      "name": "crop_corpseshroom_2",
       "x": 0.52273,
       "y": 0.11538
     },
     {
-      "name": "crop_wheat_3",
+      "name": "crop_corpseshroom_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ghostpumpkin_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ghostpumpkin_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ghostpumpkin_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ghostpumpkin_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ghostpumpkin_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_hybridpumpkin_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_hybridpumpkin_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_hybridpumpkin_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_hybridpumpkin_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_hybridpumpkin_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonflower_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonflower_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonflower_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonflower_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonflower_3_glow",
       "x": 0.52273,
       "y": 0.11538
     },
@@ -61,39 +206,299 @@
       "y": 0.11538
     },
     {
-      "name": "tree_round",
-      "x": 0.51562,
-      "y": 0.025
-    },
-    {
-      "name": "tree_spruce",
+      "name": "crop_wheat_0",
       "x": 0.52273,
-      "y": 0.025
+      "y": 0.11538
     },
     {
-      "name": "bush",
+      "name": "crop_wheat_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wheat_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wheat_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "dead_tree",
+      "x": 0.51667,
+      "y": 0.02381
+    },
+    {
+      "name": "essence_jar_l",
       "x": 0.52778,
-      "y": 0.07143
+      "y": 0.0
     },
     {
-      "name": "rock",
+      "name": "essence_jar_l_glow",
       "x": 0.52778,
-      "y": 0.07143
+      "y": 0.0
     },
     {
-      "name": "crate",
+      "name": "essence_jar_m",
+      "x": 0.53571,
+      "y": 0.0
+    },
+    {
+      "name": "essence_jar_m_glow",
+      "x": 0.53571,
+      "y": 0.0
+    },
+    {
+      "name": "essence_jar_s",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "essence_jar_s_glow",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "falling_star_0",
+      "x": 0.025,
+      "y": 0.95
+    },
+    {
+      "name": "falling_star_0_glow",
+      "x": 0.025,
+      "y": 0.95
+    },
+    {
+      "name": "falling_star_1",
+      "x": 0.025,
+      "y": 0.95
+    },
+    {
+      "name": "falling_star_1_glow",
+      "x": 0.025,
+      "y": 0.95
+    },
+    {
+      "name": "falling_star_2",
+      "x": 0.025,
+      "y": 0.95
+    },
+    {
+      "name": "falling_star_2_glow",
+      "x": 0.025,
+      "y": 0.95
+    },
+    {
+      "name": "ghost_merchant",
+      "x": 0.51471,
+      "y": 0.02941
+    },
+    {
+      "name": "ghost_merchant_glow",
+      "x": 0.51471,
+      "y": 0.02941
+    },
+    {
+      "name": "gravestone_0",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
+      "name": "gravestone_1",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
+      "name": "gravestone_2",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
+      "name": "harvest_crate_0",
       "x": 0.525,
       "y": 0.05556
     },
     {
-      "name": "plot",
+      "name": "harvest_crate_1",
+      "x": 0.525,
+      "y": 0.05556
+    },
+    {
+      "name": "harvest_crate_2",
+      "x": 0.525,
+      "y": 0.05556
+    },
+    {
+      "name": "icon_bestiary",
       "x": 0.5,
       "y": 0.5
     },
     {
-      "name": "coin",
+      "name": "icon_boat",
       "x": 0.5,
-      "y": 0.0
+      "y": 0.5
+    },
+    {
+      "name": "icon_book",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_break",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_close",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_coin",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_deepgift",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_essence",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_fatigue",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_focus",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_lamp",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_lock",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_nightcrop",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_plus",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_ritual",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_scale",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_bloodrose",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_carrot",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_corpseshroom",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_ghostpumpkin",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_hybrid",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_moonflower",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_pumpkin",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_wheat",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_settings",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_shop",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_star",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_star_empty",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_starshard",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_stats",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_upgrade",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_wisp",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "iron_fence",
+      "x": 0.52778,
+      "y": 0.07143
+    },
+    {
+      "name": "island",
+      "x": 0.5,
+      "y": 0.5
     },
     {
       "name": "lamp_lantern",
@@ -104,6 +509,16 @@
       "name": "lamp_lantern_glow",
       "x": 0.36111,
       "y": 0.02941
+    },
+    {
+      "name": "lamp_mushrooms",
+      "x": 0.525,
+      "y": 0.07143
+    },
+    {
+      "name": "lamp_mushrooms_glow",
+      "x": 0.525,
+      "y": 0.07143
     },
     {
       "name": "lamp_skull",
@@ -126,17 +541,321 @@
       "y": 0.03333
     },
     {
-      "name": "lamp_mushrooms",
-      "x": 0.525,
+      "name": "lighthouse",
+      "x": 0.51923,
+      "y": 0.01724
+    },
+    {
+      "name": "lighthouse_glow",
+      "x": 0.51923,
+      "y": 0.01724
+    },
+    {
+      "name": "merchant_chest",
+      "x": 0.52273,
+      "y": 0.05
+    },
+    {
+      "name": "merchant_chest_glow",
+      "x": 0.52273,
+      "y": 0.05
+    },
+    {
+      "name": "merchant_chest_open",
+      "x": 0.52273,
+      "y": 0.05
+    },
+    {
+      "name": "merchant_chest_open_glow",
+      "x": 0.52273,
+      "y": 0.05
+    },
+    {
+      "name": "monster_eye_0",
+      "x": 0.52273,
       "y": 0.07143
     },
     {
-      "name": "lamp_mushrooms_glow",
-      "x": 0.525,
+      "name": "monster_eye_1",
+      "x": 0.52273,
       "y": 0.07143
     },
     {
-      "name": "island",
+      "name": "monster_eye_2",
+      "x": 0.52273,
+      "y": 0.07143
+    },
+    {
+      "name": "monster_eye_2_glow",
+      "x": 0.52273,
+      "y": 0.07143
+    },
+    {
+      "name": "moth_0",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "moth_1",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "net_buoy",
+      "x": 0.53125,
+      "y": 0.14286
+    },
+    {
+      "name": "pier",
+      "x": 0.06579,
+      "y": 0.34615
+    },
+    {
+      "name": "plot",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "reeds",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
+      "name": "rock",
+      "x": 0.52778,
+      "y": 0.07143
+    },
+    {
+      "name": "ruined_arch",
+      "x": 0.51389,
+      "y": 0.03125
+    },
+    {
+      "name": "rune_stone",
+      "x": 0.53571,
+      "y": 0.05
+    },
+    {
+      "name": "rune_stone_glow",
+      "x": 0.53571,
+      "y": 0.05
+    },
+    {
+      "name": "star_shard",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "star_shard_glow",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "swamp_pool",
+      "x": 0.51667,
+      "y": 0.07143
+    },
+    {
+      "name": "tentacle_0",
+      "x": 0.53125,
+      "y": 0.02941
+    },
+    {
+      "name": "tentacle_1",
+      "x": 0.53125,
+      "y": 0.02941
+    },
+    {
+      "name": "tentacle_2",
+      "x": 0.53125,
+      "y": 0.02941
+    },
+    {
+      "name": "tree_round",
+      "x": 0.51562,
+      "y": 0.025
+    },
+    {
+      "name": "tree_spruce",
+      "x": 0.52273,
+      "y": 0.025
+    },
+    {
+      "name": "ui_bar_fill_essence",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ui_bar_fill_growth",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ui_bar_fill_rhythm",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ui_bar_frame",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        3,
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "name": "ui_button_disabled",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "name": "ui_button_hover",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "name": "ui_button_normal",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "name": "ui_button_pressed",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "name": "ui_cursor",
+      "x": 0.0,
+      "y": 1.0
+    },
+    {
+      "name": "ui_panel",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        7,
+        7,
+        7,
+        7
+      ]
+    },
+    {
+      "name": "ui_panel_page",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        7,
+        7,
+        7,
+        7
+      ]
+    },
+    {
+      "name": "ui_slot",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        5,
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "name": "ui_slot_locked",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        5,
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "name": "ui_slot_selected",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        5,
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "name": "ui_tab_active",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        4,
+        2,
+        4,
+        4
+      ]
+    },
+    {
+      "name": "ui_tab_inactive",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        4,
+        2,
+        4,
+        4
+      ]
+    },
+    {
+      "name": "ui_toast",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        5,
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "name": "ui_tooltip",
+      "x": 0.5,
+      "y": 0.5,
+      "border": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "name": "ui_wheel",
       "x": 0.5,
       "y": 0.5
     },
@@ -144,6 +863,46 @@
       "name": "water",
       "x": 0.5,
       "y": 0.5
+    },
+    {
+      "name": "wisp_gardener_0",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gardener_0_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gardener_1",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gardener_1_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gardener_2",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gardener_2_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gardener_3",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gardener_3_glow",
+      "x": 0.53125,
+      "y": 0.0
     }
   ]
 }

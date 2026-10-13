@@ -216,15 +216,24 @@ kluczy, a wersję mroczną nakłada `run_dark_palette.py`.
 ---
 
 ## 6. Lista assetów (stan prototypu)
-- **Rośliny dnia:** marchew, zboże, dynia (po 4 fazy, wersje 16 px; marchew i zboże też 32 px).
-- **Rośliny nocy:** _brak_ (do zaprojektowania).
-- **Lampy:** krzywa latarnia, czaszka ze świecą, klatka z ognikiem, świecące grzyby.
-- **Obiekty:** okrągłe drzewo (16 i 32 px), świerk, krzak z jagodami, kamień, skrzynka na plony, grządka.
-- **UI:** moneta, licznik (font 3×5), pasek Esencji, ikona zegara, przedmiot „marchew”.
-- **Do zrobienia (dark fantasy):** więcej elementów na wyspie (np. martwe drzewo, ruiny, kości), kupiec-widmo z łodzią,
-  potwór (wynurzenie), ogniki, rośliny nocy, słój Esencji.
-
----
+Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Project/Art/`. Arkusze podglądowe są w `docs/img/`.
+- **Rośliny dnia:** marchew, zboże, dynia (4 fazy). Marchew i zboże mają też test 32 px.
+- **Rośliny nocy:** księżycowy kwiat, upiorna dynia, trupi grzyb, krwawa róża (4 fazy, nasiono nocne).
+  **Hybryda:** dynia-upiór. `arkusz_rosliny_nocy.png`
+- **Lampy:** krzywa latarnia, czaszka ze świecą, klatka z ognikiem, świecące grzyby (+ `_glow`).
+- **Automatyka** (`arkusz_automation.png`): ognik-ogrodnik (4 klatki), skrzynia na plony (pusta, połowa, pełna),
+  skrzynia kupca (zamknięta, otwarta), kamień runiczny (pamięć ziemi), kompostownik, słoje Esencji S/M/L.
+- **Morze** (`arkusz_sea.png`): pomost, łódź z latarenką, boja z siecią, latarnia morska, ołtarz ofiarny, kupiec-widmo w łodzi.
+- **Strefy** (`arkusz_zones.png`): nagrobki ×3, żelazny płot, trzciny, bagienne oczko, złamana kolumna, ruiny łuku, martwe drzewo.
+- **Zdarzenia i cząsteczki** (`arkusz_events.png`): oko potwora (3 klatki), macka (3 klatki), spadająca gwiazda (3 klatki),
+  odłamek gwiazdy, ćma (2 klatki), bąbelek.
+- **Obiekty bazowe:** okrągłe drzewo, świerk, krzak, kamień, skrzynia, grządka, wyspa, woda.
+- **UI** (`ui_zestaw.png`): font 3×5 z polskimi znakami (`WyspaPixel.ttf`), 32 ikony (waluty, menu, statusy, gwiazdki jakości,
+  paczki nasion ×8), elementy 9-slice (panel, strona pergaminu, przyciski ×4, zakładki ×2, sloty ×3, tooltip, toast,
+  pasek + 3 wypełnienia), koło nasion, kursor.
+- Piksele emisyjne (płomienie, ogniki, oczy) są wycięte do osobnych plików `*_glow.png`, renderowanych na materiale Unlit.
+- **Brakuje:** sprite'y faz hybryd innych niż dynia, docelowe assety 32 px (jeśli wybierzemy 32), ikony nowych ulepszeń
+  w miarę projektowania, animacje wynurzenia potwora w pełnej sekwencji.
 
 ## 7. Otwarte decyzje
 - [ ] Siatka 16 px czy 32 px (rekomendacja: 32).
@@ -255,6 +264,10 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `run_dark.py` + `run_dark_palette.py` | uruchamia dowolny skrypt z paletą mroczną |
 | `sheet.py`, `compare.py` | arkusz stylu, porównanie 16 vs 32 px |
 | `export_unity.py` | eksport placeholderów do `Assets/_Project/Art/` (PNG, `pivots.json`, `prototype_layout.json`) |
+| `sprites3.py`, `sheet3.py` | sprite'y do §11 (rośliny nocy, automatyka, morze, strefy, zdarzenia) + arkusze |
+| `ui_kit.py` | font 3×5 (+ generator TTF), ikony, elementy 9-slice |
+| `mockups.py` | makiety UI (`out/ui_*.png`) i plik `WyspaPixel.ttf` |
+| `export_unity_ui.py` | eksport nowych sprite'ów, UI (z granicami 9-slice) i fontu do Unity (uruchamiać po `export_unity.py`) |
 
 Uruchamianie (z katalogu `tools/pixel-proto/`):
 ```
@@ -287,6 +300,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     zmęczenie), powiększanie wyspy ze strefami, lampy z trzema kierunkami ulepszeń, mutacje i jakość, morze i wyprawy,
     rytuały z cyklem księżycowym zamiast prestiżu, kolekcje i lore, opcje wygody.
     Główna gałąź repo powstanie z pusha z Unity. Gałąź Claude zostaje osobno.
+12. Sprite'y do nowych systemów + projekt UI (§12): HUD znikający, koło nasion, Księga jako główne menu,
+    tryb stawiania z podglądem światła, toasty, własny font 3×5 z polskimi znakami.
 
 ---
 
@@ -425,3 +440,73 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Etap 4:** rośliny nocy (grafiki), kupiec-widmo, pomost i łowienie, łódź i wyprawy, mutacje i jakość.
 - **Etap 5:** strefy, latarnia morska, Księga rytuałów i cykle księżyca, bestiariusz, lore, potwór.
 - **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
+
+---
+
+## 12. UI i menu
+Makiety: `docs/img/ui_hud.png`, `ui_ksiega_sklep.png`, `ui_ksiega_ulepszenia.png`, `ui_stawianie_noc.png`, zestaw: `ui_zestaw.png`.
+
+### 12.1 Zasady
+1. **Najpierw nastrój:** gra wisi na pulpicie, więc UI ma nie przeszkadzać. **HUD znika** po ok. 5 s bez kursora nad oknem
+   i wraca po najechaniu. Toasty pojawiają się na chwilę.
+2. **Ta sama siatka pikseli co gra** (natywnie 272×200, skala całkowita). Bez antyaliasingu.
+3. **Font 3×5, wielkie litery, z polskimi znakami** (`WyspaPixel.ttf`, własny, bez licencji zewnętrznych).
+   Małe litery mapują się na wielkie.
+4. **Ciemne panele ze śliwkowego drewna z nitami, a treść na pergaminie.** Główne menu to **Księga** (grimoire).
+5. **Kontekst przed menu:** większość akcji robi się klikając na wyspie. Księga służy do zakupów i przeglądania.
+6. Kolory akcentów: **złoty** (monety, posiadane), **turkus** (magia, zdarzenia, Esencja rytmu), **pomarańcz** (Esencja, ogień),
+   **szary/zablokowane** z kłódką.
+
+### 12.2 HUD
+- **Górny pasek:** monety, Esencja (ikona + pasek + liczby), plony nocy, odłamki gwiazd.
+  Waluty pojawiają się dopiero po odblokowaniu.
+- **Prawy górny róg:** przycisk Księgi i opcji.
+- **Lewy dolny róg:** rytm pracy: ikona stanu (seria / odświeżony / zmęczenie), opis („SERIA 32 MIN +25%”), pasek, zegar.
+- **Mini-tryb:** HUD całkiem ukryty, zostaje tylko wyspa.
+
+### 12.3 Interakcje na wyspie
+- **Klik pustej grządki:** **koło nasion** (menu radialne) z paczkami nasion. Najechanie pokazuje tooltip
+  (nazwa, cena, sprzedaż, czas wzrostu). Środek koła lub PPM = anuluj. Niedostępne nasiona są wyszarzone.
+- **Klik dojrzałej:** zbiór (cząsteczki, monety lecą do licznika).
+- **Najechanie na rosnącą:** tooltip z fazą, czasem do dojrzenia i **warunkami** (czy ma światło, czy gracz jest aktywny, czy noc).
+- **Obiekty** (skrzynia, łódź, ołtarz, kupiec, słój) otwierają małe panele kontekstowe przy obiekcie.
+
+### 12.4 Księga (główne menu)
+Lewa kolumna: zakładki-ikony. Prawa strona to pergamin z treścią. Na dole pasek opisu zaznaczonego elementu i przycisk **KUP + cena**.
+- **Sklep:** podzakładki Nasiona / Lampy / Budowle / Morze. Siatka slotów z ceną, a zablokowane mają kłódkę.
+- **Ulepszenia:** kolumny drzewek (Automatyka, Rytm pracy, Wyspa, Lampy, …). Węzły: posiadane (złota ramka),
+  dostępne (zwykła), zablokowane (kłódka, linia przerywana). Pasek opisu zawiera wymagania.
+- **Rytuały:** Księga rytuałów + postęp bieżącego cyklu księżyca (faza, punkty).
+- **Bestiariusz:** kolekcje (ryby, rośliny, hybrydy, zdarzenia, potwór) i fragmenty lore.
+- **Statystyki:** praca dziś / w tygodniu, najdłuższa seria, liczba przerw, wykres godzinowy.
+- **Opcje** (patrz 12.7).
+
+### 12.5 Tryb stawiania (lampy, budowle)
+- Półprzezroczysty (dithering) „duch” obiektu pod kursorem, przyciągany do siatki.
+- Zasięg światła jako przerywana elipsa. Grządki w zasięgu mają podświetlone narożniki, a licznik pokazuje „OŚWIETLI: N GRZĄDEK”.
+- Kolizja albo złe miejsce: duch na czerwono. LPM = postaw, PPM = anuluj.
+
+### 12.6 Powiadomienia (toasty)
+- Prawy górny róg, maks. 2 naraz, ok. 4 s, kolejka. Pasek akcentu z lewej w kolorze typu.
+- Zdarzenia z czasem (kupiec-widmo) pokazują odliczanie. Później powiadomienia także w zasobniku systemowym (tray).
+
+### 12.7 Opcje
+- **Okno:** skala ×2/×3, zawsze na wierzchu, przezroczyste tło, przyklejenie do rogu ekranu, mini-tryb.
+- **Noc:** godziny nocy, minimalna jasność (suwak).
+- **Praca:** próg bezczynności (domyślnie 60 s), rytm pracy i zmęczenie (włącz/wyłącz).
+- **Dźwięk:** ambient, efekty.
+- **System:** start z Windows, język (PL, później EN), reset zapisu (z potwierdzeniem).
+
+### 12.8 Wprowadzenie (bez postaci)
+Karteczki przybite do skrzyni i tablicy na wyspie, 3–4 kroki: posadź, pracuj (patrz jak rośnie), zbierz, kup lampę.
+Cel jest podświetlony pulsem.
+
+### 12.9 Technicznie (Unity)
+- **uGUI:** Canvas Screen Space - Overlay + Canvas Scaler **Constant Pixel Size**, `scaleFactor` = skala okna (całkowita),
+  **Reference Pixels Per Unit = 16**. Obrazy typu **Sliced** ze sprite'ów `Art/Sprites/UI/Kit`
+  (granice 9-slice ustawia `PixelArtImporter` z `pivots.json`).
+- **Font:** TextMeshPro, Font Asset Creator ze źródłem `Art/Fonts/WyspaPixel.ttf`:
+  - Sampling Point Size 8 (albo wielokrotność), Render Mode **RASTER** (bez wygładzania), Padding 1, atlas 256×256;
+  - znaki: ASCII + `ĄĆĘŁŃÓŚŹŻąćęłńóśźż`;
+  - rozmiar tekstu w UI = 8 × skala.
+- **Makiety do zrobienia:** Rytuały, Bestiariusz, Statystyki, Opcje, panel łodzi/wyprawy, handel z kupcem.

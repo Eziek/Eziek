@@ -30,6 +30,7 @@ namespace UnityEngine
     public class WaitForSecondsRealtime { public WaitForSecondsRealtime(float s) { } }
     public struct Vector2 { public float x, y; public Vector2(float x, float y) { this.x = x; this.y = y; } public float sqrMagnitude => 0; public static Vector2 operator -(Vector2 a, Vector2 b) => a; public static implicit operator Vector2(Vector3 v) => default; public static implicit operator Vector3(Vector2 v) => default; }
     public struct Vector3 { public float x, y, z; public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; } public static Vector3 zero, one; public static Vector3 operator -(Vector3 a, Vector3 b) => a; }
+    public struct Vector4 { public float x, y, z, w; public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; } public static Vector4 zero; }
     public struct Color { public float r, g, b, a; public Color(float r, float g, float b, float a = 1) { this.r = r; this.g = g; this.b = b; this.a = a; } public static Color white; public static implicit operator Color(Color32 c) => default; }
     public struct Color32 { public Color32(byte r, byte g, byte b, byte a) { } }
     public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; }
@@ -85,7 +86,7 @@ namespace UnityEditor
     using UnityEngine;
     public class AssetImporter : UnityEngine.Object { }
     public class TextureImporter : AssetImporter { public TextureImporterType textureType; public SpriteImportMode spriteImportMode; public float spritePixelsPerUnit; public FilterMode filterMode; public TextureImporterCompression textureCompression; public bool mipmapEnabled, alphaIsTransparency; public TextureWrapMode wrapMode; public void ReadTextureSettings(TextureImporterSettings s) { } public void SetTextureSettings(TextureImporterSettings s) { } }
-    public class TextureImporterSettings { public SpriteMeshType spriteMeshType; public uint spriteExtrude; public int spriteAlignment; public Vector2 spritePivot; }
+    public class TextureImporterSettings { public SpriteMeshType spriteMeshType; public uint spriteExtrude; public int spriteAlignment; public Vector2 spritePivot; public Vector4 spriteBorder; }
     public enum TextureImporterType { Sprite }
     public enum SpriteImportMode { Single }
     public enum TextureImporterCompression { Uncompressed }

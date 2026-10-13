@@ -8,7 +8,8 @@ namespace Wyspa.EditorTools
 {
     /// <summary>
     /// Każdy PNG w Assets/_Project/Art/Sprites dostaje ustawienia pixel art:
-    /// Sprite, PPU 16, filtr Point, bez kompresji i mipmap, pivot z pivots.json (punkt styku z ziemią).
+    /// Sprite, PPU 16, filtr Point, bez kompresji i mipmap, pivot z pivots.json (punkt styku z ziemią),
+    /// a dla elementów UI także granice 9-slice ("border": [L, B, R, T] w pikselach).
     /// </summary>
     public class PixelArtImporter : AssetPostprocessor
     {
@@ -28,9 +29,16 @@ namespace Wyspa.EditorTools
             public string name;
             public float x;
             public float y;
+            public int[] border;
         }
 
-        static Dictionary<string, Vector2> pivots;
+        struct SpriteMeta
+        {
+            public Vector2 pivot;
+            public Vector4 border;
+        }
+
+        static Dictionary<string, SpriteMeta> metas;
 
         void OnPreprocessTexture()
         {
@@ -51,10 +59,11 @@ namespace Wyspa.EditorTools
             importer.ReadTextureSettings(settings);
             settings.spriteMeshType = SpriteMeshType.FullRect; // pełny prostokąt - miejsce na kołysanie w shaderze
             settings.spriteExtrude = 0;
-            if (TryGetPivot(Path.GetFileNameWithoutExtension(assetPath), out var pivot))
+            if (TryGetMeta(Path.GetFileNameWithoutExtension(assetPath), out var meta))
             {
                 settings.spriteAlignment = (int)SpriteAlignment.Custom;
-                settings.spritePivot = pivot;
+                settings.spritePivot = meta.pivot;
+                settings.spriteBorder = meta.border; // Vector4(L, B, R, T); zero = brak 9-slice
             }
             else
             {
@@ -63,27 +72,34 @@ namespace Wyspa.EditorTools
             importer.SetTextureSettings(settings);
         }
 
-        static bool TryGetPivot(string spriteName, out Vector2 pivot)
+        static bool TryGetMeta(string spriteName, out SpriteMeta meta)
         {
-            if (pivots == null)
+            if (metas == null)
             {
-                pivots = new Dictionary<string, Vector2>();
+                metas = new Dictionary<string, SpriteMeta>();
                 if (File.Exists(PivotsFile))
                 {
                     var list = JsonUtility.FromJson<PivotList>(File.ReadAllText(PivotsFile));
                     if (list != null)
+                    {
                         foreach (var item in list.items)
-                            pivots[item.name] = new Vector2(item.x, item.y);
+                        {
+                            var b = item.border != null && item.border.Length == 4
+                                ? new Vector4(item.border[0], item.border[1], item.border[2], item.border[3])
+                                : Vector4.zero;
+                            metas[item.name] = new SpriteMeta { pivot = new Vector2(item.x, item.y), border = b };
+                        }
+                    }
                 }
             }
-            return pivots.TryGetValue(spriteName, out pivot);
+            return metas.TryGetValue(spriteName, out meta);
         }
 
         /// <summary>Wymusza ponowny import sprite'ów (np. po zmianie pivots.json).</summary>
         [MenuItem("Wyspa/Narzędzia/Reimportuj sprite'y")]
         public static void ReimportSprites()
         {
-            pivots = null;
+            metas = null;
             foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { SpritesRoot.TrimEnd('/') }))
                 AssetDatabase.ImportAsset(AssetDatabase.GUIDToAssetPath(guid), ImportAssetOptions.ForceUpdate);
         }

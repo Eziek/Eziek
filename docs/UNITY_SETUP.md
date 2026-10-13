@@ -38,6 +38,16 @@ Potem naciśnij **Play**.
 - **Wymuś aktywność:** do testów bez ruszania myszą.
 - **Zapis** trafia do `%USERPROFILE%/AppData/LocalLow/<firma>/<projekt>/save.json` (co minutę i przy wyjściu).
 
+## 4b. UI i font (przygotowane, jeszcze niepodpięte w kodzie)
+- Sprite'y UI: `Assets/_Project/Art/Sprites/UI/Kit` (9-slice ustawiony automatycznie) i `UI/Icons`.
+- Font: `Assets/_Project/Art/Fonts/WyspaPixel.ttf`. W **Window → TextMeshPro → Font Asset Creator** ustaw:
+  - Sampling Point Size **8**, Padding **1**, Render Mode **RASTER**, Atlas **256×256**;
+  - Character Set: Custom Characters, wklej ASCII i `ĄĆĘŁŃÓŚŹŻąćęłńóśźż`.
+
+  Szczegóły w GDD §12.9.
+- Rośliny nocy są w danych (menu „Wyspa → 2”). Rosną tylko w nocy, poza zasięgiem lamp, także gdy gra jest zamknięta.
+  Do testu: przycisk **23:30** w HUD i **Czas x60**.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 
