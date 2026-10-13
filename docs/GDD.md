@@ -310,6 +310,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     strefy i znaleziska odkrywane pod mgłą.
 14. Każda gra startuje z **wyspą 2×2 o losowym kształcie**. **Świat 32×32 losowany z ziarna** (strefy, znaleziska).
     Esencja zostaje w koszcie kafelka. Krzywa cen zmieniona na kwadratową (wykładnicza nie pasuje do 1024 kafelków).
+15. Zarysy stref widoczne we mgle od startu (znaczniki przy krawędzi okna w kierunku strefy).
 
 ---
 
@@ -563,7 +564,13 @@ Skrypty: `tools/pixel-proto/tiles_proto.py`, `world_proto.py`.
     w różnych kierunkach (min. 90° odstępu).
   - **Znaleziska:** ok. 5% kafelków, 12% w pobliżu stref.
   - **Dziwne kafelki:** 1× źródło, 1× pradawny kamień, co najmniej 5 kafelków od startu.
-- Gracz wybiera kierunek rozbudowy. Daleko we mgle widać **ditherowane sylwetki** stref (nagrobek, martwe drzewo, kolumna) jako zachętę.
+- **Zarysy stref (przyjęte):** od startu we mgle widać ciemną, ditherowaną **sylwetkę-znacznik** każdej strefy
+  (cmentarz: krzyż, bagno: trzciny, ruiny: kolumna), rysowaną **nad mgłą**.
+  - Gdy strefa jest poza kadrem, znacznik stoi **przy krawędzi okna w jej kierunku** (rzut kierunku na prostokąt widoku,
+    z marginesem na wysokość sprite'a). Działa jak kompas.
+  - Gdy strefa wejdzie w kadr, znacznik przesuwa się na jej prawdziwe miejsce, a po odkryciu pierwszego kafelka strefy znika.
+  - Prototyp: `docs/img/start_zarysy.png`, `tools/pixel-proto/hint_proto.py`.
+- Gracz sam wybiera kierunek rozbudowy, a znaczniki dają mu cel.
 - **Znaleziska:** część kafelków ma niespodziankę. Przylegające do lądu są oznaczone **„?”** zamiast ceny.
   Mogą zawierać skrzynkę monet, odłamek gwiazdy, nasiono nocne, fragment lore albo rzadko „dziwny kafelek”
   (źródło: +wzrost wokół; pradawny kamień: rytuał).

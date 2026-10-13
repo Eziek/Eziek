@@ -119,11 +119,6 @@ def render(isl, objects=(), fog_from=22, fog_span=40, hidden=()):
         if t == 'swamp': c.sprite(S3.swamp_pool(), x - 7, y + 2)
     for spr, x, y in sorted(objects, key=lambda o: o[2]):
         c.sprite(spr, x - spr.ax, y - spr.ay)
-    # coś czeka we mgle (sylwetki ditherowane)
-    for spr, x, y in hidden:
-        for (sx, sy), k in spr.px.items():
-            px, py = x - spr.ax + sx, y - spr.ay + sy
-            if (px + py) % 2 == 0: c.put(px, py, 'b3' if k != 'o' else 'b1')
     # mgła liczona od odległości od lądu
     dist = isl['water'].dist
     for (x, y) in isl['water'].base:
@@ -133,6 +128,13 @@ def render(isl, objects=(), fog_from=22, fog_span=40, hidden=()):
         if v > 0.85: c.put(x, y, 'fo')
         elif v > 0.55: c.put(x, y, 'fo' if th < (v - 0.55) / 0.3 else 'b3')
         elif v > 0.25 and th < (v - 0.25) / 0.3: c.put(x, y, 'b3')
+    # coś czeka we mgle: ciemne sylwetki NAD mgłą (cień we mgle), środek lekko ditherowany
+    for spr, x, y in hidden:
+        for (sx, sy), k in spr.px.items():
+            px, py = x - spr.ax + sx, y - spr.ay + sy
+            if k == 'o': c.put(px, py, 'b1')
+            elif (px + py) % 2 == 0: c.put(px, py, 'b1')
+            else: c.put(px, py, 'b3')
     return c
 
 
