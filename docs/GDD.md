@@ -238,6 +238,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   - ruiny: zburzony mur, przewrócona kolumna, posąg w kapturze, kamienne schody, gruz, palenisko, tablica runiczna, kolumna z pnączem.
 - **Usuwanie dekoracji** (`arkusz_usuwanie.png`): przewracanie drzewa (4 klatki), pnie ×3, pęknięty kamień, gruz, rozbity nagrobek,
   ścięty krzak, cząsteczki (wióry, liść, odprysk, kurz ×3), ikony drewna i kamienia.
+- **Drzewa owocowe** (`arkusz_drzewa.png`, `sad_dzien_noc.png`): jabłoń, czarny bez, upiorna grusza, krwawa jarzębina,
+  drzewo księżyca. Każde ma 4 fazy (sadzonka, młode, dorosłe, owocujące), przewracanie dorosłego (4 klatki) i ikonę owocu.
+  Do tego ikona sadzonki. Owoce gruszy i drzewa księżyca świecą (`_glow`).
 - **Brakuje:** sprite'y faz hybryd innych niż dynia, docelowe assety 32 px (jeśli wybierzemy 32), ikony nowych ulepszeń
   w miarę projektowania, animacje wynurzenia potwora w pełnej sekwencji.
 
@@ -321,6 +324,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 16. Strefy dostały własne podłoża i zestawy dekoracji (§13.8). Dodane **usuwanie dekoracji** (§14),
     z którego są materiały drewno i kamień.
 17. Drewno i kamień przyjęte jako materiały. **Na później:** różne drzewa do sadzenia i zbierania owoców (§15).
+18. Sprite'y 5 drzew owocowych gotowe (mechanika na później).
 
 ---
 
@@ -675,4 +679,7 @@ Pętla: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna to
   - upiorna grusza (owocuje nocą, owoce świecą);
   - krwawa jarzębina (rośnie lepiej na cmentarzu);
   - drzewo księżyca (srebrne owoce tylko w pełnię).
-- Potrzebne assety (później): sadzonki i fazy wzrostu dla każdego gatunku, owoce na gałęziach (do zbioru), ikony owoców.
+- **Assety gotowe** (`Assets/_Project/Art/Sprites/Trees`, ikony w `UI/Icons`): fazy 0–3 każdego gatunku,
+  przewracanie dorosłego (`tree_<gatunek>_fall_0..3`), ikony owoców i sadzonki. Po zbiorze owoców drzewo wraca do sprite'a „dorosłe”,
+  a po wycięciu zostaje pień z `Removal`.
+- Mechanika czeka na swój etap (kod jeszcze nie istnieje).

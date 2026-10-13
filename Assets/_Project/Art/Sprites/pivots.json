@@ -531,6 +531,31 @@
       "y": 0.5
     },
     {
+      "name": "icon_fruit_apple",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_fruit_elder",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_fruit_ghostpear",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_fruit_moon",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_fruit_rowan",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_lamp",
       "x": 0.5,
       "y": 0.5
@@ -552,6 +577,11 @@
     },
     {
       "name": "icon_ritual",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_sapling",
       "x": 0.5,
       "y": 0.5
     },
@@ -971,6 +1001,176 @@
       "y": 0.02941
     },
     {
+      "name": "tree_apple_0",
+      "x": 0.53571,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_apple_1",
+      "x": 0.52083,
+      "y": 0.03333
+    },
+    {
+      "name": "tree_apple_2",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_apple_3",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_apple_fall_0",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_apple_fall_1",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_apple_fall_2",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_apple_fall_3",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_elder_0",
+      "x": 0.53571,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_elder_1",
+      "x": 0.52083,
+      "y": 0.03333
+    },
+    {
+      "name": "tree_elder_2",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_elder_3",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_elder_fall_0",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_elder_fall_1",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_elder_fall_2",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_elder_fall_3",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_ghostpear_0",
+      "x": 0.53571,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_ghostpear_1",
+      "x": 0.52083,
+      "y": 0.03333
+    },
+    {
+      "name": "tree_ghostpear_2",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_ghostpear_3",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_ghostpear_3_glow",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_ghostpear_fall_0",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_ghostpear_fall_1",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_ghostpear_fall_2",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_ghostpear_fall_3",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_moon_0",
+      "x": 0.53571,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_moon_1",
+      "x": 0.52083,
+      "y": 0.03333
+    },
+    {
+      "name": "tree_moon_2",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_moon_3",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_moon_3_glow",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_moon_fall_0",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_moon_fall_1",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_moon_fall_2",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_moon_fall_3",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
       "name": "tree_round",
       "x": 0.51562,
       "y": 0.025
@@ -994,6 +1194,46 @@
       "name": "tree_round_fall_3",
       "x": 0.50694,
       "y": 0.22
+    },
+    {
+      "name": "tree_rowan_0",
+      "x": 0.53571,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_rowan_1",
+      "x": 0.52083,
+      "y": 0.03333
+    },
+    {
+      "name": "tree_rowan_2",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_rowan_3",
+      "x": 0.51471,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_rowan_fall_0",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_rowan_fall_1",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_rowan_fall_2",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_rowan_fall_3",
+      "x": 0.50676,
+      "y": 0.21154
     },
     {
       "name": "tree_spruce",
