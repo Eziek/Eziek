@@ -242,7 +242,10 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Liczby balansu (przychód Esencji, zużycie lamp, czasy wzrostu, ceny).
 - [ ] Zasady stawiania lamp (dowolnie czy na slotach) i jak liczyć oświetlenie pól.
 - [ ] Noc: stałe godziny, ustawiane w opcjach czy wschód i zachód z lokalizacji.
-- [ ] Rozmiar okna i jak rośnie przy powiększaniu wyspy.
+- [x] Rozbudowa wyspy: pojedyncze kafelki 16×16 (§13).
+- [ ] Rozmiar okna i jak rośnie przy rozbudowie (propozycja w §13.6: krokami po 16 px do limitu z opcji, potem przewijanie).
+- [ ] Mapa pod mgłą: projektowana ręcznie czy generowana z ziarna (seed)? (propozycja: ręcznie zaprojektowane strefy + losowe znaleziska).
+- [ ] Krzywa cen kafelków (prototyp ×1.15, propozycja ×1.12).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
 - [ ] Progi rytmu pracy (seria 25 min, przerwa 5 min, zmęczenie 8 h/10 h) do sprawdzenia w praktyce.
 - [ ] Mutacje: które pary roślin dają które hybrydy.
@@ -302,6 +305,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     Główna gałąź repo powstanie z pusha z Unity. Gałąź Claude zostaje osobno.
 12. Sprite'y do nowych systemów + projekt UI (§12): HUD znikający, koło nasion, Księga jako główne menu,
     tryb stawiania z podglądem światła, toasty, własny font 3×5 z polskimi znakami.
+13. **Rozbudowa wyspy kafelkami** (§13): pojedyncze kafelki przy brzegu za monety + Esencję, organiczny brzeg,
+    strefy i znaleziska odkrywane pod mgłą.
 
 ---
 
@@ -358,8 +363,8 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 ### 11.3 Drzewka
 
 **A. Wyspa**
-- **Powiększenia (4 stopnie):** +4 grządki każde, mgła się cofa, okno rośnie albo da się je przewijać. Koszt: 200 / 800 / 3000 / 10000 monet.
-- **Strefy:** cmentarzysko (rośliny nocy ×1.5), bagno (grzyby, dziwne zioła), ruiny (miejsce na ołtarz).
+- **Rozbudowa kafelkami** (zastępuje „4 stopnie powiększenia”): kupujesz pojedyncze kafelki 16×16 przy brzegu, szczegóły w **§13**.
+- **Strefy:** cmentarzysko (rośliny nocy ×1.5), bagno (grzyby, dziwne zioła), ruiny (miejsce na ołtarz). **Nie kupuje się ich, tylko odkrywa** rozbudową w ich stronę (§13.4).
 - **Kompostownik:** niesprzedane i zepsute plony zamienia w nawóz (+25% szybkości wzrostu na jedną uprawę, +1 gwiazdka jakości).
 
 **B. Esencja i rytm pracy (wyróżnik gry)**
@@ -418,7 +423,7 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 ### 11.5 Priorytety (kolejność wdrażania)
 1. Automatyzacja (ognik-ogrodnik, pamięć ziemi).
 2. Rytm pracy (seria, przerwa, zmęczenie).
-3. Powiększanie wyspy i cofanie mgły.
+3. Rozbudowa wyspy kafelkami i cofanie mgły (§13).
 4. Wyprawy łodzią.
 5. Mutacje.
 
@@ -510,3 +515,60 @@ Cel jest podświetlony pulsem.
   - znaki: ASCII + `ĄĆĘŁŃÓŚŹŻąćęłńóśźż`;
   - rozmiar tekstu w UI = 8 × skala.
 - **Makiety do zrobienia:** Rytuały, Bestiariusz, Statystyki, Opcje, panel łodzi/wyprawy, handel z kupcem.
+
+---
+
+## 13. Rozbudowa wyspy kafelkami
+Prototyp: `docs/img/wyspa_etapy.png` (start, +11, +28 z odkrytym cmentarzem i bagnem), `docs/img/wyspa_rozbudowa.png` (tryb rozbudowy).
+Skrypt: `tools/pixel-proto/tiles_proto.py`.
+
+### 13.1 Zasada
+- Wyspa to **siatka kafelków 16×16** (1 kafelek = 1 grządka = jedno miejsce na mały obiekt).
+- Gracz **kupuje pojedyncze kafelki przylegające do lądu** (4 kierunki), a wyspa rośnie o jeden kwadracik.
+- Start: ok. **20 kafelków** (5×4) z 3 grządkami.
+- **Brzeg jest organiczny, choć logika jest kwadratowa:** maska z kafelków jest zaokrąglana (otwarcie i domknięcie morfologiczne)
+  i zaburzana stałym szumem. Potem dochodzą klif, piana, cień, strefy wody i mgła (jak w prototypie).
+  Szum jest przypięty do miejsca w świecie, więc zakup zmienia tylko brzeg w pobliżu.
+
+### 13.2 Koszt
+- **Monety + Esencja.** Praca dosłownie „wyrywa ląd z mgły”.
+  - Monety: `30 × 1.12^n`, gdzie n = kafelki kupione ponad start (prototyp: ×1.15), co daje ok. 93 / 290 / 2800 za 10./20./40. kafelek.
+  - Esencja: `5 + n`.
+- Ostatnie kafelki świata (krawędź mapy, wnętrza stref) mogą wymagać rzadkich surowców (odłamki gwiazd, dary z głębin).
+
+### 13.3 Co można zrobić z kafelkiem
+- Po zakupie to **trawa**.
+- Kafelek można **przekopać na grządkę** (tanio) albo **postawić na nim obiekt**: lampa i małe budowle zajmują 1 kafelek,
+  duże (latarnia morska, ołtarz, łódź z pomostem) kilka.
+- Zasięg lamp liczony w kafelkach upraszcza oświetlenie i podgląd „OŚWIETLI: N GRZĄDEK”.
+- Kafelki stref mają własne podłoże i bonus, np. na cmentarzu rośliny nocy rosną ×1.5.
+- Pomost stawia się na **kafelkach wody** przy brzegu.
+
+### 13.4 Co jest pod mgłą
+- Świat ma stały układ: **strefy czekają w swoich kierunkach** (np. cmentarz na NE, bagno na W, ruiny na S).
+  Gracz wybiera kierunek rozbudowy. Daleko we mgle widać **ditherowane sylwetki** (nagrobek, martwe drzewo, kolumna) jako zachętę.
+- **Znaleziska:** część kafelków ma niespodziankę. Przylegające do lądu są oznaczone **„?”** zamiast ceny.
+  Mogą zawierać skrzynkę monet, odłamek gwiazdy, nasiono nocne, fragment lore albo rzadko „dziwny kafelek”
+  (źródło: +wzrost wokół; pradawny kamień: rytuał).
+- Propozycja: strefy i ważne miejsca zaprojektowane ręcznie, drobne znaleziska losowane z ziarna zapisu.
+
+### 13.5 Efekt zakupu
+- Tryb rozbudowy: przyległe kafelki mają przerywane ramki z ceną albo „?”. Najechanie pokazuje tooltip (monety + Esencja).
+  LPM = kup, PPM = wyjdź.
+- Po zakupie mgła się rozstępuje, ląd wynurza się z wody (2–3 skokowe klatki), pojawia się piana i cząsteczki,
+  a znalezisko wyskakuje jak plon przy zbiorze.
+
+### 13.6 Okno i kamera
+- Natywny kadr rośnie razem z wyspą **krokami po 16 px** (skala zostaje całkowita), aż do limitu z opcji (np. 40% ekranu).
+- Po przekroczeniu limitu kamera przewija się (przeciąganie PPM), a gra sama centruje się na wyspie.
+  Do wyboru jest też przełączanie skali ×3/×2.
+- Mini-tryb pokazuje tylko wycinek z grządkami.
+
+### 13.7 Technicznie
+- `IslandMap`: `HashSet<Vector2Int>` kafelków + `Dictionary<Vector2Int, TileType>`, ziarno świata, granice mapy (np. 32×24).
+- `ExpansionShop`: lista przyległych kafelków, koszt, znaleziska (`WorldLayout` SO: strefy, stałe znaleziska, sylwetki we mgle).
+- **Render (rekomendacja):** generowana w locie tekstura wyspy jak w prototypie: maska, zaokrąglenie z szumem, klif, piana,
+  potem `Texture2D` i Sprite. Przeliczana tylko po zakupie, a dla tak małej mapy to ułamek sekundy.
+  Mapa odległości (woda, mgła) przeliczana razem z nią.
+  Alternatywa: Tilemap z autotilingiem dual-grid (16 wariantów na teren). Bardziej standardowa, ale trudniej o nieregularny brzeg.
+- Zapis: lista kafelków z typami + ziarno.
