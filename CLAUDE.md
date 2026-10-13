@@ -10,6 +10,11 @@ a lampy zasilane Esencją oświetlają wyspę w nocy (pora dnia z zegara kompute
 
 ## Współpraca
 - Rozmowa po **polsku**.
-- Projekt jest w fazie koncepcyjnej. Nie twórz kodu ani projektu Unity w repo, dopóki gracz o to nie poprosi.
-  Pomysły i prototypy wizualne rób w scratchpadzie i pokazuj jako pliki.
+- Silnik: **Unity 6.3 LTS (6000.3.26f1)**, szablon Universal 2D. Gracz kopiuje `Assets/_Project` do swojego projektu
+  (instrukcja: `docs/UNITY_SETUP.md`). Kod gry piszemy tylko w `Assets/_Project/` (namespace `Wyspa.*`).
+- Unity nie ma w kontenerze. Przed commitem kodu C# skompiluj go na atrapach:
+  `dotnet build tools/cscheck -p:ExtraDefines="ENABLE_INPUT_SYSTEM%3BUNITY_STANDALONE_WIN%3BUNITY_EDITOR_WIN"`
+  (.NET SDK doinstaluj skryptem `dotnet-install.sh` do scratchpada). Nowe API Unity dopisuj do `tools/cscheck/UnityStubs.cs`
+  zgodnie z prawdziwą sygnaturą. Atrapy nie gwarantują zgodności z prawdziwym Unity, więc mów graczowi, co jest niesprawdzone.
+- Grafiki-placeholdery generuje `tools/pixel-proto/export_unity.py` (paleta mroczna). Docelowe assety rysuje się ręcznie.
 - Gracz woli mroczną, stonowaną estetykę (odrzucił „cukierkową”). Bez postaci, animacje tylko przez shadery i cząsteczki.

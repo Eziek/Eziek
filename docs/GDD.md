@@ -1,7 +1,7 @@
 # GDD: Wyspa (robocza nazwa)
 
-> **Status:** faza koncepcyjna. Nie ma jeszcze projektu Unity. Prototyp istnieje tylko wizualnie
-> (skrypty Python w `tools/pixel-proto/`, obrazki w `docs/img/`).
+> **Status:** Etap 1: szkielet systemów w C# (`Assets/_Project/`) gotowy do skopiowania do Unity,
+> instrukcja w `docs/UNITY_SETUP.md`. Prototyp wizualny: `tools/pixel-proto/` i `docs/img/`.
 > **Ostatnia aktualizacja:** 2026-10-13
 
 ---
@@ -30,7 +30,7 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 
 | Temat | Decyzja |
 |---|---|
-| Silnik | Unity, **URP z 2D Rendererem**, Shader Graph (Sprite Unlit/Lit) |
+| Silnik | **Unity 6.3 LTS (`6000.3.26f1`)**, szablon **Universal 2D** (URP z 2D Rendererem), Shader Graph, Input System |
 | Platforma | **Windows** (na start) |
 | Wykrywanie aktywności | `GetLastInputInfo` (user32.dll), czyli czas od ostatniego inputu w całym systemie. Bez globalnych hooków, więc antywirusy nie reagują. Gracz jest „aktywny”, gdy od ostatniego inputu minęło < ~60 s |
 | Okno | Na start zwykłe małe okno. Później bez ramki / zawsze na wierzchu / przezroczyste (paczka **UniWindowController**, kirurobo) |
@@ -42,7 +42,7 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 | Czas | `System.DateTime.Now`. Opcjonalnie później prawdziwy wschód i zachód słońca (z szerokości geograficznej) albo godziny ustawiane w opcjach |
 | Faza księżyca | Liczona z daty (pełnia daje bonus, patrz zdarzenia) |
 
-**Szkic architektury (do potwierdzenia przy starcie projektu):**
+**Architektura (zaimplementowana w Etapie 1, namespace `Wyspa.*`, szczegóły w §10):**
 - `ActivityTracker`: co 1 s sprawdza `SystemIdle`, emituje „aktywne sekundy”
 - `EssenceStore`: Esencja (przychód z aktywności, zużycie przez lampy, pojemność)
 - `DayNightClock`: pora dnia z zegara, gradient koloru otoczenia, czy jest noc
@@ -229,7 +229,7 @@ kluczy, a wersję mroczną nakłada `run_dark_palette.py`.
 ## 7. Otwarte decyzje
 - [ ] Siatka 16 px czy 32 px (rekomendacja: 32).
 - [ ] Nazwa energii (Esencja / Żar / Dusza) i nazwa gry.
-- [ ] Wersja Unity.
+- [x] Wersja Unity: **6.3 LTS (6000.3.26f1)**.
 - [ ] Liczby balansu (przychód Esencji, zużycie lamp, czasy wzrostu, ceny).
 - [ ] Zasady stawiania lamp (dowolnie czy na slotach) i jak liczyć oświetlenie pól.
 - [ ] Noc: stałe godziny, ustawiane w opcjach czy wschód i zachód z lokalizacji.
@@ -250,6 +250,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `daynight.py` | lampy, oświetlenie (pasma i Bayer), pory dnia, nocny GIF |
 | `run_dark.py` + `run_dark_palette.py` | uruchamia dowolny skrypt z paletą mroczną |
 | `sheet.py`, `compare.py` | arkusz stylu, porównanie 16 vs 32 px |
+| `export_unity.py` | eksport placeholderów do `Assets/_Project/Art/` (PNG, `pivots.json`, `prototype_layout.json`) |
 
 Uruchamianie (z katalogu `tools/pixel-proto/`):
 ```
@@ -276,3 +277,39 @@ Obrazki referencyjne (kopie): `docs/img/`
 8. Woda w warstwach: ryby pod wodą, fale morskie.
 9. Zaakceptowane: rośliny dnia i nocy, **Esencja z pracy zasila lampy**, **mgła poza wyspą na krawędziach okna**,
    zdarzenia nocne.
+10. Start kodu: **Unity 6.3 LTS**. Gracz kopiuje `Assets/_Project` do projektu z szablonu Universal 2D.
+    Etap 1 to szkielet systemów + scena budowana z menu „Wyspa”.
+
+---
+
+## 10. Kod Unity (`Assets/_Project/`)
+Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na atrapach: `tools/cscheck/` (opis w pliku `.csproj`).
+
+| Plik | Rola |
+|---|---|
+| `Scripts/Core/SystemIdle.cs` | `GetLastInputInfo` (Windows), czas od ostatniego inputu w systemie |
+| `Scripts/Core/ActivityTracker.cs` | aktywny, gdy input < 60 s (do testów `forceActive`) |
+| `Scripts/Core/GameClock.cs` | noc 20:00–6:00 (do ustawienia), debug godzina, faza księżyca, sekundy nocy między datami (offline) |
+| `Scripts/Core/EssenceStore.cs` | Esencja: +1 za minutę aktywności, pojemność 60 |
+| `Scripts/Core/GameLoop.cs` | tick co 1 s: aktywność, Esencja, lampy (najtańsze pierwsze), wzrost roślin. `debugTimeScale` |
+| `Scripts/Core/AppPerformance.cs` | runInBackground, vSync 0, 30 kl./s z fokusem, 12 w tle |
+| `Scripts/Farming/CropDefinition.cs`, `CropDatabase.cs` | ScriptableObjecty roślin (Day/Night, czas, 4 sprite'y faz, ceny) |
+| `Scripts/Farming/PlotState.cs` | czyste dane pola + reguły wzrostu (`GrowthContext`) |
+| `Scripts/Farming/FarmPlot.cs` | grządka: klik = sadzenie lub zbiór, „pop” przy zmianie fazy |
+| `Scripts/Lighting/LampDefinition.cs`, `Lamp.cs` | lampa: Esencja na minutę, zasięg, kolor, mnożnik wzrostu, Light2D + glow (Unlit) |
+| `Scripts/Lighting/Illumination.cs` | czy punkt jest oświetlony (dzień albo lampa) |
+| `Scripts/Lighting/DayNightLighting.cs` | Global Light 2D: kolor (Gradient) i jasność (krzywa) wg godziny, `minBrightness` |
+| `Scripts/Economy/Wallet.cs` | monety (start 50) |
+| `Scripts/Save/SaveSystem.cs` | JSON w persistentDataPath, autosave co 60 s, offline: rośliny nocy rosną za godziny nocy |
+| `Scripts/Input/ClickRouter.cs` | klik, potem Collider2D, potem `IClickable` (Input System albo stary Input) |
+| `Scripts/UI/DebugHud.cs` | tymczasowy HUD IMGUI: monety, Esencja, nasiona, pora dnia, czas x60 |
+| `Editor/PixelArtImporter.cs` | automatyczne ustawienia importu sprite'ów + pivoty z `pivots.json` |
+| `Editor/WyspaSetup.cs` | menu „Wyspa”: ustawienia projektu, dane (SO), budowa sceny z `prototype_layout.json` |
+
+Wartości startowe (do balansu): marchew 600 s / 5 / 12, zboże 900 s / 8 / 18, dynia 1500 s / 15 / 40 (wzrost / cena nasiona / cena sprzedaży).
+Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5), grzyby 0.
+
+**Następne etapy (propozycja):**
+2. Shadery: kołysanie (UV o całe teksele), woda (mapa odległości), mgła. Cząsteczki: monety, iskierki, listki.
+3. Rośliny nocy (grafiki i dane), sklep, ulepszenie słoja, powiększanie wyspy.
+4. Zdarzenia nocne, docelowe UI pixel art, światło pasmowe z ditheringiem.

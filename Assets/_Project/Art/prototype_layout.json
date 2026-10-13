@@ -1,0 +1,163 @@
+{
+  "width": 272,
+  "height": 200,
+  "ppu": 16,
+  "plots": [
+    {
+      "row": 0,
+      "col": 0,
+      "x": 103,
+      "y": 85,
+      "cropX": 103,
+      "cropY": 88
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "x": 123,
+      "y": 85,
+      "cropX": 123,
+      "cropY": 88
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "x": 143,
+      "y": 85,
+      "cropX": 143,
+      "cropY": 88
+    },
+    {
+      "row": 0,
+      "col": 3,
+      "x": 163,
+      "y": 85,
+      "cropX": 163,
+      "cropY": 88
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "x": 103,
+      "y": 102,
+      "cropX": 103,
+      "cropY": 105
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "x": 123,
+      "y": 102,
+      "cropX": 123,
+      "cropY": 105
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "x": 143,
+      "y": 102,
+      "cropX": 143,
+      "cropY": 105
+    },
+    {
+      "row": 1,
+      "col": 3,
+      "x": 163,
+      "y": 102,
+      "cropX": 163,
+      "cropY": 105
+    }
+  ],
+  "objects": [
+    {
+      "sprite": "tree_round",
+      "x": 64,
+      "y": 88
+    },
+    {
+      "sprite": "tree_round",
+      "x": 194,
+      "y": 72
+    },
+    {
+      "sprite": "tree_spruce",
+      "x": 70,
+      "y": 126
+    },
+    {
+      "sprite": "tree_spruce",
+      "x": 210,
+      "y": 114
+    },
+    {
+      "sprite": "bush",
+      "x": 108,
+      "y": 136
+    },
+    {
+      "sprite": "rock",
+      "x": 174,
+      "y": 136
+    },
+    {
+      "sprite": "crate",
+      "x": 184,
+      "y": 102
+    },
+    {
+      "sprite": "rock",
+      "x": 54,
+      "y": 102
+    }
+  ],
+  "lamps": [
+    {
+      "id": "lantern",
+      "sprite": "lamp_lantern",
+      "x": 86,
+      "y": 118,
+      "lightX": 92,
+      "lightY": 104,
+      "radius": 38,
+      "r": 1.0,
+      "g": 0.6799999999999999,
+      "b": 0.36
+    },
+    {
+      "id": "skull",
+      "sprite": "lamp_skull",
+      "x": 146,
+      "y": 130,
+      "lightX": 146,
+      "lightY": 118,
+      "radius": 24,
+      "r": 0.96,
+      "g": 0.64,
+      "b": 0.36
+    },
+    {
+      "id": "wisp",
+      "sprite": "lamp_wisp",
+      "x": 178,
+      "y": 76,
+      "lightX": 177,
+      "lightY": 64,
+      "radius": 34,
+      "r": 0.36,
+      "g": 0.9199999999999999,
+      "b": 0.8400000000000001
+    },
+    {
+      "id": "mushrooms",
+      "sprite": "lamp_mushrooms",
+      "x": 152,
+      "y": 148,
+      "lightX": 152,
+      "lightY": 142,
+      "radius": 20,
+      "r": 0.8,
+      "g": 0.44000000000000006,
+      "b": 0.96
+    }
+  ]
+}

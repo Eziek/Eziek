@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Kompilacja kodu gry poza Unity, na atrapach API (UnityStubs.cs). Wyłapuje błędy w NASZYM kodzie,
+       ale nie sprawdza zgodności z prawdziwym API Unity. Uruchom:
+       dotnet build tools/cscheck -p:ExtraDefines="ENABLE_INPUT_SYSTEM%3BUNITY_STANDALONE_WIN%3BUNITY_EDITOR_WIN" -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <DefineConstants>$(DefineConstants);$(ExtraDefines)</DefineConstants>
+    <NoWarn>CS0649;CS0414;CS0067</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="UnityStubs.cs" />
+    <Compile Include="../../Assets/_Project/**/*.cs" />
+  </ItemGroup>
+</Project>
