@@ -232,6 +232,12 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   paczki nasion ×8), elementy 9-slice (panel, strona pergaminu, przyciski ×4, zakładki ×2, sloty ×3, tooltip, toast,
   pasek + 3 wypełnienia), koło nasion, kursor.
 - Piksele emisyjne (płomienie, ogniki, oczy) są wycięte do osobnych plików `*_glow.png`, renderowanych na materiale Unlit.
+- **Strefy** (`arkusz_strefy.png`), dla każdej 3 kafelki podłoża i dekoracje:
+  - cmentarz: obelisk, drewniany krzyż, otwarty grób, krypta, stos czaszek, świece, żelazna brama, ciernie, wrona (2 klatki);
+  - bagno: namorzyn, lilie wodne, spróchniała kłoda z grzybami, pałki, bąble (3 klatki), żaba (2 klatki);
+  - ruiny: zburzony mur, przewrócona kolumna, posąg w kapturze, kamienne schody, gruz, palenisko, tablica runiczna, kolumna z pnączem.
+- **Usuwanie dekoracji** (`arkusz_usuwanie.png`): przewracanie drzewa (4 klatki), pnie ×3, pęknięty kamień, gruz, rozbity nagrobek,
+  ścięty krzak, cząsteczki (wióry, liść, odprysk, kurz ×3), ikony drewna i kamienia.
 - **Brakuje:** sprite'y faz hybryd innych niż dynia, docelowe assety 32 px (jeśli wybierzemy 32), ikony nowych ulepszeń
   w miarę projektowania, animacje wynurzenia potwora w pełnej sekwencji.
 
@@ -252,6 +258,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Mutacje: które pary roślin dają które hybrydy.
 - [ ] Tabela łupów wypraw łodzią.
 - [ ] Treść lore (historia wyspy, mgły, potwora).
+- [ ] Drewno i kamień jako nowe materiały do budowli (propozycja w §14.3). Odnawialne źródło drewna: sadzonki?
 
 ---
 
@@ -310,7 +317,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     strefy i znaleziska odkrywane pod mgłą.
 14. Każda gra startuje z **wyspą 2×2 o losowym kształcie**. **Świat 32×32 losowany z ziarna** (strefy, znaleziska).
     Esencja zostaje w koszcie kafelka. Krzywa cen zmieniona na kwadratową (wykładnicza nie pasuje do 1024 kafelków).
-15. Zarysy stref widoczne we mgle od startu (znaczniki przy krawędzi okna w kierunku strefy).
+15. ~~Zarysy stref we mgle~~ **odrzucone**: strefy odkrywa się bez podpowiedzi.
+16. Strefy dostały własne podłoża i zestawy dekoracji (§13.8). Dodane **usuwanie dekoracji** (§14),
+    z którego są materiały drewno i kamień (propozycja).
 
 ---
 
@@ -363,6 +372,8 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 | Odłamki gwiazd | spadające gwiazdy | lampy wyższego poziomu, latarnia morska |
 | Łuski / świecące ryby | łowienie, sieci | klatka z ognikiem, latarnia morska |
 | Dary z głębin | wynurzenia potwora | unikaty, końcówka Księgi rytuałów |
+| Drewno *(propozycja)* | usuwanie drzew, krzaków, pni | budowle drewniane: pomost, skrzynie, kompostownik, łódź |
+| Kamień *(propozycja)* | usuwanie kamieni, gruzu, nagrobków | budowle kamienne: ołtarz, latarnia morska, palenisko |
 
 ### 11.3 Drzewka
 
@@ -564,13 +575,8 @@ Skrypty: `tools/pixel-proto/tiles_proto.py`, `world_proto.py`.
     w różnych kierunkach (min. 90° odstępu).
   - **Znaleziska:** ok. 5% kafelków, 12% w pobliżu stref.
   - **Dziwne kafelki:** 1× źródło, 1× pradawny kamień, co najmniej 5 kafelków od startu.
-- **Zarysy stref (przyjęte):** od startu we mgle widać ciemną, ditherowaną **sylwetkę-znacznik** każdej strefy
-  (cmentarz: krzyż, bagno: trzciny, ruiny: kolumna), rysowaną **nad mgłą**.
-  - Gdy strefa jest poza kadrem, znacznik stoi **przy krawędzi okna w jej kierunku** (rzut kierunku na prostokąt widoku,
-    z marginesem na wysokość sprite'a). Działa jak kompas.
-  - Gdy strefa wejdzie w kadr, znacznik przesuwa się na jej prawdziwe miejsce, a po odkryciu pierwszego kafelka strefy znika.
-  - Prototyp: `docs/img/start_zarysy.png`, `tools/pixel-proto/hint_proto.py`.
-- Gracz sam wybiera kierunek rozbudowy, a znaczniki dają mu cel.
+- **Bez podpowiedzi** (decyzja gracza): nie ma znaczników ani zarysów stref we mgle. Gracz odkrywa strefy sam,
+  rozbudowując wyspę. Odrzucony prototyp znaczników został usunięty.
 - **Znaleziska:** część kafelków ma niespodziankę. Przylegające do lądu są oznaczone **„?”** zamiast ceny.
   Mogą zawierać skrzynkę monet, odłamek gwiazdy, nasiono nocne, fragment lore albo rzadko „dziwny kafelek”
   (źródło: +wzrost wokół; pradawny kamień: rytuał).
@@ -598,3 +604,56 @@ Skrypty: `tools/pixel-proto/tiles_proto.py`, `world_proto.py`.
   Mapa odległości (woda, mgła) przeliczana razem z nią.
   Alternatywa: Tilemap z autotilingiem dual-grid (16 wariantów na teren). Bardziej standardowa, ale trudniej o nieregularny brzeg.
 - Zapis: lista kafelków z typami + ziarno.
+
+### 13.8 Strefy: wygląd
+Podgląd: `docs/img/wyspa_strefy.png` (wyspa z trzema strefami), `docs/img/arkusz_strefy.png`.
+- **Podłoża są proceduralne**, z hasha pozycji w świecie, więc kafelki łączą się bez szwów:
+  - cmentarz: ciemna trawa, płaty ziemi, kamyki, kosteczki;
+  - bagno: kałuże, błoto, ciemna trawa;
+  - ruiny: płyty kamienne z fugami, pęknięcia, mech.
+- **Granice między podłożami są rozmyte szumem**, żeby nie było widać kwadratów kafelków.
+- **Dekoracje pojawiają się na kafelkach strefy przy odkryciu** (losowo z puli strefy).
+  Świecą: świece, palenisko, tablica runiczna, grzyby na kłodzie, kwiat lilii.
+- **Życie stref:** wrona na cmentarzu, żaba i bąble na bagnie. To stworzenia tła, nie postacie.
+- **Zabytki** (krypta, posąg, kamienne schody) są **nieusuwalne**. Kliknięcie daje fragment lore albo otwiera interakcję
+  (np. rytuał przy posągu).
+- **Bonus strefy wynika z podłoża**, a nie z dekoracji. Na cmentarnej ziemi można założyć grządkę i zachowuje bonus
+  (rośliny nocy ×1.5).
+
+---
+
+## 14. Usuwanie dekoracji
+Podgląd: `docs/img/wyspa_strefy.png` (drzewo w trakcie wycinki), `docs/img/arkusz_usuwanie.png`.
+
+### 14.1 Zasady
+- Kliknięcie w dekorację (drzewo, świerk, martwe drzewo, krzak, kamień, nagrobek, gruz, dekoracje stref poza zabytkami)
+  otwiera tooltip **„USUŃ”** z kosztem w Esencji i nagrodą. LPM potwierdza.
+- Usunięcie zwalnia kafelek pod grządkę lub budowlę. Dotyczy to też losowego obiektu na startowej wyspie 2×2.
+- Usuwa się **na zawsze**: dekoracje nie odrastają. Nowe pojawiają się tylko na nowo odkrytych kafelkach (ok. 25%).
+
+### 14.2 Animacje (skokowe, ok. 10 kl./s)
+| Dekoracja | Przebieg | Zostaje |
+|---|---|---|
+| Drzewo | potrząśnięcie (shader albo przesunięcie o 1 px), przewracanie (4 klatki), wióry i liście, kurz | **pień** (można zostawić albo wykarczować) |
+| Kamień | pęknięcie, rozpad, odpryski i kurz | **gruz** (wywozi się jak pień) |
+| Krzak | ścięcie, liście | ścięty krzak, znika po chwili |
+| Nagrobek | pęknięcie, odpryski | rozbity nagrobek (można wywieźć) |
+
+### 14.3 Koszty i nagrody (wstępne)
+| Co | Esencja | Nagroda | Szansa na znalezisko |
+|---|---|---|---|
+| Drzewo | 5 | 3 drewna (pień: +1 drewno za 1 Esencji) | gniazdo z nasionem 10% |
+| Świerk | 4 | 2 drewna | |
+| Martwe drzewo | 3 | 2 drewna | |
+| Krzak | 2 | 1 drewno + jagody (sprzedaż) | |
+| Kamień | 6 | 3 kamienia | monety pod kamieniem 15% |
+| Nagrobek | 3 | 2 kamienia | kości / fragment lore 10% |
+| Gruz | 2 | 1 kamień | |
+
+**Materiały (propozycja):** drewno i kamień jako nowe waluty do budowli (patrz §11.2).
+Daje to pętlę: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna do rozważenia: sadzonka drzewa jako długo rosnąca „roślina”.
+
+### 14.4 Technicznie
+- `Decoration` (MonoBehaviour) + `DecorationDefinition` (SO): koszt, nagrody, szansa znaleziska, klatki usuwania,
+  sprite pozostałości, flaga `isLandmark` (nieusuwalne).
+- Zapis: lista dekoracji na kafelkach (typ + stan: cała / pień / usunięta).

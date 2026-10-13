@@ -6,6 +6,7 @@ from PIL import Image
 import mockups as M                 # Canvas, ikony, font (ustawia paletę i scenę)
 import ui_kit as K
 import sprites3 as S3
+import sprites4 as S4
 import sprites
 from sprites import Sprite, RGB
 from water import Water, BAYER
@@ -91,10 +92,13 @@ def build(tiles, seed=3):
     water = Water(W, H, blocked, shadow, r1, r2, 48, seed=11)
     surface = {}
     for p in land:
-        c, r = (p[0] - OX) // T, (p[1] - OY) // T
-        t = tiles.get((c, r), 'grass')
-        k = {'grass': 'g2', 'soil': 'g2', 'cemetery': 'g1', 'swamp': 'g1'}.get(t, 'g2')
-        if t == 'cemetery' and (p[0] * 3 + p[1] * 7) % 23 == 0: k = 'p1'
+        # granice między typami podłoża rozmyte szumem (bez widocznych kwadratów)
+        jx = (S4.vnoise(p[0], p[1], 4, 21) - 0.5) * 9
+        jy = (S4.vnoise(p[0], p[1], 4, 22) - 0.5) * 9
+        c, r = int((p[0] + jx - OX) // T), int((p[1] + jy - OY) // T)
+        t = tiles.get((c, r), tiles.get(((p[0] - OX) // T, (p[1] - OY) // T), 'grass'))
+        if t == 'soil': t = 'grass'
+        k = S4.ground(t, p[0], p[1]) if t in ('cemetery', 'swamp', 'ruins') else 'g2'
         if (p[0], p[1] + 1) not in land: k = 'g1'
         surface[p] = k
     for _ in range(len(land) // 60):
@@ -116,7 +120,6 @@ def render(isl, objects=(), fog_from=22, fog_span=40, hidden=()):
     for (cc, rr), t in sorted(isl['tiles'].items(), key=lambda kv: kv[0][1]):
         x, y = tile_rect(cc, rr)
         if t == 'soil': c.sprite(p16, x, y)
-        if t == 'swamp': c.sprite(S3.swamp_pool(), x - 7, y + 2)
     for spr, x, y in sorted(objects, key=lambda o: o[2]):
         c.sprite(spr, x - spr.ax, y - spr.ay)
     # mgła liczona od odległości od lądu
@@ -190,13 +193,12 @@ def main():
         return o
 
     panels = []
-    isA = build(start); panels.append(("START: 20 KAFELKÓW", render(isA, objs_for(start, crops), hidden=hidden)))
-    isB = build(b); panels.append(("+11 KAFELKÓW", render(isB, objs_for(b, crops_b), hidden=hidden)))
+    isA = build(start); panels.append(("START: 20 KAFELKÓW", render(isA, objs_for(start, crops))))
+    isB = build(b); panels.append(("+11 KAFELKÓW", render(isB, objs_for(b, crops_b))))
     graves = [(S3.gravestone(0), OX + 12 * T + 8, OY + 3 * T + 13), (S3.gravestone(1), OX + 13 * T + 9, OY + 4 * T + 12),
               (S3.gravestone(2), OX + 14 * T + 7, OY + 4 * T + 13), (S3.iron_fence(), OX + 13 * T + 8, OY + 3 * T + 4),
               (S3.reeds(), OX + 4 * T + 8, OY + 7 * T + 4), (S3.dead_tree(), OX + 13 * T + 10, OY + 5 * T + 14)]
-    isC = build(cc); panels.append(("+28: CMENTARZ I BAGNO ODKRYTE", render(isC, objs_for(cc, crops_c, graves),
-                                                                      hidden=hidden[4:])))
+    isC = build(cc); panels.append(("+28: CMENTARZ I BAGNO ODKRYTE", render(isC, objs_for(cc, crops_c, graves))))
     S = 2
     sheet = Image.new("RGB", (W * S * 3 + 16, H * S + 30), RGB['o'])
     for i, (title, cv) in enumerate(panels):
@@ -205,7 +207,7 @@ def main():
     sheet.save(OUT + "wyspa_etapy.png")
 
     # tryb rozbudowy na etapie B
-    cv = render(isB, objs_for(b, crops_b), hidden=hidden)
+    cv = render(isB, objs_for(b, crops_b))
     owned = len(b)
     finds = {(12, 5): 'starshard', (5, 5): 'nightcrop'}
     for i, (c_, r_) in enumerate(neighbors(b)):

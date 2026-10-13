@@ -36,6 +36,76 @@
       "y": 0.07143
     },
     {
+      "name": "bush_cut",
+      "x": 0.52778,
+      "y": 0.1
+    },
+    {
+      "name": "cemetery_candles",
+      "x": 0.53571,
+      "y": 0.08333
+    },
+    {
+      "name": "cemetery_candles_glow",
+      "x": 0.53571,
+      "y": 0.08333
+    },
+    {
+      "name": "cemetery_crow_0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "cemetery_crow_0_glow",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "cemetery_crow_1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "cemetery_crow_1_glow",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "cemetery_crypt",
+      "x": 0.51471,
+      "y": 0.02778
+    },
+    {
+      "name": "cemetery_iron_gate",
+      "x": 0.51667,
+      "y": 0.03846
+    },
+    {
+      "name": "cemetery_obelisk",
+      "x": 0.54167,
+      "y": 0.03846
+    },
+    {
+      "name": "cemetery_open_grave",
+      "x": 0.525,
+      "y": 0.07143
+    },
+    {
+      "name": "cemetery_skull_pile",
+      "x": 0.53125,
+      "y": 0.08333
+    },
+    {
+      "name": "cemetery_thorns",
+      "x": 0.52778,
+      "y": 0.07143
+    },
+    {
+      "name": "cemetery_wooden_cross",
+      "x": 0.54167,
+      "y": 0.05556
+    },
+    {
       "name": "coin",
       "x": 0.5,
       "y": 0.0
@@ -291,6 +361,36 @@
       "y": 0.95
     },
     {
+      "name": "fx_dust_0",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_dust_1",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_dust_2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_stonechip",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_woodchip",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "ghost_merchant",
       "x": 0.51471,
       "y": 0.02941
@@ -314,6 +414,56 @@
       "name": "gravestone_2",
       "x": 0.53571,
       "y": 0.05556
+    },
+    {
+      "name": "gravestone_broken",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
+      "name": "ground_cemetery_0",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ground_cemetery_1",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ground_cemetery_2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ground_ruins_0",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ground_ruins_1",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ground_ruins_2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ground_swamp_0",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ground_swamp_1",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "ground_swamp_2",
+      "x": 0.5,
+      "y": 0.5
     },
     {
       "name": "harvest_crate_0",
@@ -481,12 +631,22 @@
       "y": 0.5
     },
     {
+      "name": "icon_stone",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_upgrade",
       "x": 0.5,
       "y": 0.5
     },
     {
       "name": "icon_wisp",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_wood",
       "x": 0.5,
       "y": 0.5
     },
@@ -626,9 +786,69 @@
       "y": 0.07143
     },
     {
+      "name": "rock_cracked",
+      "x": 0.52778,
+      "y": 0.07143
+    },
+    {
+      "name": "rubble",
+      "x": 0.52778,
+      "y": 0.1
+    },
+    {
       "name": "ruined_arch",
       "x": 0.51389,
       "y": 0.03125
+    },
+    {
+      "name": "ruins_brazier",
+      "x": 0.53571,
+      "y": 0.04545
+    },
+    {
+      "name": "ruins_brazier_glow",
+      "x": 0.53571,
+      "y": 0.04545
+    },
+    {
+      "name": "ruins_broken_wall",
+      "x": 0.51471,
+      "y": 0.04167
+    },
+    {
+      "name": "ruins_fallen_column",
+      "x": 0.51562,
+      "y": 0.07143
+    },
+    {
+      "name": "ruins_rubble",
+      "x": 0.52778,
+      "y": 0.1
+    },
+    {
+      "name": "ruins_rune_tablet",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "ruins_rune_tablet_glow",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "ruins_statue",
+      "x": 0.52778,
+      "y": 0.02941
+    },
+    {
+      "name": "ruins_stone_stairs",
+      "x": 0.52083,
+      "y": 0.05556
+    },
+    {
+      "name": "ruins_vine_pillar",
+      "x": 0.53571,
+      "y": 0.03571
     },
     {
       "name": "rune_stone",
@@ -651,8 +871,88 @@
       "y": 0.0
     },
     {
+      "name": "stump_dead",
+      "x": 0.53125,
+      "y": 0.08333
+    },
+    {
+      "name": "stump_round",
+      "x": 0.53125,
+      "y": 0.08333
+    },
+    {
+      "name": "stump_spruce",
+      "x": 0.53125,
+      "y": 0.08333
+    },
+    {
+      "name": "swamp_bog_bubbles_0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "swamp_bog_bubbles_1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "swamp_bog_bubbles_2",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "swamp_cattails",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
+      "name": "swamp_frog_0",
+      "x": 0.55,
+      "y": 0.0
+    },
+    {
+      "name": "swamp_frog_0_glow",
+      "x": 0.55,
+      "y": 0.0
+    },
+    {
+      "name": "swamp_frog_1",
+      "x": 0.55,
+      "y": 0.0
+    },
+    {
+      "name": "swamp_frog_1_glow",
+      "x": 0.55,
+      "y": 0.0
+    },
+    {
+      "name": "swamp_lily_pads",
+      "x": 0.525,
+      "y": 0.08333
+    },
+    {
+      "name": "swamp_lily_pads_glow",
+      "x": 0.525,
+      "y": 0.08333
+    },
+    {
+      "name": "swamp_mangrove",
+      "x": 0.51471,
+      "y": 0.02632
+    },
+    {
       "name": "swamp_pool",
       "x": 0.51667,
+      "y": 0.07143
+    },
+    {
+      "name": "swamp_rotten_log",
+      "x": 0.51786,
+      "y": 0.07143
+    },
+    {
+      "name": "swamp_rotten_log_glow",
+      "x": 0.51786,
       "y": 0.07143
     },
     {
@@ -674,6 +974,26 @@
       "name": "tree_round",
       "x": 0.51562,
       "y": 0.025
+    },
+    {
+      "name": "tree_round_fall_0",
+      "x": 0.50694,
+      "y": 0.22
+    },
+    {
+      "name": "tree_round_fall_1",
+      "x": 0.50694,
+      "y": 0.22
+    },
+    {
+      "name": "tree_round_fall_2",
+      "x": 0.50694,
+      "y": 0.22
+    },
+    {
+      "name": "tree_round_fall_3",
+      "x": 0.50694,
+      "y": 0.22
     },
     {
       "name": "tree_spruce",
