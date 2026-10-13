@@ -1,0 +1,66 @@
+﻿key,pl,en,de,ja,zh-Hans,uwagi
+term.essence,Esencja,Essence,Essenz,エッセンス,精华,energia z pracy; nazwa robocza
+term.grimoire,Księga,Grimoire,Grimoire,魔導書,魔典,główne menu
+menu.shop,Sklep,Shop,Laden,ショップ,商店,
+menu.upgrades,Ulepszenia,Upgrades,Verbesserungen,強化,升级,
+menu.rituals,Rytuały,Rituals,Rituale,儀式,仪式,
+menu.bestiary,Bestiariusz,Bestiary,Bestiarium,図鑑,图鉴,
+menu.stats,Statystyki,Statistics,Statistiken,統計,统计,
+menu.options,Opcje,Options,Optionen,設定,设置,
+cur.coins,Monety,Coins,Münzen,コイン,金币,
+cur.night_harvest,Plony nocy,Night harvest,Nachternte,夜の作物,夜间作物,waluta
+cur.star_shard,Odłamek gwiazdy,Star shard,Sternensplitter,星のかけら,星之碎片,
+cur.scale,Łuska,Scale,Schuppe,鱗,鳞片,rybia
+cur.deep_gift,Dar z głębin,Gift of the Deep,Gabe der Tiefe,深淵の贈り物,深渊之礼,
+cur.wood,Drewno,Wood,Holz,木材,木材,
+cur.stone,Kamień,Stone,Stein,石材,石料,
+obj.plot,Grządka,Plot,Beet,畑,田地,
+obj.seed,Nasiono,Seed,Samen,種,种子,
+obj.sapling,Sadzonka,Sapling,Setzling,苗木,树苗,
+obj.tile,Kafelek,Land tile,Landstück,土地マス,土地格,rozbudowa wyspy
+lamp.lantern,Krzywa latarnia,Crooked Lantern,Krumme Laterne,歪んだランタン,歪斜提灯,
+lamp.skull,Czaszka ze świecą,Skull Candle,Schädelkerze,髑髏の蝋燭,骷髅蜡烛,
+lamp.wisp,Klatka z ognikiem,Wisp Cage,Irrlichtkäfig,鬼火の籠,鬼火笼,
+lamp.mushrooms,Świecące grzyby,Glowcaps,Leuchtpilze,光る茸,荧光蘑菇,
+bld.essence_jar,Słój Esencji,Essence Jar,Essenzglas,エッセンスの瓶,精华罐,
+bld.wisp_gardener,Ognik-ogrodnik,Wisp Gardener,Irrlichtgärtner,鬼火の庭師,鬼火园丁,automatyczny zbiór
+bld.soil_memory,Pamięć ziemi,Soil Memory,Erdgedächtnis,大地の記憶,大地之忆,auto-sadzenie
+bld.merchant_chest,Skrzynia kupca,Merchant's Chest,Händlertruhe,商人の箱,商人宝箱,auto-sprzedaż
+bld.compost,Kompostownik,Compost Bin,Komposter,堆肥箱,堆肥箱,
+bld.pier,Pomost,Pier,Steg,桟橋,栈桥,
+bld.boat,Łódź,Boat,Boot,小舟,小船,
+bld.expedition,Wyprawa,Expedition,Expedition,遠征,远航,
+bld.lighthouse,Latarnia morska,Lighthouse,Leuchtturm,灯台,灯塔,
+bld.altar,Ołtarz ofiarny,Offering Altar,Opferaltar,供物の祭壇,献祭祭坛,
+npc.ghost_merchant,Kupiec-widmo,Ghost Merchant,Geisterhändler,幽霊商人,幽灵商人,"zdarzenie, nie postać gracza"
+world.fog,Mgła,Fog,Nebel,霧,迷雾,
+zone.graveyard,Cmentarz,Graveyard,Friedhof,墓地,墓地,
+zone.swamp,Bagno,Swamp,Sumpf,沼地,沼泽,
+zone.ruins,Ruiny,Ruins,Ruinen,遺跡,遗迹,
+rhythm.streak,Seria skupienia,Focus streak,Fokusserie,集中の連続,专注连续,
+rhythm.refreshed,Odświeżony,Refreshed,Erfrischt,リフレッシュ,精神焕发,bonus po przerwie
+rhythm.fatigue,Zmęczenie,Fatigue,Erschöpfung,疲労,疲劳,
+moon.full,Pełnia,Full moon,Vollmond,満月,满月,
+moon.cycle,Cykl księżycowy,Lunar cycle,Mondzyklus,月の周期,月相周期,
+crop.hybrid,Hybryda,Hybrid,Hybride,交配種,杂交种,
+crop.quality,Jakość,Quality,Qualität,品質,品质,
+crop.carrot,Marchew,Carrot,Karotte,ニンジン,胡萝卜,
+crop.wheat,Zboże,Wheat,Weizen,小麦,小麦,
+crop.pumpkin,Dynia,Pumpkin,Kürbis,カボチャ,南瓜,
+crop.moonflower,Księżycowy kwiat,Moonflower,Mondblume,月光花,月光花,
+crop.ghostpumpkin,Upiorna dynia,Ghost Pumpkin,Geisterkürbis,幽霊カボチャ,幽灵南瓜,
+crop.corpseshroom,Trupi grzyb,Corpse Cap,Leichenpilz,死人茸,尸菇,
+crop.bloodrose,Krwawa róża,Blood Rose,Blutrose,血の薔薇,血玫瑰,tylko w pełnię
+crop.hybridpumpkin,Dynia-upiór,Phantom Pumpkin,Phantomkürbis,亡霊カボチャ,幻影南瓜,hybryda
+tree.apple,Jabłoń,Apple Tree,Apfelbaum,リンゴの木,苹果树,
+tree.elder,Czarny bez,Black Elder,Schwarzer Holunder,ニワトコ,接骨木,
+tree.ghostpear,Upiorna grusza,Ghost Pear,Geisterbirne,幽霊梨,幽灵梨树,świeci nocą
+tree.rowan,Krwawa jarzębina,Blood Rowan,Blutvogelbeere,血のナナカマド,血花楸,
+tree.moon,Drzewo księżyca,Moon Tree,Mondbaum,月の木,月之树,świeci nocą
+act.plant,Posadź,Plant,Pflanzen,植える,种植,
+act.harvest,Zbierz,Harvest,Ernten,収穫,收获,
+act.buy,Kup,Buy,Kaufen,購入,购买,
+act.remove,Usuń,Remove,Entfernen,撤去,移除,
+act.place,Postaw,Place,Platzieren,設置,放置,
+act.cancel,Anuluj,Cancel,Abbrechen,キャンセル,取消,
+act.claim_tile,Wyrwij z mgły,Claim from the fog,Dem Nebel entreißen,霧から取り戻す,从迷雾中夺回,kupno kafelka

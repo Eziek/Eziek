@@ -1,0 +1,8 @@
+﻿key,pl,en,de,ja,zh-Hans,uwagi
+place.lights_plots,OŚWIETLI: {0} {0:plural:GRZĄDKĘ|GRZĄDKI|GRZĄDEK},LIGHTS {0} {0:plural:PLOT|PLOTS},BELEUCHTET {0} {0:plural:BEET|BEETE},{0}区画を照らす,照亮{0}块田地,"PL: 3 formy (1 / 2-4 / 5+), biernik"
+toast.wisp_harvested,Ognik zebrał {0} {0:plural:plon|plony|plonów},The wisp harvested {0} {0:plural:crop|crops},Das Irrlicht hat {0} {0:plural:Pflanze|Pflanzen} geerntet,鬼火が作物を{0}個収穫した,鬼火收获了{0}份作物,"JA/ZH: bez liczby mnogiej, liczniki 個/份"
+toast.merchant_waits,Kupiec-widmo czeka jeszcze {0} min,The Ghost Merchant waits {0} more min,Der Geisterhändler wartet noch {0} Min.,幽霊商人はあと{0}分待つ,幽灵商人还会等{0}分钟,
+hud.streak,Seria {0} min +{1}%,Streak {0} min +{1}%,Serie {0} Min. +{1} %,連続{0}分 +{1}%,连续{0}分钟 +{1}%,DE: spacja przed %
+lamp.consumption,Esencja: {0:0.0}/min,Essence: {0:0.0}/min,Essenz: {0:0.0}/Min.,エッセンス：{0:0.0}/分,精华：{0:0.0}/分钟,separator dziesiętny z kultury (PL/DE: przecinek)
+tile.mystery,Coś błyszczy we mgle…,Something glints in the fog…,Etwas schimmert im Nebel…,霧の中で何かが光っている…,迷雾中有东西在闪烁…,
+crop.grow_time,{0} min pracy,{0} min of work,{0} Min. Arbeit,作業{0}分,工作{0}分钟,

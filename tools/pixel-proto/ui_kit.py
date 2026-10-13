@@ -33,17 +33,20 @@ G = {
     "'": ["#", "#", ".", ".", "."], '"': ["#.#", "#.#", "...", "...", "..."],
     '=': ["...", "###", "...", "###", "..."], '*': ["...", "#.#", ".#.", "#.#", "..."],
     'Ł': ["#..", "##.", "#..", "#..", "###"],
+    'ẞ': [".#.", "#.#", "##.", "#.#", "##."],
 }
 # polskie: (litera bazowa, akcent) - akcent: 'acute' (piksel nad, z prawej), 'dot' (piksel nad, środek), 'ogonek'
 PL = {'Ą': ('A', 'ogonek'), 'Ę': ('E', 'ogonek'), 'Ć': ('C', 'acute'), 'Ń': ('N', 'acute'),
-      'Ó': ('O', 'acute'), 'Ś': ('S', 'acute'), 'Ź': ('Z', 'acute'), 'Ż': ('Z', 'dot')}
+      'Ó': ('O', 'acute'), 'Ś': ('S', 'acute'), 'Ź': ('Z', 'acute'), 'Ż': ('Z', 'dot'),
+      # niemieckie (lokalizacja DE)
+      'Ä': ('A', 'umlaut'), 'Ö': ('O', 'umlaut'), 'Ü': ('U', 'umlaut')}
 SPACE_W = 2
 LINE_H = 8
 
 
 def glyph_pixels(ch):
     """Lista pikseli (x, y) w komórce 8-wierszowej i szerokość znaku."""
-    ch = ch.upper()
+    ch = 'ẞ' if ch == 'ß' else ch.upper()
     accent = None
     if ch in PL:
         ch, accent = PL[ch]
@@ -55,10 +58,12 @@ def glyph_pixels(ch):
     if accent == 'acute': px.append((min(2, w - 1), 0))
     elif accent == 'dot': px.append((1, 0))
     elif accent == 'ogonek': px.append((w - 1, 7))
+    elif accent == 'umlaut': px += [(0, 0), (w - 1, 0)]
     return px, w
 
 
 def text_width(text, scale=1):
+    text = text.replace('ß', 'SS')
     w = 0
     for ch in text:
         if ch == ' ':
@@ -70,7 +75,9 @@ def text_width(text, scale=1):
 
 
 def draw_text(put, x, y, text, k='cr', shadow='o', scale=1):
-    """put(x, y, key). y = górna krawędź komórki (wiersz akcentu)."""
+    """put(x, y, key). y = górna krawędź komórki (wiersz akcentu).
+    Font jest tylko wielkimi literami, więc niemieckie ß zapisujemy poprawnie jako SS."""
+    text = text.replace('ß', 'SS')
     cx = x
     for ch in text:
         if ch == ' ':

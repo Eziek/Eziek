@@ -262,6 +262,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Mutacje: które pary roślin dają które hybrydy.
 - [ ] Tabela łupów wypraw łodzią.
 - [ ] Treść lore (historia wyspy, mgły, potwora).
+- [ ] Chiński: tylko uproszczony (zh-Hans), czy także tradycyjny (zh-Hant: Tajwan, Hongkong)?
+- [ ] Nazwa gry: wspólna marka we wszystkich językach czy tłumaczona?
+- [ ] Rozmiar fontu tekstu: 10 px czy 12 px (test w Unity, §16.3).
 - [x] Drewno i kamień jako materiały do budowli (§14.3). Odnawialne drewno i owoce: drzewa do sadzenia, na później (§15).
 
 ---
@@ -328,6 +331,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 18. Sprite'y 5 drzew owocowych gotowe (mechanika na później).
 19. Drzewa: więcej koloru, a świecące drzewa (grusza, drzewo księżyca) dają światło w nocy.
 20. Światło świecących drzew **liczy się jak lampa** dla wzrostu (bez kosztu Esencji, tylko gdy owocują).
+21. **Lokalizacja: PL, EN, DE, JA, ZH** (§16). Font dla JA/ZH: Fusion Pixel Font (OFL 1.1).
 
 ---
 
@@ -698,3 +702,63 @@ Pętla: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna to
   Świeci tylko w nocy, kiedy owocuje (po zebraniu owoców gaśnie do czasu odrośnięcia).
   W kodzie: `Illumination.IsLit` uwzględnia owocujące świecące drzewa obok lamp.
 - Mechanika czeka na swój etap (kod jeszcze nie istnieje).
+
+---
+
+## 16. Lokalizacja
+**Języki (decyzja gracza):** polski, angielski, niemiecki, japoński, chiński.
+Proponuję chiński uproszczony (zh-Hans), a tradycyjny później, jeśli będzie potrzeba.
+Pliki: `docs/localization/glossary.csv` (słownik terminów), `docs/localization/strings_sample.csv` (przykłady z odmianą).
+
+### 16.1 Zasady
+1. **Żadnego tekstu w sprite'ach.** Każdy napis to klucz lokalizacji (TextMeshPro + Unity Localization). Nasze sprite'y już są bez tekstu.
+2. **Nie sklejamy zdań z kawałków.** Każdy komunikat to jeden szablon z argumentami (`{0}`, `{1}`), bo szyk zdania różni się między językami.
+3. **Odmiana przez liczby przez Smart Strings:** `{0:plural:...}` według reguł CLDR (standardowe reguły odmiany przez liczby dla każdego języka).
+   - PL ma 3 formy (1 / 2–4 / 5+): „1 grządkę, 2 grządki, 5 grządek”.
+   - EN i DE mają 2 formy.
+   - JA i ZH nie mają liczby mnogiej, używają liczników (個, 份).
+4. **Liczby, ułamki i czas z kultury języka:**
+   - 1,250 (EN) / 1.250 (DE) / 1 250 (PL);
+   - 0.1 / 0,1;
+   - zegar 24 h (PL, DE, JA, ZH) lub zgodny z systemem.
+5. **Słownik terminów jest źródłem prawdy** (`glossary.csv`). Nowy termin trafia najpierw do słownika, potem do tekstów.
+   Wstępne tłumaczenia przygotował Claude. **JA, ZH i DE wymagają weryfikacji przez native speakera** przed wydaniem.
+
+### 16.2 Fonty
+- **JA i ZH: Fusion Pixel Font** (TakWolf), licencja **SIL OFL 1.1** (darmowa, także w grach komercyjnych).
+  - Rozmiary 8 / 10 / 12 px, warianty regionalne JA, SC, TC, KR.
+  - Wariant **JA** dla japońskiego i **SC** dla chińskiego. Te same znaki Han mają inne kształty w obu językach,
+    więc font wybieramy według języka, a nie jeden dla wszystkich.
+  - Licencja: dołączamy plik licencji. Zastrzeżona nazwa „Fusion Pixel”: jeśli sami przytniemy lub zmodyfikujemy plik fontu,
+    musimy zmienić jego nazwę. Pobranie: GitHub `TakWolf/fusion-pixel-font` (wydania).
+  - Alternatywa: Ark Pixel Font (OFL 1.1, 10/12/16 px), ale autor sam zaznacza braki w znakach chińskich.
+- **PL, EN, DE:** Fusion Pixel ma też łacinkę. Proponuję **jeden krój dla zwykłego tekstu we wszystkich językach** (spójny wygląd),
+  a własny font 3×5 `WyspaPixel` tylko na **cyfry i krótkie nagłówki** (liczniki HUD, ceny).
+  `WyspaPixel` obsługuje już PL i DE (Ä Ö Ü, a ß w wielkich literach jako SS).
+- **TextMeshPro:**
+  - główny font zależny od języka, Fusion Pixel jako fallback (zapasowy font) dla brakujących znaków;
+  - dla CJK font asset **dynamiczny** albo statyczny generowany ze znaków z tabel tekstów (mniejszy atlas);
+  - zawsze Render Mode RASTER (bez wygładzania), rozmiar = wielokrotność natywnego.
+
+### 16.3 Wpływ na UI
+- **Wysokość linii 12 px dla wszystkich języków.** Makiety z §12 (linia 8 px, font 3×5) trzeba poszerzyć,
+  bo znaki CJK są nieczytelne poniżej ok. 10 px.
+- **UI w siatce ×2, świat w ×3.** Napisy dostają więcej miejsca i są czytelne, a wciąż wyglądają pikselowo
+  (popularny kompromis w grach pixel art). Do potwierdzenia testem w Unity.
+- **Księga przy małym oknie:** okno startowe (432×336) jest za małe na teksty CJK. Po otwarciu Księgi okno tymczasowo
+  powiększa się do minimum (np. 640×480) i wraca po zamknięciu.
+- **Długość tekstów:** niemiecki jest zwykle o 20–35% dłuższy (długie złożenia: „Irrlichtgärtner”). Przyciski i etykiety
+  mają auto-rozmiar w granicach albo dwie linie. Testujemy na **pseudo-lokalizacji** (wbudowana w Unity Localization):
+  sztucznie wydłużone teksty z akcentami.
+- **Łamanie linii CJK** (bez spacji): reguły łamania w TextMeshPro (Line Breaking Rules dla JA/ZH).
+
+### 16.4 Technicznie (Unity)
+- Paczka **`com.unity.localization`**:
+  - **String Tables** (UI, przedmioty, zdarzenia, lore) i Smart Strings;
+  - Locale: `pl`, `en`, `de`, `ja`, `zh-Hans`;
+  - Asset Tables tylko dla fontów (font per język).
+- **Wybór języka:** przy pierwszym starcie z `Application.systemLanguage`, a gdy język nie jest obsługiwany, angielski.
+  W opcjach lista nazw w ich własnym języku: Polski, English, Deutsch, 日本語, 简体中文.
+- **Klucze:** `obszar.element[.wariant]`, np. `crop.carrot.name`, `crop.carrot.desc`, `toast.wisp_harvested`, `ui.shop.title`.
+- **Tłumaczenia:** eksport i import CSV z Unity Localization, ten sam format co `strings_sample.csv`.
+- **Lore** (dłuższe teksty) w osobnej tabeli, żeby tłumacz mógł pracować nad nim osobno.
