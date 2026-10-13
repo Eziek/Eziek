@@ -243,9 +243,10 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Zasady stawiania lamp (dowolnie czy na slotach) i jak liczyć oświetlenie pól.
 - [ ] Noc: stałe godziny, ustawiane w opcjach czy wschód i zachód z lokalizacji.
 - [x] Rozbudowa wyspy: pojedyncze kafelki 16×16 (§13).
-- [ ] Rozmiar okna i jak rośnie przy rozbudowie (propozycja w §13.6: krokami po 16 px do limitu z opcji, potem przewijanie).
-- [ ] Mapa pod mgłą: projektowana ręcznie czy generowana z ziarna (seed)? (propozycja: ręcznie zaprojektowane strefy + losowe znaleziska).
-- [ ] Krzywa cen kafelków (prototyp ×1.15, propozycja ×1.12).
+- [x] Start: **wyspa 2×2 o losowym kształcie**, świat **32×32 generowany z ziarna** (§13.1, §13.4).
+- [x] Esencja w koszcie kafelka: tak.
+- [ ] Rozmiar okna i jak rośnie przy rozbudowie (propozycja w §13.6: start 144×112 natywnie, krokami po 16 px do limitu z opcji, potem przewijanie).
+- [ ] Krzywa cen kafelków do balansu (obecnie kwadratowa, §13.2).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
 - [ ] Progi rytmu pracy (seria 25 min, przerwa 5 min, zmęczenie 8 h/10 h) do sprawdzenia w praktyce.
 - [ ] Mutacje: które pary roślin dają które hybrydy.
@@ -307,6 +308,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     tryb stawiania z podglądem światła, toasty, własny font 3×5 z polskimi znakami.
 13. **Rozbudowa wyspy kafelkami** (§13): pojedyncze kafelki przy brzegu za monety + Esencję, organiczny brzeg,
     strefy i znaleziska odkrywane pod mgłą.
+14. Każda gra startuje z **wyspą 2×2 o losowym kształcie**. **Świat 32×32 losowany z ziarna** (strefy, znaleziska).
+    Esencja zostaje w koszcie kafelka. Krzywa cen zmieniona na kwadratową (wykładnicza nie pasuje do 1024 kafelków).
 
 ---
 
@@ -519,21 +522,31 @@ Cel jest podświetlony pulsem.
 ---
 
 ## 13. Rozbudowa wyspy kafelkami
-Prototyp: `docs/img/wyspa_etapy.png` (start, +11, +28 z odkrytym cmentarzem i bagnem), `docs/img/wyspa_rozbudowa.png` (tryb rozbudowy).
-Skrypt: `tools/pixel-proto/tiles_proto.py`.
+Prototyp: `docs/img/wyspa_starty.png` (6 losowych startów 2×2), `docs/img/swiat_mapy.png` (3 losowe światy 32×32),
+`docs/img/wyspa_etapy.png` (wzrost wyspy, wczesny prototyp ze startem 5×4), `docs/img/wyspa_rozbudowa.png` (tryb rozbudowy).
+Skrypty: `tools/pixel-proto/tiles_proto.py`, `world_proto.py`.
 
 ### 13.1 Zasada
 - Wyspa to **siatka kafelków 16×16** (1 kafelek = 1 grządka = jedno miejsce na mały obiekt).
 - Gracz **kupuje pojedyncze kafelki przylegające do lądu** (4 kierunki), a wyspa rośnie o jeden kwadracik.
-- Start: ok. **20 kafelków** (5×4) z 3 grządkami.
+- **Start: wyspa 2×2 kafelki o losowym kształcie** (kształt brzegu z ziarna). Na niej **2 grządki** (losowe miejsca),
+  a na reszcie losowy obiekt (drzewo, krzak, kamień albo martwe drzewo). Start w środku świata, na kafelkach (15–16, 15–16).
 - **Brzeg jest organiczny, choć logika jest kwadratowa:** maska z kafelków jest zaokrąglana (otwarcie i domknięcie morfologiczne)
   i zaburzana stałym szumem. Potem dochodzą klif, piana, cień, strefy wody i mgła (jak w prototypie).
   Szum jest przypięty do miejsca w świecie, więc zakup zmienia tylko brzeg w pobliżu.
 
 ### 13.2 Koszt
 - **Monety + Esencja.** Praca dosłownie „wyrywa ląd z mgły”.
-  - Monety: `30 × 1.12^n`, gdzie n = kafelki kupione ponad start (prototyp: ×1.15), co daje ok. 93 / 290 / 2800 za 10./20./40. kafelek.
-  - Esencja: `5 + n`.
+  n = kafelki kupione od startu. Krzywa kwadratowa, bo wykładnicza nie pasuje do świata 32×32:
+  - Monety: `10 + 4n + 0.06n²`;
+  - Esencja: `3 + n/8`.
+
+  | n | 0 | 10 | 50 | 100 | 300 | 600 | 1020 |
+  |---|---|---|---|---|---|---|---|
+  | monety | 10 | 56 | 360 | 1010 | 6610 | 24010 | 66514 |
+  | Esencja | 3 | 4 | 9 | 15 | 40 | 78 | 130 |
+
+  Wysoka cena w Esencji późno w grze wymusza ulepszanie słoja, co jest celowym powiązaniem systemów.
 - Ostatnie kafelki świata (krawędź mapy, wnętrza stref) mogą wymagać rzadkich surowców (odłamki gwiazd, dary z głębin).
 
 ### 13.3 Co można zrobić z kafelkiem
@@ -545,12 +558,16 @@ Skrypt: `tools/pixel-proto/tiles_proto.py`.
 - Pomost stawia się na **kafelkach wody** przy brzegu.
 
 ### 13.4 Co jest pod mgłą
-- Świat ma stały układ: **strefy czekają w swoich kierunkach** (np. cmentarz na NE, bagno na W, ruiny na S).
-  Gracz wybiera kierunek rozbudowy. Daleko we mgle widać **ditherowane sylwetki** (nagrobek, martwe drzewo, kolumna) jako zachętę.
+- **Świat 32×32 kafelki, losowany z ziarna zapisu** (każda gra inna):
+  - **Strefy** (cmentarz, bagno, ruiny): każda to losowa plama 8–14 kafelków, 6–12 kafelków od startu,
+    w różnych kierunkach (min. 90° odstępu).
+  - **Znaleziska:** ok. 5% kafelków, 12% w pobliżu stref.
+  - **Dziwne kafelki:** 1× źródło, 1× pradawny kamień, co najmniej 5 kafelków od startu.
+- Gracz wybiera kierunek rozbudowy. Daleko we mgle widać **ditherowane sylwetki** stref (nagrobek, martwe drzewo, kolumna) jako zachętę.
 - **Znaleziska:** część kafelków ma niespodziankę. Przylegające do lądu są oznaczone **„?”** zamiast ceny.
   Mogą zawierać skrzynkę monet, odłamek gwiazdy, nasiono nocne, fragment lore albo rzadko „dziwny kafelek”
   (źródło: +wzrost wokół; pradawny kamień: rytuał).
-- Propozycja: strefy i ważne miejsca zaprojektowane ręcznie, drobne znaleziska losowane z ziarna zapisu.
+- Wszystko (kształt startu, strefy, znaleziska) wynika z jednego ziarna, więc ten sam zapis zawsze daje ten sam świat.
 
 ### 13.5 Efekt zakupu
 - Tryb rozbudowy: przyległe kafelki mają przerywane ramki z ceną albo „?”. Najechanie pokazuje tooltip (monety + Esencja).
@@ -559,14 +576,16 @@ Skrypt: `tools/pixel-proto/tiles_proto.py`.
   a znalezisko wyskakuje jak plon przy zbiorze.
 
 ### 13.6 Okno i kamera
+- **Start: kadr natywny 144×112** (9×7 kafelków), przy ×3 to okno 432×336, mały widżet na pulpit.
 - Natywny kadr rośnie razem z wyspą **krokami po 16 px** (skala zostaje całkowita), aż do limitu z opcji (np. 40% ekranu).
 - Po przekroczeniu limitu kamera przewija się (przeciąganie PPM), a gra sama centruje się na wyspie.
   Do wyboru jest też przełączanie skali ×3/×2.
 - Mini-tryb pokazuje tylko wycinek z grządkami.
 
 ### 13.7 Technicznie
-- `IslandMap`: `HashSet<Vector2Int>` kafelków + `Dictionary<Vector2Int, TileType>`, ziarno świata, granice mapy (np. 32×24).
-- `ExpansionShop`: lista przyległych kafelków, koszt, znaleziska (`WorldLayout` SO: strefy, stałe znaleziska, sylwetki we mgle).
+- `IslandMap`: `HashSet<Vector2Int>` kafelków + `Dictionary<Vector2Int, TileType>`, ziarno świata, granice mapy **32×32**.
+- `WorldGenerator`: z ziarna wylicza kształt startu, strefy, znaleziska i dziwne kafelki (algorytm jak w `world_proto.py`).
+- `ExpansionShop`: lista przyległych kafelków, koszt, znaleziska z `WorldGenerator`.
 - **Render (rekomendacja):** generowana w locie tekstura wyspy jak w prototypie: maska, zaokrąglenie z szumem, klif, piana,
   potem `Texture2D` i Sprite. Przeliczana tylko po zakupie, a dla tak małej mapy to ułamek sekundy.
   Mapa odległości (woda, mgła) przeliczana razem z nią.
