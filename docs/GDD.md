@@ -327,6 +327,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 17. Drewno i kamień przyjęte jako materiały. **Na później:** różne drzewa do sadzenia i zbierania owoców (§15).
 18. Sprite'y 5 drzew owocowych gotowe (mechanika na później).
 19. Drzewa: więcej koloru, a świecące drzewa (grusza, drzewo księżyca) dają światło w nocy.
+20. Światło świecących drzew **liczy się jak lampa** dla wzrostu (bez kosztu Esencji, tylko gdy owocują).
 
 ---
 
@@ -692,5 +693,8 @@ Pętla: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna to
   - drzewo księżyca: lawenda `(0.9, 0.85, 1.25)`, promień 40 px.
 
   W Unity to Point Light 2D na drzewie, włączany w nocy, gdy drzewo owocuje.
-  Do decyzji: czy to światło liczy się jak lampa dla wzrostu roślin (wtedy grusza to darmowa lampa, ale gasi rośliny nocy obok).
+  **Decyzja: światło drzew liczy się jak lampa dla wzrostu roślin.** W zasięgu rosną rośliny dnia (gdy gracz jest aktywny),
+  a rośliny nocy nie rosną. Drzewo nie zużywa Esencji, bo to nagroda za długi wzrost.
+  Świeci tylko w nocy, kiedy owocuje (po zebraniu owoców gaśnie do czasu odrośnięcia).
+  W kodzie: `Illumination.IsLit` uwzględnia owocujące świecące drzewa obok lamp.
 - Mechanika czeka na swój etap (kod jeszcze nie istnieje).
