@@ -1152,10 +1152,10 @@ namespace Wyspa.UI
 
             OptLabel("ui.options.scale", y);
             float x = OptCol;
-            for (int s = 2; s <= 6; s++)
+            for (int s = 2; s <= 6; s += 2)   // skala parzysta (grafiki 32 px): x1..x3 w nowych pikselach
             {
                 int scale = s;
-                x += OptButton("Scale" + s, "x" + s, x, y, 20f, () => { if (view != null) view.SetScale(scale); },
+                x += OptButton("Scale" + s, "x" + (s / ViewController.ArtScale), x, y, 20f, () => { if (view != null) view.SetScale(scale); },
                                view != null && view.Scale == s) + 4;
             }
             y += OptRow;

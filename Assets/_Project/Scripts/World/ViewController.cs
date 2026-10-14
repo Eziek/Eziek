@@ -15,6 +15,13 @@ namespace Wyspa.World
         public static ViewController Instance { get; private set; }
 
         const float Ppu = 16f;
+        /// <summary>
+        /// Etap 7: grafiki 32 px na kafelek. Cała logika kadru zostaje w pikselach 16 px (jak dotąd), a kamera dostaje
+        /// PPU 32 i dwukrotnie większy kadr. Skala okna (piksele ekranu na piksel 16) musi być parzysta, żeby piksel 32 px
+        /// był całym pikselem ekranu (x2 = x1 w nowych pikselach, x4 = x2, x6 = x3).
+        /// </summary>
+        public const int ArtScale = 2;
+        static int Even(int s) => Mathf.Clamp(s + (s & 1), 2, 6);
 
         [SerializeField] PixelPerfectCamera pixelCamera;
         [SerializeField] Vector2Int minView = new Vector2Int(144, 112);
@@ -73,7 +80,7 @@ namespace Wyspa.World
         void Awake()
         {
             Instance = this;
-            windowScale = Mathf.Clamp(PlayerPrefs.GetInt("viewScale", windowScale), 1, 6);
+            windowScale = Even(PlayerPrefs.GetInt("viewScale", windowScale));
             mini = PlayerPrefs.GetInt("viewMini", 0) == 1;
             if (GetComponent<Wyspa.Platform.DesktopWindow>() == null)
                 gameObject.AddComponent<Wyspa.Platform.DesktopWindow>();
@@ -119,7 +126,7 @@ namespace Wyspa.World
 
         public void SetScale(int scale)
         {
-            windowScale = Mathf.Clamp(scale, 1, 6);
+            windowScale = Even(scale);
             PlayerPrefs.SetInt("viewScale", windowScale);
             Refit();
         }
@@ -160,8 +167,9 @@ namespace Wyspa.World
         {
             if (pixelCamera != null)
             {
-                pixelCamera.refResolutionX = view.x;
-                pixelCamera.refResolutionY = view.y;
+                pixelCamera.assetsPPU = (int)Ppu * ArtScale;
+                pixelCamera.refResolutionX = view.x * ArtScale;
+                pixelCamera.refResolutionY = view.y * ArtScale;
             }
 #if !UNITY_EDITOR
             int scale = EffectiveScale;
@@ -180,10 +188,10 @@ namespace Wyspa.World
 
         void Update()
         {
-            // Ctrl + kółko myszy: powiększenie okna (skala x2..x6, jak w Opcjach)
+            // Ctrl + kółko myszy: powiększenie okna (x1..x3 w pikselach 32 px, jak w Opcjach)
             int scroll = UiInput.Scroll;
             if (scroll != 0 && UiInput.CtrlHeld && !mini)
-                SetScale(Mathf.Clamp(windowScale + scroll, 2, 6));
+                SetScale(Mathf.Clamp(windowScale + scroll * 2, 2, 6));
             HandleDrag();
             Place();
         }

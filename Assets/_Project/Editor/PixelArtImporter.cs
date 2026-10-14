@@ -30,12 +30,14 @@ namespace Wyspa.EditorTools
             public float x;
             public float y;
             public int[] border;
+            public int hd;   // Etap 7: 2 = grafika 32 px (art32/convert32.py), PPU x2
         }
 
         struct SpriteMeta
         {
             public Vector2 pivot;
             public Vector4 border;
+            public int ppu;
         }
 
         static Dictionary<string, SpriteMeta> metas;
@@ -63,6 +65,7 @@ namespace Wyspa.EditorTools
             settings.spriteExtrude = 0;
             if (TryGetMeta(Path.GetFileNameWithoutExtension(assetPath), out var meta))
             {
+                settings.spritePixelsPerUnit = meta.ppu;   // grafiki 32 px: ten sam rozmiar w świecie co 16 px
                 settings.spriteAlignment = (int)SpriteAlignment.Custom;
                 settings.spritePivot = meta.pivot;
                 settings.spriteBorder = meta.border; // Vector4(L, B, R, T); zero = brak 9-slice
@@ -89,7 +92,7 @@ namespace Wyspa.EditorTools
                             var b = item.border != null && item.border.Length == 4
                                 ? new Vector4(item.border[0], item.border[1], item.border[2], item.border[3])
                                 : Vector4.zero;
-                            metas[item.name] = new SpriteMeta { pivot = new Vector2(item.x, item.y), border = b };
+                            metas[item.name] = new SpriteMeta { pivot = new Vector2(item.x, item.y), border = b, ppu = PixelsPerUnit * Mathf.Max(1, item.hd) };
                         }
                     }
                 }

@@ -128,7 +128,7 @@ namespace UnityEditor
     public static class EditorApplication { public static bool isPlaying; }
     public class AssetImporter : UnityEngine.Object { }
     public class TextureImporter : AssetImporter { public bool sRGBTexture; public TextureImporterType textureType; public SpriteImportMode spriteImportMode; public float spritePixelsPerUnit; public FilterMode filterMode; public TextureImporterCompression textureCompression; public bool mipmapEnabled, alphaIsTransparency; public TextureWrapMode wrapMode; public void ReadTextureSettings(TextureImporterSettings s) { } public void SetTextureSettings(TextureImporterSettings s) { } }
-    public class TextureImporterSettings { public SpriteMeshType spriteMeshType; public uint spriteExtrude; public int spriteAlignment; public Vector2 spritePivot; public Vector4 spriteBorder; }
+    public class TextureImporterSettings { public float spritePixelsPerUnit; public SpriteMeshType spriteMeshType; public uint spriteExtrude; public int spriteAlignment; public Vector2 spritePivot; public Vector4 spriteBorder; }
     public enum TextureImporterType { Sprite }
     public enum SpriteImportMode { Single }
     public enum TextureImporterCompression { Uncompressed }

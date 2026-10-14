@@ -585,6 +585,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     wielonocne nie dorosną, gdy podmiana jest włączona). Zapis v14.
 66. Skład (prośba gracza: za dużo drewna i kamienia): budowla w Sklep → Budowle (120 monet + 10 drewna), co 10 s sprzedaje
     do 10 drewna (po 3 monety) i 10 kamienia (po 5) ponad rezerwę (domyślnie 30, w panelu ±10), „Sprzedaj nadwyżkę teraz”.
+67. Etap 7, część 1: wszystkie grafiki świata w 32 px (`tools/art32/convert32.py`: obecne projekty 16 px przez hd2x crisp,
+    paleta dark fantasy, poświaty liczone od nowa). Świat w tych samych jednostkach (kafelek = 1), importer PPU 32 dla grafik
+    z "hd": 2, kamera PPU 32 i kadr x2; skala okna parzysta (Opcje: x1-x3 w pikselach 32 px). Kołysanie x2 (piksele tekstury).
+    Teren, woda i mgła jeszcze w 16 px (części 2-3).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

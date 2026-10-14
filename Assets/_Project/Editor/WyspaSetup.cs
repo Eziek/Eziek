@@ -640,10 +640,10 @@ namespace Wyspa.EditorTools
 
         static void CreateFxMaterials()
         {
-            FxMaterialAsset("SwayCrop", "SpriteSway", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", CropSwaySpeed); });
-            FxMaterialAsset("SwayCropGlow", "SpriteSwayUnlit", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", CropSwaySpeed); });
-            FxMaterialAsset("SwayTree", "SpriteSway", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", TreeSwaySpeed); });
-            FxMaterialAsset("SwayTreeGlow", "SpriteSwayUnlit", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", TreeSwaySpeed); });
+            FxMaterialAsset("SwayCrop", "SpriteSway", m => { m.SetFloat("_SwayAmount", 2f);   /* grafiki 32 px: przesunięcie w pikselach tekstury x2 */ m.SetFloat("_SwaySpeed", CropSwaySpeed); });
+            FxMaterialAsset("SwayCropGlow", "SpriteSwayUnlit", m => { m.SetFloat("_SwayAmount", 2f);   /* grafiki 32 px: przesunięcie w pikselach tekstury x2 */ m.SetFloat("_SwaySpeed", CropSwaySpeed); });
+            FxMaterialAsset("SwayTree", "SpriteSway", m => { m.SetFloat("_SwayAmount", 2f);   /* grafiki 32 px: przesunięcie w pikselach tekstury x2 */ m.SetFloat("_SwaySpeed", TreeSwaySpeed); });
+            FxMaterialAsset("SwayTreeGlow", "SpriteSwayUnlit", m => { m.SetFloat("_SwayAmount", 2f);   /* grafiki 32 px: przesunięcie w pikselach tekstury x2 */ m.SetFloat("_SwaySpeed", TreeSwaySpeed); });
             var data = AssetDatabase.LoadAssetAtPath<Texture2D>(Sprites + "Ground/water_data.png");
             if (data == null)
                 Debug.LogWarning("[Wyspa] Brak Ground/water_data.png - uruchom tools/pixel-proto/export_unity_fx.py.");
