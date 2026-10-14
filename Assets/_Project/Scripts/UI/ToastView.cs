@@ -15,6 +15,7 @@ namespace Wyspa.UI
 
         readonly List<(RectTransform rt, float until)> items = new List<(RectTransform, float)>();
         RectTransform root;
+        float lastToastSound = -10f;
 
         public static ToastView Create(RectTransform canvasRoot)
         {
@@ -31,6 +32,11 @@ namespace Wyspa.UI
         {
             if (Save.SaveSystem.InMenu)
                 return;   // menu główne: zdarzenia wyspy w tle bez powiadomień
+            if (Time.unscaledTime - lastToastSound > 1.5f)
+            {
+                lastToastSound = Time.unscaledTime;
+                GameEvents.PlaySound("toast", 0.5f);
+            }
             var img = Ui.Img(root, "Toast", Ui.Theme.toast, true);
             var text = Ui.Txt(img.transform, "Text", Ui.Theme.textLight);
             text.text = Loc.Get(key, args);

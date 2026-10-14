@@ -129,6 +129,7 @@ namespace Wyspa.Core
             if (GetComponent<Orders.OrderBook>() == null) gameObject.AddComponent<Orders.OrderBook>();   // zamówienia z tablicy
             if (GetComponent<Familiars.FamiliarSystem>() == null) gameObject.AddComponent<Familiars.FamiliarSystem>();   // chowańce
             if (GetComponent<Weather.WeatherSystem>() == null) gameObject.AddComponent<Weather.WeatherSystem>();   // pogoda
+            if (GetComponent<Audio.AudioManager>() == null) gameObject.AddComponent<Audio.AudioManager>();   // dźwięk
             upgrades.Changed += ApplyUpgrades;
         }
 

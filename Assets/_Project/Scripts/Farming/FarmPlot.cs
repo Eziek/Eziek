@@ -92,6 +92,7 @@ namespace Wyspa.Farming
                     GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.NightHarvest, crop.nightHarvestYield);
                 }
                 IslandFx.Harvest(CropPosition, crop.StageSprite(3), CropOrder);
+                GameEvents.PlaySound("harvest");
                 LastCrop = crop;
                 state.Clear();
                 RefreshVisual();
@@ -132,6 +133,7 @@ namespace Wyspa.Farming
             RefreshVisual();
             Pop();
             IslandFx.Planted(CropPosition, CropOrder);
+            GameEvents.PlaySound("plant");
         }
 
         public void RefreshVisual()

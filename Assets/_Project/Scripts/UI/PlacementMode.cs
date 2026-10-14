@@ -237,6 +237,7 @@ namespace Wyspa.UI
                 GameEvents.RaiseToast("ui.place.need", CostText(request.cost));
                 return;
             }
+            GameEvents.PlaySound("place");
             if (!request.confirm(tile))
             {
                 if (request.cost != null)

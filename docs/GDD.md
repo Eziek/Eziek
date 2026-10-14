@@ -258,6 +258,11 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
+- [x] **Dźwięk** (Etap 6c): tło dnia (fale, wiatr, rzadkie ptaki), nocy (świerszcze, pomruk głębin, fale) i deszczu (ponad tłem,
+  burza głośniej), przenikanie przy zmianie pory; efekty: sadzenie, zbiór, moneta, kopanie, ścinanie/usuwanie, stawianie,
+  klik, Księga, powiadomienie, grzmot, magia (kocioł, zamówienie, chowaniec), nowy kafelek, bąbel. Placeholdery syntezowane
+  w `tools/audio/gen_audio.py` (numpy + ffmpeg, OGG) do `Resources/Audio`; `Audio/AudioManager.cs`, `GameEvents.PlaySound`.
+  Opcje → Dźwięk: tło i efekty (co 10%), cisza, gdy okno nieaktywne.
 - [x] **Pogoda** (wybór gracza): cykl gry dzielony na 3 części po 20 min (dwie w dzień, jedna w nocy), w każdej losowana
   pogoda z numeru cyklu (bez zapisu): burza 8%, deszcz 22%, w nocy mgła 18%, reszta pogodnie. **Deszcz**: rośliny dnia +20%,
   ukośne krople tylko nad lądem (w przezroczystym oknie nie pada na pulpit), trochę ciemniej, częstszy wiatr. **Burza**: ulewa,
@@ -534,6 +539,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 52. Kocioł alchemiczny: 6 mikstur ze składników ze skrzyń, działanie 2 cykle, zapis v10.
 53. Chowańce: kot, kruk, ropucha, nietoperz - przychodzą po spełnieniu warunku, małe bonusy, zapis v11.
 54. Pogoda: deszcz, burza z piorunami, nocna mgła, losowana na każde 20 min cyklu gry.
+55. Etap 6c, część 1: dźwięk (tła, efekty, głośność w Opcjach), placeholdery z syntezy.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

@@ -9,6 +9,11 @@ namespace Wyspa.Core
     {
         public static event Action<string, object[]> Toast;
 
+        /// <summary>Efekt dźwiękowy (AudioManager): id bez przedrostka „sfx_”, np. „harvest”, „coin”.</summary>
+        public static event Action<string, float> Sound;
+
+        public static void PlaySound(string id, float volume = 1f) => Sound?.Invoke(id, volume);
+
         public static void RaiseToast(string key, params object[] args) => Toast?.Invoke(key, args);
 
         /// <summary>Klik w obiekt na wyspie (dekoracja, lampa, skrzynia): UI pokazuje panel kontekstowy z akcjami.</summary>

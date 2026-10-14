@@ -91,6 +91,7 @@ namespace Wyspa.Familiars
                     var f = Spawn(kind);
                     if (f != null)
                         Visual.IslandFx.FindPopped(f.transform.position + new Vector3(0f, 0.4f, 0f));
+                    GameEvents.PlaySound("magic");
                     GameEvents.RaiseToast("toast.familiar.arrived", Loc.Get("familiar." + kind), Loc.Get("familiar." + kind + ".bonus"));
                     Lore.Chronicle.Note("familiar:" + kind);
                 }

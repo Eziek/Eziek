@@ -241,3 +241,8 @@ ui.cauldron.active,Działa: {0} ({1}),Active: {0} ({1}),Wirkt: {0} ({1}),効果�
 ui.cauldron.active_until_use,Działa: {0} (do użycia),Active: {0} (until used),Wirkt: {0} (bis verbraucht),効果中：{0}（使うまで）,生效中：{0}（直到使用）,
 ui.cauldron.recipe,{0} ({1}): {2},{0} ({1}): {2},{0} ({1}): {2},{0}（{1}）：{2},{0}（{1}）：{2},przycisk przepisu: nazwa (działanie): składniki
 ui.plot.rain,Deszcz: +20%,Rain: +20%,Regen: +20 %,雨：+20%,雨：+20%,dymek grządki
+ui.options.sound,Dźwięk,Sound,Ton,サウンド,声音,sekcja opcji
+ui.options.vol_ambient,"Tło (fale, noc, deszcz)","Ambience (waves, night, rain)","Atmosphäre (Wellen, Nacht, Regen)",環境音（波・夜・雨）,环境音（海浪、夜晚、雨）,
+ui.options.vol_sfx,Efekty,Effects,Effekte,効果音,音效,
+ui.options.mute_bg,"Cisza, gdy okno nieaktywne",Mute when window inactive,"Stumm, wenn Fenster inaktiv",非アクティブ時は無音,窗口未激活时静音,
+ui.options.sound_hint,"Dźwięki są tymczasowe (generowane), docelowe przyjdą później.",The sounds are temporary (generated); final ones will come later.,"Die Töne sind vorläufig (generiert), endgültige kommen später.",音は仮のもの（自動生成）。本番の音は後で入る。,声音为临时生成，正式音效稍后加入。,pasek opisu w opcjach dźwięku

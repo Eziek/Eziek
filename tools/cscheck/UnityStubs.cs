@@ -78,6 +78,22 @@ namespace UnityEngine
     public static class GUILayout { public static void BeginArea(Rect r, GUIStyle s) { } public static void EndArea() { } public static Vector2 BeginScrollView(Vector2 v, params GUILayoutOption[] o) => v; public static void EndScrollView() { } public static void Label(string s, params GUILayoutOption[] o) { } public static bool Button(string s, params GUILayoutOption[] o) => false; public static bool Toggle(bool v, string s, params GUILayoutOption[] o) => v; public static void Space(float f) { } public static void BeginHorizontal(params GUILayoutOption[] o) { } public static void EndHorizontal() { } }
     public static class GUILayoutUtility { public static Rect GetRect(float w, float h) => default; }
     [AttributeUsage(AttributeTargets.Field)] public class SerializeField : Attribute { }
+    public class AudioClip : Object { public float length; }
+    public class AudioSource : Behaviour
+    {
+        public AudioClip clip { get; set; }
+        public float volume { get; set; }
+        public float pitch { get; set; }
+        public bool loop { get; set; }
+        public bool playOnAwake { get; set; }
+        public float spatialBlend { get; set; }
+        public bool isPlaying => false;
+        public void Play() { }
+        public void Stop() { }
+        public void PlayOneShot(AudioClip clip, float volumeScale) { }
+    }
+    public class AudioListener : Behaviour { public static float volume { get; set; } }
+    public static class Resources { public static T Load<T>(string path) where T : Object => default; }
     public enum RuntimeInitializeLoadType { AfterSceneLoad = 0, BeforeSceneLoad = 1, AfterAssembliesLoaded = 2, BeforeSplashScreen = 3, SubsystemRegistration = 4 }
     [AttributeUsage(AttributeTargets.Method)] public class RuntimeInitializeOnLoadMethodAttribute : Attribute
     { public RuntimeInitializeOnLoadMethodAttribute() { } public RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType loadType) { } }

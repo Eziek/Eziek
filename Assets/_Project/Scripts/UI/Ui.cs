@@ -87,6 +87,7 @@ namespace Wyspa.UI
                 disabledSprite = Theme.buttonDisabled,
             };
             b.navigation = new Navigation { mode = Navigation.Mode.None };
+            b.onClick.AddListener(() => Core.GameEvents.PlaySound("click", 0.5f));
             if (onClick != null)
                 b.onClick.AddListener(() => onClick());
             return b;

@@ -469,6 +469,7 @@ namespace Wyspa.World
                 wallet.Add(coins);
                 return false;
             }
+            GameEvents.PlaySound("tile");
             var find = map.Buy(p);
             StartCoroutine(Claim(p, find, wallet));
             return true;
@@ -636,6 +637,7 @@ namespace Wyspa.World
             if (!IsFree(p) || wallet == null || !wallet.TrySpend(DigCoins))
                 return false;
             map.SetKind(p, TileKind.Soil);
+            GameEvents.PlaySound("dig");
             SyncPlots();
             if (plots.TryGetValue(p, out var plot))
                 IslandFx.Planted(plot.CropPosition, 0);
@@ -948,6 +950,7 @@ namespace Wyspa.World
                 return false;
             }
             var at = d.transform.position + new Vector3(0f, 8f / Ppu, 0f);
+            GameEvents.PlaySound("chop");
             var a = d.Art;
             game.Wallet.Add(a.reward, a.rewardAmount);
             GameEvents.RaiseCurrencyGained(at, a.reward, a.rewardAmount);

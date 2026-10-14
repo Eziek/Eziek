@@ -104,6 +104,7 @@ namespace Wyspa.Weather
                 {
                     nextBolt = Random.Range(12f, 35f);
                     flashTime = 0f;
+                    GameEvents.PlaySound("thunder", 0.8f);
                     // co czwarty piorun zostawia odłamek gwiazdy (spada jak spadająca gwiazda)
                     if (Random.value < 0.25f && Sea.NightEvents.Instance != null)
                         Sea.NightEvents.Instance.SpawnStar();

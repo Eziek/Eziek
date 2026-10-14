@@ -392,6 +392,15 @@ Po pobraniu: Play (bez Wyspa → 2). F1 → przyciski „Deszcz”, „Burza”,
 3. Mgła (w nocy, F1 → 23:30): mgła gęstsza, częściej błędne ogniki.
 4. Przezroczyste okno: krople nie lecą nad pulpitem.
 
+## 4za. Dźwięk (test)
+Po pobraniu: Unity zaimportuje `Assets/_Project/Resources/Audio/*.ogg`. Play.
+1. W dzień ciche fale i wiatr (pętla), w nocy świerszcze i pomruk; przy zmianie pory przenikanie ok. 2.5 s.
+   Deszcz/burza (F1 → Deszcz/Burza): szum deszczu ponad tłem, grzmot przy błysku.
+2. Efekty: sadzenie, zbiór, monety przy liczniku, kopanie grządki, nowy kafelek, ścinanie drzewa, stawianie, klik przycisku,
+   otwarcie Księgi, powiadomienie (najwyżej raz na 1.5 s), kocioł (bąbel, gotowa mikstura), zamówienie, chowaniec.
+3. Opcje → Dźwięk: tło i efekty (0-100%), „Cisza, gdy okno nieaktywne”. Brak dźwięku: sprawdź, czy kamera ma AudioListener
+   (gra dokłada go sama) i czy w Project Settings → Audio nie jest wyłączony dźwięk.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

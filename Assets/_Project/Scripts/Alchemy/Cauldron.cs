@@ -57,6 +57,7 @@ namespace Wyspa.Alchemy
                     ready = true;
                     IslandFx.FindPopped(transform.position + new Vector3(0f, 1f, 0f));
                     GameEvents.RaiseToast("toast.potion.ready", Loc.Get("potion." + brewing));
+                    GameEvents.PlaySound("magic");
                 }
             }
             Animate();
@@ -94,6 +95,7 @@ namespace Wyspa.Alchemy
             left = r.brewSeconds;
             ready = false;
             IslandFx.FindPopped(transform.position + new Vector3(0f, 0.8f, 0f));
+            GameEvents.PlaySound("bubble");
             GameEvents.RaiseToast("toast.potion.brewing", Loc.Get(r.NameKey), Mathf.CeilToInt(r.brewSeconds / 60f));
         }
 

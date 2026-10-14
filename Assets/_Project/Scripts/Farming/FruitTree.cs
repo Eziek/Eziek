@@ -441,6 +441,7 @@ namespace Wyspa.Farming
             for (int hit = 0; hit < 3; hit++)
             {
                 IslandFx.LeafBurst(basePos + new Vector3(0f, 1.4f, 0f), 2, order);
+                GameEvents.PlaySound("chop");
                 for (float t = 0f; t < 0.22f; t += Time.unscaledDeltaTime)
                 {
                     float k = Mathf.Sin(t * 70f) * (1f - t / 0.22f);

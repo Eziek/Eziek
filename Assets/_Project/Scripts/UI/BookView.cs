@@ -100,6 +100,7 @@ namespace Wyspa.UI
 
         public void Open(Tab tab)
         {
+            GameEvents.PlaySound("book");
             // mały kadr (start 144x112) nie mieści Księgi: okno na chwilę rośnie (tylko w buildzie)
             if (ViewController.Instance != null)
                 ViewController.Instance.RequireWindow(new Vector2Int(
@@ -990,7 +991,7 @@ namespace Wyspa.UI
 
         // ------------------------------------------------------------------ Opcje
 
-        int optionsSection;   // 0 ogólne, 1 okno, 2 system (GDD §12.7)
+        int optionsSection;   // 0 ogólne, 1 okno, 2 system, 3 dźwięk (GDD §12.7)
         float resetArmedUntil = -1f;
         const float OptCol = 124f, OptRow = 19f;
         static readonly int[] IdleSteps = { 15, 30, 60, 120, 300, 600 };
@@ -998,7 +999,7 @@ namespace Wyspa.UI
         void BuildOptions()
         {
             float x = 0;
-            foreach (var (section, key) in new[] { (0, "ui.options.general"), (1, "ui.options.window"), (2, "ui.options.system") })
+            foreach (var (section, key) in new[] { (0, "ui.options.general"), (1, "ui.options.window"), (3, "ui.options.sound"), (2, "ui.options.system") })
             {
                 int sec = section;
                 var b = Ui.Btn(content, "Section", () => { optionsSection = sec; Show(Tab.Options); });
@@ -1012,7 +1013,27 @@ namespace Wyspa.UI
             float y = 20;
             if (optionsSection == 1) BuildWindowOptions(y);
             else if (optionsSection == 2) BuildSystemOptions(y);
+            else if (optionsSection == 3) BuildSoundOptions(y);
             else BuildGeneralOptions(y);
+        }
+
+        /// <summary>Dźwięk (Etap 6c): głośność tła i efektów co 10%, cisza, gdy okno nie jest aktywne.</summary>
+        void BuildSoundOptions(float y)
+        {
+            OptLabel("ui.options.vol_ambient", y);
+            Stepper(OptCol, y, $"{Mathf.RoundToInt(Audio.AudioManager.AmbientVolume * 100)}%", 30f, d =>
+                Audio.AudioManager.AmbientVolume = Mathf.Round(Audio.AudioManager.AmbientVolume * 10f + d) / 10f);
+            y += OptRow;
+            OptLabel("ui.options.vol_sfx", y);
+            Stepper(OptCol, y, $"{Mathf.RoundToInt(Audio.AudioManager.SfxVolume * 100)}%", 30f, d =>
+            {
+                Audio.AudioManager.SfxVolume = Mathf.Round(Audio.AudioManager.SfxVolume * 10f + d) / 10f;
+                GameEvents.PlaySound("coin");   // próbka głośności
+            });
+            y += OptRow;
+            OptLabel("ui.options.mute_bg", y);
+            Toggle(OptCol, y, Audio.AudioManager.MuteInBackground, true, v => Audio.AudioManager.MuteInBackground = v);
+            info.text = Loc.Get("ui.options.sound_hint");
         }
 
         void BuildGeneralOptions(float y)

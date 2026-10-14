@@ -299,6 +299,7 @@ namespace Wyspa.UI
             pending.TryGetValue(type, out int p);
             pending[type] = Mathf.Max(0, p - share);
             bumpUntil[target] = Time.unscaledTime + 0.12f;   // licznik podskakuje o piksel
+            GameEvents.PlaySound("coin", 0.6f);
             flying--;
             refresh = 0f;
             yield return new WaitForSecondsRealtime(0.13f);

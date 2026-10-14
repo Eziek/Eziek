@@ -168,6 +168,7 @@ namespace Wyspa.Orders
                     break;
             }
             GameEvents.RaiseToast("toast.order.done", Loc.Get("npc." + o.requester), RewardText(o));
+            GameEvents.PlaySound("magic");
             Lore.Chronicle.Count("order");
             if (board != null && board.TryGetComponent(out UI.NoticeBoard nb))
                 nb.TearNote();
