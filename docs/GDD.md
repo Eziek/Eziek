@@ -676,6 +676,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     cyklu dnia i nocy (`GameClock.SaveOffsetSeconds`, pole `clockOffset` w zapisie): nowa gra, reset i wypłynięcie z Przystani
     ustawiają je tak, żeby była 07:00 (ok. 37 min dnia przed pierwszą nocą). Potem czas płynie normalnie, także offline.
     Starsze zapisy mają przesunięcie 0 (bez zmian), menu główne też.
+83. **Darmowa pierwsza budowla zawsze dostaje miejsce** (zgłoszenie gracza: „Wierny ognik” na nowej wyspie 2x2 nie dał
+    ognika, bo nie było wolnego kafelka). Pierwsza sztuka z ulepszenia albo daru (skrzynia, gniazdo z ognikiem, runa): gdy
+    wyspa nie ma wolnego kafelka, mgła odsłania obok darmowy kafelek trawy (bez znaleziska, nie podnosi ceny kolejnych).
+    Zapis, w którym ognik przepadł, dostaje gniazdo przy następnym wczytaniu.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

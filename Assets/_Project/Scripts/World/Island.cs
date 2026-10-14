@@ -1376,7 +1376,9 @@ namespace Wyspa.World
         }
 
         /// <summary>Pierwsza (darmowa) sztuka po zakupie ulepszenia: na wolnym kafelku najbliżej startu.</summary>
-        public TileObject SpawnBuildingNear(string kind)
+        /// <param name="expand">Pierwsza, darmowa sztuka (z ulepszenia albo daru mgły): gdy nie ma wolnego kafelka, mgła
+        /// odsłania obok darmowy kafelek trawy, żeby budowla nie przepadła (np. „Wierny ognik” na pełnej wyspie 2x2).</param>
+        public TileObject SpawnBuildingNear(string kind, bool expand = false)
         {
             if (kind == Automation.AutomationSystem.Merchant)
             {
@@ -1388,12 +1390,42 @@ namespace Wyspa.World
                 }
                 return SpawnMerchant(crate);
             }
-            if (!NearestFree(out var tile))
+            if (!NearestFree(out var tile) && !(expand && ClaimFreeTile(out tile)))
             {
                 GameEvents.RaiseToast("toast.no_space", Localization.Loc.Get(Automation.AutomationSystem.NameKey(kind)));
                 return null;
             }
             return SpawnBuilding(kind, tile);
+        }
+
+        /// <summary>
+        /// Darmowy kafelek trawy przy lądzie, najbliżej środka wyspy (nie na wodzie pomostu). Bez znaleziska i dekoracji,
+        /// bez podnoszenia ceny kolejnych kafelków. False = nie ma gdzie (koniec świata).
+        /// </summary>
+        bool ClaimFreeTile(out TilePos tile)
+        {
+            tile = default;
+            if (!Ready)
+                return false;
+            var candidates = map.Candidates();
+            candidates.RemoveAll(SeaBlocked);
+            float bestD = float.MaxValue;
+            foreach (var p in candidates)
+            {
+                float d = (p.c - 15.5f) * (p.c - 15.5f) + (p.r - 15.5f) * (p.r - 15.5f);
+                if (d < bestD)
+                {
+                    bestD = d;
+                    tile = p;
+                }
+            }
+            if (bestD == float.MaxValue || !map.AddFree(tile))
+                return false;
+            Rebuild();
+            IslandFx.TileClaimed(TileCenter(tile), art != null ? art.foam : null);
+            GameEvents.PlaySound("tile");
+            Changed?.Invoke();
+            return IsFree(tile);
         }
 
         /// <summary>Skrzynia, ognik, duszek-handlarz albo runa na kafelku (sklep, tryb stawiania, zapis).</summary>

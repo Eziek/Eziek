@@ -219,3 +219,9 @@ Najpierw **Wyspa → 2** (motyw UI wczytuje nowe ikony `icon_gift_*`; bez tego d
 2. Opcje → Reset: znów 07:00. Wypłynięcie z Przystani we mgle na nową wyspę: 07:00.
 3. Zapis i wczytanie po kilku minutach: zegar idzie dalej od miejsca zapisu (nie wraca do 07:00), noc przychodzi normalnie.
 4. Stary zapis (sprzed tej zmiany): pora dnia taka jak wcześniej.
+
+## 14. Darmowa budowla na pełnej wyspie
+1. Rejs z darem „Wierny ognik”: na nowej wyspie (2x2, pełna) mgła odsłania 1-2 darmowe kafelki obok, stoją na nich
+   skrzynia i gniazdo z ognikiem-ogrodnikiem. Cena następnego kafelka w rozbudowie taka jak bez tych kafelków.
+2. Stary zapis, w którym „Ognik-ogrodnik” był kupiony, a gniazda nie ma: po wczytaniu gniazdo z ognikiem się pojawia.
+3. Zwykła gra: kup „Ognik-ogrodnik”, gdy wyspa jest pełna: to samo (darmowy kafelek), tylko raz na rodzaj budowli.

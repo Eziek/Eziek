@@ -88,6 +88,16 @@ namespace Wyspa.World
             return Plan != null ? Plan.FindAt(p) : FindKind.None;
         }
 
+        /// <summary>Darmowy kafelek (miejsce dla darmowej budowli): bez znaleziska i bez liczenia do ceny następnych kafelków.</summary>
+        public bool AddFree(TilePos p)
+        {
+            if (!CanBuy(p))
+                return false;
+            tiles[p] = TileKind.Grass;
+            Changed?.Invoke();
+            return true;
+        }
+
         public void SetKind(TilePos p, TileKind kind)
         {
             if (!tiles.ContainsKey(p) || tiles[p] == kind)

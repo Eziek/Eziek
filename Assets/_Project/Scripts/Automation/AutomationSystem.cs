@@ -95,8 +95,9 @@ namespace Wyspa.Automation
         {
             if (!on || granted.Contains(kind))
                 return;
-            if (island.CountBuilding(kind) > 0 || island.SpawnBuildingNear(kind) != null)
-                granted.Add(kind);   // bez wolnego kafelka (toast) spróbuje przy następnym zakupie albo wczytaniu
+            // pierwsza sztuka jest darmowa i zawsze dostaje miejsce (pełna wyspa: darmowy kafelek obok)
+            if (island.CountBuilding(kind) > 0 || island.SpawnBuildingNear(kind, true) != null)
+                granted.Add(kind);   // gdyby nawet to się nie udało (toast): spróbuje przy następnym zakupie albo wczytaniu
         }
 
         /// <summary>Darmowe gniazdo z ognikiem-ogrodnikiem (ulepszenie „Ognik-ogrodnik”; zapisy sprzed roju miały „wisp”).</summary>
@@ -109,9 +110,9 @@ namespace Wyspa.Automation
                 granted.Add(Nest);
                 return;
             }
-            var b = island.SpawnBuildingNear(Nest);
+            var b = island.SpawnBuildingNear(Nest, true);
             if (b == null)
-                return;   // bez wolnego kafelka (toast) spróbuje przy następnym zakupie albo wczytaniu
+                return;   // nie było nawet darmowego kafelka (toast): spróbuje przy następnym zakupie albo wczytaniu
             granted.Add(Nest);
             if (b.TryGetComponent(out WispNest nest))
                 nest.AddWisp(WispKind.Gardener);
