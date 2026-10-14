@@ -17,6 +17,13 @@ namespace Wyspa.World
         public bool sway;
         [Tooltip("Klucz lokalizacji nazwy (deco.*).")]
         public string nameKey;
+        [Tooltip("Piksele emisyjne (świece, palenisko, tablica runiczna).")]
+        public Sprite glowSprite;
+        [Tooltip("Zabytek: nieusuwalny, klik pokazuje fragment lore (§13.8).")]
+        public bool landmark;
+        public string loreKey;
+        [Tooltip("Dodatkowa nagroda to fragment lore zamiast waluty (nagrobek).")]
+        public bool bonusLore;
 
         [Header("Usuwanie (GDD §14)")]
         public bool removable = true;
@@ -49,6 +56,13 @@ namespace Wyspa.World
         [Header("Lampy (sklep, tryb stawiania)")]
         public List<LampDefinition> lamps = new List<LampDefinition>();
         public Sprite[] dust;
+
+        [Header("Życie stref (Etap 5a): wrona, żaba, bąble")]
+        public Sprite[] crow;
+        public Sprite[] crowGlow;
+        public Sprite[] frog;
+        public Sprite[] frogGlow;
+        public Sprite[] bubbles;
 
         [Header("Morze (Etap 4)")]
         public Sprite pier;

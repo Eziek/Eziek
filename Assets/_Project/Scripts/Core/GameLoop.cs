@@ -210,7 +210,7 @@ namespace Wyspa.Core
                 playerActive = activity.IsActive,
                 night = night,
                 lit = Illumination.IsLit(p, night),
-                multiplier = night ? Illumination.GrowthMultiplier(p) : 1f,
+                multiplier = (night ? Illumination.GrowthMultiplier(p) : 1f) * (island != null ? island.ZoneBonus(plot) : 1f),
                 fullMoon = clock.IsFullMoon,
             };
         }

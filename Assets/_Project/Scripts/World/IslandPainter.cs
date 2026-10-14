@@ -38,7 +38,8 @@ namespace Wyspa.World
         // paleta mroczna (GDD §5.3)
         static readonly byte[] O = Hex("0f0a10"), G1 = Hex("21342c"), G2 = Hex("344a3b"), E0 = Hex("20171c"),
             E1 = Hex("352629"), E2 = Hex("523b35"), P0 = Hex("1c1520"), P1 = Hex("33263a"),
-            B0 = Hex("121c27"), B1 = Hex("1f3044"), B2 = Hex("30485f"), FO = Hex("848e9b");
+            B0 = Hex("121c27"), B1 = Hex("1f3044"), B2 = Hex("30485f"), FO = Hex("848e9b"),
+            G0 = Hex("141f1c"), B3 = Hex("56697a");
         static readonly byte[][] Cliff = { G1, E2, E2, E2, E1, E1, P1, P1, P0 };
         static readonly int[] Bayer = { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5 };
 
@@ -211,13 +212,13 @@ namespace Wyspa.World
                     int i = R.I(x, y);
                     if (outline[i]) Put(island, x, y, O);
                     else if (cliffCol[i] != null && !land[i]) Put(island, x, y, cliffCol[i]);
-                    else if (land[i]) Put(island, x, y, Land(x, y + 1) ? G2 : G1);
+                    else if (land[i]) Put(island, x, y, Land(x, y + 1) ? Surface(map, x, y) : G1);
                 }
             for (int y = R.y; y < R.y + R.h; y++)
                 for (int x = R.x; x < R.x + R.w; x++)
                 {
-                    if (!Land(x, y) || WHash.Value(x, y, seed * 17 + 3) >= 1.0 / 60.0)
-                        continue;
+                    if (!Land(x, y) || WHash.Value(x, y, seed * 17 + 3) >= 1.0 / 60.0 || ZoneOfPixel(map, x, y) != ZoneKind.None)
+                        continue;   // kępki trawy tylko poza strefami
                     var pts = new[] { (x, y), (x + 1, y - 1), (x + 2, y), (x + 3, y - 1), (x + 4, y) };
                     bool ok = true;
                     foreach (var (px, py) in pts)
@@ -234,6 +235,88 @@ namespace Wyspa.World
             PlaceFish(pic, dist, seed);
             PlaceBeast(pic, dist);
             return pic;
+        }
+
+        // ------------------------------------------------------------ podłoża stref (port sprites4.py: ground)
+
+        /// <summary>Strefa pod pikselem; granice rozmyte szumem, żeby nie było widać kwadratów kafelków (§13.8).</summary>
+        static ZoneKind ZoneOfPixel(IslandMap map, int x, int y)
+        {
+            if (map.Plan == null || map.Plan.zones.Count == 0)
+                return ZoneKind.None;
+            double jx = (VNoise(x, y, 4, 21) - 0.5) * 9, jy = (VNoise(x, y, 4, 22) - 0.5) * 9;
+            var t = PixelTile(x + jx, y + jy);
+            if (!map.Owns(t))
+                t = PixelTile(x, y);
+            return map.Owns(t) ? map.Plan.ZoneAt(t) : ZoneKind.None;
+        }
+
+        static TilePos PixelTile(double x, double y) =>
+            new TilePos((int)Math.Floor((x - Margin) / Tile), (int)Math.Floor((y - Margin) / Tile));
+
+        static byte[] Surface(IslandMap map, int x, int y)
+        {
+            switch (ZoneOfPixel(map, x, y))
+            {
+                case ZoneKind.Cemetery:
+                {
+                    double n = VNoise(x, y, 7, 1);
+                    var k = n > 0.68 ? E1 : (n < 0.25 ? G0 : G1);
+                    double r = H(x, y, 2);
+                    if (r > 0.985) k = P1;                        // kamyki
+                    else if (r > 0.978 && k == E1) k = B3;        // kosteczki
+                    return k;
+                }
+                case ZoneKind.Swamp:
+                {
+                    double n = VNoise(x, y, 6, 3);
+                    if (n > 0.66)
+                    {
+                        if (n < 0.69) return E0;                  // brzeg błota
+                        return VNoise(x, y, 3, 4) < 0.7 ? B1 : B2; // kałuże
+                    }
+                    if (H(x, y, 5) > 0.97) return E1;
+                    return n > 0.35 ? G1 : G0;
+                }
+                case ZoneKind.Ruins:
+                {
+                    int row = y / 6;
+                    int off = row % 2 == 1 ? 3 : 0;
+                    int bx = (x + off) / 7, ex = (x + off) % 7, ey = y % 6;
+                    if (VNoise(x, y, 8, 7) > 0.72)
+                        return H(x, y, 8) > 0.3 ? G1 : G2;         // mech na płytach
+                    if (ex == 0 || ey == 0)
+                        return P0;                                 // fugi
+                    var k = H(bx, row, 9) < 0.5 ? B1 : P1;
+                    if (ex == 1 && ey == 1) k = B3;
+                    if (H(x, y, 10) > 0.97) k = P0;                // pęknięcia
+                    return k;
+                }
+                default:
+                    return G2;
+            }
+        }
+
+        /// <summary>Hash 0..1 jak h() w sprites4.py (stały dla miejsca w świecie).</summary>
+        static double H(int x, int y, int s)
+        {
+            unchecked
+            {
+                uint n = (uint)(x * 374761393 + y * 668265263 + s * 1442695041);
+                n = (n ^ (n >> 13)) * 1274126177u;
+                return (n ^ (n >> 16)) / 4294967295.0;
+            }
+        }
+
+        static double VNoise(double x, double y, int cell, int s)
+        {
+            double gx = x / cell, gy = y / cell;
+            int x0 = (int)Math.Floor(gx), y0 = (int)Math.Floor(gy);
+            double fx = gx - x0, fy = gy - y0;
+            fx = fx * fx * (3 - 2 * fx);
+            fy = fy * fy * (3 - 2 * fy);
+            double a = H(x0, y0, s), b = H(x0 + 1, y0, s), c = H(x0, y0 + 1, s), d = H(x0 + 1, y0 + 1, s);
+            return (a * (1 - fx) + b * fx) * (1 - fy) + (c * (1 - fx) + d * fx) * fy;
         }
 
         // ------------------------------------------------------------ ryby i potwór (jak water.py, w pobliżu wyspy)

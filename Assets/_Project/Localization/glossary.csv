@@ -86,3 +86,28 @@ term.fertilizer,Nawóz,Fertilizer,Dünger,肥料,肥料,+1 jakości
 bld.nets,Sieci rybackie,Fishing Nets,Fischernetze,漁網,渔网,przy pomoście
 term.fish,Ryba,Fish,Fisch,魚,鱼,
 term.glowing_fish,Świecąca ryba,Glowing fish,Leuchtfisch,光る魚,发光鱼,tylko w nocy
+deco.gravestone,Nagrobek,Gravestone,Grabstein,墓石,墓碑,dekoracja strefy
+deco.gravestone_broken,Rozbity nagrobek,Broken gravestone,Zerbrochener Grabstein,壊れた墓石,破碎的墓碑,dekoracja strefy
+deco.wooden_cross,Drewniany krzyż,Wooden cross,Holzkreuz,木の十字架,木十字架,dekoracja strefy
+deco.obelisk,Obelisk,Obelisk,Obelisk,オベリスク,方尖碑,dekoracja strefy
+deco.open_grave,Otwarty grób,Open grave,Offenes Grab,開いた墓,敞开的坟墓,dekoracja strefy
+deco.crypt,Krypta,Crypt,Gruft,納骨堂,地穴,dekoracja strefy
+deco.skull_pile,Stos czaszek,Pile of skulls,Schädelhaufen,髑髏の山,头骨堆,dekoracja strefy
+deco.candles,Świece,Candles,Kerzen,蝋燭,蜡烛,dekoracja strefy
+deco.iron_gate,Żelazna brama,Iron gate,Eisentor,鉄の門,铁门,dekoracja strefy
+deco.thorns,Ciernie,Thorns,Dornen,茨,荆棘,dekoracja strefy
+deco.mangrove,Namorzyn,Mangrove,Mangrove,マングローブ,红树,dekoracja strefy
+deco.lily_pads,Lilie wodne,Lily pads,Seerosen,睡蓮,睡莲,dekoracja strefy
+deco.rotten_log,Spróchniała kłoda,Rotten log,Morscher Stamm,朽ちた丸太,腐木,dekoracja strefy
+deco.cattails,Pałka wodna,Cattails,Rohrkolben,ガマ,香蒲,dekoracja strefy
+deco.reeds,Trzciny,Reeds,Schilf,葦,芦苇,dekoracja strefy
+deco.swamp_pool,Bajoro,Bog pool,Moortümpel,沼の水たまり,沼泽水坑,dekoracja strefy
+deco.broken_wall,Zburzony mur,Broken wall,Eingestürzte Mauer,崩れた壁,断墙,dekoracja strefy
+deco.fallen_column,Przewrócona kolumna,Fallen column,Umgestürzte Säule,倒れた柱,倒塌的石柱,dekoracja strefy
+deco.statue,Posąg,Statue,Statue,石像,雕像,dekoracja strefy
+deco.stone_stairs,Kamienne schody,Stone stairs,Steintreppe,石段,石阶,dekoracja strefy
+deco.brazier,Palenisko,Brazier,Kohlenbecken,火鉢,火盆,dekoracja strefy
+deco.rune_tablet,Tablica runiczna,Rune tablet,Runentafel,ルーン石板,符文石板,dekoracja strefy
+deco.vine_pillar,Filar w pnączach,Vine-covered pillar,Rankensäule,蔦の柱,藤蔓石柱,dekoracja strefy
+deco.broken_pillar,Złamany filar,Broken pillar,Gebrochene Säule,折れた柱,断柱,dekoracja strefy
+deco.ruined_arch,Ruina łuku,Ruined arch,Verfallener Bogen,崩れたアーチ,残破的拱门,dekoracja strefy

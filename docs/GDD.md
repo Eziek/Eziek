@@ -269,6 +269,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Mutacje: które pary roślin dają które hybrydy. Na razie jedna para: dynia + upiorna dynia = dynia-upiór (dane w `CropDefinition.parentA/B`).
 - [x] Nasiona spoza sklepu (hybrydy, kupiec-widmo, wyprawy) trafiają do **worka nasion**; koło nasion najpierw bierze z worka.
 - [x] Nawóz (+1 jakości) na razie tylko od kupca-widma i z wypraw, zużywany automatycznie przy sadzeniu. Kompostownik później.
+- [x] Bonus ruin: na razie brak (ruiny mają miejsce na ołtarz, Etap 5b/5c).
 - [x] Budowle morskie kosztują monety + drewno: pomost 300 + 10, sieci 150 + 5, łódź 600 + 15 (do balansu).
 - [ ] Tabela łupów wypraw łodzią.
 - [ ] Treść lore (historia wyspy, mgły, potwora).
@@ -378,6 +379,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     pełnia z prawdziwej fazy księżyca; 4b kupiec-widmo (raz na noc 21-3, 10 min, nasiona, nawóz, hybryda, skup skrzyni 150%);
     4c pomost (woda przy brzegu, ląd z boku), łowienie ryb z shadera wody (te same obliczenia na CPU), sieci; 4d łódź
     i wyprawy na 2 albo 4 h aktywnej pracy z losowym łupem. Sklep w Księdze ma podzakładki Lampy i Morze.
+31. Etap 4 przetestowany (poprawka: panel kupca mierzy teksty po pokazaniu i łamie długie przyciski; bez przedrostka „Nasiona:”).
+    **Etap 5** w częściach: 5a strefy, 5b nocne zdarzenia, potwór i latarnia morska, 5c Księga rytuałów, cykl księżyca,
+    bestiariusz i lore. 5a: podłoża stref w malarzu wyspy (port `sprites4.py`), dekoracje stref na 55% kafelków strefy,
+    zabytki w środku strefy (krypta, posąg + kamienne schody; na bagnie namorzyn), toast „Odkryto: …”, bonus ziemi
+    (cmentarz: rośliny nocy x1.5, bagno: trupi grzyb x1.5), wrony, żaby i bąble jako tło.
 
 ---
 
@@ -558,7 +564,9 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
   wynurzanie lądu. Pasma światła Bayera (§4.4) później.
 - **Etap 4 (gotowy, do testu w Unity):** jakość i mutacje (dynia-upiór), pełnia (rośliny nocy x2, krwawa róża),
   worek nasion i nawóz, kupiec-widmo, pomost i łowienie, sieci, łódź i wyprawy. Grafiki roślin nocy były gotowe wcześniej.
-- **Etap 5:** strefy, latarnia morska, Księga rytuałów i cykle księżyca, bestiariusz, lore, potwór.
+- **Etap 5a (gotowy, do testu w Unity):** strefy: podłoża, dekoracje, zabytki z lore, bonusy ziemi, stworzenia tła.
+- **Etap 5b:** nocne zdarzenia (błędne ogniki, spadająca gwiazda), potwór i ołtarz, latarnia morska.
+- **Etap 5c:** Księga rytuałów i cykl księżyca, bestiariusz, kolekcja lore.
 - **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
 
 ---
@@ -714,6 +722,7 @@ masek, a mgła to shader czytający mapę odległości od brzegu (`Fog.shader`, 
 - Zapis: lista kafelków z typami + ziarno.
 
 ### 13.8 Strefy: wygląd
+**Stan (Etap 5a):** zrobione jak niżej; podłoże liczy `IslandPainter.Surface`, dekoracje i stworzenia `Island` (pule stref).
 Podgląd: `docs/img/wyspa_strefy.png` (wyspa z trzema strefami), `docs/img/arkusz_strefy.png`.
 - **Podłoża są proceduralne**, z hasha pozycji w świecie, więc kafelki łączą się bez szwów:
   - cmentarz: ciemna trawa, płaty ziemi, kamyki, kosteczki;

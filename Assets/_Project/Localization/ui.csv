@@ -107,3 +107,4 @@ ui.boat.unload,Rozładuj,Unload,Entladen,荷下ろし,卸货,
 ui.loot.title,Łup z wyprawy,Expedition loot,Beute der Fahrt,遠征の戦利品,远航战利品,
 ui.loot.seeds,{1} x{0},{1} x{0},{1} x{0},{1} x{0},{1} x{0},
 ui.loot.fertilizer,Nawóz x{0},Fertilizer x{0},Dünger x{0},肥料 x{0},肥料 x{0},
+ui.plot.zone_bonus,Ziemia strefy: rośnie 1.5x szybciej,Zone soil: grows 1.5x faster,"Zonenboden: wächst 1,5x schneller",ゾーンの土：1.5倍の速さで育つ,区域土壤：生长速度x1.5,"cmentarz: rośliny nocy, bagno: trupi grzyb"

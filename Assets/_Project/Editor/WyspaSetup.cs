@@ -292,6 +292,62 @@ namespace Wyspa.EditorTools
                 new DecoArt { kind = DecoKind.Rubble, sprite = R("rubble"), nameKey = "deco.rubble",
                     essenceCost = 2, reward = CurrencyType.Stone, rewardAmount = 1, anim = RemoveAnim.Poof, chips = stone },
             };
+            // --- Etap 5a: dekoracje stref (§13.8, §14.3). Zabytki (krypta, posąg, schody) są nieusuwalne i opowiadają lore.
+            Sprite Z(string n) => LoadSprite("Zones/" + n);
+            Sprite Zg(string n) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Zones/{n}_glow.png");
+            DecoArt Zone(DecoKind kind, string sprite, string nameKey, int essence, CurrencyType reward, int amount, bool stoneChips,
+                         bool sway = false, float loreChance = 0f, DecoKind? remains = null, bool glow = false)
+            {
+                return new DecoArt
+                {
+                    kind = kind, sprite = Z(sprite), glowSprite = glow ? Zg(sprite) : null, sway = sway, nameKey = nameKey,
+                    essenceCost = essence, reward = reward, rewardAmount = amount,
+                    bonusLore = loreChance > 0f, bonusChance = loreChance,
+                    anim = remains.HasValue && kind <= DecoKind.Gravestone2 ? RemoveAnim.Crack : RemoveAnim.Poof,
+                    frames = remains.HasValue && kind <= DecoKind.Gravestone2 ? new[] { R("gravestone_broken") } : null,
+                    chips = stoneChips ? stone : wood, hasRemains = remains.HasValue, remains = remains ?? DecoKind.Rubble,
+                };
+            }
+            DecoArt Landmark(DecoKind kind, string sprite, string nameKey, string lore) =>
+                new DecoArt { kind = kind, sprite = Z(sprite), nameKey = nameKey, removable = false, landmark = true, loreKey = lore };
+            var S = CurrencyType.Stone; var Wd = CurrencyType.Wood; var C = CurrencyType.Coins;
+            art.decorations.AddRange(new[]
+            {
+                Zone(DecoKind.Gravestone0, "gravestone_0", "deco.gravestone", 3, S, 2, true, false, 0.1f, DecoKind.GravestoneBroken),
+                Zone(DecoKind.Gravestone1, "gravestone_1", "deco.gravestone", 3, S, 2, true, false, 0.1f, DecoKind.GravestoneBroken),
+                Zone(DecoKind.Gravestone2, "gravestone_2", "deco.gravestone", 3, S, 2, true, false, 0.1f, DecoKind.GravestoneBroken),
+                new DecoArt { kind = DecoKind.GravestoneBroken, sprite = R("gravestone_broken"), nameKey = "deco.gravestone_broken",
+                              essenceCost = 1, reward = S, rewardAmount = 1, anim = RemoveAnim.Poof, chips = stone },
+                Zone(DecoKind.WoodenCross, "Cemetery/cemetery_wooden_cross", "deco.wooden_cross", 1, Wd, 1, false),
+                Zone(DecoKind.Obelisk, "Cemetery/cemetery_obelisk", "deco.obelisk", 4, S, 3, true),
+                Zone(DecoKind.OpenGrave, "Cemetery/cemetery_open_grave", "deco.open_grave", 2, S, 1, true, false, 0.15f),
+                Landmark(DecoKind.Crypt, "Cemetery/cemetery_crypt", "deco.crypt", "lore.crypt"),
+                Zone(DecoKind.SkullPile, "Cemetery/cemetery_skull_pile", "deco.skull_pile", 2, S, 1, true, false, 0.2f),
+                Zone(DecoKind.Candles, "Cemetery/cemetery_candles", "deco.candles", 1, C, 3, false, glow: true),
+                Zone(DecoKind.IronGate, "Cemetery/cemetery_iron_gate", "deco.iron_gate", 3, S, 2, true),
+                Zone(DecoKind.Thorns, "Cemetery/cemetery_thorns", "deco.thorns", 1, Wd, 1, false, true),
+                Zone(DecoKind.Mangrove, "Swamp/swamp_mangrove", "deco.mangrove", 5, Wd, 3, false, true, 0f, DecoKind.StumpDead),
+                Zone(DecoKind.LilyPads, "Swamp/swamp_lily_pads", "deco.lily_pads", 1, C, 4, false, glow: true),
+                Zone(DecoKind.RottenLog, "Swamp/swamp_rotten_log", "deco.rotten_log", 2, Wd, 2, false, glow: true),
+                Zone(DecoKind.Cattails, "Swamp/swamp_cattails", "deco.cattails", 1, Wd, 1, false, true),
+                Zone(DecoKind.Reeds, "reeds", "deco.reeds", 1, Wd, 1, false, true),
+                Zone(DecoKind.SwampPool, "swamp_pool", "deco.swamp_pool", 3, S, 1, true),
+                Zone(DecoKind.BrokenWall, "Ruins/ruins_broken_wall", "deco.broken_wall", 4, S, 3, true),
+                Zone(DecoKind.FallenColumn, "Ruins/ruins_fallen_column", "deco.fallen_column", 4, S, 3, true),
+                Landmark(DecoKind.Statue, "Ruins/ruins_statue", "deco.statue", "lore.statue"),
+                Landmark(DecoKind.StoneStairs, "Ruins/ruins_stone_stairs", "deco.stone_stairs", "lore.stairs"),
+                Zone(DecoKind.RuinsRubble, "Ruins/ruins_rubble", "deco.rubble", 2, S, 1, true),
+                Zone(DecoKind.Brazier, "Ruins/ruins_brazier", "deco.brazier", 2, S, 2, true, glow: true),
+                Zone(DecoKind.RuneTablet, "Ruins/ruins_rune_tablet", "deco.rune_tablet", 3, S, 2, true, false, 0.3f, null, true),
+                Zone(DecoKind.VinePillar, "Ruins/ruins_vine_pillar", "deco.vine_pillar", 3, S, 2, true),
+                Zone(DecoKind.BrokenPillar, "broken_pillar", "deco.broken_pillar", 3, S, 2, true),
+                Zone(DecoKind.RuinedArch, "ruined_arch", "deco.ruined_arch", 4, S, 3, true),
+            });
+            art.crow = new[] { Z("Cemetery/cemetery_crow_0"), Z("Cemetery/cemetery_crow_1") };
+            art.crowGlow = new[] { Zg("Cemetery/cemetery_crow_0"), Zg("Cemetery/cemetery_crow_1") };
+            art.frog = new[] { Z("Swamp/swamp_frog_0"), Z("Swamp/swamp_frog_1") };
+            art.frogGlow = new[] { Zg("Swamp/swamp_frog_0"), Zg("Swamp/swamp_frog_1") };
+            art.bubbles = new[] { Z("Swamp/swamp_bog_bubbles_0"), Z("Swamp/swamp_bog_bubbles_1"), Z("Swamp/swamp_bog_bubbles_2") };
             art.dust = new[] { R("fx_dust_0"), R("fx_dust_1"), R("fx_dust_2") };
             art.pier = LoadSprite("Sea/pier");
             art.netBuoy = LoadSprite("Sea/net_buoy");

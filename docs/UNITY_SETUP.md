@@ -179,6 +179,18 @@ Przydatne w F1: **x60**, **23:30**, **Wymuś pełnię**, **Mutacje zawsze**, **P
 7. **Łódź:** Sklep → Morze → Łódź. Klik w łódź: krótka (2 h pracy) albo długa (4 h) wyprawa. Liczy się tylko aktywna praca
    (F1: x60 i „Wymuś aktywność”). Po powrocie klik → **Rozładuj**: panel z łupem.
 
+## 4g. Etap 5a: strefy (test)
+Po pobraniu zmian: **Wyspa → 3**, potem Play. Strefy leżą 6-12 kafelków od startu, w trzech różnych kierunkach.
+Najszybciej: F1 → **+10 kafelków** kilka razy (albo cheat monet i rozbudowa w jedną stronę).
+1. **Podłoża:** cmentarz (ciemna trawa, płaty ziemi, kamyki, kosteczki), bagno (kałuże, błoto), ruiny (płyty z fugami, mech).
+   Granice są rozmyte, bez widocznych kwadratów. Pierwszy kafelek strefy daje toast „Odkryto: …”.
+2. **Dekoracje stref:** nagrobki, krzyże, świece, ciernie / namorzyny, pałki, kłody, lilie / mury, kolumny, palenisko, tablice.
+   Świecące (świece, palenisko, tablica, kłoda, lilie) widać w nocy. Klik: „Usuń” jak w 3c (kamień albo drewno,
+   nagrobek pęka i zostaje rozbity nagrobek, czasem fragment lore).
+3. **Zabytki:** w środku cmentarza krypta, w środku ruin posąg i kamienne schody. Klik: fragment historii, bez „Usuń”.
+4. **Bonusy:** grządka przekopana na cmentarzu - rośliny nocy rosną 1.5x szybciej; na bagnie trupi grzyb 1.5x (dymek nad grządką).
+5. **Życie stref:** wrona na cmentarzu, żaba i bąble na bagnie (skokowe klatki, losowe przerwy).
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

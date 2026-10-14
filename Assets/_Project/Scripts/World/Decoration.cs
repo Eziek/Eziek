@@ -39,7 +39,7 @@ namespace Wyspa.World
 
         public void OnClick()
         {
-            if (!removing && art != null && art.removable)
+            if (!removing && art != null && (art.removable || art.landmark))
                 GameEvents.RequestContext(this);
         }
 
@@ -47,6 +47,13 @@ namespace Wyspa.World
         {
             info.title = Loc.Get(NameKey);
             info.worldAnchor = transform.position + new Vector3(0f, 1.25f, 0f);
+            if (art != null && art.landmark)
+            {
+                // zabytek: nie da się usunąć, za to opowiada kawałek historii wyspy
+                if (!string.IsNullOrEmpty(art.loreKey))
+                    info.lines.Add(Loc.Get(art.loreKey));
+                return;
+            }
             if (art == null || !art.removable)
                 return;
             info.lines.Add(Loc.Get("ui.deco.cost", art.essenceCost));

@@ -249,6 +249,8 @@ namespace Wyspa.UI
                 state = Loc.Get("ui.plot.need_fullmoon", name);   // krwawa róża poza pełnią
             int pct = Mathf.FloorToInt(100f * s.growth / Mathf.Max(1f, s.crop.growSeconds));
             string moon = s.crop.kind == CropKind.Night && ctx.fullMoon ? "\n" + Loc.Get("ui.plot.fullmoon") : "";
+            if (game.Island != null && game.Island.ZoneBonus(plot) > 1f)
+                moon += "\n" + Loc.Get("ui.plot.zone_bonus");
             return state + "\n" + Loc.Get("ui.plot.progress", pct) + quality + moon;
         }
     }

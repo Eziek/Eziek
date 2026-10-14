@@ -25,6 +25,7 @@ namespace Wyspa.World
         public List<ObjectSave> objects = new List<ObjectSave>();
         // Etap 4: morze
         public Sea.ExpeditionSave expedition;
+        public List<int> zonesFound = new List<int>();   // Etap 5a: odkryte strefy (toast tylko raz)
         public bool pier;
         public int pierC, pierR;
         public bool nets;
@@ -59,6 +60,9 @@ namespace Wyspa.World
         bool claiming;
         Sea.Pier pier;
         GameObject nets;
+        readonly HashSet<ZoneKind> zonesFound = new HashSet<ZoneKind>();
+        readonly List<GameObject> critters = new List<GameObject>();
+        const float ZoneDecoChance = 0.55f;
         Sea.Expedition boat;
         readonly Dictionary<TilePos, TileObject> occupied = new Dictionary<TilePos, TileObject>();
         readonly Dictionary<string, TilePos> savedObjectTiles = new Dictionary<string, TilePos>();
@@ -231,6 +235,10 @@ namespace Wyspa.World
                     savedObjectTiles[o.id] = new TilePos(o.c, o.r);
             Rebuild();
             SyncPlots();
+            if (save.zonesFound != null)
+                foreach (var z in save.zonesFound)
+                    zonesFound.Add((ZoneKind)z);
+            RefreshCritters();
             if (save.pier)
             {
                 BuildPier(new TilePos(save.pierC, save.pierR));
@@ -263,6 +271,8 @@ namespace Wyspa.World
                 s.nets = nets != null;
             }
             s.boat = boat != null;
+            foreach (var z in zonesFound)
+                s.zonesFound.Add((int)z);
             if (boat != null)
                 s.expedition = boat.Snapshot();
             foreach (var kv in map.Tiles)
@@ -294,6 +304,10 @@ namespace Wyspa.World
             nets = null;
             if (boat != null) { boat.gameObject.SetActive(false); Destroy(boat.gameObject); }
             boat = null;
+            zonesFound.Clear();
+            foreach (var c in critters)
+                if (c != null) Destroy(c);
+            critters.Clear();
             lampCounter = 0;
             claiming = false;
             StopAllCoroutines();
@@ -355,11 +369,135 @@ namespace Wyspa.World
             }
             Rebuild();
             claiming = false;
-            if (WHash.Value(p.c, p.r, map.Seed + 911) < NewTileDecoChance)
+            var zone = ZoneAt(p);
+            if (zone != ZoneKind.None)
+            {
+                if (zonesFound.Add(zone))
+                    GameEvents.RaiseToast("toast.zone.found", Localization.Loc.Get(ZoneKey(zone)));
+                var landmark = Landmark(p, zone);
+                if (landmark.HasValue)
+                    AddDecoration(p, landmark.Value);
+                else if (WHash.Value(p.c, p.r, map.Seed + 913) < ZoneDecoChance)
+                    AddDecoration(p, ZoneDeco(p, zone));
+                RefreshCritters();
+            }
+            else if (WHash.Value(p.c, p.r, map.Seed + 911) < NewTileDecoChance)
                 AddDecoration(p, NewTileDeco(p));
             PlacePending();
             GrantFind(p, find, wallet);
             Changed?.Invoke();
+        }
+
+        // ================================================================ strefy (Etap 5a, §13.8)
+
+        public ZoneKind ZoneAt(TilePos p) => map.Owns(p) && map.Plan != null ? map.Plan.ZoneAt(p) : ZoneKind.None;
+
+        public static string ZoneKey(ZoneKind z) =>
+            z == ZoneKind.Cemetery ? "zone.graveyard" : z == ZoneKind.Swamp ? "zone.swamp" : z == ZoneKind.Ruins ? "zone.ruins" : "";
+
+        /// <summary>Bonus podłoża dla grządki (§11.3 A): cmentarz - rośliny nocy x1.5, bagno - trupi grzyb x1.5.</summary>
+        public float ZoneBonus(FarmPlot plot)
+        {
+            if (plot == null || plot.State.crop == null)
+                return 1f;
+            var zone = ZoneAt(new TilePos(plot.Cell.x, plot.Cell.y));
+            var crop = plot.State.crop;
+            if (zone == ZoneKind.Cemetery && crop.kind == CropKind.Night) return 1.5f;
+            if (zone == ZoneKind.Swamp && crop.id == "corpseshroom") return 1.5f;
+            return 1f;
+        }
+
+        /// <summary>Zabytki stoją w środku strefy (krypta, posąg); kamienne schody obok posągu.</summary>
+        DecoKind? Landmark(TilePos p, ZoneKind zone)
+        {
+            foreach (var zc in map.Plan.zoneCenters)
+            {
+                if (zc.kind != zone)
+                    continue;
+                if (zc.center == p)
+                    return zone == ZoneKind.Cemetery ? DecoKind.Crypt : zone == ZoneKind.Ruins ? DecoKind.Statue : DecoKind.Mangrove;
+                if (zone == ZoneKind.Ruins && p.r == zc.center.r + 1 && p.c == zc.center.c)
+                    return DecoKind.StoneStairs;
+            }
+            return null;
+        }
+
+        static readonly (DecoKind kind, int weight)[] CemeteryPool =
+        {
+            (DecoKind.Gravestone0, 12), (DecoKind.Gravestone1, 10), (DecoKind.Gravestone2, 8), (DecoKind.WoodenCross, 12),
+            (DecoKind.Obelisk, 6), (DecoKind.OpenGrave, 8), (DecoKind.SkullPile, 8), (DecoKind.Candles, 10),
+            (DecoKind.IronGate, 5), (DecoKind.Thorns, 10), (DecoKind.DeadTree, 9),
+        };
+        static readonly (DecoKind kind, int weight)[] SwampPool =
+        {
+            (DecoKind.Mangrove, 12), (DecoKind.LilyPads, 12), (DecoKind.RottenLog, 14), (DecoKind.Cattails, 18),
+            (DecoKind.Reeds, 16), (DecoKind.SwampPool, 12), (DecoKind.DeadTree, 8),
+        };
+        static readonly (DecoKind kind, int weight)[] RuinsPool =
+        {
+            (DecoKind.BrokenWall, 14), (DecoKind.FallenColumn, 14), (DecoKind.RuinsRubble, 16), (DecoKind.Brazier, 8),
+            (DecoKind.RuneTablet, 8), (DecoKind.VinePillar, 14), (DecoKind.BrokenPillar, 12), (DecoKind.RuinedArch, 8),
+        };
+
+        DecoKind ZoneDeco(TilePos p, ZoneKind zone)
+        {
+            var pool = zone == ZoneKind.Cemetery ? CemeteryPool : zone == ZoneKind.Swamp ? SwampPool : RuinsPool;
+            int total = 0;
+            foreach (var e in pool) total += e.weight;
+            double v = WHash.Value(p.c, p.r, map.Seed + 914) * total;
+            foreach (var e in pool)
+            {
+                if (v < e.weight) return e.kind;
+                v -= e.weight;
+            }
+            return pool[0].kind;
+        }
+
+        /// <summary>Stworzenia tła (nie postacie): wrona na cmentarzu, żaba i bąble na bagnie. Ok. 1 na 6 kafelków strefy.</summary>
+        void RefreshCritters()
+        {
+            foreach (var c in critters)
+                if (c != null) Destroy(c);
+            critters.Clear();
+            if (art == null || map.Plan == null)
+                return;
+            var cemetery = new List<TilePos>();
+            var swamp = new List<TilePos>();
+            foreach (var p in map.Tiles.Keys)
+            {
+                var z = ZoneAt(p);
+                if (z == ZoneKind.Cemetery) cemetery.Add(p);
+                else if (z == ZoneKind.Swamp && !decorations.ContainsKey(p) && !plots.ContainsKey(p)) swamp.Add(p);
+            }
+            cemetery.Sort((a, b) => WHash.Hash(a.c, a.r, 7).CompareTo(WHash.Hash(b.c, b.r, 7)));
+            swamp.Sort((a, b) => WHash.Hash(a.c, a.r, 8).CompareTo(WHash.Hash(b.c, b.r, 8)));
+            for (int i = 0; i < cemetery.Count && i < (cemetery.Count + 5) / 6; i++)
+                SpawnCritter(cemetery[i], art.crow, art.crowGlow, false, 5);
+            int frogs = (swamp.Count + 5) / 6;
+            for (int i = 0; i < swamp.Count && i < frogs * 2; i++)
+            {
+                bool frog = i % 2 == 0;
+                SpawnCritter(swamp[i], frog ? art.frog : art.bubbles, frog ? art.frogGlow : null, !frog, frog ? -3 : 2);
+            }
+        }
+
+        void SpawnCritter(TilePos p, Sprite[] frames, Sprite[] glowFrames, bool loop, int dx)
+        {
+            if (frames == null || frames.Length == 0 || frames[0] == null)
+                return;
+            var at = TileAnchor(p, 11, out int order) + new Vector3(dx / Ppu, 0f, 0f);
+            var sr = NewSprite("Critter", decoRoot, at, order + 3);
+            sr.sprite = frames[0];
+            SpriteRenderer glowSr = null;
+            if (glowFrames != null && glowFrames.Length > 0 && glowFrames[0] != null)
+            {
+                glowSr = NewSprite("Glow", sr.transform, at, order + 4);
+                glowSr.sprite = glowFrames[0];
+                if (art.glow != null)
+                    glowSr.sharedMaterial = art.glow;
+            }
+            sr.gameObject.AddComponent<Visual.ZoneCritter>().Setup(sr, glowSr, frames, glowFrames, loop, WHash.Hash(p.c, p.r, 9));
+            critters.Add(sr.gameObject);
         }
 
         /// <summary>Dekoracja nowego kafelka: drzewa i krzaki częściej, martwe drzewo rzadko.</summary>
@@ -509,6 +647,13 @@ namespace Wyspa.World
                 UseFx(sr, art.swayTree);
                 sr.gameObject.AddComponent<SpriteFx>().Setup(0.05f, sr);
             }
+            if (a != null && a.glowSprite != null)
+            {
+                var g = NewSprite("Glow", sr.transform, sr.transform.position, order + 1);
+                g.sprite = a.glowSprite;
+                if (art.glow != null)
+                    g.sharedMaterial = art.glow;
+            }
             AddTileCollider(sr.gameObject);
             var deco = sr.gameObject.AddComponent<Decoration>();
             deco.Init(this, p, kind, a, sr);
@@ -541,7 +686,9 @@ namespace Wyspa.World
             var a = d.Art;
             game.Wallet.Add(a.reward, a.rewardAmount);
             GameEvents.RaiseCurrencyGained(at, a.reward, a.rewardAmount);
-            if (a.bonusAmount > 0 && UnityEngine.Random.value < a.bonusChance)
+            if (a.bonusLore && UnityEngine.Random.value < a.bonusChance)
+                GameEvents.RaiseToast("toast.find.lore", Localization.Loc.Get("lore." + UnityEngine.Random.Range(1, 7)));
+            else if (a.bonusAmount > 0 && UnityEngine.Random.value < a.bonusChance)
             {
                 game.Wallet.Add(a.bonus, a.bonusAmount);
                 GameEvents.RaiseCurrencyGained(at, a.bonus, a.bonusAmount);
