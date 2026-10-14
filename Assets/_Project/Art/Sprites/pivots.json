@@ -1995,6 +1995,46 @@
       "y": 0.5
     },
     {
+      "name": "wisp_alchemist_0",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_alchemist_0_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_alchemist_1",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_alchemist_1_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_alchemist_2",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_alchemist_2_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_alchemist_3",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_alchemist_3_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
       "name": "wisp_gardener_0",
       "x": 0.53125,
       "y": 0.0
@@ -2031,6 +2071,186 @@
     },
     {
       "name": "wisp_gardener_3_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gatherer_0",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gatherer_0_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gatherer_1",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gatherer_1_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gatherer_2",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gatherer_2_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gatherer_3",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_gatherer_3_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_lamplighter_0",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_lamplighter_0_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_lamplighter_1",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_lamplighter_1_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_lamplighter_2",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_lamplighter_2_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_lamplighter_3",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_lamplighter_3_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_nest_0",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
+      "name": "wisp_nest_0_glow",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
+      "name": "wisp_nest_1",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
+      "name": "wisp_nest_1_glow",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
+      "name": "wisp_sower_0",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_sower_0_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_sower_1",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_sower_1_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_sower_2",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_sower_2_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_sower_3",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_sower_3_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_woodcutter_0",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_woodcutter_0_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_woodcutter_1",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_woodcutter_1_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_woodcutter_2",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_woodcutter_2_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_woodcutter_3",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "wisp_woodcutter_3_glow",
       "x": 0.53125,
       "y": 0.0
     }

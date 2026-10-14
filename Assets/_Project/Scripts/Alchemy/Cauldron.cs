@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Wyspa.Automation;
 using Wyspa.Core;
 using Wyspa.Localization;
 using Wyspa.Visual;
@@ -16,6 +17,15 @@ namespace Wyspa.Alchemy
         SpriteRenderer body, glow;
         Sprite idle;
         Sprite[] brewFrames, brewGlow, readyFrames, readyGlow;
+
+        public static readonly List<Cauldron> All = new List<Cauldron>();
+
+        /// <summary>Przepis, który ognik-alchemik warzy sam (null = nic); zapis w obiekcie.</summary>
+        public string AutoRecipe { get; set; }
+        public bool Idle => brewing == null;
+
+        void OnEnable() => All.Add(this);
+        void OnDisable() => All.Remove(this);
 
         string brewing;      // id przepisu w kotle
         float left;          // sekundy do końca warzenia
@@ -91,6 +101,18 @@ namespace Wyspa.Alchemy
             if (game == null || brewing != null || !Potions.CanBrew(r, game.Crops))
                 return;
             Potions.TakeIngredients(r, game.Crops);
+            BeginBrew(r);
+        }
+
+        /// <summary>Ognik-alchemik przyniósł składniki (już zabrane ze skrzyń): warzenie od razu.</summary>
+        public void StartByWisp(Recipe r)
+        {
+            if (r != null && brewing == null)
+                BeginBrew(r);
+        }
+
+        void BeginBrew(Recipe r)
+        {
             brewing = r.id;
             left = r.brewSeconds;
             ready = false;
@@ -99,7 +121,10 @@ namespace Wyspa.Alchemy
             GameEvents.RaiseToast("toast.potion.brewing", Loc.Get(r.NameKey), Mathf.CeilToInt(r.brewSeconds / 60f));
         }
 
-        void Drink()
+        /// <summary>Gotowa mikstura (id) albo null.</summary>
+        public string ReadyRecipe => ready ? brewing : null;
+
+        public void Drink()
         {
             var r = Recipe.Find(brewing);
             if (r == null || !ready)
@@ -123,8 +148,28 @@ namespace Wyspa.Alchemy
             return string.Join(", ", parts);
         }
 
+        /// <summary>Następny znany przepis dla alchemika (po ostatnim: nic).</summary>
+        void CycleAuto()
+        {
+            var game = GameLoop.Instance;
+            var known = new List<Recipe>();
+            foreach (var r in Recipe.All)
+                if (Known(r, game)) known.Add(r);
+            int i = known.FindIndex(r => r.id == AutoRecipe);
+            AutoRecipe = i + 1 < known.Count ? known[i + 1].id : null;
+            StartCoroutine(ReopenPanel());
+        }
+
+        System.Collections.IEnumerator ReopenPanel()
+        {
+            yield return null;   // przycisk zamyka panel; otwieramy go od nowa z nowym wyborem
+            var obj = GetComponent<World.TileObject>();
+            if (obj != null)
+                GameEvents.RequestContext(obj);
+        }
+
         /// <summary>Przepis widać, gdy wszystkie konkretne rośliny z niego są odblokowane w sklepie nasion.</summary>
-        static bool Known(Recipe r, GameLoop game)
+        public static bool Known(Recipe r, GameLoop game)
         {
             if (game == null || game.Crops == null)
                 return true;
@@ -160,6 +205,13 @@ namespace Wyspa.Alchemy
                 float sec = Potions.SecondsLeft(id);
                 info.lines.Add(sec < 0f ? Loc.Get("ui.cauldron.active_until_use", Loc.Get("potion." + id))
                                         : Loc.Get("ui.cauldron.active", Loc.Get("potion." + id), FormatTime(sec)));
+            }
+            // ognik-alchemik z gniazda w pobliżu warzy sam wybraną miksturę (i pije ją, gdy przestaje działać)
+            if (Wisp.AnyOfKind(WispKind.Alchemist))
+            {
+                var auto = Recipe.Find(AutoRecipe);
+                info.Button(Loc.Get("ui.cauldron.auto", auto != null ? Loc.Get(auto.NameKey) : Loc.Get("ui.cauldron.auto_none")),
+                            CycleAuto);
             }
             if (brewing != null)
             {

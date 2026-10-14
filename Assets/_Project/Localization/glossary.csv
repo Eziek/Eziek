@@ -121,7 +121,7 @@ term.new_moon,Nów,New moon,Neumond,新月,新月,koniec cyklu księżycowego
 term.bestiary,Bestiariusz,Bestiary,Bestiarium,図鑑,图鉴,kolekcja odkryć i lore
 term.lore,Zapiski,Lore,Überlieferung,伝承,传说,fragmenty opowieści wyspy
 term.mini_mode,Mini-tryb,Mini mode,Minimodus,ミニモード,迷你模式,małe okno w rogu ekranu
-bld.seed_rune,Runa siewu,Sowing Rune,Saatrune,種まきのルーン,播种符文,sadzi na 3x3 wokół
+bld.seed_rune,Runa dziczy,Wild Rune,Wildrune,野生のルーン,荒野符文,wokół wyrastają dzikie drzewa i kamienie (dawniej runa siewu)
 bld.merchant_spirit,Duszek-handlarz,Merchant Spirit,Händlergeist,商いの精霊,商贩精灵,sprzedaje ze skrzyń
 crop.garlic,Czosnek,Garlic,Knoblauch,ニンニク,大蒜,dzień
 crop.poppy,Mak,Poppy,Mohn,ケシ,罂粟,dzień
@@ -157,3 +157,22 @@ familiar.cat,Czarny kot,Black Cat,Schwarze Katze,黒猫,黑猫,chowaniec
 familiar.raven,Kruk,Raven,Rabe,ワタリガラス,渡鸦,chowaniec
 familiar.toad,Ropucha,Toad,Kröte,ヒキガエル,蟾蜍,chowaniec
 familiar.bat,Nietoperz,Bat,Fledermaus,コウモリ,蝙蝠,chowaniec
+bld.wisp_nest,Gniazdo ogników,Wisp Nest,Irrlichtnest,鬼火の巣,鬼火巢,rój ogników: dom dla 3 ogników
+wisp.kind.gardener,Ogrodnik,Gardener,Gärtner,庭師,园丁,zawód ognika: zbiera plony i owoce
+wisp.kind.sower,Siewca,Sower,Säer,種まき,播种者,zawód ognika: sieje
+wisp.kind.woodcutter,Drwal,Woodcutter,Holzfäller,きこり,樵夫,zawód ognika: rozbiera dzicz na drewno i kamień
+wisp.kind.alchemist,Alchemik,Alchemist,Alchemist,錬金術師,炼金师,zawód ognika: warzy w kotle
+wisp.kind.lamplighter,Latarnik,Lamplighter,Laternenanzünder,点灯夫,点灯人,zawód ognika: dolewa lampom nocą
+wisp.kind.gatherer,Zbieracz,Gatherer,Sammler,拾い屋,采集者,"zawód ognika: gwiazdy, owoce, błyskotki"
+wisp.name.0,Iskra,Spark,Funke,ヒバナ,火花,imię ognika
+wisp.name.1,Płomyk,Flicker,Flacker,ユラギ,摇光,imię ognika
+wisp.name.2,Żarek,Ember,Glut,オキビ,余烬,imię ognika
+wisp.name.3,Świecik,Glimmer,Schimmer,キラリ,微光,imię ognika
+wisp.name.4,Blask,Gleam,Glanz,ヒカリ,闪辉,imię ognika
+wisp.name.5,Jarka,Glow,Glimm,ホノカ,明明,imię ognika
+wisp.name.6,Migotka,Twinkle,Funkel,チラリ,闪闪,imię ognika
+wisp.name.7,Lśnik,Shine,Schein,テラス,照照,imię ognika
+wisp.name.8,Żagiew,Torch,Fackel,タイマツ,火把,imię ognika
+wisp.name.9,Pyłek,Mote,Stäubchen,チリ,尘尘,imię ognika
+wisp.name.10,Tlenik,Smoulder,Glimmi,クスブリ,闷烧,imię ognika
+wisp.name.11,Zorza,Aurora,Aurora,オーロラ,极光,imię ognika

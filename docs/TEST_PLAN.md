@@ -1,11 +1,11 @@
-# Pockland: test całościowy (po Etapie 6d i dodatkach)
+# Pockland: test całościowy (po Etapie 6d, dodatkach i roju ogników)
 
 Jeden scenariusz zamiast sekcji 4s–4zb z `UNITY_SETUP.md`. Około 30–45 minut. Przy każdym punkcie: **OK** albo krótki opis,
 co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera HUD debugowy.
 
 ## 0. Przygotowanie
 1. Pobierz gałąź, otwórz projekt, poczekaj na import (dźwięki `.ogg`, nowe sprite'y).
-2. **Wyspa → 2** (dane: rośliny, ulepszenia, motyw UI, grafiki kotła, chowańców, tablicy). Potem **Wyspa → 3** nie jest potrzebne.
+2. **Wyspa → 2** (dane: rośliny, ulepszenia, motyw UI, grafiki kotła, chowańców, tablicy, gniazda i ogników). Potem **Wyspa → 3** nie jest potrzebne.
 3. Window → General → Console: wyczyść, w trakcie testu patrz na czerwone błędy.
 
 ## 1. Menu główne i zapisy
@@ -31,11 +31,27 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
 
 ## 4. Gospodarka i budowle
 1. Ceny: pierwsze kafelki tanie (5. ok. 81 monet), marchew rośnie ok. 3 min.
-2. F1 → „+500 monet” kilka razy, kup ognika (Księga → Ulepszenia): dostajesz ognika i skrzynię.
+2. F1 → „+500 monet” kilka razy, kup ognika (Księga → Ulepszenia): dostajesz gniazdo ogników z ogrodnikiem i skrzynię.
 3. Drzewo owocowe (Sklep → Drzewa), F1 → dojrzałe drzewa: ognik leci, dwa razy uderza w koronę, owoce spadają i zbiera je z ziemi.
 4. Duszek-handlarz (Księga → Ulepszenia / Sklep → Budowle → klik w skrzynię): unosi się obok skrzyni, sprzedaje przy 20/20.
 5. Kocioł (Sklep → Budowle): składniki ze skrzyń, „Wywar wzrostu” warzy się (ogień, bąble), potem „Wypij”; panel pokazuje działanie.
 6. Sklep: długie opisy kończą się „...” przed przyciskiem, dymek pokazuje całość.
+
+## 4a. Rój ogników
+1. Klik w gniazdo: lista ogników (imię, zawód, poziom, doświadczenie) i przyciski „Przywołaj” z ceną. Przywołaj drwala
+   i zbieracza (F1 → monety, plony nocy). Każdy zawód ma inny kolor płomienia, trzy ogniki unoszą się nad pniem.
+2. Bez pracy: ogniki krążą wokół gniazda i lamp, odpoczywają nad pniem, w locie zostawiają smugę iskier.
+3. Drwal: leci do dzikiego drzewa / kamienia w polu 7x7, kilka razy uderza (dźwięk, liście), rzecz znika, ognik niesie
+   ikonkę drewna/kamienia do gniazda, licznik drewna/kamienia w pasku rośnie. Po drzewie zostaje pień (drwal go potem też zabierze).
+4. Ulepszenie „Ognik-siewca”: runa dziczy staje sama; klik w runę pokazuje odliczanie. Po 6 min gry:
+   obok runy wyrasta drzewo, krzak albo kamień (z błyskiem). Przywołaj siewcę, w gnieździe „Siewca sieje: ...” otwiera koło nasion.
+5. Kocioł + alchemik: w panelu kotła przycisk „Ognik-alchemik warzy: ...” przełącza przepis; ognik leci do skrzyni, potem do kotła
+   i warzy; gotową miksturę wypija sam.
+6. Noc: latarnik krąży od lampy do lampy (błysk nad lampą). Zbieracz zbiera spadłą gwiazdę (F1 → „Gwiazda”).
+7. F1 → „Ogniki: +50 doświadczenia”: toast o awansie, ognik trochę większy i jaśniejszy, w gnieździe nowy poziom.
+8. Stary zapis z ognikiem: po wczytaniu w miejscu ognika stoi gniazdo z ogrodnikiem. Zapis i wczytanie zachowują ogniki
+   (imiona, poziomy), tryb siewcy i przepis alchemika.
+9. Przeniesienie gniazda: ogniki wracają do nowego miejsca; rozbiórka: ogniki znikają, niesione plony trafiają do skrzyni.
 
 ## 5. Zamówienia i chowańce
 1. Przy karteczce „gotowe” zaczynają przychodzić zamówienia (toast „Nowa karteczka na tablicy”); po ok. 20 s karteczka

@@ -20,7 +20,7 @@ namespace Wyspa.UI
         GameObject blocker;
         TooltipView tooltip;
         FarmPlot plot;
-        SeedRune picker;
+        Automation.ISeedChooser picker;
         readonly List<(Button b, System.Func<bool> affordable)> buttons = new List<(Button, System.Func<bool>)>();
 
         public bool IsOpen => blocker != null && blocker.activeSelf;
@@ -93,16 +93,16 @@ namespace Wyspa.UI
             Build(target.transform.position, slots);
         }
 
-        /// <summary>Wybór nasion dla runy siewu (Etap 6b): pamięć ziemi, odblokowane rośliny, hybrydy z worka, nic.</summary>
-        public void OpenPicker(SeedRune rune)
+        /// <summary>Wybór nasion dla ognika-siewcy (gniazdo): pamięć ziemi, odblokowane rośliny, hybrydy z worka, nic.</summary>
+        public void OpenPicker(Automation.ISeedChooser rune)
         {
             var game = GameLoop.Instance;
             if (game == null || game.Crops == null || rune == null)
                 return;
             var slots = new List<Slot>
             {
-                new Slot { icon = "ritual", selected = rune.Seed == SeedRune.Memory, tip = () => Loc.Get("ui.rune.memory_tip"),
-                           pick = () => rune.Seed = SeedRune.Memory },
+                new Slot { icon = "ritual", selected = rune.Seed == Automation.WispNest.Memory, tip = () => Loc.Get("ui.rune.memory_tip"),
+                           pick = () => rune.Seed = Automation.WispNest.Memory },
             };
             foreach (var cd in game.Crops.crops)
             {
@@ -112,12 +112,12 @@ namespace Wyspa.UI
                 slots.Add(new Slot { icon = c.SeedIcon, count = game.Seeds.Count(c.id), selected = rune.Seed == c.id,
                                      tip = () => Describe(c), pick = () => rune.Seed = c.id });
             }
-            slots.Add(new Slot { icon = "lock", selected = rune.Seed == SeedRune.Off, tip = () => Loc.Get("ui.rune.off_tip"),
-                                 pick = () => rune.Seed = SeedRune.Off });
+            slots.Add(new Slot { icon = "lock", selected = rune.Seed == Automation.WispNest.Off, tip = () => Loc.Get("ui.rune.off_tip"),
+                                 pick = () => rune.Seed = Automation.WispNest.Off });
             plot = null;
             picker = rune;
             reopen = () => OpenPicker(rune);
-            Build(rune.transform.position, slots);
+            Build(rune.PickerAnchor, slots);
         }
 
         class Slot

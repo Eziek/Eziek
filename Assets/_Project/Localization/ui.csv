@@ -181,7 +181,7 @@ ui.shop.owned,Masz: {0},Owned: {0},Besitz: {0},所持：{0},拥有：{0},
 ui.shop.crate.desc,20 plonów,20 crops,20 Ernten,作物20個,20份作物,
 ui.shop.wisp.desc,Zbiera z pól 5x5,Harvests a 5x5 area,Erntet 5x5,5x5を収穫,收获5x5,
 ui.shop.merchant.desc,"Stoi przy skrzyni, sprzedaje pełną","Waits by a crate, sells it when full","Wartet an einer Kiste, verkauft sie voll",箱のそばで待ち、満杯で売る,守在箱旁，满了就卖,"sklep: kliknij skrzynię, przy której stanie"
-ui.shop.rune.desc,Sieje na 3x3,Sows a 3x3 area,Sät 3x3,3x3に種まき,播种3x3,
+ui.shop.rune.desc,Wokół rośnie dzicz,Grows wilds around it,Lässt Wildnis wachsen,周りに自然が育つ,周围生长荒野,
 act.dismantle_confirm,Na pewno rozebrać?,Really dismantle?,Wirklich abbauen?,本当に解体する？,确定拆除？,drugi klik
 ui.fill.lose,{0} przepadnie,{0} will be lost,{0} geht verloren,{0}は失われる,{0}将会丢失,{0} = roślina
 ui.options.quit_button,Wyjdź,Quit,Beenden,終了,退出,
@@ -255,3 +255,15 @@ ui.options.notify,Powiadomienia Windows,Windows notifications,Windows-Benachrich
 ui.hud.to_night,{0}  noc za {1},{0}  night in {1},{0}  Nacht in {1},{0}  夜まで {1},{0}  距夜晚 {1},"pasek HUD: {0} = godzina gry, {1} = mm:ss do nocy"
 ui.hud.to_day,{0}  świt za {1},{0}  dawn in {1},{0}  Morgen in {1},{0}  夜明けまで {1},{0}  距黎明 {1},"pasek HUD: {0} = godzina gry, {1} = mm:ss do świtu"
 ui.menu.unreadable,Zapis nieczytelny,Unreadable save,Spielstand unlesbar,読めないセーブ,存档无法读取,slot z uszkodzonym plikiem
+ui.nest.range,Ogniki pracują w polu {0}x{0} wokół gniazda,Wisps work in the {0}x{0} area around the nest,Irrlichter arbeiten im Bereich {0}x{0} um das Nest,巣の周囲{0}x{0}で働く,鬼火在巢周围{0}x{0}范围内工作,{0} = bok pola
+ui.nest.wisp,"{0} ({1}), poz. {2}: {3}/{4} dośw.","{0} ({1}), lv. {2}: {3}/{4} XP","{0} ({1}), Stufe {2}: {3}/{4} EP",{0}（{1}）Lv.{2}：{3}/{4} EXP,{0}（{1}）{2}级：{3}/{4} 经验,"{0} imię, {1} zawód, {2} poziom, {3}/{4} doświadczenie"
+ui.nest.wisp_max,"{0} ({1}), poz. {2} (najwyższy)","{0} ({1}), lv. {2} (max)","{0} ({1}), Stufe {2} (max.)",{0}（{1}）Lv.{2}（最大）,{0}（{1}）{2}级（满级）,
+ui.nest.sower,Siewca sieje: {0},Sower plants: {0},Säer sät: {0},種まき：{0},播种者种植：{0},"przycisk, otwiera koło nasion"
+ui.nest.full,Gniazdo pełne ({0} {0:plural:ognik|ogniki|ogników}),Nest full ({0} {0:plural:wisp|wisps}),Nest voll ({0} {0:plural:Irrlicht|Irrlichter}),巣は満員（{0}体）,巢已满（{0}只）,
+ui.nest.summon,Przywołaj: {0} ({1}),Summon: {0} ({1}),Rufen: {0} ({1}),呼ぶ：{0}（{1}）,召唤：{0}（{1}）,"{0} zawód, {1} koszt"
+ui.cauldron.auto,Ognik-alchemik warzy: {0},Alchemist wisp brews: {0},Alchemie-Irrlicht braut: {0},錬金術師の鬼火：{0},炼金鬼火酿造：{0},przycisk przełącza przepis
+ui.cauldron.auto_none,nic,nothing,nichts,なし,无,
+ui.rune.wild,"Wokół runy wyrastają dzikie drzewa, krzaki i kamienie","Wild trees, bushes and stones grow around the rune","Um die Rune wachsen wilde Bäume, Büsche und Steine",ルーンの周りに木や茂み、岩が生える,符文周围会长出野树、灌木和石头,
+ui.rune.next,Coś wyrośnie za {0},Something grows in {0},Nächstes Wachstum in {0},あと{0}で何かが生える,{0}后长出新东西,{0} = m:ss
+ui.rune.full,Wokół runy nie ma wolnego miejsca,No free space around the rune,Kein freier Platz um die Rune,ルーンの周りに空きがない,符文周围没有空地,
+ui.shop.nest.desc,"Dom 3 ogników, pole 7x7","Home for 3 wisps, 7x7 area","Heim für 3 Irrlichter, 7x7",鬼火3体の巣、7x7,3只鬼火的巢，7x7,

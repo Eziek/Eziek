@@ -9,14 +9,17 @@ using Wyspa.World;
 namespace Wyspa.Automation
 {
     /// <summary>
-    /// Automatyka (GDD §11.3 E, Etap 6b): budowle w wielu egzemplarzach - skrzynie, ogniki-ogrodnicy, duszki-handlarze, runy siewu.
+    /// Automatyka (GDD §11.3 E, Etap 6b, rój ogników): budowle w wielu egzemplarzach - skrzynie, gniazda ogników, duszki-handlarze,
+    /// runy dziczy, kotły.
     /// Ulepszenie z drzewka odblokowuje rodzaj budowli i daje pierwszą sztukę za darmo; kolejne kupuje się w Sklep → Budowle
     /// (cena rośnie z każdą sztuką). Ulepszenia dalej skracają odstępy pracy wszystkich ogników i duszków.
     /// </summary>
     public class AutomationSystem : MonoBehaviour
     {
-        public const string Crate = "crate", Wisp = "wisp", Merchant = "merchant", Rune = "rune", Cauldron = "cauldron";
-        public static readonly string[] Kinds = { Crate, Wisp, Merchant, Rune, Cauldron };
+        public const string Crate = "crate", Nest = "nest", Merchant = "merchant", Rune = "rune", Cauldron = "cauldron";
+        /// <summary>Zapisy sprzed roju: ognik-ogrodnik na własnym kafelku (wczytanie zamienia go na gniazdo z ognikiem).</summary>
+        public const string Wisp = "wisp";
+        public static readonly string[] Kinds = { Crate, Nest, Merchant, Rune, Cauldron };
 
         /// <summary>Rodzaje, których darmowa pierwsza sztuka już była (w zapisie, żeby po przeniesieniu/usunięciu nie wracała).</summary>
         readonly HashSet<string> granted = new HashSet<string>();
@@ -26,7 +29,7 @@ namespace Wyspa.Automation
             switch (kind)
             {
                 case Crate: return "bld.harvest_crate";
-                case Wisp: return "bld.wisp_gardener";
+                case Nest: return "bld.wisp_nest";
                 case Merchant: return "bld.merchant_spirit";
                 case Rune: return "bld.seed_rune";
                 case Cauldron: return "bld.cauldron";
@@ -54,7 +57,7 @@ namespace Wyspa.Automation
             switch (kind)
             {
                 case Crate: coins = 60; extra = new CurrencyAmount(CurrencyType.Wood, 4); break;
-                case Wisp: coins = 250; extra = new CurrencyAmount(CurrencyType.NightHarvest, 5); break;
+                case Nest: coins = 150; extra = new CurrencyAmount(CurrencyType.Wood, 6); break;
                 case Merchant: coins = 500; extra = new CurrencyAmount(CurrencyType.Stone, 8); break;
                 case Cauldron: coins = 300; extra = new CurrencyAmount(CurrencyType.Stone, 6); break;
                 default: coins = 150; extra = new CurrencyAmount(CurrencyType.Stone, 5); break;
@@ -81,7 +84,7 @@ namespace Wyspa.Automation
                 return;
             bool wisp = upgrades.Has(UpgradeIds.WispGardener), merchant = upgrades.Has(UpgradeIds.MerchantChest);
             Grant(island, Crate, wisp || merchant);
-            Grant(island, Wisp, wisp);
+            GrantNest(island, wisp);
             Grant(island, Merchant, merchant);
             Grant(island, Rune, upgrades.Has(UpgradeIds.SoilMemory));
         }
@@ -94,22 +97,32 @@ namespace Wyspa.Automation
                 granted.Add(kind);   // bez wolnego kafelka (toast) spróbuje przy następnym zakupie albo wczytaniu
         }
 
-        /// <summary>Tick automatyki: ogniki wylatują na kursy, duszki sprzedają, runy sieją. harvested: zbiory do AfterHarvest (na razie puste - ogniki zgłaszają same).</summary>
+        /// <summary>Darmowe gniazdo z ognikiem-ogrodnikiem (ulepszenie „Ognik-ogrodnik”; zapisy sprzed roju miały „wisp”).</summary>
+        void GrantNest(Island island, bool on)
+        {
+            if (!on || granted.Contains(Nest))
+                return;
+            if (granted.Contains(Wisp) || island.CountBuilding(Nest) > 0)
+            {
+                granted.Add(Nest);
+                return;
+            }
+            var b = island.SpawnBuildingNear(Nest);
+            if (b == null)
+                return;   // bez wolnego kafelka (toast) spróbuje przy następnym zakupie albo wczytaniu
+            granted.Add(Nest);
+            if (b.TryGetComponent(out WispNest nest))
+                nest.AddWisp(WispKind.Gardener);
+        }
+
+        /// <summary>Tick automatyki: duszki sprzedają, runy dziczy rosną. Ogniki pracują same (Wisp), harvested zostaje puste.</summary>
         public void Tick(float dt, GameLoop game, List<(FarmPlot plot, CropDefinition crop)> harvested)
         {
-            var upgrades = game.Upgrades;
-            if (upgrades.Has(UpgradeIds.WispGardener))
-            {
-                float interval = upgrades.Value(UpgradeIds.WispGardener, 30f);
-                // ogniki zbierają w trakcie lotu (kurs do 3 plonów) i same wołają GameLoop.AfterHarvest
-                for (int i = WispGardener.All.Count - 1; i >= 0; i--)
-                    WispGardener.All[i].Tick(dt, interval);
-            }
             // duszki-handlarze sprzedają swoją skrzynię, gdy tylko się zapełni
             for (int i = MerchantSpirit.All.Count - 1; i >= 0; i--)
                 MerchantSpirit.All[i].Tick(game.Wallet, game.Crops);
-            for (int i = SeedRune.All.Count - 1; i >= 0; i--)
-                SeedRune.All[i].Tick(dt, game);
+            for (int i = WildRune.All.Count - 1; i >= 0; i--)
+                WildRune.All[i].Tick(dt, game);
         }
     }
 }

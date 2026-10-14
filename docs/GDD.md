@@ -388,6 +388,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Lokalizacja w kodzie: **własna warstwa CSV** (`LocCore`/`Loc`) zamiast paczki Unity Localization (§16.4).
 - [ ] Przejście na Unity Localization: później albo wcale (klucze są zgodne, więc migracja jest możliwa).
 - [x] Drewno i kamień jako materiały do budowli (§14.3). Odnawialne drewno i owoce: drzewa do sadzenia, na później (§15).
+- [x] Rój ogników (prośba gracza): **gniazdo na 3 ogniki**, 6 zawodów (ogrodnik, siewca, drwal, alchemik, latarnik,
+  zbieracz), **poziomy** z imionami, krążenie bez pracy. Siewca zastępuje runę siewu, a runa staje się **runą dziczy**
+  (wokół wyrastają drzewa i kamienie). Szczegóły w §11.3 E. Zapis v12 (stary ognik → gniazdo z ogrodnikiem).
 
 ---
 
@@ -554,6 +557,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     „Zapis nieczytelny”), ikona w zasobniku po restarcie Eksploratora, karetka w polu nazwy, przyciski panelu w małym oknie,
     ołtarz i kupiec przy otwartym panelu, deszcz po długiej klatce, owoce drzewa księżyca w zamówieniach.
     Lista testowa: `docs/TEST_PLAN.md`; F1: „+20 min”, „+1 cykl”, „Wszystkie chowańce”, „Zamówienie teraz”.
+58. Rój ogników: gniazdo ogników (3 miejsca, pole 7x7), zawody ogrodnik, siewca, drwal, alchemik, latarnik, zbieracz,
+    poziomy 1-6 z imionami (12 imion w 5 językach), krążenie wokół gniazda i lamp. Runa siewu → runa dziczy (drzewa i kamienie
+    wokół), sianie przejął siewca. Kocioł: przepis dla alchemika. Zapis v12, stare ogniki stają się gniazdami z ogrodnikiem.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -691,13 +697,25 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 **E. Automatyzacja (kamienie milowe, bez niej gra przeszkadza w pracy)**
 **Stan (Etap 6b):** ulepszenie odblokowuje rodzaj budowli i daje pierwszą sztukę za darmo; kolejne w Sklep → Budowle
 (monety x1.6 za każdą posiadaną sztukę + stały materiał). Budowle stawia się i przenosi jak lampy.
-1. **Ognik-ogrodnik** (100 monet od Etapu 6d, wcześniej 300 + 5 plonów nocy): co 30 s wylatuje na kurs: zbiera **do 3** dojrzałych plonów z pól
-   **5x5 wokół siebie** (po kolei najbliższe), niesie je do najbliższej skrzyni z miejscem i wraca. Lot płynny, po łuku. Kolejne: 250 monet + 5 plonów nocy. **Skrzynia na plony** (20 miejsc): 60 monet + 4 drewna.
-   Gdy nie ma dojrzałych plonów, leci do **owocującego drzewa** w zasięgu: dwa razy uderza w koronę, owoce spadają i leżą
-   pod drzewem, ognik zbiera je z ziemi (do 3 na kurs) i niesie do skrzyni (sprzedaż po cenie owocu). Resztę zbierze następnym
-   kursem albo gracz (klik w drzewo). Leżące owoce są w zapisie.
-2. **Runa siewu** (dawna pamięć ziemi, 500 monet): sadzi na pustych grządkach **3x3 wokół siebie** (co 2 s). Klik w runę →
-   „Nasiona”: pamięć ziemi (to samo, co rosło), wybrana roślina albo nic. Nasiono z worka, inaczej za monety. Kolejne: 150 monet + 5 kamienia.
+1. **Rój ogników** (od wersji z rojem, prośba gracza: „więcej ogników, które latają i coś robią”). Ulepszenie
+   **Ognik-ogrodnik** (100 monet) daje **gniazdo ogników** z darmowym ogrodnikiem i skrzynię. Gniazdo (kolejne: 150 monet
+   + 6 drewna) to dom dla **3 ogników**, pracują w polu **7x7** wokół niego (latarnik i zbieracz na całej wyspie).
+   Klik w gniazdo: lista ogników (imię, zawód, poziom, doświadczenie) i przywołanie nowego: 200/250/350 monet x1.5 za
+   każdego ognika tego zawodu + 3 plony nocy. Zawody:
+   - **Ogrodnik:** zbiera dojrzałe plony (kurs do „udźwigu”), niesie do skrzyni; bez plonów strąca owoce z drzew i zbiera je z ziemi.
+   - **Siewca** (wymaga ulepszenia „Ognik-siewca”, dawniej „Runa siewu”): sieje na pustych grządkach; tryb nasion w gnieździe
+     (pamięć ziemi, wybrana roślina, nic). Nasiono z worka, inaczej za monety.
+   - **Drwal:** rozbiera dzikie drzewa, krzaki, kamienie i pnie w zasięgu (bez Esencji, bez zabytków), niesie drewno/kamień do gniazda.
+   - **Alchemik** (wymaga kotła): warzy w kotle przepis wybrany w panelu kotła („Ognik-alchemik warzy”) ze składników ze
+     skrzyń i wypija gotowy, gdy mikstura nie działa albo zaraz się skończy.
+   - **Latarnik:** nocą dolewa Esencji lampom: przez 2 min (+20 s na poziom) lampa pali o połowę mniej.
+   - **Zbieracz:** zbiera spadłe gwiazdy, owoce zostawione pod drzewami, co kilka minut znajduje w trawie kilka monet.
+   **Poziomy 1-6** (doświadczenie za każdą pracę: 10/30/70/150/300): szybszy lot (+8% na poziom), większy udźwig, drwal
+   uderza mniej razy, ognik jest trochę większy i jaśniejszy, awans ogłasza toast. Bez pracy ogniki krążą wokół gniazda
+   i lamp albo odpoczywają nad pniem. Każdy zawód ma inny kolor płomienia. **Skrzynia na plony** (20 miejsc): 60 monet + 4 drewna.
+2. **Runa dziczy** (prośba gracza, zastępuje runę siewu; pierwsza za darmo z „Ognik-siewca”, kolejne 150 monet + 5 kamienia):
+   co 6 min gry na wolnym kafelku trawy wokół runy (3x3 bez środka) wyrasta dzikie drzewo, krzak albo kamień.
+   Z drwalem daje stałe drewno i kamień.
 3. **Duszek-handlarz** (dawna skrzynia kupca, 800 monet): **od Etapu 6d (prośba gracza) stoi przy jednej skrzyni** (bez
    własnego kafelka, unosi się obok niej) i sprzedaje ją po 90% **od razu, gdy się zapełni** (20/20), zamiast raz na godzinę.
    Kupiony w sklepie: klik w skrzynię bez duszka. Przeniesienie skrzyni zabiera duszka, rozbiórka skrzyni też (zwrot połowy).

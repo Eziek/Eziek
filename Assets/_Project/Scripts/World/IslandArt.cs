@@ -8,6 +8,15 @@ namespace Wyspa.World
 {
     public enum RemoveAnim { Poof, Fall, Crack, Cut }
 
+    /// <summary>Klatki ognika danego zawodu (rój ogników).</summary>
+    [Serializable]
+    public class WispKindArt
+    {
+        public Automation.WispKind kind;
+        public Sprite[] frames;
+        public Sprite[] glow;
+    }
+
     [Serializable]
     public class DecoArt
     {
@@ -84,6 +93,10 @@ namespace Wyspa.World
         [Tooltip("sit0, sit1 (dziób w dół), fly0, fly1")]
         public Sprite[] birdCrow;
         public Sprite[] birdFinch;
+
+        [Header("Rój ogników: gniazdo (2 klatki) i ogniki w kolorach zawodów")]
+        public Sprite[] wispNest;
+        public List<WispKindArt> wispKinds = new List<WispKindArt>();
 
         [Header("Chowańce: kot (sit0 sit1 walk0 walk1 sleep), kruk (sit0 sit1 fly0 fly1), ropucha (sit jump), nietoperz (fly0 fly1 hang)")]
         public Sprite[] familiarCat;

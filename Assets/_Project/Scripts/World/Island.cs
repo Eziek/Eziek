@@ -25,6 +25,8 @@ namespace Wyspa.World
         public float growth, fruit;                // v7: wzrost drzewa i odrastanie owoców (sekundy)
         public int fallen;                         // v8: owoce strącone przez ognika, leżące pod drzewem
         public string merchant;                    // v8: id duszka-handlarza przy tej skrzyni
+        public List<Automation.WispSave> wisps;    // v12: ogniki w gnieździe (zawód, doświadczenie, imię)
+        public string brewAuto;                    // v12: kocioł - przepis, który warzy ognik-alchemik
         public string brew;                        // v10: kocioł - przepis w kotle
         public float brewLeft;                     // v10: sekundy do końca warzenia
         public bool brewReady;                     // v10: mikstura gotowa do wypicia
@@ -322,6 +324,13 @@ namespace Wyspa.World
                     SpawnBoard(tile, o.id);
                 else if (o.building == TreeBuilding && IsFree(tile))
                     SpawnTree(Farming.TreeSpecies.Find(o.tree), tile, o.id, o.growth, o.fruit, o.fallen);
+                else if (o.building == Automation.AutomationSystem.Wisp && IsFree(tile))
+                {
+                    // zapis sprzed roju: ognik-ogrodnik stał na własnym kafelku - teraz gniazdo z tym ognikiem
+                    var n = SpawnBuilding(Automation.AutomationSystem.Nest, tile, o.id);
+                    if (n != null && n.TryGetComponent(out Automation.WispNest nest))
+                        nest.AddWisp(Automation.WispKind.Gardener);
+                }
                 else if (LegacyBuilding(o) == Automation.AutomationSystem.Merchant)
                     legacyMerchants.Add((tile, o.id));   // zapis sprzed v8: duszek stał na własnym kafelku
                 else if (LegacyBuilding(o) is string kind && IsFree(tile))
@@ -330,12 +339,16 @@ namespace Wyspa.World
                     var b = SpawnBuilding(kind, tile, o.id);
                     if (b != null && o.crate != null && b.TryGetComponent(out Automation.HarvestCrate crate))
                         crate.Restore(o.crate);
-                    if (b != null && o.seed != null && b.TryGetComponent(out Automation.SeedRune rune))
-                        rune.Seed = o.seed;
+                    if (b != null && b.TryGetComponent(out Automation.WispNest nest))
+                        nest.Restore(o.wisps, o.seed);
                     if (b != null && !string.IsNullOrEmpty(o.merchant))
                         SpawnMerchant(b, o.merchant);
-                    if (b != null && !string.IsNullOrEmpty(o.brew) && b.TryGetComponent(out Alchemy.Cauldron cauldron))
-                        cauldron.Restore(o.brew, o.brewLeft, o.brewReady);
+                    if (b != null && b.TryGetComponent(out Alchemy.Cauldron cauldron))
+                    {
+                        cauldron.AutoRecipe = o.brewAuto;
+                        if (!string.IsNullOrEmpty(o.brew))
+                            cauldron.Restore(o.brew, o.brewLeft, o.brewReady);
+                    }
                 }
             }
             // duszki ze starych zapisów: do skrzyni bez duszka, a gdy takiej nie ma - skrzynia na ich dawnym kafelku
@@ -384,9 +397,14 @@ namespace Wyspa.World
                     if (m != null)
                         os.merchant = m.Id;
                 }
-                if (o.TryGetComponent(out Automation.SeedRune rune))
-                    os.seed = rune.Seed;
-                if (o.TryGetComponent(out Alchemy.Cauldron cauldron) && cauldron.Brewing != null)
+                if (o.TryGetComponent(out Automation.WispNest nest))
+                {
+                    os.wisps = nest.Snapshot();
+                    os.seed = nest.Seed;
+                }
+                if (o.TryGetComponent(out Alchemy.Cauldron cauldron))
+                    os.brewAuto = cauldron.AutoRecipe;
+                if (cauldron != null && cauldron.Brewing != null)
                 {
                     os.brew = cauldron.Brewing;
                     os.brewLeft = cauldron.Left;
@@ -971,6 +989,71 @@ namespace Wyspa.World
             return true;
         }
 
+        // ---------------------------------------------------------------- dzicz: drwal i runy dziczy (rój ogników)
+
+        static readonly HashSet<DecoKind> Wild = new HashSet<DecoKind>
+        {
+            DecoKind.TreeRound, DecoKind.Rock, DecoKind.Bush, DecoKind.DeadTree, DecoKind.Spruce, DecoKind.Stump,
+            DecoKind.StumpSpruce, DecoKind.StumpDead, DecoKind.Rubble, DecoKind.RottenLog, DecoKind.Thorns,
+        };
+
+        /// <summary>Dzikie drzewa, krzaki, kamienie i pnie, które może rozebrać ognik-drwal (bez zabytków i stref).</summary>
+        public IEnumerable<Decoration> WildDecorations()
+        {
+            foreach (var d in decorations.Values)
+                if (d != null && !d.Removing && d.Art != null && d.Art.removable && !d.Art.landmark && Wild.Contains(d.Kind))
+                    yield return d;
+        }
+
+        /// <summary>
+        /// Rozbiórka przez ognika-drwala: bez Esencji, nagroda (drewno / kamień) idzie z ognikiem do gniazda, bonusy od razu.
+        /// Po drzewie zostaje pień, jak przy usuwaniu ręcznym.
+        /// </summary>
+        public bool WispRemove(Decoration d, out CurrencyType reward, out int amount)
+        {
+            reward = CurrencyType.Wood;
+            amount = 0;
+            var game = GameLoop.Instance;
+            if (d == null || d.Removing || d.Art == null || !d.Art.removable || game == null)
+                return false;
+            var a = d.Art;
+            reward = a.reward;
+            amount = a.rewardAmount;
+            if (a.bonusAmount > 0 && !a.bonusLore && UnityEngine.Random.value < a.bonusChance)
+            {
+                var at = d.transform.position + new Vector3(0f, 8f / Ppu, 0f);
+                game.Wallet.Add(a.bonus, a.bonusAmount);
+                GameEvents.RaiseCurrencyGained(at, a.bonus, a.bonusAmount);
+            }
+            GameEvents.PlaySound("chop", 0.6f);
+            d.PlayRemoval(() => FinishRemoval(d));
+            return true;
+        }
+
+        static readonly DecoKind[] WildGrowth = { DecoKind.TreeRound, DecoKind.TreeRound, DecoKind.Spruce, DecoKind.Bush, DecoKind.Rock, DecoKind.Rock };
+
+        /// <summary>Runa dziczy: na wolnym kafelku trawy wokół (bez środka) wyrasta dzikie drzewo, krzak albo kamień.</summary>
+        public bool GrowWild(TilePos center, int radius)
+        {
+            var free = new List<TilePos>();
+            for (int dc = -radius; dc <= radius; dc++)
+                for (int dr = -radius; dr <= radius; dr++)
+                {
+                    var p = new TilePos(center.c + dc, center.r + dr);
+                    if ((dc != 0 || dr != 0) && IsFree(p) && !plots.ContainsKey(p))
+                        free.Add(p);
+                }
+            if (free.Count == 0)
+                return false;
+            var tile = free[UnityEngine.Random.Range(0, free.Count)];
+            AddDecoration(tile, WildGrowth[UnityEngine.Random.Range(0, WildGrowth.Length)]);
+            IslandFx.Grew(TileAnchor(tile, 12, out int order), order);
+            IslandFx.FindPopped(TileCenter(tile));
+            GameEvents.PlaySound("plant", 0.6f);
+            Changed?.Invoke();
+            return true;
+        }
+
         void FinishRemoval(Decoration d)
         {
             if (d == null)
@@ -1286,10 +1369,10 @@ namespace Wyspa.World
                     body.sprite = art.crateFill != null && art.crateFill.Length > 0 ? art.crateFill[0] : null;
                     go.AddComponent<Automation.HarvestCrate>().Setup(art.crateFill, body);
                     break;
-                case Automation.AutomationSystem.Wisp:
-                    body.sprite = First(art.wispFrames);
-                    go.AddComponent<Automation.WispGardener>().Setup(body, Glow(First(art.wispGlow)), art.wispFrames, art.wispGlow);
-                    NightGlow.Add(go, new Vector2(0f, 0.6f), new Color(0.37f, 0.81f, 0.72f), 1.6f, 0.7f);
+                case Automation.AutomationSystem.Nest:
+                    // gniazdo ogników: pień z dziuplami; ogniki to dzieci gniazda (rój ogników)
+                    body.sprite = First(art.wispNest);
+                    go.AddComponent<Automation.WispNest>().Setup(body, art.wispNest, art);
                     break;
                 case Automation.AutomationSystem.Cauldron:
                     body.sprite = art.cauldronIdle;
@@ -1300,7 +1383,7 @@ namespace Wyspa.World
                     body.sprite = art.rune;
                     if (art.runeGlow != null)
                         Glow(art.runeGlow);
-                    go.AddComponent<Automation.SeedRune>();
+                    go.AddComponent<Automation.WildRune>();
                     NightGlow.Add(go, new Vector2(0f, 0.6f), new Color(0.37f, 0.81f, 0.72f), 1.1f, 0.45f);
                     break;
                 default:

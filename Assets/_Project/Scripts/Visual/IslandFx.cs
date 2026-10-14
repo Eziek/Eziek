@@ -162,6 +162,15 @@ namespace Wyspa.Visual
                 fx.particles.Burst(at, fx.leaves, count, 34f, 120f, 0.9f, order + 2);
         }
 
+        /// <summary>Ślad za lecącym ognikiem: pojedyncza iskierka, która chwilę dryfuje i gaśnie.</summary>
+        public static void WispTrail(Vector3 at)
+        {
+            var fx = Instance;
+            if (fx == null || fx.particles == null || fx.sparkle == null || fx.sparkle.Length == 0)
+                return;
+            fx.particles.Spawn(at, new[] { fx.sparkle[0] }, new Vector2(Random.Range(-3f, 3f), Random.Range(-1f, 5f)), 0f, 0.4f, 4399, true);
+        }
+
         public static void FindPopped(Vector3 at)
         {
             var fx = Instance;

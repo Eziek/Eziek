@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using Wyspa.Core;
@@ -18,6 +19,13 @@ namespace Wyspa.Sea
         SpriteRenderer body, glow;
         BoxCollider2D col;
         bool landed;
+
+        /// <summary>Odłamki na ziemi (ognik-zbieracz leci po nie).</summary>
+        public static readonly List<StarPickup> All = new List<StarPickup>();
+        public bool Landed => landed;
+
+        void OnEnable() => All.Add(this);
+        void OnDisable() => All.Remove(this);
 
         public void Setup(Vector3 target, int order, Sprite[] fall, Sprite[] fallGlow, Sprite shard, Sprite shardGlow, Material glowMaterial)
         {

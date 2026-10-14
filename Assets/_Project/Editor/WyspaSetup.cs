@@ -96,7 +96,7 @@ namespace Wyspa.EditorTools
                 levels = new[] { (120f, new[] { Coins(200) }), (240f, new[] { Coins(800) }), (480f, new[] { Coins(3000) }) } },
             new UpgradeSpec { id = UpgradeIds.WispGardener, name = "Ognik-ogrodnik", category = UpgradeCategory.Automation,
                 levels = new[] { (30f, new[] { Coins(100) }) } },   // 6d: pierwszy ognik w ciągu ok. 1-3 h pracy
-            new UpgradeSpec { id = UpgradeIds.SoilMemory, name = "Runa siewu", category = UpgradeCategory.Automation,
+            new UpgradeSpec { id = UpgradeIds.SoilMemory, name = "Ognik-siewca", category = UpgradeCategory.Automation,
                 levels = new[] { (1f, new[] { Coins(500) }) }, requires = new[] { UpgradeIds.WispGardener } },
             new UpgradeSpec { id = UpgradeIds.MerchantChest, name = "Duszek-handlarz", category = UpgradeCategory.Automation,
                 levels = new[] { (3600f, new[] { Coins(1600) }) }, requires = new[] { UpgradeIds.WispGardener } },
@@ -451,6 +451,14 @@ namespace Wyspa.EditorTools
             // kocioł alchemiczny: zimny, warzenie (3 klatki), gotowy (2 klatki) + piksele emisyjne
             Sprite Obj(string n) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Objects/{n}.png");
             art.cauldronIdle = LoadSprite("Objects/cauldron_idle");
+            // rój ogników: gniazdo i ogniki w kolorach zawodów (klatki i piksele emisyjne)
+            art.wispNest = new[] { LoadSprite("Automation/wisp_nest_0"), LoadSprite("Automation/wisp_nest_1") };
+            art.wispKinds = new List<WispKindArt>();
+            foreach (Wyspa.Automation.WispKind k in System.Enum.GetValues(typeof(Wyspa.Automation.WispKind)))
+            {
+                string n = k.ToString().ToLowerInvariant();
+                art.wispKinds.Add(new WispKindArt { kind = k, frames = Frames("wisp_" + n), glow = Frames("wisp_" + n, "_glow") });
+            }
             // chowańce: klatki i piksele emisyjne (oczy)
             Sprite[] Fam(string kind, string suffix, params string[] poses)
             {

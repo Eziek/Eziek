@@ -11,6 +11,10 @@ namespace Wyspa.Lighting
     {
         public static readonly List<Lamp> All = new List<Lamp>();
 
+        /// <summary>Ognik-latarnik „dolał światła”: do tej chwili (Time.unscaledTime) lampa pali o połowę mniej Esencji.</summary>
+        public float RefueledUntil { get; set; }
+        public bool Refueled => Time.unscaledTime < RefueledUntil;
+
         /// <summary>Do testów: wszystkie lampy zgaszone (np. żeby sprawdzić rośliny nocy).</summary>
         public static bool DebugAllOff;
 
@@ -60,7 +64,7 @@ namespace Wyspa.Lighting
             // mikstura „Płynne światło”: lampy świecą bez Esencji
             // nietoperz: o 20% mniej
             float burn = Alchemy.Potions.LampsFree ? 0f : definition != null
-                ? definition.essencePerMinute * ConsumptionMultiplier * Familiars.FamiliarSystem.LampBurn * dt / 60f : 0f;
+                ? definition.essencePerMinute * ConsumptionMultiplier * Familiars.FamiliarSystem.LampBurn * (Refueled ? 0.5f : 1f) * dt / 60f : 0f;
             bool on = !DebugAllOff && night && definition != null && essence.TryConsume(burn);
             SetOn(on);
         }

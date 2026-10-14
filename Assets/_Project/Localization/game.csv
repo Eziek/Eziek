@@ -2,9 +2,9 @@
 upgrade.essence_jar.name,Słój Esencji,Essence Jar,Essenzglas,エッセンスの瓶,精华罐,
 upgrade.essence_jar.desc,Mieści więcej Esencji: {0}.,Holds more Essence: {0}.,Fasst mehr Essenz: {0}.,エッセンスの容量：{0},精华容量：{0},{0} = pojemność
 upgrade.wisp_gardener.name,Ognik-ogrodnik,Wisp Gardener,Irrlichtgärtner,鬼火の庭師,鬼火园丁,
-upgrade.wisp_gardener.desc,Ogniki zbierają co {0} s plon z pól 5x5 wokół siebie. Pierwszy ognik i skrzynia za darmo.,Wisps harvest a crop from the 5x5 area around them every {0} s. First wisp and crate are free.,Irrlichter ernten alle {0} s im 5x5-Feld um sich herum. Erstes Irrlicht und Kiste gratis.,鬼火は{0}秒ごとに周囲5x5の作物を収穫。最初の鬼火と箱は無料。,鬼火每{0}秒收获周围5x5的作物。第一个鬼火和箱子免费。,{0} = sekundy
-upgrade.soil_memory.name,Runa siewu,Sowing Rune,Saatrune,種まきのルーン,播种符文,
-upgrade.soil_memory.desc,Runy sieją wybrane nasiona na 8 polach wokół siebie. Pierwsza runa za darmo.,Runes sow chosen seeds on the 8 plots around them. First rune is free.,Runen säen gewählte Samen auf den 8 Beeten um sich herum. Erste Rune gratis.,ルーンが周囲8マスに選んだ種をまく。最初のルーンは無料。,符文在周围8块地播下所选种子。第一个符文免费。,
+upgrade.wisp_gardener.desc,"Gniazdo ogników z darmowym ogrodnikiem i skrzynia. W gnieździe przywołasz drwala, latarnika i zbieracza.","A wisp nest with a free gardener, plus a crate. Summon woodcutters, lamplighters and gatherers in the nest.","Ein Irrlichtnest mit kostenlosem Gärtner und eine Kiste. Im Nest rufst du Holzfäller, Laternenanzünder und Sammler.",無料の庭師つき鬼火の巣と収穫箱。巣できこり、点灯夫、拾い屋を呼べる。,附带免费园丁的鬼火巢和收获箱。可在巢中召唤樵夫、点灯人和采集者。,
+upgrade.soil_memory.name,Ognik-siewca,Wisp Sower,Irrlicht-Säer,鬼火の種まき,鬼火播种者,
+upgrade.soil_memory.desc,W gnieździe przywołasz siewcę (sieje wybrane nasiona). Pierwsza runa dziczy za darmo.,Summon sowers in the nest (they plant chosen seeds). First wild rune is free.,Im Nest rufst du Säer (säen gewählte Samen). Erste Wildrune gratis.,巣で種まきを呼べる（選んだ種を植える）。最初の野生のルーンは無料。,可在巢中召唤播种者（种下所选种子）。第一个荒野符文免费。,
 upgrade.merchant_chest.name,Duszek-handlarz,Merchant Spirit,Händlergeist,商いの精霊,商贩精灵,
 upgrade.merchant_chest.desc,"Duszek stoi przy skrzyni i sprzedaje ją, gdy tylko się zapełni (90% ceny). Pierwszy za darmo.",A spirit waits by a crate and sells it as soon as it is full (90% price). The first one is free.,"Ein Geist wartet an einer Kiste und verkauft sie, sobald sie voll ist (90 % des Preises). Der erste ist gratis.",精霊が箱のそばで待ち、いっぱいになるとすぐ売る（90%）。最初の1体は無料。,精灵守在箱子旁，箱子一满就出售（90%价格）。第一个免费。,Etap 6d: duszek przypięty do skrzyni
 rhythm.streak.status,Seria {0} min,Streak {0} min,Serie {0} Min.,連続{0}分,连续{0}分钟,
@@ -117,3 +117,5 @@ toast.familiar.gift,Kot przyniósł coś błyszczącego: +{0} {0:plural:moneta|m
 toast.weather.rain,Zaczyna padać. Rośliny dnia rosną szybciej.,It starts to rain. Day crops grow faster.,Es beginnt zu regnen. Tagpflanzen wachsen schneller.,雨が降り始めた。昼の作物が速く育つ。,开始下雨了。白天作物长得更快。,pogoda
 toast.weather.storm,Nadciąga burza. Pioruny czasem zostawiają odłamki gwiazd.,A storm is coming. Lightning sometimes leaves star shards.,Ein Gewitter zieht auf. Blitze hinterlassen manchmal Sternsplitter.,嵐が来る。雷が星のかけらを残すことがある。,暴风雨来了。闪电有时会留下星之碎片。,pogoda
 toast.weather.mist,Z morza podnosi się gęsta mgła. Ogniki krążą bliżej.,Thick mist rises from the sea. Wisps drift closer.,Dichter Nebel steigt aus dem Meer. Irrlichter kommen näher.,海から濃い霧が立ち込める。鬼火が近くを漂う。,海上升起浓雾。鬼火飘得更近了。,pogoda (tylko noc)
+toast.wisp.level,{0} ({1}) osiąga poziom {2}!,{0} ({1}) reached level {2}!,{0} ({1}) erreicht Stufe {2}!,{0}（{1}）がLv.{2}になった！,{0}（{1}）升到{2}级！,
+toast.wisp.summoned,Nowy ognik w gnieździe: {0} ({1}),A new wisp joins the nest: {0} ({1}),Neues Irrlicht im Nest: {0} ({1}),巣に新しい鬼火：{0}（{1}）,巢里来了新鬼火：{0}（{1}）,

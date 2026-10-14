@@ -1,0 +1,254 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Wyspa.Core;
+using Wyspa.Economy;
+using Wyspa.Localization;
+using Wyspa.World;
+
+namespace Wyspa.Automation
+{
+    [Serializable]
+    public class WispSave
+    {
+        public string id;
+        public int kind;
+        public int xp;
+        public int name;
+    }
+
+    /// <summary>
+    /// Gniazdo ogników (rój ogników): budowla na kafelku, dom dla 3 ogników dowolnych zawodów. Klik → lista ogników
+    /// (imię, zawód, poziom, doświadczenie), przywołanie nowego (monety + plony nocy, cena rośnie z liczbą ogników tego zawodu),
+    /// wybór nasion dla siewcy. Ogniki z gniazda pracują w polu 7x7 wokół niego (latarnik i zbieracz na całej wyspie).
+    /// </summary>
+    public class WispNest : MonoBehaviour, IAreaEffect, IContextActions, ISeedChooser
+    {
+        public const int Capacity = 3;
+        /// <summary>Tryb siewcy: „pamięć ziemi” (to samo, co rosło) i „nic nie sadź”.</summary>
+        public const string Memory = "", Off = "-";
+
+        public static readonly List<WispNest> All = new List<WispNest>();
+
+        SpriteRenderer body;
+        Sprite[] frames;
+        IslandArt art;
+        string seed = Memory;
+        readonly List<Wisp> wisps = new List<Wisp>();
+
+        public int AreaRadius => Wisp.Radius;
+        public Vector3 PickerAnchor => transform.position;
+        public IReadOnlyList<Wisp> Wisps => wisps;
+        public string Seed
+        {
+            get => seed;
+            set => seed = value ?? Memory;
+        }
+
+        public TilePos Tile
+        {
+            get
+            {
+                var obj = GetComponent<TileObject>();
+                return obj != null && obj.Placed ? obj.Tile : Island.WorldToTile(transform.position);
+            }
+        }
+
+        public void Setup(SpriteRenderer bodyRenderer, Sprite[] nestFrames, IslandArt islandArt)
+        {
+            body = bodyRenderer;
+            frames = nestFrames;
+            art = islandArt;
+        }
+
+        void OnEnable() => All.Add(this);
+        void OnDisable() => All.Remove(this);
+
+        /// <summary>Ognik zniknął (np. rozbiórka gniazda): zwolnij jego miejsce.</summary>
+        public void Forget(Wisp w)
+        {
+            wisps.Remove(w);
+            slots.Remove(w);
+        }
+
+        void Update()
+        {
+            if (body != null && frames != null && frames.Length > 1)
+                body.sprite = frames[Mathf.FloorToInt(Time.unscaledTime * 1.5f) % frames.Length];   // migotanie dziupli
+        }
+
+        /// <summary>Gniazdo przeniesione: ogniki wracają do nowego domu.</summary>
+        void OnPlaced()
+        {
+            foreach (var w in wisps)
+                if (w != null) w.OnNestMoved();
+        }
+
+        public static Sprite[] FramesFor(IslandArt art, WispKind kind, bool glow)
+        {
+            if (art == null || art.wispKinds == null)
+                return null;
+            foreach (var k in art.wispKinds)
+                if (k != null && k.kind == kind)
+                    return glow ? k.glow : k.frames;
+            return null;
+        }
+
+        /// <summary>Nowy ognik w gnieździe (zakup, darmowy pierwszy, zapis). Zwraca null, gdy gniazdo pełne.</summary>
+        public Wisp AddWisp(WispKind kind, string id = null, int xp = 0, int name = -1)
+        {
+            wisps.RemoveAll(w => w == null);
+            if (wisps.Count >= Capacity)
+                return null;
+            int slot = 0;
+            while (wisps.Exists(w => SlotOf(w) == slot))
+                slot++;
+            var go = new GameObject("Wisp_" + kind);
+            go.transform.SetParent(transform, false);
+            var b = go.AddComponent<SpriteRenderer>();
+            var g = new GameObject("Glow").AddComponent<SpriteRenderer>();
+            g.transform.SetParent(go.transform, false);
+            if (art != null && art.glow != null)
+                g.sharedMaterial = art.glow;
+            var frames = FramesFor(art, kind, false);
+            var glows = FramesFor(art, kind, true);
+            if (frames == null || frames.Length == 0 || frames[0] == null)
+            {
+                frames = art != null ? art.wispFrames : null;   // brak grafiki zawodu (Wyspa → 2): zwykły ognik
+                glows = art != null ? art.wispGlow : null;
+            }
+            var w = go.AddComponent<Wisp>();
+            w.Setup(kind, this, slot, string.IsNullOrEmpty(id) ? "w" + Guid.NewGuid().ToString("N").Substring(0, 8) : id, xp,
+                    name >= 0 ? name : UnityEngine.Random.Range(0, Wisp.NameCount), b, g, frames, glows);
+            Visual.NightGlow.Add(go, new Vector2(0f, 0.6f), KindColor(kind), 1.4f, 0.55f);
+            slots[w] = slot;
+            wisps.Add(w);
+            return w;
+        }
+
+        readonly Dictionary<Wisp, int> slots = new Dictionary<Wisp, int>();
+        int SlotOf(Wisp w) => slots.TryGetValue(w, out int s) ? s : -1;
+
+        public static Color KindColor(WispKind k)
+        {
+            switch (k)
+            {
+                case WispKind.Sower: return new Color(0.56f, 0.82f, 0.42f);
+                case WispKind.Woodcutter: return new Color(0.94f, 0.54f, 0.23f);
+                case WispKind.Alchemist: return new Color(0.83f, 0.6f, 0.94f);
+                case WispKind.Lamplighter: return new Color(1f, 0.88f, 0.54f);
+                case WispKind.Gatherer: return new Color(0.87f, 0.91f, 1f);
+                default: return new Color(0.37f, 0.81f, 0.72f);
+            }
+        }
+
+        // ------------------------------------------------------------ zakup ognika
+
+        /// <summary>Czy zawód jest dostępny: siewca wymaga ulepszenia „Runa siewu”, alchemik - kotła na wyspie.</summary>
+        public static bool KindUnlocked(WispKind k, GameLoop game)
+        {
+            if (game == null || !game.Upgrades.Has(Upgrades.UpgradeIds.WispGardener))
+                return false;
+            switch (k)
+            {
+                case WispKind.Sower: return game.Upgrades.Has(Upgrades.UpgradeIds.SoilMemory);
+                case WispKind.Alchemist: return Alchemy.Cauldron.All.Count > 0;
+                default: return true;
+            }
+        }
+
+        public static List<CurrencyAmount> Cost(WispKind k)
+        {
+            int baseCoins;
+            switch (k)
+            {
+                case WispKind.Woodcutter: case WispKind.Lamplighter: baseCoins = 250; break;
+                case WispKind.Alchemist: baseCoins = 350; break;
+                default: baseCoins = 200; break;
+            }
+            int coins = Mathf.RoundToInt(baseCoins * Mathf.Pow(1.5f, Wisp.CountOfKind(k)) / 5f) * 5;
+            return new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, coins), new CurrencyAmount(CurrencyType.NightHarvest, 3) };
+        }
+
+        void Summon(WispKind k)
+        {
+            var game = GameLoop.Instance;
+            if (game == null || wisps.Count >= Capacity || !KindUnlocked(k, game))
+                return;
+            var cost = Cost(k);
+            if (!game.Wallet.TrySpend(cost))
+                return;
+            var w = AddWisp(k);
+            if (w == null)
+            {
+                foreach (var c in cost) game.Wallet.Add(c.type, c.amount);
+                return;
+            }
+            Visual.IslandFx.FindPopped(transform.position + new Vector3(0f, 1f, 0f));
+            GameEvents.PlaySound("magic", 0.7f);
+            GameEvents.RaiseToast("toast.wisp.summoned", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(k)));
+        }
+
+        // ------------------------------------------------------------ panel
+
+        public void FillContext(ContextInfo info)
+        {
+            info.verticalButtons = true;
+            info.lines.Add(Loc.Get("ui.nest.range", Wisp.Radius * 2 + 1));
+            wisps.RemoveAll(w => w == null);
+            foreach (var w in wisps)
+            {
+                int next = w.NextLevelXp;
+                info.lines.Add(next < 0
+                    ? Loc.Get("ui.nest.wisp_max", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level)
+                    : Loc.Get("ui.nest.wisp", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level, w.Xp, next));
+            }
+            if (wisps.Exists(w => w.Kind == WispKind.Sower))
+            {
+                string what = seed == Memory ? Loc.Get("ui.rune.memory") : seed == Off ? Loc.Get("ui.rune.off") : Loc.Get("crop." + seed);
+                info.Button(Loc.Get("ui.nest.sower", what), () =>
+                {
+                    var ui = UI.UiRoot.Instance;
+                    if (ui != null)
+                        ui.Wheel.OpenPicker(this);
+                });
+            }
+            if (wisps.Count >= Capacity)
+            {
+                info.lines.Add(Loc.Get("ui.nest.full", Capacity));
+                return;
+            }
+            var game = GameLoop.Instance;
+            foreach (WispKind k in Enum.GetValues(typeof(WispKind)))
+            {
+                if (!KindUnlocked(k, game))
+                    continue;
+                var kind = k;
+                var cost = Cost(k);
+                info.Button(Loc.Get("ui.nest.summon", Loc.Get(Wisp.KindKey(k)), UI.PlacementMode.CostText(cost)),
+                            () => Summon(kind), game != null && game.Wallet.CanAfford(cost));
+            }
+        }
+
+        // ------------------------------------------------------------ zapis
+
+        public List<WispSave> Snapshot()
+        {
+            var list = new List<WispSave>();
+            foreach (var w in wisps)
+                if (w != null)
+                    list.Add(new WispSave { id = w.Id, kind = (int)w.Kind, xp = w.Xp, name = w.NameIndex });
+            return list;
+        }
+
+        public void Restore(List<WispSave> list, string seedMode)
+        {
+            seed = seedMode ?? Memory;
+            if (list == null)
+                return;
+            foreach (var s in list)
+                if (s != null && Enum.IsDefined(typeof(WispKind), s.kind))
+                    AddWisp((WispKind)s.kind, s.id, s.xp, s.name);
+        }
+    }
+}

@@ -116,7 +116,10 @@ namespace Wyspa.UI
                         t.DebugMature();
                 if (GUILayout.Button("Odblokuj wszystkie nasiona"))
                     game.DebugUnlockAll();
-                GUILayout.Label($"Ogniki: {WispGardener.All.Count}, duszki: {MerchantSpirit.All.Count}, runy: {SeedRune.All.Count}");
+                GUILayout.Label($"Ogniki: {Wisp.All.Count}, gniazda: {WispNest.All.Count}, duszki: {MerchantSpirit.All.Count}, runy: {WildRune.All.Count}");
+                if (Wisp.All.Count > 0 && GUILayout.Button("Ogniki: +50 doświadczenia"))
+                    foreach (var w in Wisp.All.ToArray())
+                        w.DebugAddXp(50);
                 if (MerchantSpirit.All.Count > 0)
                     GUILayout.Label($"Duszki-handlarze: {MerchantSpirit.All.Count} (sprzedają pełne skrzynie)");
             }

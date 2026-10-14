@@ -76,6 +76,12 @@ for pose in S6.TOAD_POSES:
 for pose in S6.BAT_POSES:
     save(S6.bat(pose), "Critters", f"familiar_bat_{pose}")
 
+for kind in S6.WISP_KINDS:   # rój ogników
+    for f in range(4):
+        save(S6.wisp_kind(kind, f), "Automation", f"wisp_{kind}_{f}")
+for f in range(2):
+    save(S6.wisp_nest(f), "Automation", f"wisp_nest_{f}")
+
 for name, rows in S6.ICON_MAPS.items():
     save(K.from_map(rows), "UI/Icons", "icon_" + name, pivot=(0.5, 0.5), glow=False)
 

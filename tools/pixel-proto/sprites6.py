@@ -372,3 +372,50 @@ def bat(pose):
     s.outline()
     s.set(5, 4, 'fx'); s.set(7, 4, 'fx')
     return s
+
+
+# ---------- rój ogników: gniazdo i ogniki w kolorach zawodów ----------
+# nowe kolory emisyjne (świecą jak płomień ognika)
+from sprites3 import RGB, EMISSIVE  # noqa: E402
+for _k, _hex in (('gn', '8fd16a'), ('gN', 'd6ffb0'), ('mL', 'f2dcff'), ('fL', 'fff6c8'), ('cW', 'dfe8ff'), ('wW', 'ffffff')):
+    RGB[_k] = tuple(int(_hex[i:i + 2], 16) for i in (0, 2, 4))
+    EMISSIVE.add(_k)
+
+WISP_KINDS = {
+    'gardener': ('wi', 'wl'),      # turkus: zbiera plony
+    'sower': ('gn', 'gN'),         # zieleń: sadzi
+    'woodcutter': ('fx', 'fl'),    # pomarańcz: drewno i kamień
+    'alchemist': ('ml', 'mL'),     # fiolet: kocioł
+    'lamplighter': ('fl', 'fL'),   # złoto: lampy
+    'gatherer': ('cW', 'wW'),      # biel: gwiazdy, owoce, błyskotki
+}
+
+
+def wisp_kind(kind, f):
+    """Ognik w kolorze zawodu (ten sam kształt co ognik-ogrodnik, płomień w innym kolorze)."""
+    body, light = WISP_KINDS[kind]
+    s = S3.wisp_gardener(f, bob=False)
+    for p, k in list(s.px.items()):
+        if k == 'wi':
+            s.px[p] = body
+        elif k == 'wl':
+            s.px[p] = light
+    return s
+
+
+def wisp_nest(f=0):
+    """Gniazdo ogników: wypróchniały pień z trzema świecącymi dziuplami, 16 px szerokości z obrysem."""
+    s = Sprite(16, 22, 8, 20)
+    s.blob(8, 13, 5.6, 7.2, ['e0', 'e1', 'e2'])            # pień
+    for x in range(3, 14):                                 # postrzępiony wierzch
+        if x % 3 != 1:
+            s.set(x, 6, 'e2')
+    s.set(2, 19, 'e1'); s.set(1, 20, 'e0'); s.set(13, 19, 'e1'); s.set(14, 20, 'e0')   # korzenie
+    for y in range(8, 19, 3):                              # słoje kory
+        s.set(5, y, 'e3'); s.set(11, y + 1, 'e3')
+    s.outline()
+    glow = [('wi', 'wl'), ('wl', 'wi')][f % 2]
+    for i, (x, y) in enumerate(((7, 10), (10, 14), (6, 16))):   # dziuple z blaskiem
+        s.set(x, y, 'o'); s.set(x + 1, y, glow[i % 2]); s.set(x, y + 1, glow[(i + 1) % 2])
+    s.set(9, 4, 'wl')                                      # iskierka nad gniazdem
+    return s
