@@ -1112,6 +1112,16 @@ namespace Wyspa.UI
             }
             y += OptRow;
 
+            OptLabel("ui.options.ui_size", y);
+            x = OptCol;
+            for (int s = 0; s <= 4; s++)
+            {
+                int size = s;
+                x += OptButton("UiSize" + s, s == 0 ? Loc.Get("ui.options.ui_size.auto") : "x" + s, x, y, 20f,
+                               () => UiRoot.UiScaleSetting = size, UiRoot.UiScaleSetting == s) + 4;
+            }
+            y += OptRow;
+
             OptLabel("ui.options.mini", y);
             Toggle(OptCol, y, view != null && view.Mini, view != null, v => view.Mini = v);
             y += OptRow;

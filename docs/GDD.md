@@ -388,6 +388,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Lokalizacja w kodzie: **własna warstwa CSV** (`LocCore`/`Loc`) zamiast paczki Unity Localization (§16.4).
 - [ ] Przejście na Unity Localization: później albo wcale (klucze są zgodne, więc migracja jest możliwa).
 - [x] Drewno i kamień jako materiały do budowli (§14.3). Odnawialne drewno i owoce: drzewa do sadzenia, na później (§15).
+- [x] Skala UI (po teście: przy powiększonym oknie i małej wyspie pasek zajmował pół okna): **zależy od rozdzielczości
+  monitora, nie od powiększenia okna** (1080p x2, 1440p x3, 4K x4), najwyżej o 1 mniej niż skala świata. Opcje → Okno →
+  „Rozmiar interfejsu”: auto albo x1-x4.
 - [x] Rój ogników (prośba gracza): **gniazdo na 3 ogniki**, 6 zawodów (ogrodnik, siewca, drwal, alchemik, latarnik,
   zbieracz), **poziomy** z imionami, krążenie bez pracy. Siewca zastępuje runę siewu, a runa staje się **runą dziczy**
   (wokół wyrastają drzewa i kamienie). Szczegóły w §11.3 E. Zapis v12 (stary ognik → gniazdo z ogrodnikiem).
@@ -560,6 +563,8 @@ Obrazki referencyjne (kopie): `docs/img/`
 58. Rój ogników: gniazdo ogników (3 miejsca, pole 7x7), zawody ogrodnik, siewca, drwal, alchemik, latarnik, zbieracz,
     poziomy 1-6 z imionami (12 imion w 5 językach), krążenie wokół gniazda i lamp. Runa siewu → runa dziczy (drzewa i kamienie
     wokół), sianie przejął siewca. Kocioł: przepis dla alchemika. Zapis v12, stare ogniki stają się gniazdami z ogrodnikiem.
+59. Skala UI od rozdzielczości monitora zamiast od powiększenia okna (pasek HUD i karteczki nie rosną z x6),
+    nowa opcja „Rozmiar interfejsu” (auto, x1-x4).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

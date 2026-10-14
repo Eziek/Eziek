@@ -197,14 +197,28 @@ namespace Wyspa.UI
                 game.Rhythm.RhythmEnabled = PlayerPrefs.GetInt("rhythm") == 1;
         }
 
-        /// <summary>Skala UI: o 1 mniejsza od skali świata (piksele ekranu na piksel gry), co najmniej 1.</summary>
+        /// <summary>Rozmiar interfejsu z Opcji: 0 = automatyczny, 1-4 = stała skala.</summary>
+        public static int UiScaleSetting
+        {
+            get => Mathf.Clamp(PlayerPrefs.GetInt("uiScale", 0), 0, 4);
+            set => PlayerPrefs.SetInt("uiScale", Mathf.Clamp(value, 0, 4));
+        }
+
+        /// <summary>
+        /// Skala UI (po teście: przy powiększonym oknie i małej wyspie pasek zajmował pół okna). Zależy od rozdzielczości
+        /// monitora, nie od powiększenia okna: 1080p → x2, 1440p → x3, 4K → x4. Najwyżej o 1 mniej niż skala świata,
+        /// żeby UI zmieściło się w oknie. Gracz może ustawić rozmiar sam (Opcje → Okno).
+        /// </summary>
         public static int UiScale()
         {
             var view = ViewController.Instance;
             int world = view != null
                 ? view.PixelRatio
                 : Mathf.Max(1, Mathf.Min(Screen.width / 272, Screen.height / 200));
-            return Mathf.Max(1, world - 1);
+            int want = UiScaleSetting;
+            if (want == 0)
+                want = Mathf.Max(1, Mathf.RoundToInt(Screen.currentResolution.height / 540f));
+            return Mathf.Max(1, Mathf.Min(want, world - 1));
         }
 
         /// <summary>Skala na czas Księgi: zwykła, chyba że okno jest za małe (np. okno Game w edytorze) - wtedy mniejsza.</summary>
