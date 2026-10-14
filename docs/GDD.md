@@ -583,6 +583,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     w pierścieniu akcji „Wykop roślinę”, dymek grządki podpowiada podmianę. Siewca: osobne nasiona na dzień i na noc
     oraz „Podmiana o świcie i zmroku” (domyślnie wł.): wymienia rośliny, które o tej porze nie rosną (uwaga: rośliny
     wielonocne nie dorosną, gdy podmiana jest włączona). Zapis v14.
+66. Skład (prośba gracza: za dużo drewna i kamienia): budowla w Sklep → Budowle (120 monet + 10 drewna), co 10 s sprzedaje
+    do 10 drewna (po 3 monety) i 10 kamienia (po 5) ponad rezerwę (domyślnie 30, w panelu ±10), „Sprzedaj nadwyżkę teraz”.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -768,6 +770,8 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
    **Poziomy 1-6** (doświadczenie za każdą pracę: 10/30/70/150/300): szybszy lot (+8% na poziom), większy udźwig, drwal
    uderza mniej razy, ognik jest trochę większy i jaśniejszy, awans ogłasza toast. Bez pracy ogniki krążą wokół gniazda
    i lamp albo odpoczywają nad pniem. Każdy zawód ma inny kolor płomienia. **Skrzynia na plony** (20 miejsc): 60 monet + 4 drewna.
+2. **Skład** (prośba gracza: nadmiar drewna i kamienia z drwala i run): sprzedaje nadwyżkę ponad rezerwę na budowy
+   (drewno 3, kamień 5 monet, porcja co 10 s; rezerwa domyślnie 30, ustawiana w panelu; przycisk „Sprzedaj nadwyżkę teraz”).
 2. **Runa dziczy** (prośba gracza, zastępuje runę siewu; pierwsza za darmo z „Ognik-siewca”, kolejne 150 monet + 5 kamienia):
    co 6 min gry na wolnym kafelku trawy wokół runy (3x3 bez środka) wyrasta dzikie drzewo, krzak albo kamień.
    Z drwalem daje stałe drewno i kamień.

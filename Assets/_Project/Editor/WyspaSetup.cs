@@ -501,6 +501,7 @@ namespace Wyspa.EditorTools
             art.introArrow = LoadSprite("Fx/intro_arrow");
             // kocioł alchemiczny: zimny, warzenie (3 klatki), gotowy (2 klatki) + piksele emisyjne
             Sprite Obj(string n) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Objects/{n}.png");
+            art.storehouse = LoadSprite("Objects/storehouse");
             art.cauldronIdle = LoadSprite("Objects/cauldron_idle");
             // rój ogników: gniazdo i ogniki w kolorach zawodów (klatki i piksele emisyjne)
             art.wispNest = new[] { LoadSprite("Automation/wisp_nest_0"), LoadSprite("Automation/wisp_nest_1") };

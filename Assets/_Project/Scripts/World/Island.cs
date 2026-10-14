@@ -29,6 +29,8 @@ namespace Wyspa.World
         public string brewAuto;                    // v12: kocioł - przepis, który warzy ognik-alchemik
         public string seedNight;                   // v14: gniazdo - nasiona siewcy w nocy (seed = w dzień)
         public bool noSwap;                        // v14: gniazdo - siewca nie podmienia roślin o świcie/zmierzchu
+        public int storeReserve;                   // v14: skład - rezerwa drewna i kamienia
+        public bool storeOff;                      // v14: skład - automatyczna sprzedaż wyłączona
         public string brew;                        // v10: kocioł - przepis w kotle
         public float brewLeft;                     // v10: sekundy do końca warzenia
         public bool brewReady;                     // v10: mikstura gotowa do wypicia
@@ -345,6 +347,8 @@ namespace Wyspa.World
                         nest.Restore(o.wisps, o.seed, o.seedNight, o.noSwap);
                     if (b != null && !string.IsNullOrEmpty(o.merchant))
                         SpawnMerchant(b, o.merchant);
+                    if (b != null && b.TryGetComponent(out Automation.Storehouse store))
+                        store.Restore(o.storeReserve, o.storeOff);
                     if (b != null && b.TryGetComponent(out Alchemy.Cauldron cauldron))
                     {
                         cauldron.AutoRecipe = o.brewAuto;
@@ -408,6 +412,11 @@ namespace Wyspa.World
                 }
                 if (o.TryGetComponent(out Alchemy.Cauldron cauldron))
                     os.brewAuto = cauldron.AutoRecipe;
+                if (o.TryGetComponent(out Automation.Storehouse store))
+                {
+                    os.storeReserve = store.Reserve;
+                    os.storeOff = !store.Auto;
+                }
                 if (cauldron != null && cauldron.Brewing != null)
                 {
                     os.brew = cauldron.Brewing;
@@ -1381,6 +1390,10 @@ namespace Wyspa.World
                     body.sprite = art.cauldronIdle;
                     go.AddComponent<Alchemy.Cauldron>().Setup(body, Glow(null), art.cauldronIdle, art.cauldronBrew, art.cauldronBrewGlow,
                                                                  art.cauldronReady, art.cauldronReadyGlow);
+                    break;
+                case Automation.AutomationSystem.Store:
+                    body.sprite = art.storehouse;
+                    go.AddComponent<Automation.Storehouse>();
                     break;
                 case Automation.AutomationSystem.Rune:
                     body.sprite = art.rune;

@@ -202,6 +202,26 @@ def merchant_spirit(f):
     return s
 
 
+# ---------------- skład (nadwyżka drewna i kamienia na monety) ----------------
+def storehouse():
+    """Skład: stos polan, kupka kamieni i ważąca je waga z mosiężnymi szalami. 16 px szerokości (kafelek)."""
+    s = Sprite(16, 22, 8, 20)
+    for i, (y0, x0, n) in enumerate(((17, 1, 3), (14, 2, 2), (11, 3, 1))):   # polana (czoła słojów)
+        for k in range(n):
+            cx, cy = x0 + k * 3 + 1, y0 + 1
+            s.blob(cx, cy, 1.6, 1.6, ['e1', 'e2', 'e3'])
+            s.set(cx, cy, 'e1')
+    s.blob(12.5, 18, 2.6, 1.8, ['p1', 'b1', 'b3']); s.blob(10.5, 18.5, 1.8, 1.4, ['p1', 'b1', 'b2'])
+    s.blob(12, 15.8, 1.8, 1.4, ['p1', 'b2', 'b3'])
+    s.rect(12, 5, 12, 13, 'e1')                                       # słupek wagi
+    s.rect(8, 5, 15, 5, 'go'); s.set(12, 4, 'go')                     # belka
+    for x, y in ((8, 6), (8, 7), (15, 6), (15, 7)):
+        s.set(x, y, 'e1')
+    s.rect(7, 8, 9, 8, 'go'); s.rect(14, 8, 15, 8, 'go')              # szale
+    s.set(8, 7, 'e2'); s.set(12, 14, 'e0')
+    return s.outline()
+
+
 # ---------------- ikony nasion (do ui_kit.SEED_SYMBOLS) ----------------
 SEED_SYMBOLS = {
     'garlic': [".m.m.", "..m..", ".www.", "wwzww", ".www."],

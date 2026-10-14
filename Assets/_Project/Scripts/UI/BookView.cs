@@ -652,6 +652,7 @@ namespace Wyspa.UI
                         case Automation.AutomationSystem.Nest: pic = art.wispNest != null && art.wispNest.Length > 0 ? art.wispNest[0] : null; area = Automation.Wisp.Radius; break;
                         case Automation.AutomationSystem.Merchant: pic = art.merchantFrames != null && art.merchantFrames.Length > 0 ? art.merchantFrames[0] : null; break;
                         case Automation.AutomationSystem.Cauldron: pic = art.cauldronIdle; break;
+                        case Automation.AutomationSystem.Store: pic = art.storehouse; break;
                         default: pic = art.rune; area = Automation.WildRune.Radius; break;
                     }
                 var cost = Automation.AutomationSystem.Cost(k, island.CountBuilding(k));

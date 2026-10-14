@@ -291,3 +291,10 @@ ui.dig_up.back,"{0}: nasiono wróci do worka, wzrost przepadnie","{0}: the seed 
 ui.nest.sower_day,Siewca w dzień: {0},Sower by day: {0},Säer am Tag: {0},昼の種まき：{0},白天播种：{0},otwiera koło nasion dnia
 ui.nest.sower_night,Siewca w nocy: {0},Sower by night: {0},Säer in der Nacht: {0},夜の種まき：{0},夜间播种：{0},otwiera koło nasion nocy
 ui.nest.swap,Podmiana o świcie i zmroku: {0},Swap at dawn and dusk: {0},Tausch bei Morgen- und Abenddämmerung: {0},夜明けと夕暮れに植え替え：{0},黎明和黄昏时替换：{0},"{0} = wł./wył.; siewca wymienia rośliny, które o tej porze nie rosną"
+ui.shop.store.desc,Sprzedaje nadwyżkę drewna i kamienia,Sells surplus wood and stone,Verkauft überschüssiges Holz und Stein,余った木と石を売る,出售多余的木材和石头,
+ui.store.desc,"Sprzedaje nadwyżkę: drewno po {0}, kamień po {1} {1:plural:moneta|monety|monet}","Sells surplus: wood for {0}, stone for {1} {1:plural:coin|coins}","Verkauft Überschuss: Holz für {0}, Stein für {1} {1:plural:Münze|Münzen}",余りを売る：木{0}コイン、石{1}コイン,出售多余：木材{0}金币，石头{1}金币,
+ui.store.reserve,Zostawia na budowy: {0} drewna i {0} kamienia,Keeps for building: {0} wood and {0} stone,Behält zum Bauen: {0} Holz und {0} Stein,建築用に残す：木{0}、石{0},留作建造：木材{0}，石头{0},
+ui.store.reserve_less,Rezerwa -{0},Reserve -{0},Reserve -{0},予備 -{0},储备 -{0},
+ui.store.reserve_more,Rezerwa +{0},Reserve +{0},Reserve +{0},予備 +{0},储备 +{0},
+ui.store.auto,Sprzedaż co 10 s: {0},Sell every 10 s: {0},Alle 10 s verkaufen: {0},10秒ごとに売る：{0},每10秒出售：{0},{0} = wł./wył.
+ui.store.sell_now,Sprzedaj nadwyżkę teraz (+{0}),Sell surplus now (+{0}),Überschuss jetzt verkaufen (+{0}),今すぐ余りを売る（+{0}）,立即出售多余（+{0}）,{0} = monety

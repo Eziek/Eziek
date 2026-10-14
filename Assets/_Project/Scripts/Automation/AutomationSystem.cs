@@ -16,10 +16,10 @@ namespace Wyspa.Automation
     /// </summary>
     public class AutomationSystem : MonoBehaviour
     {
-        public const string Crate = "crate", Nest = "nest", Merchant = "merchant", Rune = "rune", Cauldron = "cauldron";
+        public const string Crate = "crate", Nest = "nest", Merchant = "merchant", Rune = "rune", Cauldron = "cauldron", Store = "store";
         /// <summary>Zapisy sprzed roju: ognik-ogrodnik na własnym kafelku (wczytanie zamienia go na gniazdo z ognikiem).</summary>
         public const string Wisp = "wisp";
-        public static readonly string[] Kinds = { Crate, Nest, Merchant, Rune, Cauldron };
+        public static readonly string[] Kinds = { Crate, Nest, Merchant, Rune, Cauldron, Store };
 
         /// <summary>Rodzaje, których darmowa pierwsza sztuka już była (w zapisie, żeby po przeniesieniu/usunięciu nie wracała).</summary>
         readonly HashSet<string> granted = new HashSet<string>();
@@ -33,6 +33,7 @@ namespace Wyspa.Automation
                 case Merchant: return "bld.merchant_spirit";
                 case Rune: return "bld.seed_rune";
                 case Cauldron: return "bld.cauldron";
+                case Store: return "bld.storehouse";
                 default: return kind;
             }
         }
@@ -60,6 +61,7 @@ namespace Wyspa.Automation
                 case Nest: coins = 150; extra = new CurrencyAmount(CurrencyType.Wood, 6); break;
                 case Merchant: coins = 500; extra = new CurrencyAmount(CurrencyType.Stone, 8); break;
                 case Cauldron: coins = 300; extra = new CurrencyAmount(CurrencyType.Stone, 6); break;
+                case Store: coins = 120; extra = new CurrencyAmount(CurrencyType.Wood, 10); break;
                 default: coins = 150; extra = new CurrencyAmount(CurrencyType.Stone, 5); break;
             }
             coins = Mathf.RoundToInt(coins * Mathf.Pow(1.6f, Mathf.Max(0, owned)) / 5f) * 5;
@@ -123,6 +125,8 @@ namespace Wyspa.Automation
                 MerchantSpirit.All[i].Tick(game.Wallet, game.Crops);
             for (int i = WildRune.All.Count - 1; i >= 0; i--)
                 WildRune.All[i].Tick(dt, game);
+            for (int i = Storehouse.All.Count - 1; i >= 0; i--)
+                Storehouse.All[i].Tick(dt, game);
         }
     }
 }

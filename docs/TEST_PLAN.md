@@ -69,6 +69,11 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
 3. Ustaw dzień: marchew, noc: księżycowy kwiat. F1 → 23:30: siewca wymienia marchew bez lampy na kwiaty; F1 → 12:00: odwrotnie.
 4. Podmiana wył.: siewca sadzi tylko na pustych grządkach. Zapis i wczytanie zachowuje oba ustawienia.
 
+## 4a4. Skład
+1. Sklep → Budowle → Skład (po ogniku-ogrodniku), postaw. Klik: ceny, rezerwa 30, przyciski ±10, sprzedaż wł./wył., „Sprzedaj teraz”.
+2. Z drewnem/kamieniem ponad rezerwę: co 10 s monety lecą ze składu (do 10 sztuk każdego), surowce spadają do rezerwy.
+3. Zapis i wczytanie zachowuje rezerwę i przełącznik.
+
 ## 4b. Hybrydy, wyprawy, zapiski
 1. Wyspa → 2 (nowe rośliny). F1 → „Mutacje zawsze”: posadź obok siebie marchew i wilczą jagodę, zbierz: toast mutacji,
    w worku „Wilcza marchew”. Dymek nasiona w kole: „Krzyżówka: Marchew + Wilcza jagoda”. Sprawdź wygląd 4 faz każdej hybrydy.

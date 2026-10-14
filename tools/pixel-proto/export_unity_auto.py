@@ -66,6 +66,7 @@ for note in (True, False):   # wprowadzenie (Etap 6d)
     save(S6.notice_board(note), "Objects", "notice_board" + ("" if note else "_empty"), glow=False)
 save(S6.intro_arrow(), "Fx", "intro_arrow", glow=False)
 
+save(S6.storehouse(), "Objects", "storehouse")   # skład: nadwyżka drewna i kamienia na monety
 save(S6.cauldron('idle'), "Objects", "cauldron_idle")   # kocioł alchemiczny
 for f in range(3):
     save(S6.cauldron('brew', f), "Objects", f"cauldron_brew_{f}")
