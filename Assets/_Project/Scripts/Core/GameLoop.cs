@@ -43,6 +43,11 @@ namespace Wyspa.Core
         public const float MutationChance = 0.03f;
         /// <summary>Do testów (HUD debugowy): każda mutacja się udaje.</summary>
         public static bool DebugAlwaysMutate;
+
+        /// <summary>Rytuał „Zmierzch”: rośliny nocy rosną też w ostatniej godzinie przed nocą.</summary>
+        public static bool DuskGrowth;
+        /// <summary>Rytuał „Głębokie korzenie”: rośliny dnia rosną szybciej.</summary>
+        public static float DayGrowthMultiplier = 1f;
         float accumulator;
 
         public ActivityTracker Activity => activity;
@@ -101,6 +106,13 @@ namespace Wyspa.Core
         /// <summary>Po każdym zbiorze (ręcznym i przez ognika): pamięć ziemi sadzi to samo, jeśli stać gracza na nasiono.</summary>
         public void AfterHarvest(FarmPlot plot, CropDefinition crop)
         {
+            if (crop != null)
+            {
+                Lore.Chronicle.Note("crop:" + crop.id);
+                Lore.Chronicle.Count("harvest");
+                if (crop.kind == CropKind.Night)
+                    Lore.Chronicle.Count("night");
+            }
             TryMutate(plot, crop);
             if (crop == null || plot == null || !plot.State.IsEmpty || !upgrades.Has(UpgradeIds.SoilMemory))
                 return;
@@ -179,6 +191,7 @@ namespace Wyspa.Core
             {
                 fullMoonAnnounced = true;
                 GameEvents.RaiseToast("toast.fullmoon");
+                Lore.Chronicle.Note("event:fullmoon");
             }
             else if (!night)
                 fullMoonAnnounced = false;
@@ -207,12 +220,16 @@ namespace Wyspa.Core
         public GrowthContext ContextFor(FarmPlot plot, bool night)
         {
             Vector2 p = plot.LightProbe;
+            var crop = plot.State.crop;
+            if (!night && DuskGrowth && crop != null && crop.kind == CropKind.Night && clock.IsDusk)
+                night = true;   // zmierzch liczy się roślinom nocy jak noc
+            float dayBonus = crop != null && crop.kind == CropKind.Day ? DayGrowthMultiplier : 1f;
             return new GrowthContext
             {
                 playerActive = activity.IsActive,
                 night = night,
                 lit = Illumination.IsLit(p, night),
-                multiplier = (night ? Illumination.GrowthMultiplier(p) : 1f) * (island != null ? island.ZoneBonus(plot) : 1f),
+                multiplier = (night ? Illumination.GrowthMultiplier(p) : 1f) * (island != null ? island.ZoneBonus(plot) : 1f) * dayBonus,
                 fullMoon = clock.IsFullMoon,
             };
         }

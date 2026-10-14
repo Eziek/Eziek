@@ -115,3 +115,8 @@ term.will_o_wisp,Błędny ognik,Will-o'-the-wisp,Irrlicht,鬼火,鬼火,nocne zd
 term.falling_star,Spadająca gwiazda,Falling star,Sternschnuppe,流れ星,流星,
 term.monster,Potwór z głębin,Thing from the Deep,Wesen aus der Tiefe,深淵の怪物,深渊怪物,"nie postać, zdarzenie"
 lamp.lighthouse,Latarnia morska,Lighthouse,Leuchtturm,灯台,灯塔,jak bld.lighthouse (nazwa lampy)
+term.ritual,Rytuał,Ritual,Ritual,儀式,仪式,"Księga rytuałów, trwałe bonusy"
+term.moon_points,Punkty księżyca,Moon points,Mondpunkte,月の点,月之点数,waluta rytuałów; przyznawane na nowiu
+term.new_moon,Nów,New moon,Neumond,新月,新月,koniec cyklu księżycowego
+term.bestiary,Bestiariusz,Bestiary,Bestiarium,図鑑,图鉴,kolekcja odkryć i lore
+term.lore,Zapiski,Lore,Überlieferung,伝承,传说,fragmenty opowieści wyspy

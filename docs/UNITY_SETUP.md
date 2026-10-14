@@ -200,6 +200,17 @@ Po pobraniu zmian: **Wyspa → 3**, potem Play. W nocy (F1 → 23:30) zdarzenia 
 5. **Latarnia morska** (2000 monet + 10 odłamków; na brzegu): świeci jak lampa, mgła odsuwa się, zdarzenia dwa razy częściej.
 6. **Pomost:** woda pod deskami i przy łodzi nie ma już ramek rozbudowy. Zapis z zasypanym pomostem: toast o zwrocie kosztów.
 
+## 4i. Etap 5c: rytuały, cykl księżyca, bestiariusz (test)
+Po pobraniu zmian: **Wyspa → 3** (dodaje obiekt kroniki do sceny), potem Play.
+1. **Księga → Rytuały:** u góry punkty księżyca, dni do nowiu i ile punktów da obecny cykl. Zbieraj plony, łów ryby,
+   kupuj kafelki: liczba „cykl da” rośnie (co 10 plonów, 5 plonów nocy, 5 ryb, 3 zdarzenia, 10 kafelków = 1 pkt, maks. 12).
+2. F1 → **Zamknij cykl księżyca teraz**: toast „Nów: cykl zamknięty, +N pkt”, liczniki od zera. **+5 pkt księżyca** do testu.
+3. **Odpraw** rytuał (punkty + surowiec, np. Ciche lampy: 8 łusek): toast, wiersz pokazuje „Odprawiony”, efekt działa od razu
+   i po wczytaniu zapisu (np. Szept mgły: kupiec zostaje dłużej, Pamięć przypływu: krótsze wyprawy).
+4. **Księga → Bestiariusz:** Rośliny / Ryby / Zjawy / Zapiski. Nieodkryte to „???”; zebrane plony, złowione ryby, zdarzenia
+   (ognik, gwiazda, kupiec, potwór, pełnia) i lore (znaleziska, zabytki) się odkrywają. Pełna strona: przycisk „Odbierz: +N pkt”.
+5. Zapiski lore: po 4 na stronę, strzałki na dole.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

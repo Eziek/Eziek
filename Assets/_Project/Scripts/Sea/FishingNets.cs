@@ -27,6 +27,7 @@ namespace Wyspa.Sea
             if (glow)
                 scales += 2;
             game.Wallet.Add(CurrencyType.Scale, scales);
+            Lore.Chronicle.Count("fish");
             GameEvents.RaiseCurrencyGained(transform.position, CurrencyType.Scale, scales);
             GameEvents.RaiseToast(glow ? "toast.nets.glow" : "toast.nets", scales);
         }

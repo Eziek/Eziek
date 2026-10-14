@@ -78,6 +78,8 @@ namespace Wyspa.Sea
             if (!landed || game == null)
                 return;
             game.Wallet.Add(CurrencyType.StarShard, 1);
+            Lore.Chronicle.Note("event:star");
+            Lore.Chronicle.Count("event");
             GameEvents.RaiseCurrencyGained(transform.position, CurrencyType.StarShard, 1);
             GameEvents.RaiseToast("toast.star.found");
             Destroy(gameObject);

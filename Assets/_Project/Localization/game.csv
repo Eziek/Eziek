@@ -56,3 +56,18 @@ toast.star.found,Odłamek gwiazdy!,A star shard!,Ein Sternensplitter!,星のか�
 toast.monster.rises,Coś ogromnego wynurza się z głębin...,Something enormous rises from the deep...,Etwas Gewaltiges steigt aus der Tiefe ...,深みから巨大な何かが現れる…,有什么巨大的东西从深渊中浮起……,
 toast.monster.gift,Potwór przyjął ofiarę: dar z głębin,The Thing accepted the offering: a gift of the deep,Das Wesen nahm das Opfer an: eine Gabe der Tiefe,怪物は捧げ物を受け取った：深淵の贈り物,怪物接受了祭品：深渊之礼,
 lore.monster,Oko wielkości łodzi patrzy na wyspę. Czeka na coś.,An eye the size of a boat watches the island. It is waiting.,Ein Auge so groß wie ein Boot beobachtet die Insel. Es wartet.,小舟ほどの目が島を見つめている。何かを待っている。,一只船那么大的眼睛注视着岛屿。它在等待。,potwór
+toast.cycle.closed,"Nów: cykl zamknięty, +{0} pkt księżyca","New moon: cycle closed, +{0} moon points","Neumond: Zyklus beendet, +{0} Mondpunkte",新月：周期終了、月の点+{0},新月：周期结束，月之点数+{0},{0} = punkty
+toast.ritual.done,Odprawiono: {0},Ritual performed: {0},Ritual vollzogen: {0},儀式完了：{0},仪式完成：{0},{0} = nazwa rytuału
+toast.bestiary.reward,+{0} pkt księżyca,+{0} moon points,+{0} Mondpunkte,月の点+{0},月之点数+{0},{0} = punkty
+ritual.dusk,Zmierzchowe ziarno,Dusk Seed,Dämmerkorn,黄昏の種,黄昏之种,
+ritual.dusk.desc,Rośliny nocy rosną też o zmierzchu,Night crops also grow at dusk,Nachtpflanzen wachsen auch in der Dämmerung,夜の作物が黄昏にも育つ,夜间作物在黄昏时也会生长,
+ritual.quiet_lamps,Ciche lampy,Quiet Lamps,Stille Lampen,静かな灯,静谧之灯,
+ritual.quiet_lamps.desc,Lampy palą o 25% mniej Esencji,Lamps burn 25% less Essence,Lampen verbrauchen 25% weniger Essenz,ランプのエッセンス消費が25%減る,灯消耗的精华减少25%,
+ritual.moon_dew,Księżycowa rosa,Moon Dew,Mondtau,月の露,月露,
+ritual.moon_dew.desc,Pełnia trwa dwa razy dłużej,The full moon lasts twice as long,Der Vollmond dauert doppelt so lange,満月が2倍長く続く,满月持续时间翻倍,
+ritual.deep_roots,Głębokie korzenie,Deep Roots,Tiefe Wurzeln,深い根,深根,
+ritual.deep_roots.desc,Rośliny dnia rosną o 10% szybciej,Day crops grow 10% faster,Tagpflanzen wachsen 10% schneller,昼の作物の成長が10%速くなる,白天作物生长加快10%,
+ritual.fog_whisper,Szept mgły,Fog Whisper,Nebelflüstern,霧のささやき,雾之低语,
+ritual.fog_whisper.desc,Kupiec-widmo zostaje dwa razy dłużej,The Ghost Merchant stays twice as long,Der Geisterhändler bleibt doppelt so lange,幽霊商人が2倍長く滞在する,幽灵商人停留时间翻倍,
+ritual.tide_memory,Pamięć przypływu,Tide Memory,Gezeitengedächtnis,潮の記憶,潮汐之忆,
+ritual.tide_memory.desc,Wyprawy łodzią trwają o 25% krócej,Boat expeditions take 25% less time,Bootsexpeditionen dauern 25% kürzer,舟の遠征が25%短くなる,船只远征时间缩短25%,

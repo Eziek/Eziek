@@ -27,7 +27,11 @@ namespace Wyspa.Sea
     /// </summary>
     public class Expedition : MonoBehaviour, IClickable, IContextActions
     {
-        public const float ShortHours = 2f, LongHours = 4f;
+        public const float BaseShortHours = 2f, BaseLongHours = 4f;
+        /// <summary>Rytuał „Pamięć przypływu”: wyprawy krótsze.</summary>
+        public static float DurationMultiplier = 1f;
+        public static float ShortHours => BaseShortHours * DurationMultiplier;
+        public static float LongHours => BaseLongHours * DurationMultiplier;
         const float Ppu = 16f;
 
         enum State { Docked, Away, Returned }
@@ -201,7 +205,9 @@ namespace Wyspa.Sea
             if (v < 0.88) { Give(game, s, CurrencyType.StarShard, 1, at); return; }
             if (v < 0.95)
             {
-                s.lines.Add(Loc.Get("lore." + rnd.Next(1, 7)));
+                string key = "lore." + rnd.Next(1, 7);
+                Lore.Chronicle.Note("lore:" + key);
+                s.lines.Add(Loc.Get(key));
                 return;
             }
             CropDefinition hybrid = null;

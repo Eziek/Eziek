@@ -123,6 +123,9 @@ namespace Wyspa.Sea
             if (!game.Wallet.TrySpend(cost))
                 return;
             game.Wallet.Add(CurrencyType.DeepGift, 1);
+            Lore.Chronicle.Note("event:monster");
+            Lore.Chronicle.Note("lore:lore.monster");
+            Lore.Chronicle.Count("event");
             GameEvents.RaiseCurrencyGained(transform.position + new Vector3(0f, 1f, 0f), CurrencyType.DeepGift, 1);
             GameEvents.RaiseToast("toast.monster.gift");
             Leave();

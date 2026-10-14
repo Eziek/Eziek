@@ -664,6 +664,7 @@ namespace Wyspa.EditorTools
             camGo.AddComponent<ViewController>().Setup(ppc);
             var dayNight = game.AddComponent<DayNightLighting>();
             var click = game.AddComponent<ClickRouter>();
+            game.AddComponent<Wyspa.Lore.Chronicle>();
             game.AddComponent<DebugHud>();
 
             SetRefs(loop, ("activity", activity), ("clock", clock), ("essence", essence), ("wallet", wallet),

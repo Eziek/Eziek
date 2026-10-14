@@ -76,6 +76,8 @@ namespace Wyspa.Sea
             if (game == null)
                 return;
             game.Essence.Set(game.Essence.Amount + Essence);
+            Lore.Chronicle.Note("event:wisp");
+            Lore.Chronicle.Count("event");
             GameEvents.RaiseToast("toast.wisp.caught", (int)Essence);
             IslandFx.FindPopped(transform.position);
             Destroy(gameObject);

@@ -273,6 +273,12 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Budowle morskie kosztują monety + drewno: pomost 300 + 10, sieci 150 + 5, łódź 600 + 15 (do balansu).
 - [ ] Tabela łupów wypraw łodzią.
 - [ ] Treść lore (historia wyspy, mgły, potwora).
+- [x] Punkty księżyca (Etap 5c): przy nowiu cykl daje plony/10 + plony nocy/5 + ryby/5 + zdarzenia/3 + kafelki/10, maks. 12;
+  pełna strona bestiariusza daje jednorazowo 2 / 1 / 2 / 3 pkt (rośliny / ryby / zjawy / zapiski). Liczby do balansu.
+- [x] Pierwsze rytuały (jednorazowe, na zawsze): Zmierzchowe ziarno (rośliny nocy rosną o zmierzchu, 2 pkt + 3 odłamki),
+  Ciche lampy (-25% Esencji, 2 pkt + 8 łusek), Księżycowa rosa (pełnia x2 dłużej, 3 pkt + 1 dar), Głębokie korzenie
+  (rośliny dnia +10%, 2 pkt + 20 drewna), Szept mgły (kupiec x2 dłużej, 2 pkt + 2 odłamki), Pamięć przypływu (wyprawy -25%,
+  3 pkt + 1 dar).
 - [x] Chiński: **uproszczony (zh-Hans)**.
 - [x] Cząsteczki: **własny system pikselowy** (pula sprite'ów, 12 kl./s) zamiast ParticleSystem, dla ostrych pikseli.
 - [x] Woda i mgła: **liczone w shaderze z mapy danych** (port prototypu), ryby i potwór w shaderze, nie jako osobne sprite'y.
@@ -389,6 +395,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     odłamek leży 2 min, potwór: ofiara 5 plonów nocy = dar z głębin, raz na noc), ołtarz na brzegu (500 monet + 10 kamienia:
     potwór x3, przywołanie za 3 plony nocy), latarnia morska (2000 monet + 10 odłamków, lampa 0.3 Esencji/min:
     mgła o 25% dalej, zdarzenia x2).
+33. **5c:** Kronika wyspy liczy osiągnięcia cyklu księżyca (od nowiu do nowiu, z zegara komputera) i przy nowiu zamienia je
+    w punkty księżyca (wyspa nic nie traci). Księga ma zakładki Rytuały (6 stałych bonusów za punkty i surowce, §7)
+    i Bestiariusz (rośliny, ryby, zjawy, zapiski lore; nieodkryte jako „???”, pełna strona = punkty). Zapis v5.
 
 ---
 
@@ -422,7 +431,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/UI/Ui.cs`, `UiTheme.cs`, `UiInput.cs`, `LocText.cs` | fabryka elementów (9-slice, tekst, przycisk, pasek), motyw (sprite'y, ikony, kolory, tabele), wejście, tekst z klucza odświeżany po zmianie języka |
 | `Scripts/UI/HudView.cs` | HUD: waluty (pokazane po zdobyciu), Esencja, Księga i opcje, rytm pracy, zegar; chowa się po 5 s bez ruchu myszy |
 | `Scripts/UI/SeedWheel.cs` | koło nasion wokół pustej grządki, dymki z opisem, PPM/Esc zamyka |
-| `Scripts/UI/BookView.cs` | Księga: zakładki; Ulepszenia (zakup), Statystyki, Opcje (język, jasność nocy, rytm pracy); reszta „Wkrótce” |
+| `Scripts/UI/BookView.cs` | Księga: zakładki Sklep (Lampy, Morze), Ulepszenia, Rytuały, Bestiariusz, Statystyki, Opcje (język, jasność nocy, rytm pracy) |
 | `Scripts/UI/ToastView.cs`, `TooltipView.cs` | toasty (maks. 3, 4 s) i dymek przy kursorze |
 | `Localization/*.csv` | tabele: `glossary` (słownik terminów), `game` (teksty gry), `ui` (interfejs) |
 | `Shaders/SpriteSway.shader`, `SpriteSwayUnlit.shader` | sprite oświetlany (jak Sprite-Lit-Default URP 17.6) + kołysanie wierszy pikseli + kontur; wersja bez oświetlenia dla `*_glow` |
@@ -439,6 +448,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Sea/Pier.cs`, `FishingNets.cs` | pomost i łowisko (ryby liczone tak jak w `Water.shader`), sieci co godzinę |
 | `Scripts/Sea/Expedition.cs` | łódź i wyprawy (postęp z aktywnej pracy, łup) |
 | `Scripts/Sea/NightEvents.cs`, `WillOWisp.cs`, `StarPickup.cs`, `MonsterEvent.cs`, `Altar.cs` | nocne zdarzenia (harmonogram, ogniki, gwiazdy, potwór), ołtarz |
+| `Scripts/Lore/Chronicle.cs`, `Rituals.cs` | kronika: liczniki cyklu, punkty księżyca przy nowiu, odkrycia do bestiariusza, rytuały i ich efekty (statyczne mnożniki) |
 | `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |
 | `Scripts/UI/PlacementMode.cs` | tryb stawiania: duch na kafelku, okrąg zasięgu światła, licznik oświetlonych grządek, kupno lampy, przenoszenie |
@@ -572,7 +582,7 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
   worek nasion i nawóz, kupiec-widmo, pomost i łowienie, sieci, łódź i wyprawy. Grafiki roślin nocy były gotowe wcześniej.
 - **Etap 5a (gotowy, do testu w Unity):** strefy: podłoża, dekoracje, zabytki z lore, bonusy ziemi, stworzenia tła.
 - **Etap 5b (gotowy, do testu w Unity):** nocne zdarzenia (błędne ogniki, spadająca gwiazda), potwór i ołtarz, latarnia morska.
-- **Etap 5c:** Księga rytuałów i cykl księżyca, bestiariusz, kolekcja lore.
+- **Etap 5c (gotowy, do testu w Unity):** Księga rytuałów i cykl księżyca, bestiariusz, kolekcja lore.
 - **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
 
 ---

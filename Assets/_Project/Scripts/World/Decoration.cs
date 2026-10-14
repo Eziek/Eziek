@@ -51,7 +51,10 @@ namespace Wyspa.World
             {
                 // zabytek: nie da się usunąć, za to opowiada kawałek historii wyspy
                 if (!string.IsNullOrEmpty(art.loreKey))
+                {
                     info.lines.Add(Loc.Get(art.loreKey));
+                    Lore.Chronicle.Note("lore:" + art.loreKey);
+                }
                 return;
             }
             if (art == null || !art.removable)

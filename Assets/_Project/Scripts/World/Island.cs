@@ -384,6 +384,7 @@ namespace Wyspa.World
             }
             Rebuild();
             claiming = false;
+            Lore.Chronicle.Count("tile");
             var zone = ZoneAt(p);
             if (zone != ZoneKind.None)
             {
@@ -564,7 +565,9 @@ namespace Wyspa.World
                     GameEvents.RaiseToast("toast.find.shard");
                     break;
                 case FindKind.Lore:
-                    GameEvents.RaiseToast("toast.find.lore", Localization.Loc.Get("lore." + (1 + h % 6)));
+                    string loreKey = "lore." + (1 + h % 6);
+                    Lore.Chronicle.Note("lore:" + loreKey);
+                    GameEvents.RaiseToast("toast.find.lore", Localization.Loc.Get(loreKey));
                     break;
                 case FindKind.Spring:
                     GameEvents.RaiseToast("toast.find.spring");
@@ -702,7 +705,11 @@ namespace Wyspa.World
             game.Wallet.Add(a.reward, a.rewardAmount);
             GameEvents.RaiseCurrencyGained(at, a.reward, a.rewardAmount);
             if (a.bonusLore && UnityEngine.Random.value < a.bonusChance)
-                GameEvents.RaiseToast("toast.find.lore", Localization.Loc.Get("lore." + UnityEngine.Random.Range(1, 7)));
+            {
+                string loreKey = "lore." + UnityEngine.Random.Range(1, 7);
+                Lore.Chronicle.Note("lore:" + loreKey);
+                GameEvents.RaiseToast("toast.find.lore", Localization.Loc.Get(loreKey));
+            }
             else if (a.bonusAmount > 0 && UnityEngine.Random.value < a.bonusChance)
             {
                 game.Wallet.Add(a.bonus, a.bonusAmount);

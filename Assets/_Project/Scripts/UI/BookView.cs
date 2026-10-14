@@ -141,6 +141,8 @@ namespace Wyspa.UI
                 case Tab.Stats: BuildStats(); break;
                 case Tab.Options: BuildOptions(); break;
                 case Tab.Shop: BuildShop(); break;
+                case Tab.Rituals: BuildRituals(); break;
+                case Tab.Bestiary: BuildBestiary(); break;
                 default: Paragraph("ui.soon", 0); break;
             }
         }
@@ -160,6 +162,7 @@ namespace Wyspa.UI
             refresh = 0.25f;
             if (current == Tab.Upgrades) RefreshUpgrades();
             else if (current == Tab.Shop) RefreshShop();
+            else if (current == Tab.Rituals) RefreshRituals();
             else if (current == Tab.Stats) BuildStats();
         }
 
@@ -527,6 +530,188 @@ namespace Wyspa.UI
                 bool afford = game != null && game.Wallet.Coins >= def.price;
                 buy.interactable = afford;
                 price.color = afford ? Ui.Theme.textDark : Ui.Theme.textWarn;
+            }
+        }
+
+        // ------------------------------------------------------------------ Księga rytuałów (GDD §11.3 G)
+
+        readonly List<(Lore.RitualDef def, Button button, TextMeshProUGUI status)> ritualRows =
+            new List<(Lore.RitualDef, Button, TextMeshProUGUI)>();
+        TextMeshProUGUI moonLine;
+
+        void BuildRituals()
+        {
+            ritualRows.Clear();
+            var chronicle = Lore.Chronicle.Instance;
+            float y = 0;
+            moonLine = Ui.Txt(content, "Moon", Ui.Theme.textDark);
+            Ui.Place(moonLine.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, 0), new Vector2(W - 64, 10));
+            y = 24;
+            info.text = Loc.Get("ui.rituals.hint");
+            foreach (var r in Lore.Rituals.All)
+            {
+                var row = Ui.Place(Ui.Rect("Ritual_" + r.id, content), Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 64, 22));
+                var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
+                LocText.On(name, r.nameKey);
+                Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -1), new Vector2(160, 10));
+                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
+                desc.text = Loc.Get(r.descKey) + " - " + Loc.Get("ui.rituals.points", r.points) + ", " + PlacementMode.CostText(r.cost);
+                Ui.Place(desc.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -11), new Vector2(W - 110, 10));
+                var def = r;
+                var b = Ui.Btn(row, "Perform", () =>
+                {
+                    var game = GameLoop.Instance;
+                    if (chronicle != null && game != null)
+                        chronicle.TryPerform(def, game.Wallet);
+                    RefreshRituals();
+                });
+                Ui.Place((RectTransform)b.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -3), new Vector2(42, 16));
+                var bt = Ui.Txt(b.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
+                Ui.Stretch(bt.rectTransform);
+                LocText.On(bt, "ui.rituals.perform");
+                var status = Ui.Txt(row, "Status", Ui.Theme.textGold, TextAlignmentOptions.TopRight);
+                Ui.Place(status.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -6), new Vector2(60, 10));
+                ritualRows.Add((r, b, status));
+                y += 23;
+            }
+            RefreshRituals();
+        }
+
+        void RefreshRituals()
+        {
+            var chronicle = Lore.Chronicle.Instance;
+            var game = GameLoop.Instance;
+            if (moonLine != null && chronicle != null)
+                moonLine.text = Loc.Get("ui.rituals.moon", chronicle.MoonPoints)
+                              + "   " + Loc.Get("ui.rituals.cycle", Mathf.CeilToInt(GameClock.DaysToNewMoon(System.DateTime.UtcNow)), chronicle.PendingPoints);
+            foreach (var (def, b, status) in ritualRows)
+            {
+                bool done = chronicle != null && chronicle.Has(def.id);
+                b.gameObject.SetActive(!done);
+                b.interactable = chronicle != null && game != null && chronicle.MoonPoints >= def.points && game.Wallet.CanAfford(def.cost);
+                status.text = done ? Loc.Get("ui.rituals.done") : "";
+            }
+        }
+
+        // ------------------------------------------------------------------ Bestiariusz i lore (GDD §11.3 H)
+
+        int bestiarySection;   // 0 rośliny, 1 ryby, 2 zdarzenia, 3 lore
+        int lorePage;
+        static readonly string[] FishIds = { "normal", "glow" };
+        static readonly string[] EventIds = { "wisp", "star", "merchant", "monster", "fullmoon" };
+        static readonly string[] LoreIds = { "lore.1", "lore.2", "lore.3", "lore.4", "lore.5", "lore.6", "lore.crypt", "lore.statue", "lore.stairs", "lore.monster" };
+        // nagroda za ukończenie kategorii (punkty księżyca)
+        static readonly int[] CategoryReward = { 2, 1, 2, 3 };
+
+        void BuildBestiary()
+        {
+            var chronicle = Lore.Chronicle.Instance;
+            float x = 0;
+            string[] sections = { "ui.bestiary.plants", "ui.bestiary.fish", "ui.bestiary.events", "ui.bestiary.lore" };
+            for (int i = 0; i < sections.Length; i++)
+            {
+                int sec = i;
+                var b = Ui.Btn(content, "Section", () => { bestiarySection = sec; lorePage = 0; Show(Tab.Bestiary); });
+                var label = Ui.Txt(b.transform, "Text", sec == bestiarySection ? Ui.Theme.textGold : Ui.Theme.textLight, TextAlignmentOptions.Center);
+                label.text = Loc.Get(sections[i]);
+                float bw = Mathf.Max(40f, Ui.Width(label) + 12f);
+                Ui.Stretch(label.rectTransform);
+                Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, 0), new Vector2(bw, 14));
+                x += bw + 4;
+            }
+            info.text = Loc.Get("ui.bestiary.hint");
+            if (chronicle == null)
+                return;
+
+            // wpisy kategorii: (id w kronice, tekst gdy odkryte)
+            var entries = new List<(string id, string label)>();
+            var game = GameLoop.Instance;
+            switch (bestiarySection)
+            {
+                case 0:
+                    if (game != null && game.Crops != null)
+                        foreach (var c in game.Crops.crops)
+                            if (c != null) entries.Add(("crop:" + c.id, Loc.Get("crop." + c.id)));
+                    break;
+                case 1:
+                    foreach (var f in FishIds) entries.Add(("fish:" + f, Loc.Get("ui.fish." + f)));
+                    break;
+                case 2:
+                    foreach (var e in EventIds) entries.Add(("event:" + e, Loc.Get("ui.event." + e)));
+                    break;
+                default:
+                    foreach (var l in LoreIds) entries.Add(("lore:" + l, Loc.Get(l)));
+                    break;
+            }
+            int found = 0;
+            foreach (var e in entries)
+                if (chronicle.Found(e.id)) found++;
+            float y = 20;
+            var progress = Ui.Txt(content, "Progress", Ui.Theme.textDark);
+            progress.text = Loc.Get("ui.bestiary.progress", found, entries.Count);
+            Ui.Place(progress.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(120, 10));
+            string category = "bestiary." + bestiarySection;
+            if (found == entries.Count && entries.Count > 0)
+            {
+                if (chronicle.Claimed(category))
+                {
+                    var done = Ui.Txt(content, "Done", Ui.Theme.textGold, TextAlignmentOptions.TopRight);
+                    done.text = Loc.Get("ui.bestiary.complete");
+                    Ui.Place(done.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -y), new Vector2(160, 10));
+                }
+                else
+                {
+                    int reward = CategoryReward[Mathf.Clamp(bestiarySection, 0, CategoryReward.Length - 1)];
+                    var claim = Ui.Btn(content, "Claim", () => { chronicle.Claim(category, reward); Show(Tab.Bestiary); });
+                    var ct = Ui.Txt(claim.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
+                    ct.text = Loc.Get("ui.bestiary.claim", reward);
+                    float cw = Ui.Width(ct) + 12f;
+                    Ui.Stretch(ct.rectTransform);
+                    Ui.Place((RectTransform)claim.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -y + 2), new Vector2(cw, 14));
+                }
+            }
+            y += 16;
+
+            if (bestiarySection == 3)
+            {
+                // lore: odkryte fragmenty w całości, po 4 na stronę
+                var lines = new List<string>();
+                foreach (var e in entries)
+                    if (chronicle.Found(e.id)) lines.Add(e.label);
+                const int perPage = 4;
+                int pages = Mathf.Max(1, (lines.Count + perPage - 1) / perPage);
+                lorePage = Mathf.Clamp(lorePage, 0, pages - 1);
+                for (int i = lorePage * perPage; i < Mathf.Min(lines.Count, (lorePage + 1) * perPage); i++)
+                {
+                    var t = Ui.Txt(content, "Lore", Ui.Theme.textDark);
+                    t.textWrappingMode = TextWrappingModes.Normal;
+                    t.text = lines[i];
+                    float h = Mathf.Ceil(t.GetPreferredValues(t.text, W - 70, 0f).y);
+                    Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 70, h));
+                    y += h + 6;
+                }
+                if (pages > 1)
+                {
+                    var prev = Ui.Btn(content, "Prev", () => { lorePage--; Show(Tab.Bestiary); });
+                    Ui.Place((RectTransform)prev.transform, Ui.BottomLeft, Ui.BottomLeft, new Vector2(0, 0), new Vector2(18, 14));
+                    Ui.Stretch(Ui.Txt(prev.transform, "T", Ui.Theme.textLight, TextAlignmentOptions.Center).rectTransform).GetComponent<TextMeshProUGUI>().text = "<";
+                    prev.interactable = lorePage > 0;
+                    var next = Ui.Btn(content, "Next", () => { lorePage++; Show(Tab.Bestiary); });
+                    Ui.Place((RectTransform)next.transform, Ui.BottomLeft, Ui.BottomLeft, new Vector2(22, 0), new Vector2(18, 14));
+                    Ui.Stretch(Ui.Txt(next.transform, "T", Ui.Theme.textLight, TextAlignmentOptions.Center).rectTransform).GetComponent<TextMeshProUGUI>().text = ">";
+                    next.interactable = lorePage < pages - 1;
+                }
+                return;
+            }
+            // pozostałe kategorie: dwie kolumny nazw, nieodkryte jako „???”
+            for (int i = 0; i < entries.Count; i++)
+            {
+                var e = entries[i];
+                bool known = chronicle.Found(e.id);
+                var t = Ui.Txt(content, "Entry", known ? Ui.Theme.textDark : Ui.Theme.textMuted);
+                t.text = known ? e.label : "???";
+                float col = (i % 2) * ((W - 64) / 2f);
+                Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(col, -(y + (i / 2) * 13)), new Vector2((W - 64) / 2f - 4, 10));
             }
         }
 

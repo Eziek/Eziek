@@ -35,7 +35,26 @@ namespace Wyspa.Core
 
         /// <summary>0 = nów, 0.5 = pełnia.</summary>
         public float MoonPhase => MoonPhaseAt(DateTime.UtcNow);
-        public bool IsFullMoon => DebugFullMoon || Mathf.Abs(MoonPhase - 0.5f) < 0.034f; // ok. ±1 doba
+        public bool IsFullMoon => DebugFullMoon || Mathf.Abs(MoonPhase - 0.5f) < FullMoonWindow;
+
+        /// <summary>Połowa okna pełni w fazie (0.034 = ok. ±1 doba; rytuał „Księżycowa rosa” podwaja).</summary>
+        public static float FullMoonWindow = 0.034f;
+
+        /// <summary>Zmierzch: ostatnia godzina przed nocą (rytuał „Zmierzch”: rośliny nocy rosną też wtedy).</summary>
+        public bool IsDusk
+        {
+            get
+            {
+                float h = Hour, start = nightStartsAt, from = Mathf.Repeat(start - 1f, 24f);
+                return from < start ? h >= from && h < start : h >= from || h < start;
+            }
+        }
+
+        /// <summary>Numer cyklu księżyca (od nowiu do nowiu) - do punktów Księgi rytuałów (GDD §11.3 G).</summary>
+        public static int CycleIndex(DateTime utc) => (int)Math.Floor((utc - KnownNewMoonUtc).TotalDays / SynodicMonthDays);
+
+        /// <summary>Ile dni do najbliższego nowiu (końca cyklu).</summary>
+        public static float DaysToNewMoon(DateTime utc) => (float)((1.0 - MoonPhaseAt(utc)) * SynodicMonthDays);
 
         /// <summary>Do testów (HUD debugowy): pełnia niezależnie od prawdziwej fazy księżyca.</summary>
         public static bool DebugFullMoon;

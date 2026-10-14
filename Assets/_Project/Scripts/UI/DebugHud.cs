@@ -169,6 +169,15 @@ namespace Wyspa.UI
             var merchant = Wyspa.Sea.GhostMerchant.Instance;
             if (merchant != null && !merchant.Present && GUILayout.Button("Przywołaj kupca-widmo"))
                 merchant.Arrive();
+            var chronicle = Wyspa.Lore.Chronicle.Instance;
+            if (chronicle != null)
+            {
+                GUILayout.Label($"Księżyc: {chronicle.MoonPoints} pkt, cykl da {chronicle.PendingPoints}");
+                if (GUILayout.Button("Zamknij cykl księżyca teraz"))
+                    chronicle.CloseCycle(GameClock.CycleIndex(System.DateTime.UtcNow));
+                if (GUILayout.Button("+5 pkt księżyca"))
+                    chronicle.DebugAddPoints(5);
+            }
             var events = Wyspa.Sea.NightEvents.Instance;
             if (events != null)
             {

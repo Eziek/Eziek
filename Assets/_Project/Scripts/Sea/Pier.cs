@@ -61,6 +61,8 @@ namespace Wyspa.Sea
             var at = water.FishPosition(i);
             bool glow = water.IsGlowing(i) && game.Clock.IsNight;
             water.Hide(i, RespawnSeconds);
+            Lore.Chronicle.Note(glow ? "fish:glow" : "fish:normal");
+            Lore.Chronicle.Count("fish");
             int scales = glow ? 3 : 1;
             int coins = Random.Range(2, 6);
             game.Wallet.Add(CurrencyType.Scale, scales);

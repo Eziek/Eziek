@@ -18,7 +18,10 @@ namespace Wyspa.Sea
     /// </summary>
     public class GhostMerchant : MonoBehaviour, IClickable, IContextActions
     {
-        const float StaySeconds = 600f;
+        const float BaseStaySeconds = 600f;
+        /// <summary>Rytuał „Szept mgły”: kupiec zostaje dłużej.</summary>
+        public static float StayMultiplier = 1f;
+        static float StaySeconds => BaseStaySeconds * StayMultiplier;
         const float SellMultiplier = 1.5f;
         const float Ppu = 16f;
 
@@ -105,8 +108,10 @@ namespace Wyspa.Sea
         static string NightKey(DateTime now) => NightStart(now).ToString("yyyy-MM-dd");
 
         /// <summary>Przybycie (także z HUD debugowego): oferta na tę noc, łódź wyłania się z mgły.</summary>
-        public void Arrive(string night = null, float stay = StaySeconds)
+        public void Arrive(string night = null, float stay = -1f)
         {
+            if (stay < 0f)
+                stay = StaySeconds;
             var game = GameLoop.Instance;
             if (game == null)
                 return;
@@ -118,6 +123,8 @@ namespace Wyspa.Sea
             present = true;
             StartCoroutine(Fade(true));
             GameEvents.RaiseToast("toast.merchant.arrived");
+            Lore.Chronicle.Note("event:merchant");
+            Lore.Chronicle.Count("event");
         }
 
         void Leave()

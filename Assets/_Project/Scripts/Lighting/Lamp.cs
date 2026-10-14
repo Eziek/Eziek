@@ -14,6 +14,9 @@ namespace Wyspa.Lighting
         /// <summary>Do testów: wszystkie lampy zgaszone (np. żeby sprawdzić rośliny nocy).</summary>
         public static bool DebugAllOff;
 
+        /// <summary>Rytuał „Ciche lampy”: lampy spalają mniej Esencji.</summary>
+        public static float ConsumptionMultiplier = 1f;
+
         [SerializeField] LampDefinition definition;
         [SerializeField] Light2D light2D;
         [SerializeField] SpriteRenderer glowRenderer;
@@ -48,7 +51,7 @@ namespace Wyspa.Lighting
         /// <summary>Wywoływane co tick przez GameLoop (najtańsze lampy pierwsze).</summary>
         public void Tick(float dt, bool night, EssenceStore essence)
         {
-            bool on = !DebugAllOff && night && definition != null && essence.TryConsume(definition.essencePerMinute * dt / 60f);
+            bool on = !DebugAllOff && night && definition != null && essence.TryConsume(definition.essencePerMinute * ConsumptionMultiplier * dt / 60f);
             SetOn(on);
         }
 
