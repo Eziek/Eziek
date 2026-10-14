@@ -334,6 +334,15 @@ Po pobraniu: **Wyspa → 2** (nowe czasy wzrostu i ceny w danych roślin i uleps
 5. Sklep → Morze: długi opis latarni morskiej kończy się „...” przed przyciskiem, koszt widać cały; najechanie pokazuje całość.
 6. Opcje → Ogólne: nie ma już „Godziny nocy”.
 
+## 4t. Menu główne i sloty zapisu (test)
+Po pobraniu: **Wyspa → 2** (ikona „menu” w motywie UI), potem Play.
+1. Gra startuje w menu głównym: nazwa gry, trzy sloty, na dole język i „Wyjdź z gry”. Za menu przyciemniona wyspa.
+   Stary zapis jest w slocie 1 jako „Wyspa 1” z datą i godziną ostatniego zapisu.
+2. Pusty slot → „Nowa gra”: pole z nazwą (max 10 znaków, wpisywanie, Enter albo „Start”). Nowa wyspa z tablicą wprowadzenia.
+3. W grze: prawy klik → „Menu główne”. Gra się zapisuje, w slocie widać nową godzinę.
+4. „Usuń”: pierwszy klik zmienia napis na „Na pewno?”, drugi (w ciągu 4 s) usuwa zapis.
+5. Język w menu: klik przełącza na kolejny (sprawdź też pole nazwy z japońskimi znakami przez IME).
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

@@ -113,7 +113,7 @@ namespace Wyspa.UI
             }
             var view = Wyspa.World.ViewController.Instance;
             bool mini = view != null && view.Mini;
-            bool visible = !mini && (ForceVisible || flying > 0 || Time.unscaledTime - lastMove < HideAfter);
+            bool visible = !mini && !Save.SaveSystem.InMenu && (ForceVisible || flying > 0 || Time.unscaledTime - lastMove < HideAfter);
             float target = visible ? 1f : 0f;
             group.alpha = Mathf.MoveTowards(group.alpha, target, Time.unscaledDeltaTime * 4f);
             group.blocksRaycasts = group.alpha > 0.5f;

@@ -29,6 +29,8 @@ namespace Wyspa.UI
 
         public void Show(string key, object[] args)
         {
+            if (Save.SaveSystem.InMenu)
+                return;   // menu główne: zdarzenia wyspy w tle bez powiadomień
             var img = Ui.Img(root, "Toast", Ui.Theme.toast, true);
             var text = Ui.Txt(img.transform, "Text", Ui.Theme.textLight);
             text.text = Loc.Get(key, args);

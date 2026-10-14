@@ -163,6 +163,9 @@ ICON_MAPS = {
              ".hj.jh.w..", ".hj.jh....", ".hjjjh....", ".hhhhh....", ".........."],
     'fill': [".......jj.", "......jj..", ".....jj...", "....jj....", "..sss.....",
              ".szzs.....", ".szs......", "..s.......", "hhhhhhh...", ".........."],
+    # menu główne (Etap 6d+): trzy deski jak w księdze zapisów
+    'menu': ["..........", ".hhhhhhh..", ".hjjjjjh..", ".hhhhhhh..", ".hjjjjjh..",
+             ".hhhhhhh..", ".hjjjjjh..", ".hhhhhhh..", "..........", ".........."],
 }
 
 

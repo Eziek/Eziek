@@ -34,6 +34,7 @@ namespace Wyspa.Save
         public List<string> unlockedSeeds = new List<string>();      // v6: nasiona odblokowane w sklepie
         public List<string> automationGranted = new List<string>();  // v6: darmowa pierwsza sztuka budowli już była
         public int intro;                       // v8: krok wprowadzenia (starsze zapisy: wprowadzenie skończone)
+        public string slotName;                 // v8: nazwa zapisu w menu głównym (do 10 znaków)
     }
 
     [Serializable]
@@ -46,6 +47,23 @@ namespace Wyspa.Save
         public bool fertilized;
     }
 
+    /// <summary>Nagłówek slotu do menu głównego: tylko pola potrzebne na liście (JsonUtility pomija resztę pliku).</summary>
+    [Serializable]
+    public class SlotInfo
+    {
+        public string slotName;
+        public long savedAtUtcTicks;
+        public IslandHeader island;
+        [NonSerialized] public int index;
+        [NonSerialized] public bool exists;
+
+        [Serializable]
+        public class IslandHeader { public int purchased; }
+
+        public DateTime SavedLocal => new DateTime(savedAtUtcTicks, DateTimeKind.Utc).ToLocalTime();
+        public int Tiles => island != null ? island.purchased : 0;
+    }
+
     /// <summary>
     /// Zapis JSON + postęp offline: rośliny NOCY rosną za godziny nocy, które minęły od zamknięcia gry
     /// (lampy offline nie świecą, więc cała wyspa jest w ciemności). Rośliny DNIA offline nie rosną.
@@ -53,16 +71,128 @@ namespace Wyspa.Save
     public class SaveSystem : MonoBehaviour
     {
         [SerializeField] float autosaveSeconds = 60f;
-        [SerializeField] string fileName = "save.json";
+
+        // ------------------------------------------------------------ sloty (menu główne, Etap 6d+)
+
+        /// <summary>Ile slotów zapisu ma menu główne.</summary>
+        public const int Slots = 3;
+        /// <summary>Najdłuższa nazwa zapisu.</summary>
+        public const int MaxNameLength = 10;
+        const string LegacyFile = "save.json";
+
+        /// <summary>Wybrany slot (0..2) albo -1 = menu główne (gra bez zapisu, wyspa w tle). Przeżywa przeładowanie sceny.</summary>
+        public static int CurrentSlot = -1;
+        /// <summary>Nazwa bieżącego zapisu (z pliku albo wpisana przy nowej grze).</summary>
+        public static string CurrentName = "";
+        public static bool InMenu => CurrentSlot < 0;
+
+        /// <summary>Każde uruchomienie gry (także Play w edytorze bez przeładowania domeny) zaczyna się od menu głównego.</summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatics()
+        {
+            CurrentSlot = -1;
+            CurrentName = "";
+        }
+
+        public static string SlotPath(int slot) => Path.Combine(Application.persistentDataPath, $"save_{slot + 1}.json");
+
+        /// <summary>Stan slotów do menu głównego (puste sloty: exists = false). Stary save.json trafia najpierw do slotu 1.</summary>
+        public static List<SlotInfo> ListSlots()
+        {
+            MigrateLegacy();
+            var list = new List<SlotInfo>();
+            for (int i = 0; i < Slots; i++)
+            {
+                SlotInfo info = null;
+                try
+                {
+                    string path = SlotPath(i);
+                    if (File.Exists(path))
+                        info = JsonUtility.FromJson<SlotInfo>(File.ReadAllText(path));
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[Wyspa] Nie udało się odczytać slotu {i + 1}: {e.Message}");
+                }
+                if (info == null)
+                    info = new SlotInfo();
+                else
+                    info.exists = true;
+                info.index = i;
+                list.Add(info);
+            }
+            return list;
+        }
+
+        static void MigrateLegacy()
+        {
+            try
+            {
+                string legacy = Path.Combine(Application.persistentDataPath, LegacyFile);
+                if (File.Exists(legacy) && !File.Exists(SlotPath(0)))
+                    File.Move(legacy, SlotPath(0));
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Wyspa] Nie udało się przenieść starego zapisu do slotu 1: {e.Message}");
+            }
+        }
+
+        /// <summary>Gra na slocie (wczytanie albo nowa wyspa, gdy plik nie istnieje): scena ładuje się od nowa.</summary>
+        public static void Play(int slot, string newName = null)
+        {
+            CurrentSlot = Mathf.Clamp(slot, 0, Slots - 1);
+            CurrentName = CleanName(newName, slot);
+            ReloadScene();
+        }
+
+        public static void DeleteSlot(int slot)
+        {
+            try
+            {
+                string path = SlotPath(slot);
+                if (File.Exists(path))
+                    File.Delete(path);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Wyspa] Nie udało się usunąć slotu {slot + 1}: {e.Message}");
+            }
+        }
+
+        /// <summary>Nazwa zapisu: bez znaków nowej linii, najwyżej 10 znaków; pusta = domyślna „Wyspa N”.</summary>
+        public static string CleanName(string name, int slot)
+        {
+            name = (name ?? "").Replace("\n", " ").Replace("\r", " ").Trim();
+            if (name.Length > MaxNameLength)
+                name = name.Substring(0, MaxNameLength);
+            return name.Length > 0 ? name : Localization.Loc.Get("ui.menu.default_name", slot + 1);
+        }
+
+        /// <summary>Powrót do menu głównego: zapis bieżącej gry, potem scena od nowa bez slotu.</summary>
+        public void BackToMenu()
+        {
+            if (owner != null)
+                Save(owner);
+            owner = null;
+            CurrentSlot = -1;
+            ReloadScene();
+        }
+
+        static void ReloadScene()
+        {
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(scene.buildIndex >= 0 ? scene.buildIndex : 0);
+        }
 
         float timer;
         GameLoop owner;
 
-        public string FilePath => Path.Combine(Application.persistentDataPath, fileName);
+        public string FilePath => SlotPath(Mathf.Max(0, CurrentSlot));
 
         void Update()
         {
-            if (owner == null)
+            if (owner == null || InMenu)
                 return;
             timer += Time.unscaledDeltaTime;
             if (timer >= autosaveSeconds)
@@ -74,19 +204,22 @@ namespace Wyspa.Save
 
         void OnApplicationQuit()
         {
-            if (owner != null)
+            if (owner != null && !InMenu)
                 Save(owner);
         }
 
         void OnApplicationPause(bool paused)
         {
-            if (paused && owner != null)
+            if (paused && owner != null && !InMenu)
                 Save(owner);
         }
 
-        /// <summary>Reset zapisu (Opcje, z potwierdzeniem): plik znika, scena ładuje się od nowa z nową wyspą. Opcje gracza zostają.</summary>
+        /// <summary>Reset zapisu (Opcje, z potwierdzeniem): plik bieżącego slotu znika, scena ładuje się od nowa z nową wyspą
+        /// (ta sama nazwa). Opcje gracza zostają.</summary>
         public void ResetAll()
         {
+            if (InMenu)
+                return;
             owner = null;   // bez autozapisu w tej klatce
             try
             {
@@ -98,13 +231,14 @@ namespace Wyspa.Save
                 Debug.LogError($"[Wyspa] Nie udało się usunąć zapisu: {e.Message}");
                 return;
             }
-            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-            UnityEngine.SceneManagement.SceneManager.LoadScene(scene.buildIndex >= 0 ? scene.buildIndex : 0);
+            ReloadScene();
         }
 
         public void Save(GameLoop game)
         {
             owner = game;
+            if (InMenu)
+                return;   // menu główne: wyspa w tle nie jest zapisywana
             var data = new SaveData
             {
                 savedAtUtcTicks = DateTime.UtcNow.Ticks,
@@ -124,6 +258,7 @@ namespace Wyspa.Save
                 monsterNight = Sea.NightEvents.Instance != null ? Sea.NightEvents.Instance.MonsterNight : "",
                 chronicle = Lore.Chronicle.Instance != null ? Lore.Chronicle.Instance.Snapshot() : null,
                 intro = UI.IntroNotes.Instance != null ? UI.IntroNotes.Instance.Step : UI.IntroNotes.Done,
+                slotName = CurrentName,
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
@@ -142,6 +277,9 @@ namespace Wyspa.Save
         public void Load(GameLoop game)
         {
             owner = game;
+            if (InMenu)
+                return;
+            MigrateLegacy();
             if (!File.Exists(FilePath))
                 return;
 
@@ -157,6 +295,8 @@ namespace Wyspa.Save
             }
             if (data == null)
                 return;
+            if (!string.IsNullOrEmpty(data.slotName))
+                CurrentName = data.slotName;
 
             // najpierw wyspa: grządki (do wczytania niżej) i miejsca na obiekty powstają razem z kafelkami.
             // Zapis sprzed Etapu 3b nie ma wyspy - dostaje nowy świat (waluty i ulepszenia zostają).

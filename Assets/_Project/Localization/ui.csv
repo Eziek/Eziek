@@ -211,3 +211,12 @@ ui.board.skip,Rozbiórka tablicy kończy wprowadzenie.,Taking the board apart en
 ui.board.done,Rozbierz tablicę: 3 drewna.,Take the board apart: 3 wood.,Brett zerlegen: 3 Holz.,掲示板を解体：木材3。,拆掉告示板：木材3。,panel tablicy ogłoszeń
 ui.crate.merchant,"Duszek-handlarz sprzeda ją, gdy się zapełni",The merchant spirit sells it when full,"Der Händlergeist verkauft sie, wenn sie voll ist",いっぱいになると商いの精霊が売る,箱子满了商贩精灵就会出售,panel skrzyni
 ui.tree.pick,Podnieś z ziemi: {0} (+{1}),Pick up from the ground: {0} (+{1}),Vom Boden aufheben: {0} (+{1}),地面から拾う：{0}（+{1}）,从地上捡起：{0}（+{1}）,"{0} = owoce, {1} = monety"
+ui.menu.default_name,Wyspa {0},Island {0},Insel {0},島{0},岛屿{0},"domyślna nazwa zapisu, {0} = numer slotu; maks. 10 znaków"
+ui.menu.empty,Pusty zapis,Empty save,Leerer Spielstand,空きセーブ,空存档,pusty slot
+ui.menu.slot_info,{0},{0},{0},{0},{0},{0} = data i godzina zapisu (format języka)
+ui.menu.play,Graj,Play,Spielen,プレイ,开始,wczytaj zapis
+ui.menu.new,Nowa gra,New game,Neues Spiel,新しく始める,新游戏,pusty slot
+ui.menu.start,Start,Start,Start,開始,开始,nowa gra: potwierdzenie nazwy
+ui.menu.name,Nazwa wyspy (do 10 znaków),Island name (up to 10),Inselname (bis 10),島の名前（10文字まで）,岛屿名称（最多10字）,pole nazwy zapisu
+ui.menu.delete,Usuń,Delete,Löschen,削除,删除,usuwa zapis (drugi klik potwierdza)
+ui.menu.delete_confirm,Na pewno?,Sure?,Sicher?,本当に？,确定？,potwierdzenie usunięcia

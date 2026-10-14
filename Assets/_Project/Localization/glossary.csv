@@ -141,3 +141,5 @@ fruit.ghostpear,Upiorna gruszka,Ghost pear,Geisterbirne,幽霊梨,幽灵梨,świ
 fruit.moon,Owoc księżyca,Moonfruit,Mondfrucht,月の実,月之果,tylko w pełnię
 bld.board,Tablica ogłoszeń,Notice Board,Anschlagbrett,掲示板,告示板,wprowadzenie (Etap 6d): karteczki z zadaniami
 term.note,Karteczka,Note,Zettel,張り紙,便条,zadanie przybite do tablicy ogłoszeń
+term.save_slot,Zapis,Save,Spielstand,セーブ,存档,slot zapisu w menu głównym (3 sloty)
+menu.main,Menu główne,Main menu,Hauptmenü,メインメニュー,主菜单,pierścień akcji: powrót do menu (gra się zapisuje)

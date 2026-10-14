@@ -35,6 +35,8 @@ namespace Wyspa.UI
         public PlacementMode Placement { get; private set; }
         public TooltipView Tooltip { get; private set; }
         public ActionRing Ring { get; private set; }
+        /// <summary>Menu główne (tylko gdy nie wybrano jeszcze slotu zapisu).</summary>
+        public MainMenuView Menu { get; private set; }
 
         // prawy klik na wyspie otwiera pierścień akcji (GDD §12.10): uzbrojony przy wciśnięciu, otwiera się po puszczeniu bez przeciągania
         bool ringArmed;
@@ -66,7 +68,7 @@ namespace Wyspa.UI
         void Start()
         {
             ApplySavedOptions();
-            if (PlayerPrefs.GetInt("hintRing", 0) == 0)
+            if (PlayerPrefs.GetInt("hintRing", 0) == 0 && !Save.SaveSystem.InMenu)
                 StartCoroutine(RingHint());
         }
 
@@ -180,6 +182,8 @@ namespace Wyspa.UI
             Context = ContextPanel.Create(canvasRect, StartMove);
             Placement = PlacementMode.Create(transform, Tooltip);
             Ring = ActionRing.Create(canvasRect, Tooltip);
+            if (Save.SaveSystem.InMenu)
+                Menu = MainMenuView.Create(canvasRect);
             Tooltip.transform.SetAsLastSibling();
         }
 
@@ -266,6 +270,8 @@ namespace Wyspa.UI
         /// </summary>
         void UpdateRingTrigger()
         {
+            if (Save.SaveSystem.InMenu)
+                return;   // menu główne: wyspa w tle nie reaguje
             var mouse = UiInput.MousePosition;
             if (UiInput.RightPressed)
             {
@@ -293,6 +299,7 @@ namespace Wyspa.UI
                 new ActionRing.Entry { icon = "shop", nameKey = "menu.shop", run = () => OpenBook(BookView.Tab.Shop) },
                 new ActionRing.Entry { icon = "plus", nameKey = "menu.expand", run = () => { CloseAll(); Expansion.Toggle(); } },
                 new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
+                new ActionRing.Entry { icon = "menu", nameKey = "menu.main", run = BackToMenu },
                 new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame },
             };
             var cam = Camera.main;
@@ -305,6 +312,15 @@ namespace Wyspa.UI
                     run = () => { if (plot != null && Island.Instance != null) Island.Instance.TryFill(plot); },
                 });
             return list;
+        }
+
+        /// <summary>Powrót do menu głównego (pierścień): gra zapisuje się, scena ładuje się od nowa z menu.</summary>
+        void BackToMenu()
+        {
+            CloseAll();
+            var save = FindAnyObjectByType<Save.SaveSystem>();
+            if (save != null)
+                save.BackToMenu();
         }
 
         /// <summary>Wyjście z gry (pierścień, Opcje): zapis robi SaveSystem przy zamykaniu aplikacji.</summary>

@@ -138,6 +138,9 @@ namespace Wyspa.Core
         }
 
         /// <summary>Po każdym zbiorze (ręcznym i przez ognika): bestiariusz, liczniki cyklu, mutacje. Ponowne sadzenie robią runy siewu.</summary>
+        /// <summary>Ziarno wyspy w tle menu głównego.</summary>
+        const int MenuSeed = 20261014;
+
         public void AfterHarvest(FarmPlot plot, CropDefinition crop)
         {
             if (crop != null)
@@ -185,8 +188,9 @@ namespace Wyspa.Core
             ApplyUpgrades();
             if (saveSystem != null)
                 saveSystem.Load(this);
+            // pierwszy start slotu: wyspa 2x2 z losowego ziarna; menu główne: stała wyspa w tle, bez tablicy wprowadzenia
             if (island != null && !island.Ready)
-                island.NewWorld(NewSeed());   // pierwszy start: wyspa 2x2 z losowego ziarna
+                island.NewWorld(Save.SaveSystem.InMenu ? MenuSeed : NewSeed(), !Save.SaveSystem.InMenu);
             if (island != null)
                 island.FlushRefunds(wallet);
             foreach (var plot in FarmPlot.All)

@@ -245,7 +245,7 @@ namespace Wyspa.World
 
         // ================================================================ świat
 
-        public void NewWorld(int seed)
+        public void NewWorld(int seed, bool withBoard = true)
         {
             Clear();
             map.NewWorld(seed);
@@ -253,7 +253,10 @@ namespace Wyspa.World
             Rebuild();
             SyncPlots();
             // nowa gra (Etap 6d): na czwartym kafelku startu zamiast dekoracji stoi tablica z karteczkami wprowadzenia
-            SpawnBoard(plan.startDecoTile);
+            if (withBoard)
+                SpawnBoard(plan.startDecoTile);
+            else
+                AddDecoration(plan.startDecoTile, plan.startDeco);
             // lampa startowa na wolnym kafelku startu (GDD §13.1: 2 grządki, obiekt, latarnia)
             var lantern = art != null ? art.Lamp(StarterLamp) : null;
             if (lantern != null && NearestFree(out var lampTile))

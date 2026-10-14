@@ -76,6 +76,9 @@ namespace UnityEngine
     public static class GUILayout { public static void BeginArea(Rect r, GUIStyle s) { } public static void EndArea() { } public static Vector2 BeginScrollView(Vector2 v, params GUILayoutOption[] o) => v; public static void EndScrollView() { } public static void Label(string s, params GUILayoutOption[] o) { } public static bool Button(string s, params GUILayoutOption[] o) => false; public static bool Toggle(bool v, string s, params GUILayoutOption[] o) => v; public static void Space(float f) { } public static void BeginHorizontal(params GUILayoutOption[] o) { } public static void EndHorizontal() { } }
     public static class GUILayoutUtility { public static Rect GetRect(float w, float h) => default; }
     [AttributeUsage(AttributeTargets.Field)] public class SerializeField : Attribute { }
+    public enum RuntimeInitializeLoadType { AfterSceneLoad = 0, BeforeSceneLoad = 1, AfterAssembliesLoaded = 2, BeforeSplashScreen = 3, SubsystemRegistration = 4 }
+    [AttributeUsage(AttributeTargets.Method)] public class RuntimeInitializeOnLoadMethodAttribute : Attribute
+    { public RuntimeInitializeOnLoadMethodAttribute() { } public RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType loadType) { } }
     public class HeaderAttribute : Attribute { public HeaderAttribute(string s) { } }
     public class TooltipAttribute : Attribute { public TooltipAttribute(string s) { } }
     public class RangeAttribute : Attribute { public RangeAttribute(float a, float b) { } }
@@ -129,7 +132,11 @@ namespace UnityEditor.SceneManagement
     public static class EditorSceneManager { public static UnityEngine.SceneManagement.Scene NewScene(NewSceneSetup s, NewSceneMode m) => default; public static bool SaveScene(UnityEngine.SceneManagement.Scene s, string p) => true; public static bool SaveCurrentModifiedScenesIfUserWantsTo() => true; }
 }
 
-namespace UnityEngine.Events { public class UnityEvent { public void AddListener(Action a) { } public void RemoveAllListeners() { } } }
+namespace UnityEngine.Events
+{
+    public class UnityEvent { public void AddListener(Action a) { } public void RemoveAllListeners() { } }
+    public class UnityEvent<T0> { public void AddListener(Action<T0> a) { } public void RemoveAllListeners() { } }
+}
 namespace UnityEngine.EventSystems
 {
     public class UIBehaviour : UnityEngine.MonoBehaviour { }
@@ -155,6 +162,7 @@ namespace UnityEngine.UI
     public class Button : Selectable { public class ButtonClickedEvent : UnityEngine.Events.UnityEvent { } public ButtonClickedEvent onClick; }
     public class CanvasScaler : UIBehaviour { public enum ScaleMode { ConstantPixelSize, ScaleWithScreenSize, ConstantPhysicalSize } public ScaleMode uiScaleMode; public float referencePixelsPerUnit; public float scaleFactor; }
     public class GraphicRaycaster : UIBehaviour { }
+    public class RectMask2D : UIBehaviour { }
 }
 namespace UnityEngine.InputSystem.UI { public class InputSystemUIInputModule : UnityEngine.EventSystems.BaseInputModule { } }
 namespace UnityEngine.TextCore.LowLevel { public enum GlyphRenderMode { SMOOTH_HINTED = 4121, SMOOTH = 4117, RASTER_HINTED = 4161, RASTER = 4157, SDF = 4134, SDFAA = 4165 } }
@@ -178,4 +186,23 @@ namespace TMPro
         public Vector2 GetPreferredValues(string text) => default; public Vector2 GetPreferredValues(string text, float width, float height) => default; public void ForceMeshUpdate() { }
     }
     public class TextMeshProUGUI : TMP_Text { }
+    public class TMP_InputField : UnityEngine.UI.Selectable
+    {
+        public enum LineType { SingleLine, MultiLineSubmit, MultiLineNewline }
+        public class OnChangeEvent : UnityEngine.Events.UnityEvent<string> { }
+        public class SubmitEvent : UnityEngine.Events.UnityEvent<string> { }
+        public string text { get; set; }
+        public int characterLimit { get; set; }
+        public LineType lineType { get; set; }
+        public RectTransform textViewport { get; set; }
+        public TMP_Text textComponent { get; set; }
+        public UnityEngine.UI.Graphic placeholder { get; set; }
+        public Color caretColor { get; set; }
+        public bool customCaretColor { get; set; }
+        public int caretWidth { get; set; }
+        public Color selectionColor { get; set; }
+        public OnChangeEvent onValueChanged { get; set; }
+        public SubmitEvent onSubmit { get; set; }
+        public void ActivateInputField() { }
+    }
 }
