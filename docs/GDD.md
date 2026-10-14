@@ -260,6 +260,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   potem przewijanie PPM. Limit i skala do ustawienia w opcjach później.
 - [x] Do Etapu 3c lampa startowa, skrzynia i automatyka **stają same** na wolnym kafelku trawy (najbliżej startu);
   bez wolnego kafelka czekają (toast). Tryb stawiania przyjdzie w 3c.
+- [x] Sklep lamp: płaci się dopiero przy postawieniu (PPM w trybie stawiania = nic nie kosztuje). Lamp można mieć dowolnie dużo.
+- [x] Obiekty klika się w kafelek pod nimi (podstawa); klik otwiera panel kontekstowy (Usuń / Sprzedaj / Przenieś).
 - [ ] Pasma światła lamp z ditheringiem Bayera (§4.4): przesunięte na później (wymaga własnego światła 2D albo post-processu).
 - [ ] Krzywa cen kafelków do balansu (obecnie kwadratowa, §13.2).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
@@ -365,6 +367,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     Start 2×2 z 2 grządkami, dekoracją i latarnią; świat 32×32 z ziarna; kupowanie kafelków (monety + Esencja), znaleziska,
     przekopywanie trawy na grządkę, mgła liczona od brzegu, więc cofa się sama. 3c: tryb stawiania i usuwanie dekoracji.
     Zapis v3 (wyspa); stary zapis zachowuje waluty i ulepszenia, a wyspę dostaje nową.
+29. Etap 3b przetestowany. **Etap 3c:** sklep lamp w Księdze i tryb stawiania (duch, czerwony gdy zajęte, okrąg zasięgu,
+    „Oświetli: N grządek”), przenoszenie obiektów, panel kontekstowy przy obiektach, usuwanie dekoracji z animacjami
+    i pozostałościami (§14), dekoracje na 25% nowych kafelków, ląd wynurza się w 3 klatkach. Latarnia startowa
+    jest stawiana w kodzie jak każda kupiona lampa.
 
 ---
 
@@ -410,6 +416,9 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/World/WorldTypes.cs`, `WorldGenerator.cs`, `IslandMap.cs`, `IslandPainter.cs` | czyste C# (testowalne poza Unity): kafelki, ziarno, generator świata (port `world_proto.py`), mapa i ceny (§13.2), malowanie lądu, wody i mapy danych (port `tiles_proto.py`, morfologia przez transformatę odległości) |
 | `Scripts/World/Island.cs`, `IslandArt.cs`, `TileObject.cs` | wyspa w scenie: tekstury w locie, grządki i dekoracje na kafelkach, zakup, przekopywanie, znaleziska, samoczynne stawianie obiektów, zapis |
 | `Scripts/World/ViewController.cs` | kadr i okno rosną z wyspą (Pixel Perfect Camera, `Screen.SetResolution` w buildzie), przewijanie PPM |
+| `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
+| `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |
+| `Scripts/UI/PlacementMode.cs` | tryb stawiania: duch na kafelku, okrąg zasięgu światła, licznik oświetlonych grządek, kupno lampy, przenoszenie |
 | `Scripts/UI/ExpansionMode.cs`, `TileFrame.cs` | tryb rozbudowy: ramki z ceną lub „?”, dymek z kosztem, kupno, przekopywanie |
 | `Editor/PixelArtImporter.cs` | automatyczne ustawienia importu sprite'ów + pivoty z `pivots.json` |
 | `Editor/WyspaSetup.cs` | menu „Wyspa”: ustawienia projektu, dane (SO, także `Data/UiTheme.asset`), budowa sceny z `prototype_layout.json` (z obiektem UI) |
@@ -533,8 +542,9 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
   tryb rozbudowy (ramki, ceny, „?”), mgła cofa się od nowego brzegu, okno i kadr rosną z wyspą, przekopywanie trawy na grządkę,
   znaleziska (monety, nasiona nocy, odłamek, lore, źródło, pradawny kamień), zapis v3.
   Strefy mają na razie zwykłą trawę (wygląd stref: Etap 5).
-- **Etap 3c:** tryb stawiania (lampy ze sklepu, skrzynia, automatyka, przenoszenie), usuwanie dekoracji (§14),
-  dekoracje na nowo odkrytych kafelkach (ok. 25%), animacja wynurzania lądu. Pasma światła Bayera (§4.4) później.
+- **Etap 3c (gotowy, do testu w Unity):** sklep lamp (Księga → Sklep), tryb stawiania i przenoszenie obiektów,
+  panel kontekstowy, usuwanie dekoracji z nagrodami (drewno, kamień, bonusy), dekoracje na 25% nowych kafelków,
+  wynurzanie lądu. Pasma światła Bayera (§4.4) później.
 - **Etap 4:** rośliny nocy (grafiki), kupiec-widmo, pomost i łowienie, łódź i wyprawy, mutacje i jakość.
 - **Etap 5:** strefy, latarnia morska, Księga rytuałów i cykle księżyca, bestiariusz, lore, potwór.
 - **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
@@ -580,6 +590,8 @@ Lewa kolumna: zakładki-ikony. Prawa strona to pergamin z treścią. Na dole pas
 - **Opcje** (patrz 12.7).
 
 ### 12.5 Tryb stawiania (lampy, budowle)
+**Stan (Etap 3c):** działa dla lamp ze sklepu i przenoszenia obiektów (przycisk „Przenieś” w panelu obiektu). Duch jest
+półprzezroczysty (alfa, nie dithering), okrąg zasięgu i licznik grządek jak niżej.
 - Półprzezroczysty (dithering) „duch” obiektu pod kursorem, przyciągany do siatki.
 - Zasięg światła jako przerywana elipsa. Grządki w zasięgu mają podświetlone narożniki, a licznik pokazuje „OŚWIETLI: N GRZĄDEK”.
 - Kolizja albo złe miejsce: duch na czerwono. LPM = postaw, PPM = anuluj.
@@ -738,6 +750,8 @@ Podgląd: `docs/img/wyspa_strefy.png` (drzewo w trakcie wycinki), `docs/img/arku
 Pętla: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna to drzewa sadzone przez gracza (§15, na później).
 
 ### 14.4 Technicznie
+**Stan (Etap 3c):** `Decoration` + konfiguracja w `IslandArt.decorations` (koszty i nagrody z tabeli wyżej), zapis rodzaju
+dekoracji na kafelku. Nagrobki i dekoracje stref przyjdą ze strefami (Etap 5).
 - `Decoration` (MonoBehaviour) + `DecorationDefinition` (SO): koszt, nagrody, szansa znaleziska, klatki usuwania,
   sprite pozostałości, flaga `isLandmark` (nieusuwalne).
 - Zapis: lista dekoracji na kafelkach (typ + stan: cała / pień / usunięta).

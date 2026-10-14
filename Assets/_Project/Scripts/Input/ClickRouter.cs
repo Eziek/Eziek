@@ -15,6 +15,8 @@ namespace Wyspa.Input
                 return;
             if (DebugHud.IsPointerOverHud(screenPos))
                 return;
+            if (PlacementMode.Active || PlacementMode.ConsumedFrame == Time.frameCount)
+                return;   // klik należy do trybu stawiania
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                 return;   // klik w UI (księga, koło nasion, przyciski) nie trafia w wyspę
 

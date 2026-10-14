@@ -32,8 +32,11 @@ namespace Wyspa.World
     /// <summary>Niespodzianka pod kafelkiem (GDD §13.4). Spring i Monolith to „dziwne kafelki”.</summary>
     public enum FindKind { None, Coins, NightSeed, Shard, Lore, Spring, Monolith }
 
-    /// <summary>Dekoracje na lądzie (usuwanie w §14, Etap 3c).</summary>
-    public enum DecoKind { TreeRound, Rock, Bush, DeadTree }
+    /// <summary>
+    /// Dekoracje na lądzie i pozostałości po usuwaniu (§14). Nowe wartości tylko na końcu: zapis trzyma liczby.
+    /// Pierwsze cztery losuje start wyspy.
+    /// </summary>
+    public enum DecoKind { TreeRound, Rock, Bush, DeadTree, Spruce, Stump, StumpSpruce, StumpDead, Rubble }
 
     /// <summary>Deterministyczny generator liczb (xorshift64*): ten sam wynik na każdym komputerze i w każdej wersji .NET.</summary>
     public class WRandom

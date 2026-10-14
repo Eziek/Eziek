@@ -148,6 +148,19 @@ Okno samo rośnie tylko w buildzie, w edytorze rośnie kadr.
    cheat **+30 Esencji**.
 8. Zapis: wyspa zapisuje się z resztą gry. Stary zapis (sprzed 3b) zachowuje monety i ulepszenia, a wyspę dostaje nową.
 
+## 4e. Etap 3c: sklep, stawianie, usuwanie (test)
+Po pobraniu zmian: **Wyspa → 3**, potem Play. Zapis z 3b zostaje (wyspa, lampa startowa wraca na swoje miejsce).
+1. **Sklep:** Księga → Sklep → Lampy. **Kup** zamyka Księgę i pokazuje ducha lampy przy kursorze.
+   Na wolnym kafelku duch jest jasny, na zajętym czerwony. Przerywany okrąg pokazuje zasięg światła, a dymek mówi, ile grządek
+   oświetli. **LPM** stawia (dopiero wtedy płacisz), **PPM** albo **Esc** anuluje.
+2. **Obiekty:** klik w kafelek pod lampą, skrzynią, skrzynią kupca albo kamieniem runicznym otwiera panel
+   (zasięg i stan lampy, zawartość skrzyni, **Sprzedaj**, **Przenieś**). „Przenieś” działa jak stawianie; ognik leci za skrzynią.
+3. **Usuwanie:** klik w kafelek pod drzewem, kamieniem albo krzakiem: panel z kosztem w Esencji i nagrodą, przycisk **Usuń**.
+   Drzewo się przewraca i zostaje pień, kamień pęka i zostaje gruz, krzak zostaje ścięty i po chwili znika.
+   Pień i gruz też można usunąć. Drewno i kamień lecą do licznika (pojawią się w HUD).
+4. **Nowe kafelki:** kupiony kafelek wysuwa się z lądu w 3 klatkach, a na co czwartym rośnie dekoracja.
+5. Brak Esencji na usunięcie: przycisk jest wyszarzony (F1 → +30 Esencji do testów).
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

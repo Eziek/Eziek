@@ -204,7 +204,8 @@ namespace Wyspa.UI
             int n = Mathf.Clamp(Mathf.CeilToInt(amount / 10f), 1, 5);
             pending.TryGetValue(type, out int p);
             pending[type] = p + amount;
-            string icon = type == CurrencyType.NightHarvest ? "nightcrop" : type == CurrencyType.StarShard ? "starshard" : "coin";
+            string icon = type == CurrencyType.NightHarvest ? "nightcrop" : type == CurrencyType.StarShard ? "starshard"
+                        : type == CurrencyType.Wood ? "wood" : type == CurrencyType.Stone ? "stone" : "coin";
             for (int i = 0; i < n; i++)
             {
                 int share = i < n - 1 ? amount / n : amount - (amount / n) * (n - 1);

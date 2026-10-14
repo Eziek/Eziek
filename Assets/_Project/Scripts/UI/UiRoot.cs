@@ -31,6 +31,8 @@ namespace Wyspa.UI
         public BookView Book { get; private set; }
         public ToastView Toasts { get; private set; }
         public ExpansionMode Expansion { get; private set; }
+        public ContextPanel Context { get; private set; }
+        public PlacementMode Placement { get; private set; }
         public TooltipView Tooltip { get; private set; }
 
         public void Setup(UiTheme uiTheme) => theme = uiTheme;
@@ -100,12 +102,14 @@ namespace Wyspa.UI
 
             Tooltip = TooltipView.Create(canvasRect);
             Hud = HudView.Create(canvasRect, () => OpenBook(BookView.Tab.Upgrades), () => OpenBook(BookView.Tab.Options),
-                () => { Wheel.Close(); Expansion.Toggle(); });
+                () => { Wheel.Close(); Context.Close(); Placement.Cancel(); Expansion.Toggle(); });
             Expansion = ExpansionMode.Create(canvasRect, Tooltip);
             Hud.ExpandButton.gameObject.AddComponent<HoverTip>().Init(Tooltip, () => Loc.Get("menu.expand"));
             Toasts = ToastView.Create(canvasRect);
             Wheel = SeedWheel.Create(canvasRect, Tooltip);
             Book = BookView.Create(canvasRect, Tooltip);
+            Context = ContextPanel.Create(canvasRect, StartMove);
+            Placement = PlacementMode.Create(transform, Tooltip);
             Tooltip.transform.SetAsLastSibling();
         }
 
@@ -138,9 +142,30 @@ namespace Wyspa.UI
 
         void OpenBook(BookView.Tab tab)
         {
+            CloseAll();
+            Book.Open(tab);
+        }
+
+        void CloseAll()
+        {
             Expansion.Close();
             Wheel.Close();
-            Book.Open(tab);
+            Context.Close();
+            Placement.Cancel();
+        }
+
+        /// <summary>Lampa kupiona w sklepie: Księga się zamyka, duch lampy idzie za kursorem.</summary>
+        public void StartBuy(Wyspa.Lighting.LampDefinition def)
+        {
+            CloseAll();
+            Book.Close();
+            Placement.StartBuy(def);
+        }
+
+        public void StartMove(TileObject obj)
+        {
+            CloseAll();
+            Placement.StartMove(obj);
         }
 
         public bool PointerOverUi => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
@@ -148,7 +173,7 @@ namespace Wyspa.UI
         void Update()
         {
             scaler.scaleFactor = Book.IsOpen ? BookScale() : UiScale();
-            Hud.ForceVisible = Book.IsOpen || Wheel.IsOpen || Expansion.IsActive;
+            Hud.ForceVisible = Book.IsOpen || Wheel.IsOpen || Expansion.IsActive || PlacementMode.Active;
             UpdatePlotTooltip();
         }
 
@@ -158,13 +183,24 @@ namespace Wyspa.UI
             var game = GameLoop.Instance;
             var cam = Camera.main;
             FarmPlot.Hovered = null;
-            if (game == null || cam == null || PointerOverUi || Book.IsOpen || Wheel.IsOpen || Expansion.IsActive)
+            if (game == null || cam == null || PointerOverUi || Book.IsOpen || Wheel.IsOpen || Expansion.IsActive
+                || Context.IsOpen || PlacementMode.Active)
             {
                 Tooltip.Hide(plotHoverOwner);
                 return;
             }
             Vector2 world = cam.ScreenToWorldPoint(UiInput.MousePosition);
             var hit = Physics2D.OverlapPoint(world);
+            if (hit != null && hit.TryGetComponent(out Decoration deco) && !deco.Removing)
+            {
+                Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + "\n" + Loc.Get("ui.deco.hint"));
+                return;
+            }
+            if (hit != null && hit.TryGetComponent(out TileObject obj))
+            {
+                Tooltip.Show(plotHoverOwner, Loc.Get(obj.NameKey) + "\n" + Loc.Get("ui.object.hint"));
+                return;
+            }
             if (hit == null || !hit.TryGetComponent(out FarmPlot plot))
             {
                 Tooltip.Hide(plotHoverOwner);

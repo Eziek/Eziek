@@ -30,3 +30,6 @@ lore.3,"Rybacy mówili, że morze tu liczy kroki.",The fishermen said the sea he
 lore.4,Każdy kawałek lądu trzeba wyrwać mgle.,Every scrap of land must be torn from the fog.,Jedes Stück Land muss dem Nebel entrissen werden.,土地はひとかけらずつ霧から奪い取るしかない。,每一寸土地都必须从迷雾中夺回。,lore wstępne
 lore.5,"Księżyc pamięta, kto sadził nocą.",The moon remembers who planted at night.,"Der Mond erinnert sich, wer nachts gepflanzt hat.",月は、夜に種をまいた者を覚えている。,月亮记得谁在夜里播种。,lore wstępne
 lore.6,W głębinie coś otwiera oko.,"In the deep, something opens an eye.",In der Tiefe öffnet etwas ein Auge.,深みで何かが目を開く。,深渊中，有什么睁开了眼睛。,lore wstępne
+toast.deco.nest,Gniazdo z nasionem: +{0} {0:plural:plon nocy|plony nocy|plonów nocy},A nest with a seed: +{0} night {0:plural:harvest|harvests},Ein Nest mit Samen: +{0} Nachternte,種の入った巣：夜の作物 +{0},藏有种子的鸟巢：夜间作物 +{0},usuwanie drzewa
+toast.deco.berries,Jagody: +{0} {0:plural:moneta|monety|monet},Berries: +{0} {0:plural:coin|coins},Beeren: +{0} {0:plural:Münze|Münzen},ベリー：+{0}コイン,浆果：+{0}金币,usuwanie krzaka
+toast.deco.coins,Monety pod kamieniem: +{0} {0:plural:moneta|monety|monet},Coins under the rock: +{0} {0:plural:coin|coins},Münzen unter dem Felsen: +{0} {0:plural:Münze|Münzen},岩の下のコイン：+{0},石头下的金币：+{0},usuwanie kamienia

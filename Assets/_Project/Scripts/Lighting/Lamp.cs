@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Wyspa.Core;
+using Wyspa.Localization;
 
 namespace Wyspa.Lighting
 {
     /// <summary>Lampa: w nocy świeci, jeśli starczy Esencji. Glow = osobny sprite na materiale Unlit (piksele emisyjne).</summary>
-    public class Lamp : MonoBehaviour
+    public class Lamp : MonoBehaviour, IContextActions
     {
         public static readonly List<Lamp> All = new List<Lamp>();
 
@@ -39,6 +40,9 @@ namespace Wyspa.Lighting
             definition = def;
             light2D = light;
             glowRenderer = glow;
+            // lampa stawiana w trakcie gry: Awake było przed Setup, więc gasimy ją jeszcze raz już z referencjami
+            initialized = false;
+            SetOn(false);
         }
 
         /// <summary>Wywoływane co tick przez GameLoop (najtańsze lampy pierwsze).</summary>
@@ -46,6 +50,14 @@ namespace Wyspa.Lighting
         {
             bool on = !DebugAllOff && night && definition != null && essence.TryConsume(definition.essencePerMinute * dt / 60f);
             SetOn(on);
+        }
+
+        public void FillContext(ContextInfo info)
+        {
+            if (definition == null)
+                return;
+            info.lines.Add(Loc.Get("ui.lamp.info", definition.radius, definition.essencePerMinute * 60f));
+            info.lines.Add(Loc.Get(isOn ? "ui.lamp.on" : "ui.lamp.off"));
         }
 
         public bool Illuminates(Vector2 point)

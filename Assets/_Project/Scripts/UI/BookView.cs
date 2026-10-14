@@ -140,7 +140,7 @@ namespace Wyspa.UI
                 case Tab.Upgrades: BuildUpgrades(); break;
                 case Tab.Stats: BuildStats(); break;
                 case Tab.Options: BuildOptions(); break;
-                case Tab.Shop: Paragraph("ui.shop.soon", 0); break;
+                case Tab.Shop: BuildShop(); break;
                 default: Paragraph("ui.soon", 0); break;
             }
         }
@@ -159,6 +159,7 @@ namespace Wyspa.UI
                 return;
             refresh = 0.25f;
             if (current == Tab.Upgrades) RefreshUpgrades();
+            else if (current == Tab.Shop) RefreshShop();
             else if (current == Tab.Stats) BuildStats();
         }
 
@@ -290,6 +291,70 @@ namespace Wyspa.UI
             if (game != null && game.Upgrades.TryBuy(d, game.Wallet))
                 GameEvents.RaiseToast("ui.toast.upgrade_bought", Loc.Get(d.nameKey));
             RefreshUpgrades();
+        }
+
+        // ------------------------------------------------------------------ Sklep (GDD §12.4): na razie lampy
+
+        readonly List<(LampDefinition def, Button buy, TextMeshProUGUI price)> shopRows = new List<(LampDefinition, Button, TextMeshProUGUI)>();
+
+        void BuildShop()
+        {
+            shopRows.Clear();
+            float y = 0;
+            Header("ui.shop.lamps", ref y);
+            var island = Island.Instance;
+            var lamps = island != null && island.Art != null ? island.Art.lamps : null;
+            if (lamps != null)
+                foreach (var def in lamps)
+                {
+                    if (def == null)
+                        continue;
+                    var row = Ui.Place(Ui.Rect("Lamp_" + def.id, content), Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 64, 26));
+                    var slot = Ui.Img(row, "Slot", Ui.Theme.slot, true);
+                    Ui.Place(slot.rectTransform, Ui.TopLeft, Ui.TopLeft, Vector2.zero, new Vector2(22, 26));
+                    var pic = Ui.Img(slot.transform, "Lamp", def.sprite, false);
+                    pic.preserveAspect = true;
+                    Ui.Place(pic.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(18, 22));
+
+                    var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
+                    LocText.On(name, def.NameKey);
+                    Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -3), new Vector2(160, 10));
+                    var stats = Ui.Txt(row, "Info", Ui.Theme.textMuted);
+                    stats.text = Loc.Get("ui.lamp.info", def.radius, def.essencePerMinute * 60f);
+                    Ui.Place(stats.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -13), new Vector2(200, 10));
+
+                    var coin = Ui.Img(row, "Coin", Ui.Theme.Icon("coin"), false);
+                    Ui.Place(coin.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-72, -6), new Vector2(12, 12));
+                    var price = Ui.Txt(row, "Price", Ui.Theme.textDark, TextAlignmentOptions.TopRight);
+                    price.text = def.price.ToString("N0", LocCore.Culture(Loc.Language));
+                    Ui.Place(price.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-46, -8), new Vector2(24, 10));
+
+                    var d = def;
+                    var buy = Ui.Btn(row, "Buy", () => { if (UiRoot.Instance != null) UiRoot.Instance.StartBuy(d); });
+                    Ui.Place((RectTransform)buy.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -5), new Vector2(40, 16));
+                    var bt = Ui.Txt(buy.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
+                    Ui.Stretch(bt.rectTransform);
+                    LocText.On(bt, "ui.upgrade.buy");
+                    shopRows.Add((def, buy, price));
+                    y += 28;
+                }
+            var more = Ui.Txt(content, "More", Ui.Theme.textMuted);
+            more.textWrappingMode = TextWrappingModes.Normal;
+            LocText.On(more, "ui.shop.more");
+            Ui.Place(more.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y - 4), new Vector2(W - 70, 30));
+            info.text = Loc.Get("ui.shop.hint");
+            RefreshShop();
+        }
+
+        void RefreshShop()
+        {
+            var game = GameLoop.Instance;
+            foreach (var (def, buy, price) in shopRows)
+            {
+                bool afford = game != null && game.Wallet.Coins >= def.price;
+                buy.interactable = afford;
+                price.color = afford ? Ui.Theme.textDark : Ui.Theme.textWarn;
+            }
         }
 
         // ------------------------------------------------------------------ Statystyki

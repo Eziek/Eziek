@@ -47,3 +47,21 @@ ui.dig.title,Przekop na grządkę,Dig a plot,Beet anlegen,畑を耕す,开垦田
 ui.dig.cost,{0} {0:plural:moneta|monety|monet},{0} {0:plural:coin|coins},{0} {0:plural:Münze|Münzen},{0}コイン,{0}金币,
 ui.dig.click,LPM: przekop,Left click: dig,Linksklick: umgraben,左クリック：耕す,左键：开垦,
 ui.dig.need,Potrzeba {0} {0:plural:monety|monet|monet},You need {0} {0:plural:coin|coins},Benötigt: {0} {0:plural:Münze|Münzen},{0}コインが必要,需要{0}金币,toast
+ui.deco.cost,Koszt: {0} Esencji,Cost: {0} Essence,Kosten: {0} Essenz,コスト：エッセンス{0},消耗：{0}精华,
+ui.deco.reward.wood,Nagroda: drewno x{0},Reward: wood x{0},Belohnung: Holz x{0},報酬：木材 x{0},奖励：木材 x{0},
+ui.deco.reward.stone,Nagroda: kamień x{0},Reward: stone x{0},Belohnung: Stein x{0},報酬：石材 x{0},奖励：石料 x{0},
+ui.deco.need,Potrzeba {0} Esencji,You need {0} Essence,Benötigt: {0} Essenz,エッセンスが{0}必要,需要{0}精华,toast
+ui.deco.hint,LPM: usuń...,Left click: remove...,Linksklick: entfernen ...,左クリック：撤去…,左键：移除……,
+ui.object.hint,LPM: opcje,Left click: options,Linksklick: Optionen,左クリック：オプション,左键：选项,
+ui.crate.sell,Sprzedaj,Sell,Verkaufen,売る,出售,
+ui.lamp.info,Zasięg {0:0.0} - {1:0.0} Esencji/h,Range {0:0.0} - {1:0.0} Essence/h,Reichweite {0:0.0} - {1:0.0} Essenz/h,範囲 {0:0.0} - エッセンス {1:0.0}/時,范围 {0:0.0} - 精华 {1:0.0}/小时,zasięg w kafelkach
+ui.lamp.on,Świeci,Lit,Brennt,点灯中,亮着,
+ui.lamp.off,Zgaszona,Out,Erloschen,消灯,熄灭,
+ui.place.cost,Koszt: {0} {0:plural:moneta|monety|monet},Cost: {0} {0:plural:coin|coins},Kosten: {0} {0:plural:Münze|Münzen},コスト：{0}コイン,花费：{0}金币,
+ui.place.lights,Oświetli: {0} {0:plural:grządkę|grządki|grządek},Will light: {0} {0:plural:plot|plots},Beleuchtet: {0} {0:plural:Beet|Beete},照らす畑：{0},可照亮：{0}块田地,
+ui.place.blocked,Tu nie można postawić,Can't place here,Hier nicht möglich,ここには置けない,无法放在这里,
+ui.place.click,LPM: postaw - PPM: anuluj,Left click: place - right click: cancel,Linksklick: setzen - Rechtsklick: abbrechen,左クリック：設置 - 右クリック：キャンセル,左键：放置 - 右键：取消,
+ui.toast.placed,Postawiono: {0},Placed: {0},Aufgestellt: {0},設置した：{0},已放置：{0},
+ui.shop.lamps,Lampy,Lamps,Lampen,ランプ,灯,
+ui.shop.more,Budowle i Morze wkrótce.,Buildings and Sea coming soon.,Bauwerke und Meer folgen bald.,建物と海は近日公開。,建筑与海洋即将推出。,
+ui.shop.hint,Kup lampę i postaw ją na wolnym kafelku.,Buy a lamp and place it on a free tile.,Kaufe eine Lampe und stelle sie auf ein freies Landstück.,ランプを買って空きマスに置こう。,购买灯并放在空闲的土地格上。,

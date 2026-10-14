@@ -6,9 +6,9 @@ using System.Collections.Generic;
 namespace UnityEngine
 {
     public class Object { public string name; public static implicit operator bool(Object o) => o != null; public static void Destroy(Object o) { } public static T FindAnyObjectByType<T>() where T : Object => default; }
-    public class Component : Object { public Transform transform; public GameObject gameObject; public T GetComponent<T>() => default; public T[] GetComponentsInChildren<T>(bool inactive) => null; public void SendMessage(string m, SendMessageOptions o) { } public bool TryGetComponent<T>(out T c) { c = default; return false; } public string tag; }
+    public class Component : Object { public Transform transform; public GameObject gameObject; public T GetComponent<T>() => default; public T[] GetComponentsInChildren<T>(bool inactive) => null; public T[] GetComponents<T>() => null; public void SendMessage(string m, SendMessageOptions o) { } public bool TryGetComponent<T>(out T c) { c = default; return false; } public string tag; }
     public class Behaviour : Component { public bool enabled; public bool isActiveAndEnabled; }
-    public class MonoBehaviour : Behaviour { public Coroutine StartCoroutine(IEnumerator e) => null; public void StopCoroutine(Coroutine c) { } }
+    public class MonoBehaviour : Behaviour { public Coroutine StartCoroutine(IEnumerator e) => null; public void StopCoroutine(Coroutine c) { } public void StopAllCoroutines() { } }
     public class ScriptableObject : Object { public static T CreateInstance<T>() where T : ScriptableObject => default; }
     public class GameObject : Object { public GameObject(string n) { } public GameObject(string n, params Type[] components) { } public Transform transform; public string tag; public bool activeSelf; public void SetActive(bool v) { } public T AddComponent<T>() where T : Component => default; public T GetComponent<T>() => default; }
     public class Transform : Component, IEnumerable { public Vector3 position, localPosition, localScale; public Transform parent; public void SetParent(Transform p, bool w) { } public void SetAsLastSibling() { } public Vector3 TransformPoint(Vector3 p) => p; public Vector3 InverseTransformPoint(Vector3 p) => p; public IEnumerator GetEnumerator() => null; }
@@ -23,7 +23,7 @@ namespace UnityEngine
     public enum KeyCode { Escape, F1 }
     public class Renderer : Component { public int sortingOrder; public Material sharedMaterial; public Material material; public bool enabled; public void GetPropertyBlock(MaterialPropertyBlock b) { } public void SetPropertyBlock(MaterialPropertyBlock b) { } }
     public class MaterialPropertyBlock { public void SetFloat(int id, float v) { } public void SetColor(int id, Color c) { } }
-    public class SpriteRenderer : Renderer { public Sprite sprite; }
+    public class SpriteRenderer : Renderer { public Sprite sprite; public Color color; }
     public class Sprite : Object { public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu, uint extrude, SpriteMeshType mesh) => null; public Bounds bounds; public Vector2 pivot; public Texture2D texture; }
     public struct Bounds { public Vector3 size; }
     public class Material : Object { public Material(Shader s) { } public Material(Material m) { } public Shader shader; public void SetFloat(int id, float v) { } public void SetFloat(string n, float v) { } public void SetColor(string n, Color c) { } public void SetTexture(string n, Texture t) { } public void SetTexture(int id, Texture t) { } public void SetVector(int id, Vector4 v) { } public void SetVectorArray(int id, Vector4[] v) { } }
@@ -34,7 +34,7 @@ namespace UnityEngine
     public class Texture2D : Texture { public static Texture2D whiteTexture; public Texture2D(int w, int h, TextureFormat f, bool mip, bool linear) { } public void LoadRawTextureData(byte[] d) { } public void Apply(bool mips) { } }
     public class Camera : Behaviour { public static Camera main; public bool orthographic; public float orthographicSize; public CameraClearFlags clearFlags; public Color backgroundColor; public Vector3 ScreenToWorldPoint(Vector3 p) => p; public Vector3 WorldToScreenPoint(Vector3 p) => p; }
     public enum CameraClearFlags { Skybox, SolidColor }
-    public class Collider2D : Behaviour { }
+    public class Collider2D : Behaviour { public Vector2 offset; }
     public class BoxCollider2D : Collider2D { public Vector2 size; }
     public static class Input { public static Vector3 mousePosition; public static bool GetMouseButtonDown(int b) => false; public static bool GetMouseButton(int b) => false; public static bool GetMouseButtonUp(int b) => false; public static bool GetKeyDown(KeyCode k) => false; }
     public static class Physics2D { public static Collider2D OverlapPoint(Vector2 p) => null; }
@@ -47,11 +47,11 @@ namespace UnityEngine
     public struct Color { public float r, g, b, a; public Color(float r, float g, float b, float a = 1) { this.r = r; this.g = g; this.b = b; this.a = a; } public static Color white, clear; public static bool operator ==(Color a, Color b) => true; public static bool operator !=(Color a, Color b) => false; public override bool Equals(object o) => false; public override int GetHashCode() => 0; public static implicit operator Color(Color32 c) => default; }
     public struct Color32 { public Color32(byte r, byte g, byte b, byte a) { } }
     public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; public float xMin => x; public float yMin => y; public Vector2 size => default; public Vector2 center => default; public static Rect MinMaxRect(float a, float b, float c, float d) => default; }
-    public static class Mathf { public static float Lerp(float a, float b, float t) => a; public const float PI = 3.14159265f; public static float Ceil(float f) => f; public static int CeilToInt(float f) => 0; public static float Round(float f) => f; public static float Cos(float f) => f; public static float MoveTowards(float c, float t, float d) => c; public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
+    public static class Mathf { public static float Sqrt(float f) => f; public static float Atan2(float y, float x) => y; public static float Lerp(float a, float b, float t) => a; public const float PI = 3.14159265f; public static float Ceil(float f) => f; public static int CeilToInt(float f) => 0; public static float Round(float f) => f; public static float Cos(float f) => f; public static float MoveTowards(float c, float t, float d) => c; public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
     public static class Random { public static float value; public static float Range(float a, float b) => a; public static int Range(int a, int b) => a; }
     public static class Application { public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath; public static event Action<bool> focusChanged; }
     public static class QualitySettings { public static int vSyncCount; }
-    public static class Time { public static float unscaledDeltaTime, unscaledTime; }
+    public static class Time { public static float unscaledDeltaTime, unscaledTime; public static int frameCount; }
     public static class Screen { public static int width, height; public static FullScreenMode fullScreenMode; public static Resolution currentResolution; public static void SetResolution(int w, int h, FullScreenMode m) { } }
     public static class Debug { public static void Log(object o) { } public static void LogWarning(object o) { } public static void LogError(object o) { } }
     public static class JsonUtility { public static string ToJson(object o, bool p) => ""; public static T FromJson<T>(string s) => default; }
@@ -145,7 +145,7 @@ namespace UnityEngine.UI
     using UnityEngine.EventSystems;
     public class Graphic : UIBehaviour { public UnityEngine.Color color; public bool raycastTarget; public UnityEngine.RectTransform rectTransform => null; }
     public class MaskableGraphic : Graphic { }
-    public class Image : MaskableGraphic { public enum Type { Simple, Sliced, Tiled, Filled } public UnityEngine.Sprite sprite; public Type type; public float pixelsPerUnitMultiplier; }
+    public class Image : MaskableGraphic { public enum Type { Simple, Sliced, Tiled, Filled } public UnityEngine.Sprite sprite; public Type type; public float pixelsPerUnitMultiplier; public bool preserveAspect; }
     public struct SpriteState { public UnityEngine.Sprite highlightedSprite, pressedSprite, selectedSprite, disabledSprite; }
     public struct Navigation { public enum Mode { None, Horizontal, Vertical, Automatic, Explicit } public Mode mode; }
     public class Selectable : UIBehaviour { public enum Transition { None, ColorTint, SpriteSwap, Animation } public Transition transition; public Graphic targetGraphic; public SpriteState spriteState; public Navigation navigation; public bool interactable; }

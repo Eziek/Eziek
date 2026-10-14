@@ -47,7 +47,11 @@ namespace Wyspa.World
         /// <summary>Lewy górny róg kafelka w pikselach tekstury (y w dół).</summary>
         public static (int x, int y) TileOrigin(TilePos p) => (Margin + p.c * Tile, Margin + p.r * Tile);
 
-        public static IslandPicture Paint(IslandMap map)
+        /// <summary>
+        /// Maluje wyspę. rising + grow: świeżo kupiony kafelek wysuwa się z lądu - wypełnione jest tylko grow pikseli
+        /// od strony sąsiedniego kafelka (animacja wynurzania: kilka klatek z rosnącym grow, GDD §13.5).
+        /// </summary>
+        public static IslandPicture Paint(IslandMap map, TilePos? rising = null, int grow = Tile)
         {
             int W = Size, H = Size, seed = map.Seed;
             var pic = new IslandPicture { width = W, height = H };
@@ -70,8 +74,18 @@ namespace Wyspa.World
             foreach (var p in map.Tiles.Keys)
             {
                 var (x0, y0) = TileOrigin(p);
-                for (int y = y0; y < y0 + Tile; y++)
-                    for (int x = x0; x < x0 + Tile; x++)
+                int ax = x0, ay = y0, bx = x0 + Tile, by = y0 + Tile;
+                if (rising.HasValue && rising.Value == p && grow < Tile)
+                {
+                    int g = Math.Max(0, grow);
+                    // rośnie od pierwszego posiadanego sąsiada (lewo, prawo, góra, dół)
+                    if (map.Owns(new TilePos(p.c - 1, p.r))) bx = x0 + g;
+                    else if (map.Owns(new TilePos(p.c + 1, p.r))) ax = x0 + Tile - g;
+                    else if (map.Owns(new TilePos(p.c, p.r - 1))) by = y0 + g;
+                    else ay = y0 + Tile - g;
+                }
+                for (int y = ay; y < by; y++)
+                    for (int x = ax; x < bx; x++)
                         m[R.I(x, y)] = true;
             }
             m = Dilate(Erode(m, R, 6), R, 6);   // zaokrąglenie wypukłych narożników

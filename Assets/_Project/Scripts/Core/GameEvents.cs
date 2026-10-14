@@ -11,6 +11,11 @@ namespace Wyspa.Core
 
         public static void RaiseToast(string key, params object[] args) => Toast?.Invoke(key, args);
 
+        /// <summary>Klik w obiekt na wyspie (dekoracja, lampa, skrzynia): UI pokazuje panel kontekstowy z akcjami.</summary>
+        public static event Action<IContextActions> ContextRequested;
+
+        public static void RequestContext(IContextActions target) => ContextRequested?.Invoke(target);
+
         /// <summary>Zdobyta waluta w miejscu na świecie (np. zbiór): UI pokazuje lecące monety do licznika.</summary>
         public static event Action<Vector3, CurrencyType, int> CurrencyGained;
 

@@ -23,5 +23,16 @@ namespace Wyspa.Lighting
 
         [Tooltip("Lekkie migotanie (płomienie).")]
         public bool flicker = true;
+
+        [Header("Wygląd (lampy stawiane w trakcie gry)")]
+        public Sprite sprite;
+        [Tooltip("Piksele emisyjne (materiał bez oświetlenia).")]
+        public Sprite glowSprite;
+        [Tooltip("Środek światła względem podstawy lampy, w jednostkach świata.")]
+        public Vector2 lightOffset;
+
+        public string NameKey => "lamp." + id;
+        /// <summary>Zasięg w kafelkach (do opisu w sklepie).</summary>
+        public float RadiusTiles => radius;
     }
 }

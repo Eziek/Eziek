@@ -1,4 +1,7 @@
 using UnityEngine;
+using Wyspa.Core;
+using Wyspa.Input;
+using Wyspa.Localization;
 
 namespace Wyspa.World
 {
@@ -6,7 +9,7 @@ namespace Wyspa.World
     /// Obiekt stojący na kafelku (lampa, skrzynia, kamień runiczny). Island stawia go na wolnym kafelku, gdy jest potrzebny
     /// (do Etapu 3c samoczynnie; potem gracz w trybie stawiania). Obiekt z kotwicą (np. ognik przy skrzyni) nie zajmuje kafelka.
     /// </summary>
-    public class TileObject : MonoBehaviour
+    public class TileObject : MonoBehaviour, IClickable, IContextActions
     {
         [SerializeField] string id;
         [Tooltip("Klucz lokalizacji nazwy (do komunikatu o braku miejsca).")]
@@ -25,6 +28,8 @@ namespace Wyspa.World
         public int BaseRow => baseRow;
         public bool NeedsTile => anchor == null;
 
+        /// <summary>Lampa kupiona w sklepie: id definicji (do odtworzenia z zapisu). Puste dla obiektów ze sceny.</summary>
+        public string LampId { get; set; }
         public bool Wanted { get; set; }
         public bool Placed { get; set; }
         public TilePos Tile { get; set; }
@@ -36,6 +41,18 @@ namespace Wyspa.World
             anchor = anchorObject;
             anchorOffset = offset;
             baseRow = row;
+        }
+
+        public void OnClick() => GameEvents.RequestContext(this);
+
+        /// <summary>Panel kontekstowy: nazwa + to, co dopiszą inne komponenty (skrzynia: sprzedaż, lampa: zasięg). „Przenieś” dodaje UI.</summary>
+        public void FillContext(ContextInfo info)
+        {
+            info.title = string.IsNullOrEmpty(nameKey) ? name : Loc.Get(nameKey);
+            info.worldAnchor = transform.position + new Vector3(0f, 1.25f, 0f);
+            foreach (var c in GetComponents<IContextActions>())
+                if (!ReferenceEquals(c, this))
+                    c.FillContext(info);
         }
     }
 }

@@ -1,16 +1,19 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Farming;
+using Wyspa.Lighting;
 using Wyspa.Visual;
 
 namespace Wyspa.World
 {
     [Serializable] public class TileSave { public int c, r; public TileKind kind; }
     [Serializable] public class DecoSave { public int c, r; public DecoKind kind; }
-    [Serializable] public class ObjectSave { public string id; public int c, r; }
+    [Serializable] public class ObjectSave { public string id; public int c, r; public string lamp; }
 
     [Serializable]
     public class IslandSave
@@ -32,7 +35,8 @@ namespace Wyspa.World
 
         const float Ppu = 16f;
         const int Half = IslandPainter.Size / 2;   // 320 px: środek tekstury = (0,0) w świecie
-        const string LanternId = "lamp_lantern";
+        const string StarterLamp = "lantern";
+        const float NewTileDecoChance = 0.25f;   // §14.1: dekoracje na nowo odkrytych kafelkach
 
         [SerializeField] IslandArt art;
         [SerializeField] SpriteRenderer islandRenderer;
@@ -43,7 +47,10 @@ namespace Wyspa.World
 
         readonly IslandMap map = new IslandMap();
         readonly Dictionary<TilePos, FarmPlot> plots = new Dictionary<TilePos, FarmPlot>();
-        readonly Dictionary<TilePos, (DecoKind kind, GameObject go)> decorations = new Dictionary<TilePos, (DecoKind, GameObject)>();
+        readonly Dictionary<TilePos, Decoration> decorations = new Dictionary<TilePos, Decoration>();
+        readonly List<TileObject> spawned = new List<TileObject>();   // lampy postawione w trakcie gry
+        int lampCounter;
+        bool claiming;
         readonly Dictionary<TilePos, TileObject> occupied = new Dictionary<TilePos, TileObject>();
         readonly Dictionary<string, TilePos> savedObjectTiles = new Dictionary<string, TilePos>();
         Texture2D islandTex, waterTex, dataTex;
@@ -133,8 +140,8 @@ namespace Wyspa.World
             get
             {
                 foreach (var d in decorations.Values)
-                    if (d.kind == DecoKind.TreeRound || d.kind == DecoKind.DeadTree)
-                        yield return d.go.transform;
+                    if (d != null && !d.Removing && (d.Kind == DecoKind.TreeRound || d.Kind == DecoKind.Spruce))
+                        yield return d.transform;
             }
         }
 
@@ -148,6 +155,8 @@ namespace Wyspa.World
                 return n;
             }
         }
+
+        public bool Claiming => claiming;
 
         public bool IsFree(TilePos p) => map.Owns(p) && map.KindAt(p) == TileKind.Grass
                                          && !decorations.ContainsKey(p) && !occupied.ContainsKey(p);
@@ -171,7 +180,10 @@ namespace Wyspa.World
             AddDecoration(plan.startDecoTile, plan.startDeco);
             Rebuild();
             SyncPlots();
-            WantLantern();
+            // lampa startowa na wolnym kafelku startu (GDD §13.1: 2 grządki, obiekt, latarnia)
+            var lantern = art != null ? art.Lamp(StarterLamp) : null;
+            if (lantern != null && NearestFree(out var lampTile))
+                SpawnLamp(lantern, lampTile);
             PlacePending();   // obiekty chciane wcześniej (np. skrzynia po wczytaniu ulepszeń)
             Changed?.Invoke();
         }
@@ -190,7 +202,15 @@ namespace Wyspa.World
                     savedObjectTiles[o.id] = new TilePos(o.c, o.r);
             Rebuild();
             SyncPlots();
-            WantLantern();
+            foreach (var o in save.objects)
+            {
+                // lampy: kupione (lamp = id definicji) albo startowa latarnia z zapisu 3b (id lamp_lantern)
+                string lampId = !string.IsNullOrEmpty(o.lamp) ? o.lamp : (o.id == "lamp_lantern" ? StarterLamp : null);
+                var def = lampId != null && art != null ? art.Lamp(lampId) : null;
+                var tile = new TilePos(o.c, o.r);
+                if (def != null && IsFree(tile))
+                    SpawnLamp(def, tile, o.id);
+            }
             PlacePending();   // obiekty chciane wcześniej (np. skrzynia po wczytaniu ulepszeń)
             Changed?.Invoke();
         }
@@ -201,10 +221,11 @@ namespace Wyspa.World
             foreach (var kv in map.Tiles)
                 s.tiles.Add(new TileSave { c = kv.Key.c, r = kv.Key.r, kind = kv.Value });
             foreach (var kv in decorations)
-                s.decorations.Add(new DecoSave { c = kv.Key.c, r = kv.Key.r, kind = kv.Value.kind });
-            foreach (var o in objects)
-                if (o != null && o.Placed && o.NeedsTile)
-                    s.objects.Add(new ObjectSave { id = o.Id, c = o.Tile.c, r = o.Tile.r });
+                if (kv.Value != null)
+                    s.decorations.Add(new DecoSave { c = kv.Key.c, r = kv.Key.r, kind = kv.Value.Kind });
+            foreach (var o in AllObjects())
+                if (o.Placed && o.NeedsTile)
+                    s.objects.Add(new ObjectSave { id = o.Id, c = o.Tile.c, r = o.Tile.r, lamp = o.LampId });
             return s;
         }
 
@@ -215,8 +236,14 @@ namespace Wyspa.World
                 if (p != null) { p.gameObject.SetActive(false); Destroy(p.gameObject); }
             plots.Clear();
             foreach (var d in decorations.Values)
-                if (d.go != null) { d.go.SetActive(false); Destroy(d.go); }
+                if (d != null) { d.gameObject.SetActive(false); Destroy(d.gameObject); }
             decorations.Clear();
+            foreach (var o in spawned)
+                if (o != null) { o.gameObject.SetActive(false); Destroy(o.gameObject); }
+            spawned.Clear();
+            lampCounter = 0;
+            claiming = false;
+            StopAllCoroutines();
             occupied.Clear();
             savedObjectTiles.Clear();
             foreach (var o in objects)
@@ -227,11 +254,12 @@ namespace Wyspa.World
                 }
         }
 
-        void WantLantern()
+        IEnumerable<TileObject> AllObjects()
         {
             foreach (var o in objects)
-                if (o != null && o.Id == LanternId)
-                    Want(o, true);
+                if (o != null) yield return o;
+            foreach (var o in spawned)
+                if (o != null) yield return o;
         }
 
         // ================================================================ zakup i przekopywanie
@@ -246,7 +274,7 @@ namespace Wyspa.World
         /// <summary>Kupno kafelka: monety + Esencja (GDD §13.2). Po zakupie mgła się rozstępuje i wypada znalezisko.</summary>
         public bool TryBuy(TilePos p, Wallet wallet, EssenceStore essence)
         {
-            if (!map.CanBuy(p) || !CanAffordTile(wallet, essence))
+            if (claiming || !map.CanBuy(p) || !CanAffordTile(wallet, essence))
                 return false;
             int coins = NextTileCoins, ess = NextTileEssence;
             if (!wallet.TrySpend(coins))
@@ -257,12 +285,39 @@ namespace Wyspa.World
                 return false;
             }
             var find = map.Buy(p);
-            Rebuild();
-            PlacePending();
+            StartCoroutine(Claim(p, find, wallet));
+            return true;
+        }
+
+        /// <summary>Ląd wynurza się z wody w 3 skokowych klatkach, potem piana, znalezisko i (czasem) dekoracja (§13.5).</summary>
+        IEnumerator Claim(TilePos p, FindKind find, Wallet wallet)
+        {
+            claiming = true;
             IslandFx.TileClaimed(TileCenter(p), art != null ? art.foam : null);
+            var wait = new WaitForSecondsRealtime(0.1f);
+            foreach (int grow in new[] { 6, 11 })
+            {
+                Rebuild(p, grow);
+                yield return wait;
+            }
+            Rebuild();
+            claiming = false;
+            if (WHash.Value(p.c, p.r, map.Seed + 911) < NewTileDecoChance)
+                AddDecoration(p, NewTileDeco(p));
+            PlacePending();
             GrantFind(p, find, wallet);
             Changed?.Invoke();
-            return true;
+        }
+
+        /// <summary>Dekoracja nowego kafelka: drzewa i krzaki częściej, martwe drzewo rzadko.</summary>
+        DecoKind NewTileDeco(TilePos p)
+        {
+            double v = WHash.Value(p.c, p.r, map.Seed + 912);
+            if (v < 0.30) return DecoKind.TreeRound;
+            if (v < 0.50) return DecoKind.Spruce;
+            if (v < 0.75) return DecoKind.Bush;
+            if (v < 0.95) return DecoKind.Rock;
+            return DecoKind.DeadTree;
         }
 
         /// <summary>Przekopanie wolnego kafelka trawy na grządkę (tanio, §13.3).</summary>
@@ -317,9 +372,9 @@ namespace Wyspa.World
 
         // ================================================================ obraz wyspy
 
-        void Rebuild()
+        void Rebuild(TilePos? rising = null, int grow = IslandPainter.Tile)
         {
-            picture = IslandPainter.Paint(map);
+            picture = IslandPainter.Paint(map, rising, grow);
             int s = picture.width;
             if (islandTex == null)
             {
@@ -400,7 +455,134 @@ namespace Wyspa.World
                 UseFx(sr, art.swayTree);
                 sr.gameObject.AddComponent<SpriteFx>().Setup(0.05f, sr);
             }
-            decorations[p] = (kind, sr.gameObject);
+            AddTileCollider(sr.gameObject);
+            var deco = sr.gameObject.AddComponent<Decoration>();
+            deco.Init(this, p, kind, a, sr);
+            decorations[p] = deco;
+        }
+
+        /// <summary>Klikalny obszar = kafelek pod obiektem (podstawa stoi 6 px pod środkiem kafelka).</summary>
+        static void AddTileCollider(GameObject go)
+        {
+            var col = go.GetComponent<BoxCollider2D>();
+            if (col == null)
+                col = go.AddComponent<BoxCollider2D>();
+            col.size = new Vector2(1f, 1f);
+            col.offset = new Vector2(-0.5f / Ppu, 6f / Ppu);
+        }
+
+        // ================================================================ usuwanie dekoracji (§14)
+
+        public bool TryRemove(Decoration d)
+        {
+            var game = GameLoop.Instance;
+            if (d == null || d.Removing || d.Art == null || !d.Art.removable || game == null)
+                return false;
+            if (!game.Essence.TryConsume(d.Art.essenceCost))
+            {
+                GameEvents.RaiseToast("ui.deco.need", d.Art.essenceCost);
+                return false;
+            }
+            var at = d.transform.position + new Vector3(0f, 8f / Ppu, 0f);
+            var a = d.Art;
+            game.Wallet.Add(a.reward, a.rewardAmount);
+            GameEvents.RaiseCurrencyGained(at, a.reward, a.rewardAmount);
+            if (a.bonusAmount > 0 && UnityEngine.Random.value < a.bonusChance)
+            {
+                game.Wallet.Add(a.bonus, a.bonusAmount);
+                GameEvents.RaiseCurrencyGained(at, a.bonus, a.bonusAmount);
+                if (!string.IsNullOrEmpty(a.bonusToast))
+                    GameEvents.RaiseToast(a.bonusToast, a.bonusAmount);
+            }
+            d.PlayRemoval(() => FinishRemoval(d));
+            return true;
+        }
+
+        void FinishRemoval(Decoration d)
+        {
+            if (d == null)
+                return;
+            var tile = d.Tile;
+            var a = d.Art;
+            if (decorations.TryGetValue(tile, out var cur) && cur == d)
+                decorations.Remove(tile);
+            d.gameObject.SetActive(false);
+            Destroy(d.gameObject);
+            if (a != null && a.hasRemains)
+                AddDecoration(tile, a.remains);
+            PlacePending();
+            Changed?.Invoke();
+        }
+
+        // ================================================================ lampy (sklep, tryb stawiania)
+
+        /// <summary>Lampa postawiona w trakcie gry: sprite, piksele emisyjne, światło 2D i komponent Lamp.</summary>
+        public TileObject SpawnLamp(LampDefinition def, TilePos tile, string id = null)
+        {
+            if (def == null || !IsFree(tile))
+                return null;
+            var go = new GameObject("Lamp_" + def.id);
+            go.transform.SetParent(decoRoot, false);
+            var body = go.AddComponent<SpriteRenderer>();
+            body.sprite = def.sprite;
+            var glow = NewSprite("Glow", go.transform, Vector3.zero, 1);
+            glow.transform.localPosition = Vector3.zero;
+            glow.sprite = def.glowSprite;
+            if (art != null && art.glow != null)
+                glow.sharedMaterial = art.glow;
+            var lightGo = new GameObject("Light");
+            lightGo.transform.SetParent(go.transform, false);
+            lightGo.transform.localPosition = new Vector3(def.lightOffset.x, def.lightOffset.y, 0f);
+            var light = lightGo.AddComponent<Light2D>();
+            light.lightType = Light2D.LightType.Point;
+            light.pointLightOuterRadius = def.radius;
+            light.pointLightInnerRadius = def.radius * 0.25f;
+            light.color = def.color;
+            light.intensity = def.intensity;
+            light.falloffIntensity = 0.6f;
+            var lamp = go.AddComponent<Lamp>();
+            lamp.Setup(def, light, glow);
+            AddTileCollider(go);
+            var obj = go.AddComponent<TileObject>();
+            if (string.IsNullOrEmpty(id))
+                id = $"lamp_{def.id}_{++lampCounter}";
+            else
+                lampCounter++;
+            obj.Setup(id, def.NameKey);
+            obj.LampId = def.id;
+            obj.Wanted = true;
+            spawned.Add(obj);
+            PutOnTile(obj, tile);
+            Changed?.Invoke();
+            return obj;
+        }
+
+        /// <summary>Przeniesienie obiektu na wolny kafelek (tryb stawiania). Obiekty zakotwiczone idą za nim.</summary>
+        public bool MoveObject(TileObject obj, TilePos tile)
+        {
+            if (obj == null || !obj.NeedsTile || !(IsFree(tile) || (obj.Placed && obj.Tile == tile)))
+                return false;
+            if (obj.Placed && occupied.TryGetValue(obj.Tile, out var o) && o == obj)
+                occupied.Remove(obj.Tile);
+            PutOnTile(obj, tile);
+            foreach (var f in AllObjects())
+                if (f.Anchor == obj && f.Placed)
+                {
+                    f.Placed = false;
+                    TryPlace(f, false);
+                }
+            PlacePending();
+            Changed?.Invoke();
+            return true;
+        }
+
+        void PutOnTile(TileObject obj, TilePos tile)
+        {
+            occupied[tile] = obj;
+            obj.Tile = tile;
+            savedObjectTiles[obj.Id] = tile;
+            var at = TileAnchor(tile, obj.BaseRow, out int order);
+            Activate(obj, at, order);
         }
 
         static SpriteRenderer NewSprite(string name, Transform parent, Vector3 position, int order)
@@ -478,11 +660,7 @@ namespace Wyspa.World
                     GameEvents.RaiseToast("toast.no_space", Localization.Loc.Get(obj.NameKey));
                 return;
             }
-            occupied[tile] = obj;
-            obj.Tile = tile;
-            savedObjectTiles[obj.Id] = tile;
-            var at = TileAnchor(tile, obj.BaseRow, out int order);
-            Activate(obj, at, order);
+            PutOnTile(obj, tile);
             // obiekty zakotwiczone przy tym (np. ognik przy skrzyni)
             foreach (var o in objects)
                 if (o != null && o.Wanted && !o.Placed && o.Anchor == obj)

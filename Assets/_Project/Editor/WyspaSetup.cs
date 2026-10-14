@@ -182,6 +182,10 @@ namespace Wyspa.EditorTools
                     lamp.radius = l.radius / Ppu;
                     lamp.color = new Color(l.r, l.g, l.b);
                     lamp.intensity = 1f;
+                    // wygląd do stawiania w trakcie gry: sprite'y i światło względem podstawy (jak w układzie prototypu)
+                    lamp.sprite = LoadSprite("Lamps/" + l.sprite);
+                    lamp.glowSprite = LoadSprite("Lamps/" + l.sprite + "_glow");
+                    lamp.lightOffset = new Vector2((l.lightX - l.x - 0.5f) / Ppu, (l.y + 1 - l.lightY) / Ppu);
                     EditorUtility.SetDirty(lamp);
                 }
             }
@@ -239,13 +243,47 @@ namespace Wyspa.EditorTools
         {
             var art = LoadOrCreate<IslandArt>(IslandArtPath);
             art.plotTile = LoadSprite("Ground/plot_tile");
+            Sprite R(string n) => LoadSprite("Removal/" + n);
+            Sprite[] wood = { R("fx_woodchip"), R("fx_leaf") }, stone = { R("fx_stonechip") };
+            // koszty i nagrody z GDD §14.3 (wstępne, do balansu)
             art.decorations = new List<DecoArt>
             {
-                new DecoArt { kind = DecoKind.TreeRound, sprite = LoadSprite("Objects/tree_round"), sway = true },
-                new DecoArt { kind = DecoKind.Rock, sprite = LoadSprite("Objects/rock"), sway = false },
-                new DecoArt { kind = DecoKind.Bush, sprite = LoadSprite("Objects/bush"), sway = true },
-                new DecoArt { kind = DecoKind.DeadTree, sprite = LoadSprite("Zones/dead_tree"), sway = false },
+                new DecoArt { kind = DecoKind.TreeRound, sprite = LoadSprite("Objects/tree_round"), sway = true, nameKey = "deco.tree_round",
+                    essenceCost = 5, reward = CurrencyType.Wood, rewardAmount = 3,
+                    bonusChance = 0.1f, bonus = CurrencyType.NightHarvest, bonusAmount = 1, bonusToast = "toast.deco.nest",
+                    anim = RemoveAnim.Fall, frames = new[] { R("tree_round_fall_0"), R("tree_round_fall_1"), R("tree_round_fall_2"), R("tree_round_fall_3") },
+                    chips = wood, hasRemains = true, remains = DecoKind.Stump },
+                new DecoArt { kind = DecoKind.Spruce, sprite = LoadSprite("Objects/tree_spruce"), sway = true, nameKey = "deco.spruce",
+                    essenceCost = 4, reward = CurrencyType.Wood, rewardAmount = 2, anim = RemoveAnim.Poof,
+                    chips = wood, hasRemains = true, remains = DecoKind.StumpSpruce },
+                new DecoArt { kind = DecoKind.DeadTree, sprite = LoadSprite("Zones/dead_tree"), sway = false, nameKey = "deco.dead_tree",
+                    essenceCost = 3, reward = CurrencyType.Wood, rewardAmount = 2, anim = RemoveAnim.Poof,
+                    chips = new[] { R("fx_woodchip") }, hasRemains = true, remains = DecoKind.StumpDead },
+                new DecoArt { kind = DecoKind.Bush, sprite = LoadSprite("Objects/bush"), sway = true, nameKey = "deco.bush",
+                    essenceCost = 2, reward = CurrencyType.Wood, rewardAmount = 1,
+                    bonusChance = 1f, bonus = CurrencyType.Coins, bonusAmount = 5, bonusToast = "toast.deco.berries",
+                    anim = RemoveAnim.Cut, frames = new[] { R("bush_cut") }, chips = new[] { R("fx_leaf") } },
+                new DecoArt { kind = DecoKind.Rock, sprite = LoadSprite("Objects/rock"), sway = false, nameKey = "deco.rock",
+                    essenceCost = 6, reward = CurrencyType.Stone, rewardAmount = 3,
+                    bonusChance = 0.15f, bonus = CurrencyType.Coins, bonusAmount = 15, bonusToast = "toast.deco.coins",
+                    anim = RemoveAnim.Crack, frames = new[] { R("rock_cracked") }, chips = stone, hasRemains = true, remains = DecoKind.Rubble },
+                new DecoArt { kind = DecoKind.Stump, sprite = R("stump_round"), nameKey = "deco.stump",
+                    essenceCost = 1, reward = CurrencyType.Wood, rewardAmount = 1, anim = RemoveAnim.Poof, chips = new[] { R("fx_woodchip") } },
+                new DecoArt { kind = DecoKind.StumpSpruce, sprite = R("stump_spruce"), nameKey = "deco.stump",
+                    essenceCost = 1, reward = CurrencyType.Wood, rewardAmount = 1, anim = RemoveAnim.Poof, chips = new[] { R("fx_woodchip") } },
+                new DecoArt { kind = DecoKind.StumpDead, sprite = R("stump_dead"), nameKey = "deco.stump",
+                    essenceCost = 1, reward = CurrencyType.Wood, rewardAmount = 1, anim = RemoveAnim.Poof, chips = new[] { R("fx_woodchip") } },
+                new DecoArt { kind = DecoKind.Rubble, sprite = R("rubble"), nameKey = "deco.rubble",
+                    essenceCost = 2, reward = CurrencyType.Stone, rewardAmount = 1, anim = RemoveAnim.Poof, chips = stone },
             };
+            art.dust = new[] { R("fx_dust_0"), R("fx_dust_1"), R("fx_dust_2") };
+            art.lamps = new List<LampDefinition>();
+            foreach (var id in new[] { "lantern", "skull", "wisp", "mushrooms" })
+            {
+                var def = AssetDatabase.LoadAssetAtPath<LampDefinition>($"{DataDir}/Lamps/Lamp_{id}.asset");
+                if (def != null)
+                    art.lamps.Add(def);
+            }
             art.frameBuy = LoadSprite("UI/Frames/frame_buy");
             art.frameBuyHover = LoadSprite("UI/Frames/frame_buy_hover");
             art.frameDig = LoadSprite("UI/Frames/frame_dig");
@@ -351,6 +389,16 @@ namespace Wyspa.EditorTools
             FxMaterialAsset("Fog", "Fog", null);
         }
 
+        /// <summary>Klikalny obszar = kafelek pod obiektem (podstawa 6 px pod środkiem kafelka), jak w Island.</summary>
+        static void TileCollider(GameObject go)
+        {
+            var col = go.GetComponent<BoxCollider2D>();
+            if (col == null)
+                col = go.AddComponent<BoxCollider2D>();
+            col.size = new Vector2(1f, 1f);
+            col.offset = new Vector2(-0.5f / Ppu, 6f / Ppu);
+        }
+
         static Material LoadMat(string name) => AssetDatabase.LoadAssetAtPath<Material>($"{MatDir}/{name}.mat");
 
         /// <summary>Materiał efektu z przełącznikiem (F1): zapasowy = materiał, który renderer miał wcześniej.</summary>
@@ -442,8 +490,7 @@ namespace Wyspa.EditorTools
                                LoadSprite("Automation/harvest_crate_2") };
             var crateSr = MakeSprite("HarvestCrate", objectsRoot, fill[0], Vector3.zero, 0);
             var crate = crateSr.gameObject.AddComponent<HarvestCrate>();
-            if (fill[0] != null)
-                crateSr.GetComponent<BoxCollider2D>().size = fill[0].bounds.size;
+            TileCollider(crate.gameObject);
             crate.Setup(fill, crateSr);
             var crateTile = AsTileObject(crate, "crate", "bld.harvest_crate");
 
@@ -465,43 +512,15 @@ namespace Wyspa.EditorTools
             var chest = chestBody.gameObject.AddComponent<MerchantChest>();
             chest.Setup(chestBody, LoadSprite("Automation/merchant_chest"), LoadSprite("Automation/merchant_chest_open"),
                 chestGlow, LoadSprite("Automation/merchant_chest_glow"), LoadSprite("Automation/merchant_chest_open_glow"));
+            TileCollider(chest.gameObject);
             AsTileObject(chest, "merchant_chest", "bld.merchant_chest");
 
             var rune = MakeSprite("RuneStone", objectsRoot, LoadSprite("Automation/rune_stone"), Vector3.zero, 0);
             MakeGlow(rune, LoadSprite("Automation/rune_stone_glow"), 1, glowMat);
+            TileCollider(rune.gameObject);
             AsTileObject(rune, "rune", "bld.soil_memory");
 
-            // lampa startowa: krzywa latarnia (pozostałe lampy kupuje się w Etapie 3c, tryb stawiania)
-            foreach (var l in layout.lamps)
-            {
-                if (l.id != "lantern")
-                    continue;
-                var def = AssetDatabase.LoadAssetAtPath<LampDefinition>($"{DataDir}/Lamps/Lamp_{l.id}.asset");
-                var body = MakeSprite("Lamp_" + l.id, objectsRoot, LoadSprite("Lamps/" + l.sprite), Anchor(l.x, l.y), 0);
-                var glow = MakeSprite("Glow", body.transform, LoadSprite("Lamps/" + l.sprite + "_glow"), Vector3.zero, 1);
-                glow.transform.localPosition = Vector3.zero;
-                if (glowMat != null)
-                    glow.sharedMaterial = glowMat;
-
-                // światło względem podstawy lampy (jak w układzie prototypu), lampa przesuwa się razem z nim
-                var lightGo = new GameObject("Light");
-                lightGo.transform.SetParent(body.transform, false);
-                lightGo.transform.position = Center(l.lightX, l.lightY);
-                var light = lightGo.AddComponent<Light2D>();
-                light.lightType = Light2D.LightType.Point;
-                if (def != null)
-                {
-                    light.pointLightOuterRadius = def.radius;
-                    light.pointLightInnerRadius = def.radius * 0.25f;
-                    light.color = def.color;
-                    light.intensity = def.intensity;
-                }
-                light.falloffIntensity = 0.6f;
-
-                var lamp = body.gameObject.AddComponent<Lamp>();
-                lamp.Setup(def, light, glow);
-                AsTileObject(lamp, "lamp_lantern", "lamp." + l.id);
-            }
+            // lampy (także startową latarnię) stawia Island w trakcie gry: IslandArt.lamps, sklep, tryb stawiania
 
             var islandArt = AssetDatabase.LoadAssetAtPath<IslandArt>(IslandArtPath);
             var waterAnim = water.gameObject.AddComponent<WaterAnimator>();

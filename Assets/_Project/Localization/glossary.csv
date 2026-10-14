@@ -72,3 +72,11 @@ act.dig,Przekop,Dig,Umgraben,耕す,开垦,kafelek na grządkę
 mode.expand,Rozbudowa,Expansion,Ausbau,拡張,扩建,tryb rozbudowy
 menu.expand,Rozbudowa wyspy,Expand the island,Insel erweitern,島を広げる,扩建岛屿,przycisk w HUD
 bld.harvest_crate,Skrzynia na plony,Harvest Crate,Erntekiste,収穫箱,收获箱,
+act.move,Przenieś,Move,Verschieben,移動,移动,
+deco.tree_round,Drzewo,Tree,Baum,木,树,
+deco.spruce,Świerk,Spruce,Fichte,トウヒ,云杉,
+deco.dead_tree,Martwe drzewo,Dead Tree,Toter Baum,枯れ木,枯树,
+deco.bush,Krzak,Bush,Busch,茂み,灌木,
+deco.rock,Kamień,Rock,Felsen,岩,岩石,dekoracja (nie waluta cur.stone)
+deco.stump,Pień,Stump,Baumstumpf,切り株,树桩,
+deco.rubble,Gruz,Rubble,Geröll,瓦礫,碎石,

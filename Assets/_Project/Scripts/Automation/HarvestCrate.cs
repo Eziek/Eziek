@@ -4,7 +4,7 @@ using UnityEngine;
 using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Farming;
-using Wyspa.Input;
+using Wyspa.Localization;
 
 namespace Wyspa.Automation
 {
@@ -17,10 +17,10 @@ namespace Wyspa.Automation
 
     /// <summary>
     /// Skrzynia na plony (GDD §11.3 E). Ognik-ogrodnik zbiera do niej dojrzałe plony.
-    /// Klik = sprzedaż wszystkiego po pełnej cenie; skrzynia kupca sprzedaje sama (90%).
+    /// Klik = panel z przyciskiem „Sprzedaj” (pełna cena) i „Przenieś”; skrzynia kupca sprzedaje sama (90%).
     /// </summary>
     [RequireComponent(typeof(BoxCollider2D))]
-    public class HarvestCrate : MonoBehaviour, IClickable
+    public class HarvestCrate : MonoBehaviour, IContextActions
     {
         [SerializeField] int capacity = 20;
         [Tooltip("Sprite'y napełnienia: pusta, do połowy, pełna.")]
@@ -77,7 +77,14 @@ namespace Wyspa.Automation
             return coins;
         }
 
-        public void OnClick()
+        public void FillContext(ContextInfo info)
+        {
+            info.lines.Add(Loc.Get("crate.contents", count, capacity));
+            info.Button(Loc.Get("ui.crate.sell"), SellNow, count > 0);
+        }
+
+        /// <summary>Sprzedaż ręczna: pełna cena, monety lecą do licznika.</summary>
+        public void SellNow()
         {
             var game = GameLoop.Instance;
             if (game == null)
