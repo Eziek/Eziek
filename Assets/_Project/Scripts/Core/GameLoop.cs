@@ -42,7 +42,8 @@ namespace Wyspa.Core
         bool fullMoonAnnounced;
 
         /// <summary>Szansa na nasiono hybrydy przy zbiorze, gdy sąsiad (4 kierunki) ma roślinę-partnera (GDD §11.3 D).</summary>
-        public const float MutationChance = 0.03f;
+        /// <summary>Szansa mutacji przy zbiorze (3%, ulepszenie „Krzyżowanie” więcej).</summary>
+        public static float MutationChance => UpgradeEffects.MutationChance;
         /// <summary>Do testów (HUD debugowy): każda mutacja się udaje.</summary>
         public static bool DebugAlwaysMutate;
 
@@ -139,6 +140,7 @@ namespace Wyspa.Core
         public void ApplyUpgrades()
         {
             essence.SetCapacity(upgrades.Value(UpgradeIds.EssenceJar, essence.BaseCapacity));
+            UpgradeEffects.Apply(upgrades);
             if (automation != null)
                 automation.ApplyUpgrades(upgrades);
         }
@@ -238,7 +240,7 @@ namespace Wyspa.Core
             else if (!night)
                 fullMoonAnnounced = false;
             if (activity.IsActive)
-                essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier * Alchemy.Potions.Essence);   // napar skupienia
+                essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier * Alchemy.Potions.Essence * UpgradeEffects.WorkEssence);   // napar skupienia
 
             // Najtańsze lampy dostają Esencję pierwsze - gdy jej braknie, gasną najdroższe.
             lampOrder.Clear();
@@ -276,10 +278,10 @@ namespace Wyspa.Core
                 night = true;   // zmierzch liczy się roślinom nocy jak noc
             // rośliny dnia: rytuał „Głębokie korzenie” i tempo pracy (pisanie, mysz)
             float dayBonus = crop != null && crop.kind == CropKind.Day
-                ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth : 1f;   // deszcz +20%
+                ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth * UpgradeEffects.DayGrowth : 1f;   // deszcz +20%
             // mikstury z kotła: wywar wzrostu (rośliny dnia), eliksir nocy (rośliny nocy)
             if (crop != null && crop.kind == CropKind.Night)
-                dayBonus = Alchemy.Potions.NightGrowth * Familiars.FamiliarSystem.NightGrowth;   // eliksir nocy, ropucha
+                dayBonus = Alchemy.Potions.NightGrowth * Familiars.FamiliarSystem.NightGrowth * UpgradeEffects.NightGrowth;   // eliksir nocy, ropucha
             return new GrowthContext
             {
                 playerActive = activity.IsActive,

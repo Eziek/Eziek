@@ -1,6 +1,6 @@
 ﻿key,pl,en,de,ja,zh-Hans,uwagi
 upgrade.essence_jar.name,Słój Żaru,Ember Jar,Glutglas,熾火の瓶,余火罐,
-upgrade.essence_jar.desc,Mieści więcej Żaru: {0}.,Holds more Ember: {0}.,Fasst mehr Glut: {0}.,熾火の容量：{0},余火容量：{0},{0} = pojemność
+upgrade.essence_jar.desc,Mieści więcej Żaru: {0}.,Holds more Ember: {0}.,Fasst mehr Glut: {0}.,熾火の容量：{0},余火容量：{0},
 upgrade.wisp_gardener.name,Ognik-ogrodnik,Wisp Gardener,Irrlichtgärtner,鬼火の庭師,鬼火园丁,
 upgrade.wisp_gardener.desc,"Gniazdo ogników z darmowym ogrodnikiem i skrzynia. W gnieździe przywołasz drwala, latarnika i zbieracza.","A wisp nest with a free gardener, plus a crate. Summon woodcutters, lamplighters and gatherers in the nest.","Ein Irrlichtnest mit kostenlosem Gärtner und eine Kiste. Im Nest rufst du Holzfäller, Laternenanzünder und Sammler.",無料の庭師つき鬼火の巣と収穫箱。巣できこり、点灯夫、拾い屋を呼べる。,附带免费园丁的鬼火巢和收获箱。可在巢中召唤樵夫、点灯人和采集者。,
 upgrade.soil_memory.name,Ognik-siewca,Wisp Sower,Irrlicht-Säer,鬼火の種まき,鬼火播种者,
@@ -143,3 +143,31 @@ lore.heart.2,"Na dnie leży ogromna postać, owinięta wokół czegoś ciemnego.
 lore.heart.3,Pierwszy Opiekun nie odszedł. Zszedł na dno i od stu lat trzyma mgłę w ramionach.,The First Keeper never left. He went down to the seabed and has held the fog in his arms for a hundred years.,Der Erste Hüter ist nie gegangen. Er stieg auf den Grund und hält den Nebel seit hundert Jahren in seinen Armen.,最初の守り人は去ってなどいなかった。海の底へ降り、百年のあいだ霧を腕に抱えている。,第一位守护人从未离开。他沉入海底，用双臂抱住雾已有百年。,serce 3/5: potwór = Pierwszy Opiekun
 lore.heart.4,Każda zapalona lampa daje mu siłę. Każda ofiara na ołtarzu to łyk powietrza.,Every lit lamp gives him strength. Every offering on the altar is a breath of air.,Jede brennende Lampe gibt ihm Kraft. Jedes Opfer auf dem Altar ist ein Atemzug.,灯がひとつ灯るたびに彼は力を得る。祭壇の供物は、ひと息の空気になる。,每一盏点亮的灯都给他力量。祭坛上的每份祭品，都是一口空气。,serce 4/5
 lore.heart.5,"Na skale wyryto świeże słowa: ""Zostaję z nim. Pal światło, a my utrzymamy resztę. - O.""","Fresh words are carved into the rock: ""I'm staying with him. Keep the light burning, and we will hold the rest. - K.""","In den Fels sind frische Worte geritzt: ""Ich bleibe bei ihm. Halte das Licht am Brennen, wir halten den Rest. - H.""",岩に新しい言葉が刻まれている。「私は彼のそばに残る。灯を絶やすな。残りは私たちが支える。――守り人」,岩石上刻着新鲜的字：“我留下陪他。让灯亮着，其余的交给我们。——守护人”,"serce 5/5, koniec historii"
+upgrade.wisp_speed.name,Lekkie skrzydła,Light Wings,Leichte Flügel,軽い翼,轻盈之翼,
+upgrade.wisp_speed.desc,Ogniki latają o {0}% szybciej.,Wisps fly {0}% faster.,Irrlichter fliegen {0} % schneller.,鬼火の飛ぶ速さ+{0}%,鬼火飞行速度+{0}%,{0} = procent
+upgrade.nest_size.name,Przestronne gniazdo,Roomy Nest,Geräumiges Nest,広い巣,宽敞的巢,
+upgrade.nest_size.desc,Gniazdo mieści {0} {0:plural:ognik|ogniki|ogników}.,A nest holds {0} {0:plural:wisp|wisps}.,Ein Nest fasst {0} {0:plural:Irrlicht|Irrlichter}.,巣に鬼火が{0}体入る,每个巢可容纳{0}只鬼火,
+upgrade.wisp_xp.name,Bystre ogniki,Clever Wisps,Kluge Irrlichter,賢い鬼火,聪慧鬼火,
+upgrade.wisp_xp.desc,Ogniki zdobywają o {0}% więcej doświadczenia.,Wisps gain {0}% more experience.,Irrlichter erhalten {0} % mehr Erfahrung.,鬼火の経験値+{0}%,鬼火获得的经验+{0}%,
+upgrade.big_crates.name,Pojemne skrzynie,Roomy Crates,Große Kisten,大きな収穫箱,大容量收获箱,
+upgrade.big_crates.desc,Skrzynia na plony mieści {0} plonów.,A harvest crate holds {0} crops.,Eine Erntekiste fasst {0} Ernten.,収穫箱に作物が{0}個入る,每个收获箱可装{0}份作物,
+upgrade.kindling.name,Rozpałka,Kindling,Zunder,焚きつけ,引火物,
+upgrade.kindling.desc,Praca daje o {0}% więcej Żaru.,Work gives {0}% more Ember.,Arbeit gibt {0} % mehr Glut.,作業で得る熾火+{0}%,工作获得的余火+{0}%,
+upgrade.second_wind.name,Drugi oddech,Second Wind,Zweiter Atem,二度目の息,重振精神,
+upgrade.second_wind.desc,Zmęczenie łagodniejsze: po 8 h pracy Żar spada tylko do {0}%.,"Gentler fatigue: after 8 h of work, Ember only drops to {0}%.",Mildere Erschöpfung: Nach 8 Std. Arbeit sinkt die Glut nur auf {0} %.,疲労がやわらぐ：8時間作業後も熾火は{0}%までしか下がらない,疲劳更轻：工作8小时后余火只降到{0}%,
+upgrade.focus_streak.name,Głębokie skupienie,Deep Focus,Tiefe Konzentration,深い集中,深度专注,
+upgrade.focus_streak.desc,Seria skupienia (25 min bez przerwy) daje +{0}% Żaru.,A focus streak (25 min without a break) gives +{0}% Ember.,Eine Fokusserie (25 Min. ohne Pause) gibt +{0} % Glut.,集中の連続（休まず25分）で熾火+{0}%,专注连续（不间断25分钟）余火+{0}%,
+upgrade.spider_wicks.name,Pajęcze knoty,Spider-Silk Wicks,Spinnenseidendochte,蜘蛛糸の灯心,蛛丝灯芯,
+upgrade.spider_wicks.desc,Lampy palą o {0}% mniej Żaru.,Lamps burn {0}% less Ember.,Lampen verbrauchen {0} % weniger Glut.,ランプの熾火消費-{0}%,灯消耗的余火-{0}%,
+upgrade.fertile_soil.name,Żyzna gleba,Fertile Soil,Fruchtbarer Boden,肥えた土,肥沃土壤,
+upgrade.fertile_soil.desc,Rośliny dnia rosną o {0}% szybciej.,Day crops grow {0}% faster.,Tagpflanzen wachsen {0} % schneller.,昼の作物の成長+{0}%,白天作物生长+{0}%,
+upgrade.night_dew.name,Nocna rosa,Night Dew,Nachttau,夜露,夜露,
+upgrade.night_dew.desc,Rośliny nocy rosną o {0}% szybciej.,Night crops grow {0}% faster.,Nachtpflanzen wachsen {0} % schneller.,夜の作物の成長+{0}%,夜间作物生长+{0}%,
+upgrade.crossbreed.name,Krzyżowanie,Crossbreeding,Kreuzung,交配,杂交,
+upgrade.crossbreed.desc,Szansa na mutację przy zbiorze: {0}% (zwykle 3%).,Chance of a mutation on harvest: {0}% (normally 3%).,Mutationschance bei der Ernte: {0} % (normal 3 %).,収穫時の変異確率：{0}%（通常3%）,收获时变异几率：{0}%（通常3%）,
+upgrade.wild_runes.name,Dzikie runy,Wild Runes,Wilde Runen,野生のルーン,狂野符文,
+upgrade.wild_runes.desc,Dzicz wokół run wyrasta w {0}% krótszym czasie.,Wilds around runes grow back {0}% sooner.,Die Wildnis um Runen wächst {0} % schneller nach.,ルーンの周りの自然が{0}%早く育つ,符文周围的荒野生长时间-{0}%,
+upgrade.fair_trade.name,Uczciwy handel,Fair Trade,Fairer Handel,公正な取引,公平交易,
+upgrade.fair_trade.desc,Duszki-handlarze i ogniki sprzedają po {0}% ceny (zwykle 90%).,Merchant spirits and wisps sell at {0}% of the price (normally 90%).,Händlergeister und Irrlichter verkaufen zu {0} % des Preises (normal 90 %).,商いの精霊と鬼火が価格の{0}%で売る（通常90%）,商贩精灵和鬼火按{0}%的价格出售（通常90%）,
+upgrade.swift_boat.name,Szybka łódź,Swift Boat,Schnelles Boot,速い舟,快船,
+upgrade.swift_boat.desc,Wyprawy łodzią trwają o {0}% krócej.,Boat trips take {0}% less time.,Bootsfahrten dauern {0} % kürzer.,遠征の時間-{0}%,远航时间-{0}%,

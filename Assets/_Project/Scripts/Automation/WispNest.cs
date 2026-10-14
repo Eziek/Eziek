@@ -24,7 +24,8 @@ namespace Wyspa.Automation
     /// </summary>
     public class WispNest : MonoBehaviour, IAreaEffect, IContextActions, ISeedChooser
     {
-        public const int Capacity = 3;
+        /// <summary>Miejsca w gnieździe: 3, ulepszenie „Przestronne gniazdo” do 5.</summary>
+        public static int Capacity => Upgrades.UpgradeEffects.NestCapacity;
         /// <summary>Tryb siewcy: „pamięć ziemi” (to samo, co rosło) i „nic nie sadź”.</summary>
         public const string Memory = "", Off = "-";
 

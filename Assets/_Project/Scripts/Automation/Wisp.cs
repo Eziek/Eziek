@@ -116,7 +116,7 @@ namespace Wyspa.Automation
 
         /// <summary>Doświadczenie do następnego poziomu (-1 = najwyższy).</summary>
         public int NextLevelXp => Level < LevelXp.Length ? LevelXp[Level] : -1;
-        float Speed => 3f * (1f + 0.08f * (Level - 1));
+        float Speed => 3f * (1f + 0.08f * (Level - 1)) * Upgrades.UpgradeEffects.WispSpeed;
         int Carry => 3 + (Level - 1) / 2;
 
         public static bool AnyOfKind(WispKind k)
@@ -239,7 +239,7 @@ namespace Wyspa.Automation
         void AddXp(int n)
         {
             int before = Level;
-            xp += n;
+            xp += Mathf.Max(1, Mathf.RoundToInt(n * Upgrades.UpgradeEffects.WispXp));
             if (Level > before)
             {
                 ApplyLevelLook();

@@ -64,7 +64,7 @@ namespace Wyspa.Lighting
             // mikstura „Płynne światło”: lampy świecą bez Esencji
             // nietoperz: o 20% mniej
             float burn = Alchemy.Potions.LampsFree ? 0f : definition != null
-                ? definition.essencePerMinute * ConsumptionMultiplier * Familiars.FamiliarSystem.LampBurn * (Refueled ? 0.5f : 1f) * dt / 60f : 0f;
+                ? definition.essencePerMinute * ConsumptionMultiplier * Upgrades.UpgradeEffects.LampBurn * Familiars.FamiliarSystem.LampBurn * (Refueled ? 0.5f : 1f) * dt / 60f : 0f;
             bool on = !DebugAllOff && night && definition != null && essence.TryConsume(burn);
             SetOn(on);
         }

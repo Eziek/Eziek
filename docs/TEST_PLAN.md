@@ -55,6 +55,13 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
    (imiona, poziomy), tryb siewcy i przepis alchemika.
 9. Przeniesienie gniazda: ogniki wracają do nowego miejsca; rozbiórka: ogniki znikają, niesione plony trafiają do skrzyni.
 
+## 4a2. Drzewko ulepszeń
+1. Wyspa → 2 (nowe ulepszenia). Nowa gra → Księga → Ulepszenia: w środku ognik, wokół 4 węzły z kłódką („Ukryte we mgle”).
+2. Kup ognika (klik): węzeł złoty, sąsiednie odkrywają się z ikonami, linie do kupionych są złote, a dalsze znów za mgłą.
+3. Dymek: nazwa, poziom, efekt w procentach, koszt, „Kliknij, aby kupić” albo „Za mało środków”.
+4. Drzewko mieści się na stronie (bez nachodzenia na tytuł i tekst na dole), także po niemiecku i w CJK.
+5. Efekty: „Przestronne gniazdo” → w gnieździe 4 miejsca; „Pojemne skrzynie” → skrzynia 0/30; „Krzyżowanie” → dymek mówi 5%.
+
 ## 4b. Hybrydy, wyprawy, zapiski
 1. Wyspa → 2 (nowe rośliny). F1 → „Mutacje zawsze”: posadź obok siebie marchew i wilczą jagodę, zbierz: toast mutacji,
    w worku „Wilcza marchew”. Dymek nasiona w kole: „Krzyżówka: Marchew + Wilcza jagoda”. Sprawdź wygląd 4 faz każdej hybrydy.

@@ -14,7 +14,8 @@ namespace Wyspa.Automation
     /// </summary>
     public class MerchantSpirit : MonoBehaviour
     {
-        public const float PriceMultiplier = 0.9f;
+        /// <summary>Sprzedaż po 90% ceny (ulepszenie „Uczciwy handel”: więcej).</summary>
+        public static float PriceMultiplier => Upgrades.UpgradeEffects.MerchantPrice;
         public static readonly List<MerchantSpirit> All = new List<MerchantSpirit>();
 
         [SerializeField] SpriteRenderer body;

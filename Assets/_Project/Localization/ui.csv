@@ -274,3 +274,8 @@ ui.boat.locked_lore,{0}: przeczytaj zapiski z innych wypraw ({1}/{2}),{0}: read 
 ui.boat.target,Cel: {0},Destination: {0},Ziel: {0},行き先：{0},目的地：{0},
 ui.loot.lore,Zapisek: {0},Note: {0},Notiz: {0},手記：{0},手记：{0},
 ui.seed.parents,Krzyżówka: {0} + {1},Cross: {0} + {1},Kreuzung: {0} + {1},交配：{0}＋{1},杂交：{0}＋{1},rodzice hybrydy
+ui.upgrade.tree_hint,"Najedź, by zobaczyć, kliknij, by kupić. Kupione odkrywają dalsze gałęzie.","Hover to read, click to buy. Each purchase reveals more branches.","Zum Lesen darüberfahren, zum Kaufen klicken. Jeder Kauf enthüllt weitere Zweige.",カーソルで説明、クリックで購入。買うと先の枝が現れる,悬停查看，点击购买。购买后会显露更多分支,
+ui.upgrade.hidden,Ukryte we mgle. Najpierw: {0},Hidden in the fog. First: {0},Im Nebel verborgen. Zuerst: {0},霧に隠れている。先に：{0},藏在雾中。需先：{0},
+ui.upgrade.cost,Koszt: {0},Cost: {0},Kosten: {0},コスト：{0},花费：{0},
+ui.upgrade.click_buy,"Kliknij, aby kupić",Click to buy,Klicken zum Kaufen,クリックで購入,点击购买,
+ui.upgrade.cant_afford,Za mało środków,Not enough resources,Nicht genug Mittel,資源が足りない,资源不足,

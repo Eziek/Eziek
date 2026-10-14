@@ -573,6 +573,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     (33 zapiski po kolei). Zapis v13 (cel wyprawy, liczba wypraw).
 61. Decyzje gracza: siatka 32 px, font 12 px (oba przy osobnej przesiadce), energia nazywa się **Żar** (teksty w 5 językach;
     ognik „Żarek” → „Węgielek”).
+62. Drzewko ulepszeń (prośba gracza): strona Ulepszenia jako odkrywane drzewko z ognikiem-ogrodnikiem w środku,
+    18 ulepszeń w 4 gałęziach (rój, Żar, ziemia, handel), 14 nowych. Słój Żaru wymaga teraz ognika-ogrodnika (100 monet).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -682,6 +684,33 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 | Kamień | usuwanie kamieni, gruzu, nagrobków | budowle kamienne: ołtarz, latarnia morska, palenisko |
 
 ### 11.3 Drzewka
+
+**Drzewko ulepszeń w Księdze** (prośba gracza: „bardziej progresywny wygląd, na środku ognik-ogrodnik, drzewko się odkrywa”).
+Strona Ulepszenia to mapa węzłów zamiast listy: w środku Ognik-ogrodnik, cztery gałęzie. Węzeł kupiony świeci złotem,
+dostępny i na kieszeń delikatnie pulsuje, następny za nim jest „we mgle” (kłódka, nazwa ukryta), dalsze nie są widoczne.
+Najechanie: nazwa, poziom, efekt, koszt; klik kupuje. Pozycje i ikony w `Upgrades/UpgradeTree.cs`, wartości w `WyspaSetup`,
+efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
+
+| Gałąź | Ulepszenie | Poziomy (efekt) | Wymaga |
+|---|---|---|---|
+| środek | Ognik-ogrodnik | gniazdo + ogrodnik | - |
+| rój (góra) | Ognik-siewca | siewca, runa dziczy | ogrodnik |
+| | Lekkie skrzydła | ogniki +15% / +30% szybsze | siewca |
+| | Przestronne gniazdo | 4 / 5 miejsc | siewca |
+| | Bystre ogniki | +50% doświadczenia | siewca |
+| | Pojemne skrzynie | 30 / 40 miejsc | gniazdo |
+| Żar (lewo) | Słój Żaru | 120 / 240 / 480 | ogrodnik |
+| | Rozpałka | praca +10/20/30% Żaru | słój |
+| | Drugi oddech | zmęczenie: Żar do 65% / 80% | rozpałka |
+| | Głębokie skupienie | seria +35% / +50% | rozpałka |
+| | Pajęcze knoty | lampy -15% / -30% Żaru | słój |
+| ziemia (prawo) | Żyzna gleba | rośliny dnia +10/20/30% | ogrodnik |
+| | Nocna rosa | rośliny nocy +10/20/30% | gleba |
+| | Krzyżowanie | mutacje 5% / 8% | rosa |
+| | Dzikie runy | runa dziczy -30% / -50% czasu | rosa |
+| handel (dół) | Duszek-handlarz | sprzedaje pełne skrzynie | ogrodnik |
+| | Uczciwy handel | sprzedaż 95% / 100% ceny | handlarz |
+| | Szybka łódź | wyprawy -15% / -30% czasu | handlarz |
 
 **A. Wyspa**
 - **Rozbudowa kafelkami** (zastępuje „4 stopnie powiększenia”): kupujesz pojedyncze kafelki 16×16 przy brzegu, szczegóły w **§13**.

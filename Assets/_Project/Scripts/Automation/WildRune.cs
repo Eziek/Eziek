@@ -14,8 +14,8 @@ namespace Wyspa.Automation
     public class WildRune : MonoBehaviour, IAreaEffect, IContextActions
     {
         public const int Radius = 1;
-        /// <summary>Co ile sekund gry wyrasta coś nowego (do balansu).</summary>
-        public const float Interval = 360f;
+        /// <summary>Co ile sekund gry wyrasta coś nowego (do balansu; ulepszenie „Dzikie runy” skraca).</summary>
+        public static float Interval => 360f * Upgrades.UpgradeEffects.WildRuneInterval;
 
         public static readonly List<WildRune> All = new List<WildRune>();
 

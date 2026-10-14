@@ -37,15 +37,6 @@ namespace Wyspa.UI
         float refresh;
 
         // wiersze ulepszeń (odświeżane w miejscu)
-        class Row
-        {
-            public UpgradeDefinition def;
-            public TextMeshProUGUI level;
-            public Button buy;
-            public TextMeshProUGUI status;
-            public RectTransform cost;
-        }
-        readonly List<Row> rows = new List<Row>();
 
         public bool IsOpen => blocker != null && blocker.activeSelf;
 
@@ -130,7 +121,7 @@ namespace Wyspa.UI
                 img.sprite = tb == tab ? Ui.Theme.slotSelected : Ui.Theme.slot;
             foreach (Transform c in content)
                 Destroy(c.gameObject);
-            rows.Clear();
+            treeNodes.Clear();
             info.text = "";
             foreach (var t in Tabs)
                 if (t.tab == tab)
@@ -166,56 +157,97 @@ namespace Wyspa.UI
             else if (current == Tab.Stats) BuildStats();
         }
 
-        // ------------------------------------------------------------------ Ulepszenia
+        // ------------------------------------------------------------------ Ulepszenia: drzewko
 
-        static string IconFor(UpgradeDefinition d)
+        /// <summary>Stan węzła drzewka: kupiony, dostępny (wymagania spełnione), za mgłą („?”) albo jeszcze niewidoczny.</summary>
+        enum NodeState { Hidden, Fog, Open, Owned }
+
+        class TreeNode
         {
-            switch (d.id)
-            {
-                case UpgradeIds.EssenceJar: return "essence";
-                case UpgradeIds.WispGardener: return "wisp";
-                case UpgradeIds.MerchantChest: return "shop";
-                default: return "upgrade";
-            }
+            public UpgradeDefinition def;
+            public NodeState state;
+            public Image frame, icon;
+            public TextMeshProUGUI level;
+        }
+        readonly List<TreeNode> treeNodes = new List<TreeNode>();
+        const float Cell = 24f, NodeSize = 20f;
+
+        static NodeState StateOf(UpgradeState ups, UpgradeDefinition d)
+        {
+            if (ups.Level(d.id) > 0) return NodeState.Owned;
+            if (ups.RequirementsMet(d)) return NodeState.Open;
+            // za mgłą: rodzic jest już widoczny (dostępny), więc wiadomo, że coś tam jest
+            foreach (var r in d.requires)
+                if (r != null && r.upgrade != null && ups.RequirementsMet(r.upgrade)) return NodeState.Fog;
+            return NodeState.Hidden;
+        }
+
+        /// <summary>Środek komórki na stronie: drzewko wyśrodkowane w polu treści (296x168).</summary>
+        static Vector2 CellCenter(Vector2Int c)
+        {
+            var mid = UpgradeTree.Middle;
+            return new Vector2((W - 64) / 2f + (c.x - mid.x) * Cell, -(H - 64) / 2f - (c.y - mid.y) * Cell);
         }
 
         void BuildUpgrades()
         {
+            treeNodes.Clear();
             var game = GameLoop.Instance;
             if (game == null || game.Upgrades.Database == null)
                 return;
-            float y = 0;
-            foreach (var def in game.Upgrades.Database.upgrades)
+            var ups = game.Upgrades;
+            info.text = Loc.Get("ui.upgrade.tree_hint");
+            var defs = new List<UpgradeDefinition>();
+            foreach (var def in ups.Database.upgrades)
+                if (def != null && UpgradeTree.InTree(def.id)) defs.Add(def);
+
+            // linie (pod węzłami): od rodzica poziomo, potem pionowo; złote, gdy oba końce kupione
+            foreach (var def in defs)
             {
-                if (def == null)
+                var st = StateOf(ups, def);
+                if (st == NodeState.Hidden)
                     continue;
-                var row = Ui.Place(Ui.Rect("Row_" + def.id, content), Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 64, 24));
-                var slot = Ui.Img(row, "Slot", Ui.Theme.slot, true, true);
-                Ui.Place(slot.rectTransform, Ui.TopLeft, Ui.TopLeft, Vector2.zero, new Vector2(22, 22));
-                var ic = Ui.Img(slot.transform, "Icon", Ui.Theme.Icon(IconFor(def)), false);
-                Ui.Place(ic.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(12, 12));
+                foreach (var r in def.requires)
+                {
+                    if (r == null || r.upgrade == null || !UpgradeTree.InTree(r.upgrade.id))
+                        continue;
+                    var a = CellCenter(UpgradeTree.Cell(r.upgrade.id));
+                    var b = CellCenter(UpgradeTree.Cell(def.id));
+                    var color = st == NodeState.Owned ? Ui.Theme.textGold : (st == NodeState.Open ? Ui.Theme.textDark : Ui.Theme.textMuted);
+                    Line(new Vector2(Mathf.Min(a.x, b.x) - 1, a.y + 1), new Vector2(Mathf.Abs(b.x - a.x) + 2, 2), color);
+                    Line(new Vector2(b.x - 1, Mathf.Max(a.y, b.y) + 1), new Vector2(2, Mathf.Abs(b.y - a.y) + 2), color);
+                }
+            }
+
+            foreach (var def in defs)
+            {
+                var st = StateOf(ups, def);
+                if (st == NodeState.Hidden)
+                    continue;
                 var d = def;
-                slot.gameObject.AddComponent<HoverTip>().Init(tooltip, () => Describe(d));
-
-                var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
-                LocText.On(name, def.nameKey);
-                Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -2), new Vector2(150, 10));
-                var level = Ui.Txt(row, "Level", Ui.Theme.textMuted);
-                Ui.Place(level.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -12), new Vector2(80, 10));
-                var cost = Ui.Place(Ui.Rect("Cost", row), Ui.TopLeft, Ui.TopLeft, new Vector2(150, -5), new Vector2(80, 12));
-
-                var buy = Ui.Btn(row, "Buy", () => Buy(d));
-                Ui.Place((RectTransform)buy.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -3), new Vector2(40, 16));
-                var bt = Ui.Txt(buy.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
-                Ui.Stretch(bt.rectTransform);
-                LocText.On(bt, "ui.upgrade.buy");
-                var status = Ui.Txt(row, "Status", Ui.Theme.textWarn, TextAlignmentOptions.TopRight);
-                Ui.Place(status.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -6), new Vector2(90, 10));
-
-                rows.Add(new Row { def = def, level = level, buy = buy, status = status, cost = cost });
-                y += 26;
+                var center = CellCenter(UpgradeTree.Cell(def.id));
+                var frame = Ui.Img(content, "Node_" + def.id, Ui.Theme.slot, true, true);
+                Ui.Place(frame.rectTransform, Ui.TopLeft, Ui.Center, center, new Vector2(NodeSize, NodeSize));
+                var btn = frame.gameObject.AddComponent<Button>();
+                btn.transition = Selectable.Transition.None;
+                btn.navigation = new Navigation { mode = Navigation.Mode.None };
+                btn.onClick.AddListener(() => Buy(d));
+                frame.gameObject.AddComponent<HoverTip>().Init(tooltip, () => Describe(d));
+                var icon = Ui.Img(frame.transform, "Icon", Ui.Theme.Icon(st == NodeState.Fog ? "lock" : UpgradeTree.Icon(def.id)), false);
+                Ui.Place(icon.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(12, 12));
+                var level = Ui.Txt(frame.transform, "Level", Ui.Theme.textDark, TextAlignmentOptions.BottomRight);
+                Ui.Place(level.rectTransform, Ui.BottomRight, Ui.BottomRight, new Vector2(3, -3), new Vector2(20, 10));
+                treeNodes.Add(new TreeNode { def = def, state = st, frame = frame, icon = icon, level = level });
             }
             RefreshUpgrades();
+        }
+
+        void Line(Vector2 topLeft, Vector2 size, Color color)
+        {
+            var img = Ui.Img(content, "Line", null, false);
+            img.enabled = true;
+            img.color = color;
+            Ui.Place(img.rectTransform, Ui.TopLeft, Ui.TopLeft, topLeft, size);
         }
 
         void RefreshUpgrades()
@@ -224,36 +256,24 @@ namespace Wyspa.UI
             if (game == null)
                 return;
             var ups = game.Upgrades;
-            foreach (var r in rows)
+            foreach (var n in treeNodes)
             {
-                int lvl = ups.Level(r.def.id);
-                r.level.text = Loc.Get("ui.upgrade.level", lvl, r.def.MaxLevel);
-                var next = ups.NextLevel(r.def);
-                foreach (Transform c in r.cost)
-                    Destroy(c.gameObject);
-                if (next == null)
+                if (StateOf(ups, n.def) != n.state)
                 {
-                    r.buy.gameObject.SetActive(false);
-                    r.status.text = Loc.Get("ui.upgrade.max");
-                    r.status.color = Ui.Theme.textMuted;
-                    continue;
+                    Show(Tab.Upgrades);   // kupno odkryło nowe gałęzie: zbuduj drzewko od nowa
+                    return;
                 }
-                float x = 0;
-                foreach (var c in next.cost)
-                {
-                    var ic = Ui.Img(r.cost, "Icon", Ui.Theme.Icon(CurrencyIcon(c.type)), false);
-                    Ui.Place(ic.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, 0), new Vector2(12, 12));
-                    var tx = Ui.Txt(r.cost, "Amount", game.Wallet.Get(c.type) >= c.amount ? Ui.Theme.textDark : Ui.Theme.textWarn);
-                    tx.text = c.amount.ToString("N0", LocCore.Culture(Loc.Language));
-                    float w = Ui.Width(tx);
-                    Ui.Place(tx.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(x + 13, -2), new Vector2(w, 10));
-                    x += 13 + w + 5;
-                }
-                bool req = ups.RequirementsMet(r.def);
-                r.buy.gameObject.SetActive(req);
-                r.buy.interactable = ups.CanBuy(r.def, game.Wallet);
-                r.status.text = req ? "" : Loc.Get("ui.upgrade.requires", RequirementNames(r.def));
-                r.status.color = Ui.Theme.textWarn;
+                int lvl = ups.Level(n.def.id);
+                bool max = lvl >= n.def.MaxLevel;
+                bool canBuy = ups.CanBuy(n.def, game.Wallet);
+                n.frame.sprite = n.state == NodeState.Fog ? Ui.Theme.slotLocked
+                               : max || canBuy ? Ui.Theme.slotSelected : Ui.Theme.slot;
+                // dostępne i stać cię: delikatne pulsowanie; za mgłą: przyciemnione
+                float pulse = canBuy ? 0.85f + 0.15f * Mathf.Sin(Time.unscaledTime * 4f) : 1f;
+                n.frame.color = n.state == NodeState.Fog ? new Color(0.6f, 0.6f, 0.6f, 0.8f) : new Color(pulse, pulse, pulse, 1f);
+                n.icon.color = n.state == NodeState.Open && !canBuy ? new Color(1f, 1f, 1f, 0.55f) : Color.white;
+                n.level.text = n.state == NodeState.Fog || n.def.MaxLevel <= 1 ? "" : lvl + "/" + n.def.MaxLevel;
+                n.level.color = max ? Ui.Theme.textGold : Ui.Theme.textDark;
             }
         }
 
@@ -283,16 +303,31 @@ namespace Wyspa.UI
         string Describe(UpgradeDefinition d)
         {
             var game = GameLoop.Instance;
-            var next = game != null ? game.Upgrades.NextLevel(d) : null;
+            if (game == null)
+                return Loc.Get(d.nameKey);
+            var ups = game.Upgrades;
+            if (StateOf(ups, d) == NodeState.Fog)
+                return Loc.Get("ui.upgrade.hidden", RequirementNames(d));
+            var next = ups.NextLevel(d);
             float value = next != null ? next.value : (d.levels.Count > 0 ? d.levels[d.levels.Count - 1].value : 0f);
-            return Loc.Get(d.nameKey) + "\n" + Loc.Get(d.descriptionKey, value);
+            string s = Loc.Get(d.nameKey) + "\n" + Loc.Get("ui.upgrade.level", ups.Level(d.id), d.MaxLevel) + "\n"
+                     + Loc.Get(d.descriptionKey, UpgradeTree.Display(d.id, value));
+            if (next == null)
+                return s + "\n" + Loc.Get("ui.upgrade.max");
+            s += "\n" + Loc.Get("ui.upgrade.cost", PlacementMode.CostText(next.cost));
+            if (!ups.RequirementsMet(d))
+                return s + "\n" + Loc.Get("ui.upgrade.requires", RequirementNames(d));
+            return s + "\n" + Loc.Get(ups.CanBuy(d, game.Wallet) ? "ui.upgrade.click_buy" : "ui.upgrade.cant_afford");
         }
 
         void Buy(UpgradeDefinition d)
         {
             var game = GameLoop.Instance;
             if (game != null && game.Upgrades.TryBuy(d, game.Wallet))
+            {
                 GameEvents.RaiseToast("ui.toast.upgrade_bought", Loc.Get(d.nameKey));
+                GameEvents.PlaySound("magic", 0.6f);
+            }
             RefreshUpgrades();
         }
 

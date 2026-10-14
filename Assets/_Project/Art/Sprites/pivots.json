@@ -1071,7 +1071,17 @@
       "y": 0.5
     },
     {
+      "name": "icon_crate",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_deepgift",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_drop",
       "x": 0.5,
       "y": 0.5
     },
@@ -1317,6 +1327,11 @@
     },
     {
       "name": "icon_upgrade",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_wing",
       "x": 0.5,
       "y": 0.5
     },

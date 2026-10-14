@@ -197,11 +197,11 @@ namespace Wyspa.UI
             if (!game.Activity.IsActive)
                 rhythmText.text = Loc.Get("ui.rhythm.idle");
             else if (r.FatigueLevel > 0)
-                rhythmText.text = Loc.Get("rhythm.fatigue.status", r.FatigueLevel == 2 ? 0.25f : 0.5f);
+                rhythmText.text = Loc.Get("rhythm.fatigue.status", r.FatigueLevel == 2 ? r.HeavyFatigue : r.Fatigue);
             else if (r.Refreshed)
                 rhythmText.text = Loc.Get("rhythm.refreshed.status", 15, Mathf.CeilToInt(r.RefreshedMinutesLeft));
             else if (r.StreakBonusActive)
-                rhythmText.text = Loc.Get("rhythm.streak.bonus", 25);
+                rhythmText.text = Loc.Get("rhythm.streak.bonus", Mathf.RoundToInt(r.StreakBonus * 100f));
             else
                 rhythmText.text = Loc.Get("ui.rhythm.normal", r.StreakMinutes);
             Ui.SetBar(rhythmFill, r.StreakMinutes / 25f);

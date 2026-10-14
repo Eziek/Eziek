@@ -101,16 +101,56 @@ namespace Wyspa.EditorTools
         static CurrencyAmount Night(int n) => new CurrencyAmount(CurrencyType.NightHarvest, n);
 
         // GDD §11.3 (wartości wstępne do balansu)
+        static CurrencyAmount Wood(int n) => new CurrencyAmount(CurrencyType.Wood, n);
+        static CurrencyAmount Stone(int n) => new CurrencyAmount(CurrencyType.Stone, n);
+
+        static (float, CurrencyAmount[]) L(float value, params CurrencyAmount[] cost) => (value, cost);
+
+        // GDD §11.3 (wartości wstępne do balansu). Drzewko (prośba gracza): środek = ognik-ogrodnik, wymagania = rodzic w drzewku,
+        // pozycje i ikony w Upgrades/UpgradeTree.cs. Wartość poziomu: mnożnik, liczba albo szansa (patrz UpgradeEffects).
         static readonly UpgradeSpec[] UpgradeSpecs =
         {
-            new UpgradeSpec { id = UpgradeIds.EssenceJar, name = "Słój Żaru", category = UpgradeCategory.Essence,
-                levels = new[] { (120f, new[] { Coins(200) }), (240f, new[] { Coins(800) }), (480f, new[] { Coins(3000) }) } },
             new UpgradeSpec { id = UpgradeIds.WispGardener, name = "Ognik-ogrodnik", category = UpgradeCategory.Automation,
-                levels = new[] { (30f, new[] { Coins(100) }) } },   // 6d: pierwszy ognik w ciągu ok. 1-3 h pracy
+                levels = new[] { L(30f, Coins(100)) } },   // 6d: pierwszy ognik w ciągu ok. 1-3 h pracy
+            // rój (góra)
             new UpgradeSpec { id = UpgradeIds.SoilMemory, name = "Ognik-siewca", category = UpgradeCategory.Automation,
-                levels = new[] { (1f, new[] { Coins(500) }) }, requires = new[] { UpgradeIds.WispGardener } },
+                levels = new[] { L(1f, Coins(500)) }, requires = new[] { UpgradeIds.WispGardener } },
+            new UpgradeSpec { id = UpgradeIds.WispSpeed, name = "Lekkie skrzydła", category = UpgradeCategory.Automation,
+                levels = new[] { L(1.15f, Coins(400)), L(1.3f, Coins(1200), Night(3)) }, requires = new[] { UpgradeIds.SoilMemory } },
+            new UpgradeSpec { id = UpgradeIds.NestSize, name = "Przestronne gniazdo", category = UpgradeCategory.Automation,
+                levels = new[] { L(4f, Coins(600), Wood(10)), L(5f, Coins(1500), Wood(20)) }, requires = new[] { UpgradeIds.SoilMemory } },
+            new UpgradeSpec { id = UpgradeIds.WispXp, name = "Bystre ogniki", category = UpgradeCategory.Automation,
+                levels = new[] { L(1.5f, Coins(800), Night(5)) }, requires = new[] { UpgradeIds.SoilMemory } },
+            new UpgradeSpec { id = UpgradeIds.BigCrates, name = "Pojemne skrzynie", category = UpgradeCategory.Automation,
+                levels = new[] { L(30f, Coins(300), Wood(10)), L(40f, Coins(900), Wood(20)) }, requires = new[] { UpgradeIds.NestSize } },
+            // Żar (lewo)
+            new UpgradeSpec { id = UpgradeIds.EssenceJar, name = "Słój Żaru", category = UpgradeCategory.Essence,
+                levels = new[] { L(120f, Coins(200)), L(240f, Coins(800)), L(480f, Coins(3000)) }, requires = new[] { UpgradeIds.WispGardener } },
+            new UpgradeSpec { id = UpgradeIds.Kindling, name = "Rozpałka", category = UpgradeCategory.Essence,
+                levels = new[] { L(1.1f, Coins(300)), L(1.2f, Coins(900)), L(1.3f, Coins(2500)) }, requires = new[] { UpgradeIds.EssenceJar } },
+            new UpgradeSpec { id = UpgradeIds.SecondWind, name = "Drugi oddech", category = UpgradeCategory.Rhythm,
+                levels = new[] { L(0.65f, Coins(600)), L(0.8f, Coins(1800)) }, requires = new[] { UpgradeIds.Kindling } },
+            new UpgradeSpec { id = UpgradeIds.FocusStreak, name = "Głębokie skupienie", category = UpgradeCategory.Rhythm,
+                levels = new[] { L(0.35f, Coins(500)), L(0.5f, Coins(1500)) }, requires = new[] { UpgradeIds.Kindling } },
+            new UpgradeSpec { id = UpgradeIds.SpiderWicks, name = "Pajęcze knoty", category = UpgradeCategory.Lamps,
+                levels = new[] { L(0.85f, Coins(300), Wood(5)), L(0.7f, Coins(1000), Wood(10)) }, requires = new[] { UpgradeIds.EssenceJar } },
+            // ziemia (prawo)
+            new UpgradeSpec { id = UpgradeIds.FertileSoil, name = "Żyzna gleba", category = UpgradeCategory.Island,
+                levels = new[] { L(1.1f, Coins(250)), L(1.2f, Coins(800)), L(1.3f, Coins(2400)) }, requires = new[] { UpgradeIds.WispGardener } },
+            new UpgradeSpec { id = UpgradeIds.NightDew, name = "Nocna rosa", category = UpgradeCategory.Island,
+                levels = new[] { L(1.1f, Coins(400), Night(3)), L(1.2f, Coins(1200), Night(6)), L(1.3f, Coins(3000), Night(10)) },
+                requires = new[] { UpgradeIds.FertileSoil } },
+            new UpgradeSpec { id = UpgradeIds.Crossbreed, name = "Krzyżowanie", category = UpgradeCategory.Island,
+                levels = new[] { L(0.05f, Coins(700), Night(5)), L(0.08f, Coins(2000), Night(10)) }, requires = new[] { UpgradeIds.NightDew } },
+            new UpgradeSpec { id = UpgradeIds.WildRunes, name = "Dzikie runy", category = UpgradeCategory.Island,
+                levels = new[] { L(0.7f, Coins(400), Stone(5)), L(0.5f, Coins(1200), Stone(10)) }, requires = new[] { UpgradeIds.NightDew } },
+            // handel i morze (dół)
             new UpgradeSpec { id = UpgradeIds.MerchantChest, name = "Duszek-handlarz", category = UpgradeCategory.Automation,
-                levels = new[] { (3600f, new[] { Coins(1600) }) }, requires = new[] { UpgradeIds.WispGardener } },
+                levels = new[] { L(3600f, Coins(1600)) }, requires = new[] { UpgradeIds.WispGardener } },
+            new UpgradeSpec { id = UpgradeIds.FairTrade, name = "Uczciwy handel", category = UpgradeCategory.Automation,
+                levels = new[] { L(0.95f, Coins(800)), L(1f, Coins(2400)) }, requires = new[] { UpgradeIds.MerchantChest } },
+            new UpgradeSpec { id = UpgradeIds.SwiftBoat, name = "Szybka łódź", category = UpgradeCategory.Sea,
+                levels = new[] { L(0.85f, Coins(600), Wood(10)), L(0.7f, Coins(1800), Wood(20)) }, requires = new[] { UpgradeIds.MerchantChest } },
         };
 
         static readonly Dictionary<string, LampSpec> LampSpecs = new Dictionary<string, LampSpec>

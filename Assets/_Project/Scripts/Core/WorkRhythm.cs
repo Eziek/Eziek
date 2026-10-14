@@ -53,14 +53,20 @@ namespace Wyspa.Core
         /// <summary>0 = brak, 1 = zmęczenie, 2 = duże zmęczenie.</summary>
         public int FatigueLevel => dailyActiveSeconds >= heavyFatigueHours * 3600f ? 2 : (dailyActiveSeconds >= fatigueHours * 3600f ? 1 : 0);
 
+        /// <summary>Premia serii skupienia (25%, ulepszenie „Seria skupienia” więcej).</summary>
+        public float StreakBonus => Mathf.Max(streakBonus, Upgrades.UpgradeEffects.StreakBonus);
+        /// <summary>Mnożnik Żaru przy zmęczeniu (50% / 25%, ulepszenie „Drugi oddech” łagodzi).</summary>
+        public float Fatigue => Mathf.Max(fatigueMultiplier, Upgrades.UpgradeEffects.FatigueMultiplier);
+        public float HeavyFatigue => Mathf.Max(heavyFatigueMultiplier, Upgrades.UpgradeEffects.HeavyFatigueMultiplier);
+
         public float EssenceMultiplier
         {
             get
             {
                 if (!rhythmEnabled)
                     return 1f;
-                float bonus = 1f + (StreakBonusActive ? streakBonus : 0f) + (Refreshed ? refreshedBonus : 0f);
-                float fatigue = FatigueLevel == 2 ? heavyFatigueMultiplier : (FatigueLevel == 1 ? fatigueMultiplier : 1f);
+                float bonus = 1f + (StreakBonusActive ? StreakBonus : 0f) + (Refreshed ? refreshedBonus : 0f);
+                float fatigue = FatigueLevel == 2 ? HeavyFatigue : (FatigueLevel == 1 ? Fatigue : 1f);
                 return bonus * fatigue;
             }
         }

@@ -71,8 +71,9 @@ namespace Wyspa.Automation
         }
 
         public int Count => count;
-        public int Capacity => capacity;
-        public bool IsFull => count >= capacity;
+        /// <summary>20 miejsc, ulepszenie „Pojemne skrzynie” więcej.</summary>
+        public int Capacity => Mathf.Max(capacity, Upgrades.UpgradeEffects.CrateCapacity);
+        public bool IsFull => count >= Capacity;
 
         public void Setup(Sprite[] sprites, SpriteRenderer renderer)
         {
@@ -189,7 +190,7 @@ namespace Wyspa.Automation
 
         public void FillContext(ContextInfo info)
         {
-            info.lines.Add(Loc.Get("crate.contents", count, capacity));
+            info.lines.Add(Loc.Get("crate.contents", count, Capacity));
             if (MerchantSpirit.Of(this) != null)
                 info.lines.Add(Loc.Get("ui.crate.merchant"));
             info.Button(Loc.Get("ui.crate.sell"), SellNow, count > 0);
@@ -213,7 +214,7 @@ namespace Wyspa.Automation
         {
             if (spriteRenderer == null || fillSprites == null || fillSprites.Length == 0)
                 return;
-            int i = count == 0 ? 0 : (count < capacity ? 1 : 2);
+            int i = count == 0 ? 0 : (count < Capacity ? 1 : 2);
             spriteRenderer.sprite = fillSprites[Mathf.Min(i, fillSprites.Length - 1)];
         }
 

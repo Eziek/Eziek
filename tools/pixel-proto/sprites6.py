@@ -233,6 +233,13 @@ ICON_MAPS = {
              "hjhjhjhjh.", "hhhhhhhhh.", "hhjjjjjhh.", "hhhhhhhhh.", ".........."],
     'mouse': ["...hhh....", "..hjhjh...", ".hjjhjjh..", ".hjjhjjh..", ".hhhhhhh..",
               ".hjjjjjh..", ".hjjjjjh..", "..hjjjh...", "...hhh....", ".........."],
+    # drzewko ulepszeń: lekkie skrzydła, pojemne skrzynie, nocna rosa
+    'wing': ["..........", "......sss.", "....sszzs.", "...szzzs..", "..szzzs...",
+             ".szzss....", "szzs......", "sss.......", "..........", ".........."],
+    'crate': ["..........", ".hhhhhhhh.", ".hjjjjjjh.", ".hhhhhhhh.", ".hjhjjhjh.",
+              ".hjjhhjjh.", ".hjhjjhjh.", ".hhhhhhhh.", "..........", ".........."],
+    'drop': ["....W.....", "....W.....", "...WLW....", "...WLW....", "..WLLLW...",
+             "..WLLLW...", "..WWLWW...", "...WWW....", "..........", ".........."],
     # menu główne (Etap 6d+): trzy deski jak w księdze zapisów
     'menu': ["..........", ".hhhhhhh..", ".hjjjjjh..", ".hhhhhhh..", ".hjjjjjh..",
              ".hhhhhhh..", ".hjjjjjh..", ".hhhhhhh..", "..........", ".........."],

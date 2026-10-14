@@ -32,7 +32,7 @@ namespace Wyspa.Sea
     {
         /// <summary>Rytuał „Pamięć przypływu”: wyprawy krótsze.</summary>
         public static float DurationMultiplier = 1f;
-        public static float Hours(Destination d) => d.hours * DurationMultiplier;
+        public static float Hours(Destination d) => d.hours * DurationMultiplier * Upgrades.UpgradeEffects.BoatDuration;
         const float Ppu = 16f;
 
         enum State { Docked, Away, Returned }
