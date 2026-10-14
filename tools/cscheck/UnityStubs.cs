@@ -71,9 +71,8 @@ namespace UnityEngine.SceneManagement { public struct Scene { } }
 namespace UnityEngine.Rendering { public class RenderPipelineAsset : UnityEngine.Object { } public static class GraphicsSettings { public static RenderPipelineAsset defaultRenderPipeline; } }
 namespace UnityEngine.Rendering.Universal
 {
-    public class ScriptableRenderer { }
-    public class Renderer2D : ScriptableRenderer { }
-    public class UniversalRenderPipelineAsset : UnityEngine.Rendering.RenderPipelineAsset { public ScriptableRenderer scriptableRenderer => null; }
+    // UWAGA: klasa Renderer2D jest w URP 17 wewnętrzna (internal), więc nie ma jej w atrapach.
+    public class UniversalRenderPipelineAsset : UnityEngine.Rendering.RenderPipelineAsset { }
     public class Light2D : UnityEngine.Behaviour { public enum LightType { Parametric, Freeform, Sprite, Point, Global } public LightType lightType { get; set; } public float intensity { get; set; } public UnityEngine.Color color { get; set; } public float pointLightOuterRadius { get; set; } public float pointLightInnerRadius { get; set; } public float falloffIntensity { get; set; } }
     public class PixelPerfectCamera : UnityEngine.MonoBehaviour { public enum GridSnapping { None, PixelSnapping, UpscaleRenderTexture } public int assetsPPU { get; set; } public int refResolutionX { get; set; } public int refResolutionY { get; set; } public GridSnapping gridSnapping { get; set; } }
 }
@@ -99,7 +98,7 @@ namespace UnityEditor
     public static class EditorUtility { public static void SetDirty(UnityEngine.Object o) { } }
     public static class PlayerSettings { public static FullScreenMode fullScreenMode; public static int defaultScreenWidth, defaultScreenHeight; public static bool resizableWindow, runInBackground, visibleInBackground; }
     public class SerializedObject { public SerializedObject(UnityEngine.Object o) { } public SerializedProperty FindProperty(string n) => null; public bool ApplyModifiedPropertiesWithoutUndo() => true; }
-    public class SerializedProperty { public UnityEngine.Object objectReferenceValue; }
+    public class SerializedProperty { public UnityEngine.Object objectReferenceValue; public bool isArray; public int arraySize; public int intValue; public SerializedProperty GetArrayElementAtIndex(int i) => null; }
     public class EditorBuildSettingsScene { public EditorBuildSettingsScene(string p, bool e) { } }
     public static class EditorBuildSettings { public static EditorBuildSettingsScene[] scenes; }
 }

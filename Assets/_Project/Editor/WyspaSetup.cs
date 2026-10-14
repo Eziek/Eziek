@@ -79,7 +79,7 @@ namespace Wyspa.EditorTools
             var rp = GraphicsSettings.defaultRenderPipeline as UniversalRenderPipelineAsset;
             if (rp == null)
                 Debug.LogWarning("[Wyspa] Brak URP! Utwórz projekt z szablonu 'Universal 2D' albo przypisz URP Asset z 2D Rendererem w Project Settings > Graphics.");
-            else if (!(rp.scriptableRenderer is Renderer2D))
+            else if (!Uses2DRenderer(rp))
                 Debug.LogWarning("[Wyspa] URP używa renderera 3D, więc światła 2D (dzień/noc, lampy) nie zadziałają. " +
                                  "Project: Create > Rendering > URP Asset (with 2D Renderer), potem ustaw go w " +
                                  "Project Settings > Graphics (Default Render Pipeline) i w Quality (Render Pipeline Asset) dla każdego poziomu. " +
@@ -88,6 +88,19 @@ namespace Wyspa.EditorTools
                 Debug.Log("[Wyspa] URP z 2D Rendererem: OK.");
 
             Debug.Log($"[Wyspa] Player Settings: okno {w * WindowScale}x{h * WindowScale}, praca w tle włączona.");
+        }
+
+        /// <summary>Czy domyślny renderer URP to 2D Renderer (czyta pola assetu - klasa Renderer2D jest wewnętrzna).</summary>
+        static bool Uses2DRenderer(UniversalRenderPipelineAsset rp)
+        {
+            var so = new SerializedObject(rp);
+            var list = so.FindProperty("m_RendererDataList");
+            if (list == null || !list.isArray || list.arraySize == 0)
+                return false;
+            var index = so.FindProperty("m_DefaultRendererIndex");
+            int i = index != null ? Mathf.Clamp(index.intValue, 0, list.arraySize - 1) : 0;
+            var data = list.GetArrayElementAtIndex(i).objectReferenceValue;
+            return data != null && data.GetType().Name == "Renderer2DData";
         }
 
         // =====================================================================
