@@ -33,3 +33,8 @@ lore.6,W głębinie coś otwiera oko.,"In the deep, something opens an eye.",In 
 toast.deco.nest,Gniazdo z nasionem: +{0} {0:plural:plon nocy|plony nocy|plonów nocy},A nest with a seed: +{0} night {0:plural:harvest|harvests},Ein Nest mit Samen: +{0} Nachternte,種の入った巣：夜の作物 +{0},藏有种子的鸟巢：夜间作物 +{0},usuwanie drzewa
 toast.deco.berries,Jagody: +{0} {0:plural:moneta|monety|monet},Berries: +{0} {0:plural:coin|coins},Beeren: +{0} {0:plural:Münze|Münzen},ベリー：+{0}コイン,浆果：+{0}金币,usuwanie krzaka
 toast.deco.coins,Monety pod kamieniem: +{0} {0:plural:moneta|monety|monet},Coins under the rock: +{0} {0:plural:coin|coins},Münzen unter dem Felsen: +{0} {0:plural:Münze|Münzen},岩の下のコイン：+{0},石头下的金币：+{0},usuwanie kamienia
+toast.mutation,Mutacja! Nasiono: {0},Mutation! Seed: {0},Mutation! Samen: {0},突然変異！種：{0},变异！种子：{0},do worka nasion
+toast.fullmoon,Pełnia: rośliny nocy rosną 2x szybciej,Full moon: night crops grow 2x faster,Vollmond: Nachtpflanzen wachsen 2x schneller,満月：夜の作物が2倍の速さで育つ,满月：夜间作物生长速度x2,
+toast.merchant.arrived,Z mgły wypływa kupiec-widmo...,The Ghost Merchant drifts out of the fog...,Der Geisterhändler gleitet aus dem Nebel ...,霧の中から幽霊商人が現れた…,幽灵商人从迷雾中驶来……,
+toast.merchant.left,Kupiec-widmo odpłynął w mgłę,The Ghost Merchant sailed back into the fog,Der Geisterhändler ist in den Nebel zurückgekehrt,幽霊商人は霧の中へ去った,幽灵商人驶回了迷雾,
+toast.merchant.bought,Kupiec-widmo skupił plony: +{0} {0:plural:moneta|monety|monet},The Ghost Merchant bought your crops: +{0} {0:plural:coin|coins},Der Geisterhändler kaufte die Ernte: +{0} {0:plural:Münze|Münzen},幽霊商人が作物を買い取った：+{0}コイン,幽灵商人收购了作物：+{0}金币,

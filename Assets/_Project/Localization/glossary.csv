@@ -80,3 +80,6 @@ deco.bush,Krzak,Bush,Busch,茂み,灌木,
 deco.rock,Kamień,Rock,Felsen,岩,岩石,dekoracja (nie waluta cur.stone)
 deco.stump,Pień,Stump,Baumstumpf,切り株,树桩,
 deco.rubble,Gruz,Rubble,Geröll,瓦礫,碎石,
+term.seed_bag,Worek nasion,Seed bag,Saatbeutel,種袋,种子袋,"hybrydy, kupiec, wyprawy"
+term.mutation,Mutacja,Mutation,Mutation,突然変異,变异,sąsiednie grządki
+term.fertilizer,Nawóz,Fertilizer,Dünger,肥料,肥料,+1 jakości

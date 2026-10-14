@@ -216,8 +216,9 @@ namespace Wyspa.UI
             if (s.IsEmpty)
                 return Loc.Get("ui.plot.empty");
             string name = Loc.Get("crop." + s.crop.id);
+            string quality = s.Quality > 1 ? "\n" + Loc.Get("ui.plot.quality", s.Quality) : "";
             if (s.IsRipe)
-                return Loc.Get("ui.plot.ripe", name);
+                return Loc.Get("ui.plot.ripe", name) + quality;
             bool night = game.Clock.IsNight;
             var ctx = game.ContextFor(plot, night);
             string state;
@@ -225,10 +226,15 @@ namespace Wyspa.UI
                 state = Loc.Get("ui.plot.growing", name);
             else if (s.crop.kind == CropKind.Day)
                 state = Loc.Get(!ctx.lit ? "ui.plot.need_light" : "ui.plot.need_work", name);
+            else if (!night)
+                state = Loc.Get("ui.plot.need_night", name);
+            else if (ctx.lit)
+                state = Loc.Get("ui.plot.too_bright", name);
             else
-                state = Loc.Get(!night ? "ui.plot.need_night" : "ui.plot.too_bright", name);
+                state = Loc.Get("ui.plot.need_fullmoon", name);   // krwawa róża poza pełnią
             int pct = Mathf.FloorToInt(100f * s.growth / Mathf.Max(1f, s.crop.growSeconds));
-            return state + "\n" + Loc.Get("ui.plot.progress", pct);
+            string moon = s.crop.kind == CropKind.Night && ctx.fullMoon ? "\n" + Loc.Get("ui.plot.fullmoon") : "";
+            return state + "\n" + Loc.Get("ui.plot.progress", pct) + quality + moon;
         }
     }
 }

@@ -35,7 +35,10 @@ namespace Wyspa.Core
 
         /// <summary>0 = nów, 0.5 = pełnia.</summary>
         public float MoonPhase => MoonPhaseAt(DateTime.UtcNow);
-        public bool IsFullMoon => Mathf.Abs(MoonPhase - 0.5f) < 0.034f; // ok. ±1 doba
+        public bool IsFullMoon => DebugFullMoon || Mathf.Abs(MoonPhase - 0.5f) < 0.034f; // ok. ±1 doba
+
+        /// <summary>Do testów (HUD debugowy): pełnia niezależnie od prawdziwej fazy księżyca.</summary>
+        public static bool DebugFullMoon;
 
         public static float HourOf(DateTime t) => (float)t.TimeOfDay.TotalHours;
 

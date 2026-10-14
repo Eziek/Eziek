@@ -103,7 +103,10 @@ namespace Wyspa.UI
             }
             if (buttons.Count > 0)
             {
-                w = Mathf.Max(w, bx - 4);
+                float widest = 0;
+                foreach (var (_, bw) in buttons)
+                    widest = Mathf.Max(widest, bw);
+                w = Mathf.Max(w, info.verticalButtons ? widest : bx - 4);
                 y += 2;
             }
             foreach (var (tmp, ty) in texts)
@@ -111,10 +114,16 @@ namespace Wyspa.UI
             float x = 5;
             foreach (var (b, bw) in buttons)
             {
+                if (info.verticalButtons)
+                {
+                    Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -y), new Vector2(w, 14));
+                    y += 16;
+                    continue;
+                }
                 Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, -y), new Vector2(bw, 14));
                 x += bw + 4;
             }
-            if (buttons.Count > 0)
+            if (buttons.Count > 0 && !info.verticalButtons)
                 y += 14;
             Ui.Place(panel, Ui.BottomLeft, new Vector2(0.5f, 0f), Vector2.zero, new Vector2(w + 10, y + 4));
         }

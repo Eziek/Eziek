@@ -30,6 +30,8 @@ namespace Wyspa.Farming
         Coroutine popRoutine;
 
         public string PlotId => plotId;
+        /// <summary>Kafelek grządki (ustawia wyspa) - do sąsiedztwa przy mutacjach.</summary>
+        public Vector2Int Cell { get; set; }
         public Vector3 CropPosition => cropRenderer != null ? cropRenderer.transform.position : transform.position;
         int CropOrder => cropRenderer != null ? cropRenderer.sortingOrder : 0;
         public PlotState State => state;
@@ -79,8 +81,9 @@ namespace Wyspa.Farming
             if (state.IsRipe)
             {
                 var crop = state.crop;
-                game.Wallet.Add(crop.sellPrice);
-                GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.Coins, crop.sellPrice);
+                int price = crop.SellPrice(state.Quality);
+                game.Wallet.Add(price);
+                GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.Coins, price);
                 if (crop.kind == CropKind.Night)
                 {
                     game.Wallet.Add(CurrencyType.NightHarvest, crop.nightHarvestYield);

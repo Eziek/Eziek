@@ -63,7 +63,7 @@ namespace Wyspa.Automation
             if (wisp != null && upgrades.Has(UpgradeIds.WispGardener))
             {
                 var plot = wisp.isActiveAndEnabled ? wisp.Tick(dt, upgrades.Value(UpgradeIds.WispGardener, 30f), crate) : null;
-                if (plot != null && crate.TryAdd(plot.State.crop))
+                if (plot != null && crate.TryAdd(plot.State.crop, plot.State.Quality))
                 {
                     harvestedCrop = plot.HarvestSilently();
                     harvested = plot;

@@ -17,6 +17,8 @@ namespace Wyspa.Core
     {
         public string title;
         public Vector3 worldAnchor;
+        /// <summary>Przyciski jeden pod drugim, na całą szerokość (np. oferta kupca).</summary>
+        public bool verticalButtons;
         public readonly List<string> lines = new List<string>();
         public readonly List<ContextButton> buttons = new List<ContextButton>();
 

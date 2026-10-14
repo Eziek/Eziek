@@ -10,6 +10,8 @@ namespace Wyspa.Farming
         public bool lit;
         /// <summary>Np. klatka z ognikiem przyspiesza wzrost w swoim świetle.</summary>
         public float multiplier;
+        /// <summary>Pełnia księżyca: rośliny nocy rosną 2x szybciej, krwawa róża rośnie tylko wtedy.</summary>
+        public bool fullMoon;
     }
 
     /// <summary>Stan pola - czyste dane, bez MonoBehaviour (łatwe do zapisu i testów).</summary>
@@ -18,6 +20,10 @@ namespace Wyspa.Farming
     {
         public string cropId;
         public float growth;
+        /// <summary>Sekundy wzrostu w świetle ognika (lampa z mnożnikiem wzrostu): połowa czasu daje +1 do jakości.</summary>
+        public float boostSeconds;
+        /// <summary>Nawóz (kompostownik, później): +1 do jakości.</summary>
+        public bool fertilized;
 
         [NonSerialized] public CropDefinition crop;
 
@@ -37,13 +43,27 @@ namespace Wyspa.Farming
             }
         }
 
+        /// <summary>Jakość 1-3: baza 1, +1 za wzrost w świetle ognika, +1 za nawóz (GDD §11.3 D).</summary>
+        public int Quality
+        {
+            get
+            {
+                if (crop == null)
+                    return 1;
+                int q = 1;
+                if (boostSeconds >= crop.growSeconds * 0.5f) q++;
+                if (fertilized) q++;
+                return q;
+            }
+        }
+
         public bool CanGrow(in GrowthContext ctx)
         {
             if (crop == null || IsRipe)
                 return false;
-            return crop.kind == CropKind.Day
-                ? ctx.playerActive && ctx.lit
-                : ctx.night && !ctx.lit;
+            if (crop.kind == CropKind.Day)
+                return ctx.playerActive && ctx.lit;
+            return ctx.night && !ctx.lit && (!crop.requiresFullMoon || ctx.fullMoon);
         }
 
         /// <summary>Zwraca true, gdy zmieniła się faza (do efektu "pop").</summary>
@@ -53,6 +73,10 @@ namespace Wyspa.Farming
                 return false;
             int before = Stage;
             float mult = ctx.multiplier > 0f ? ctx.multiplier : 1f;
+            if (crop.kind == CropKind.Night && ctx.fullMoon)
+                mult *= 2f;
+            if (ctx.multiplier > 1f)
+                boostSeconds += dt * mult;
             growth = Mathf.Min(crop.growSeconds, growth + dt * mult);
             return Stage != before;
         }
@@ -62,6 +86,8 @@ namespace Wyspa.Farming
             crop = def;
             cropId = def != null ? def.id : null;
             growth = 0f;
+            boostSeconds = 0f;
+            fertilized = false;
         }
 
         public void Clear()
@@ -69,6 +95,8 @@ namespace Wyspa.Farming
             crop = null;
             cropId = null;
             growth = 0f;
+            boostSeconds = 0f;
+            fertilized = false;
         }
     }
 }

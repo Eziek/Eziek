@@ -36,6 +36,13 @@ namespace Wyspa.Core
         [SerializeField] float debugTimeScale = 1f;
 
         readonly List<Lamp> lampOrder = new List<Lamp>();
+        readonly SeedBag seeds = new SeedBag();
+        bool fullMoonAnnounced;
+
+        /// <summary>Szansa na nasiono hybrydy przy zbiorze, gdy sąsiad (4 kierunki) ma roślinę-partnera (GDD §11.3 D).</summary>
+        public const float MutationChance = 0.03f;
+        /// <summary>Do testów (HUD debugowy): każda mutacja się udaje.</summary>
+        public static bool DebugAlwaysMutate;
         float accumulator;
 
         public ActivityTracker Activity => activity;
@@ -47,6 +54,20 @@ namespace Wyspa.Core
         public UpgradeState Upgrades => upgrades;
         public AutomationSystem Automation => automation;
         public Island Island => island;
+        public SeedBag Seeds => seeds;
+
+        int fertilizer;
+        /// <summary>Nawóz (od kupca-widma): przy sadzeniu daje +1 do jakości (GDD §11.3 D).</summary>
+        public int Fertilizer { get => fertilizer; set => fertilizer = Mathf.Max(0, value); }
+        public void AddFertilizer(int n) => Fertilizer += n;
+
+        public bool TakeFertilizer()
+        {
+            if (fertilizer <= 0)
+                return false;
+            fertilizer--;
+            return true;
+        }
 
         /// <summary>Ziarno nowego świata (każda gra inna, GDD §13.4).</summary>
         public static int NewSeed() => new System.Random().Next(1, int.MaxValue);
@@ -80,10 +101,38 @@ namespace Wyspa.Core
         /// <summary>Po każdym zbiorze (ręcznym i przez ognika): pamięć ziemi sadzi to samo, jeśli stać gracza na nasiono.</summary>
         public void AfterHarvest(FarmPlot plot, CropDefinition crop)
         {
+            TryMutate(plot, crop);
             if (crop == null || plot == null || !plot.State.IsEmpty || !upgrades.Has(UpgradeIds.SoilMemory))
                 return;
             if (wallet.TrySpend(crop.seedPrice))
                 plot.Replant(crop);
+        }
+
+        /// <summary>
+        /// Mutacja (GDD §11.3 D): sąsiednia grządka z rośliną-partnerem daje szansę na nasiono hybrydy do worka.
+        /// Pary rodziców są w danych hybryd (CropDefinition.parentA/B).
+        /// </summary>
+        void TryMutate(FarmPlot plot, CropDefinition crop)
+        {
+            if (plot == null || crop == null || crops == null || island == null)
+                return;
+            foreach (var n in island.NeighbourPlots(plot))
+            {
+                var other = n.State.crop;
+                if (other == null || other == crop)
+                    continue;
+                foreach (var h in crops.crops)
+                {
+                    if (h == null || !h.IsParentPair(crop.id, other.id))
+                        continue;
+                    if (!DebugAlwaysMutate && Random.value >= MutationChance)
+                        return;   // jedna próba na zbiór
+                    seeds.Add(h.id);
+                    GameEvents.RaiseToast("toast.mutation", Localization.Loc.Get("crop." + h.id));
+                    Visual.IslandFx.FindPopped(plot.CropPosition);
+                    return;
+                }
+            }
         }
 
         void Start()
@@ -123,6 +172,14 @@ namespace Wyspa.Core
             bool night = clock.IsNight;
 
             rhythm.Tick(activity.IsActive, dt, System.DateTime.Now);
+            // pełnia: komunikat raz na noc (rośliny nocy x2, krwawa róża rośnie)
+            if (night && clock.IsFullMoon && !fullMoonAnnounced)
+            {
+                fullMoonAnnounced = true;
+                GameEvents.RaiseToast("toast.fullmoon");
+            }
+            else if (!night)
+                fullMoonAnnounced = false;
             if (activity.IsActive)
                 essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier);
 
@@ -154,6 +211,7 @@ namespace Wyspa.Core
                 night = night,
                 lit = Illumination.IsLit(p, night),
                 multiplier = night ? Illumination.GrowthMultiplier(p) : 1f,
+                fullMoon = clock.IsFullMoon,
             };
         }
 

@@ -1,3 +1,4 @@
+using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -63,12 +64,14 @@ namespace Wyspa.UI
             p.y = Mathf.Clamp(p.y, 34, size.y - 34);
             wheel.anchoredPosition = new Vector2(Mathf.Round(p.x), Mathf.Round(p.y));
 
-            var crops = game.Crops.crops;
+            // hybrydy tylko, gdy są w worku nasion (z mutacji)
+            var crops = new List<CropDefinition>();
+            foreach (var cd in game.Crops.crops)
+                if (cd != null && (!cd.hybrid || game.Seeds.Count(cd.id) > 0))
+                    crops.Add(cd);
             for (int i = 0; i < crops.Count; i++)
             {
                 var crop = crops[i];
-                if (crop == null)
-                    continue;
                 float a = Mathf.PI / 2f - i * 2f * Mathf.PI / crops.Count;
                 var pos = new Vector2(Mathf.Round(Mathf.Cos(a) * Radius), Mathf.Round(Mathf.Sin(a) * Radius));
                 var img = Ui.Img(wheel, "Seed_" + crop.id, Ui.Theme.slot, true, true);
@@ -79,8 +82,15 @@ namespace Wyspa.UI
                 b.spriteState = new SpriteState { highlightedSprite = Ui.Theme.slotSelected, pressedSprite = Ui.Theme.slotSelected,
                                                   selectedSprite = Ui.Theme.slot, disabledSprite = Ui.Theme.slotLocked };
                 b.navigation = new Navigation { mode = Navigation.Mode.None };
-                var icon = Ui.Img(img.transform, "Icon", Ui.Theme.Icon("seed_" + crop.id), false);
+                var icon = Ui.Img(img.transform, "Icon", Ui.Theme.Icon(crop.SeedIcon), false);
                 Ui.Place(icon.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(12, 12));
+                int inBag = game.Seeds.Count(crop.id);
+                if (inBag > 0)
+                {
+                    var badge = Ui.Txt(img.transform, "Count", Ui.Theme.textGold, TextAlignmentOptions.BottomRight);
+                    badge.text = inBag.ToString();
+                    Ui.Place(badge.rectTransform, Ui.BottomRight, Ui.BottomRight, new Vector2(1, -1), new Vector2(14, 10));
+                }
                 var c = crop;
                 b.onClick.AddListener(() => Plant(c));
                 var hover = img.gameObject.AddComponent<HoverTip>();
@@ -117,14 +127,20 @@ namespace Wyspa.UI
         {
             var game = GameLoop.Instance;
             foreach (var (b, crop) in buttons)
-                b.interactable = game != null && game.Wallet.Coins >= crop.seedPrice;
+                b.interactable = game != null && (game.Seeds.Count(crop.id) > 0 || (!crop.hybrid && game.Wallet.Coins >= crop.seedPrice));
         }
 
         void Plant(CropDefinition crop)
         {
             var game = GameLoop.Instance;
-            if (game != null && plot != null && plot.State.IsEmpty && game.Wallet.TrySpend(crop.seedPrice))
+            // najpierw worek nasion (za darmo), potem zakup za monety (hybryd nie da się kupić)
+            if (game != null && plot != null && plot.State.IsEmpty
+                && (game.Seeds.TryTake(crop.id) || (!crop.hybrid && game.Wallet.TrySpend(crop.seedPrice))))
+            {
                 plot.Replant(crop);
+                if (game.TakeFertilizer())
+                    plot.State.fertilized = true;   // nawóz idzie od razu do ziemi (+1 jakości)
+            }
             Close();
         }
 
@@ -133,10 +149,20 @@ namespace Wyspa.UI
             string time = c.kind == CropKind.Day
                 ? Loc.Get("ui.seed.time_work", Mathf.RoundToInt(c.growSeconds / 60f))
                 : Loc.Get("ui.seed.time_night", Mathf.Round(c.growSeconds / 360f) / 10f);
-            return Loc.Get("crop." + c.id) + "\n"
+            var game = GameLoop.Instance;
+            int inBag = game != null ? game.Seeds.Count(c.id) : 0;
+            string price = c.hybrid ? Loc.Get("ui.seed.hybrid") : Loc.Get("ui.seed.price", c.seedPrice);
+            string s = Loc.Get("crop." + c.id) + "\n"
                  + Loc.Get(c.kind == CropKind.Day ? "ui.seed.kind_day" : "ui.seed.kind_night") + "\n"
-                 + Loc.Get("ui.seed.price", c.seedPrice) + "   " + Loc.Get("ui.seed.sell", c.sellPrice) + "\n"
+                 + price + "   " + Loc.Get("ui.seed.sell", c.sellPrice) + "\n"
                  + time;
+            if (c.requiresFullMoon)
+                s += "\n" + Loc.Get("ui.seed.fullmoon");
+            if (inBag > 0)
+                s += "\n" + Loc.Get("ui.seed.bag", inBag);
+            if (game != null && game.Fertilizer > 0)
+                s += "\n" + Loc.Get("ui.seed.fertilizer", game.Fertilizer);
+            return s;
         }
     }
 

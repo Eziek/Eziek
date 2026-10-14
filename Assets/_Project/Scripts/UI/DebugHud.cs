@@ -155,6 +155,8 @@ namespace Wyspa.UI
             if (fi != game.Activity.ForceIdle) game.Activity.ForceIdle = fi;
             Lamp.DebugAllOff = GUILayout.Toggle(Lamp.DebugAllOff, "Zgaś lampy (test roślin nocy)");
             r.RhythmEnabled = GUILayout.Toggle(r.RhythmEnabled, "Rytm pracy (seria/przerwa/zmęczenie)");
+            GameClock.DebugFullMoon = GUILayout.Toggle(GameClock.DebugFullMoon, "Wymuś pełnię (rośliny nocy x2, krwawa róża)");
+            GameLoop.DebugAlwaysMutate = GUILayout.Toggle(GameLoop.DebugAlwaysMutate, "Mutacje zawsze (zamiast 3%)");
             bool fx = GUILayout.Toggle(FxMaterial.Enabled, "Shadery efektów (woda, mgła, kołysanie)");
             if (fx != FxMaterial.Enabled) FxMaterial.Enabled = fx;
             if (GUILayout.Button("Cheat: +500 monet, +5 plonów nocy"))
@@ -164,6 +166,10 @@ namespace Wyspa.UI
             }
             if (GUILayout.Button("Cheat: +30 Esencji"))
                 game.Essence.Set(game.Essence.Amount + 30f);
+            var merchant = Wyspa.Sea.GhostMerchant.Instance;
+            if (merchant != null && !merchant.Present && GUILayout.Button("Przywołaj kupca-widmo"))
+                merchant.Arrive();
+            GUILayout.Label($"Worek: nawóz {game.Fertilizer}, hybrydy {game.Seeds.Count("hybridpumpkin")}");
 
             var island = game.Island;
             if (island != null && island.Ready)

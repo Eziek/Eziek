@@ -42,7 +42,15 @@ namespace Wyspa.EditorTools
         [Serializable] class ObjL { public string sprite; public int x; public int y; }
         [Serializable] class LampL { public string id; public string sprite; public int x; public int y; public int lightX; public int lightY; public float radius; public float r; public float g; public float b; }
 
-        struct CropSpec { public string id, name, sprite; public CropKind kind; public float seconds; public int seed, sell; }
+        struct CropSpec
+        {
+            public string id, name, sprite;
+            public CropKind kind;
+            public float seconds;
+            public int seed, sell;
+            public bool fullMoon, hybrid;
+            public string parentA, parentB, seedIcon;
+        }
         struct LampSpec { public string name; public int price; public float perMinute, growth; public bool flicker; }
 
         static readonly CropSpec[] CropSpecs =
@@ -54,7 +62,10 @@ namespace Wyspa.EditorTools
             new CropSpec { id = "corpseshroom", name = "Trupi grzyb", sprite = "crop_corpseshroom", kind = CropKind.Night, seconds = 3 * 3600, seed = 15, sell = 45 },
             new CropSpec { id = "moonflower", name = "Księżycowy kwiat", sprite = "crop_moonflower", kind = CropKind.Night, seconds = 4 * 3600, seed = 20, sell = 60 },
             new CropSpec { id = "ghostpumpkin", name = "Upiorna dynia", sprite = "crop_ghostpumpkin", kind = CropKind.Night, seconds = 6 * 3600, seed = 30, sell = 90 },
-            new CropSpec { id = "bloodrose", name = "Krwawa róża", sprite = "crop_bloodrose", kind = CropKind.Night, seconds = 8 * 3600, seed = 50, sell = 200 },
+            new CropSpec { id = "bloodrose", name = "Krwawa róża", sprite = "crop_bloodrose", kind = CropKind.Night, seconds = 8 * 3600, seed = 50, sell = 200, fullMoon = true },
+            // hybryda (Etap 4a): nasiona tylko z mutacji dyni i upiornej dyni na sąsiednich grządkach
+            new CropSpec { id = "hybridpumpkin", name = "Dynia-upiór", sprite = "crop_hybridpumpkin", kind = CropKind.Night, seconds = 5 * 3600, seed = 0, sell = 150,
+                           hybrid = true, parentA = "pumpkin", parentB = "ghostpumpkin", seedIcon = "seed_hybrid" },
         };
 
         struct UpgradeSpec
@@ -153,6 +164,11 @@ namespace Wyspa.EditorTools
                 crop.growSeconds = spec.seconds;
                 crop.seedPrice = spec.seed;
                 crop.sellPrice = spec.sell;
+                crop.requiresFullMoon = spec.fullMoon;
+                crop.hybrid = spec.hybrid;
+                crop.parentA = spec.parentA;
+                crop.parentB = spec.parentB;
+                crop.seedIcon = spec.seedIcon;
                 crop.stages = new Sprite[4];
                 crop.glowStages = new Sprite[4];
                 for (int i = 0; i < 4; i++)
@@ -521,6 +537,17 @@ namespace Wyspa.EditorTools
             AsTileObject(rune, "rune", "bld.soil_memory");
 
             // lampy (także startową latarnię) stawia Island w trakcie gry: IslandArt.lamps, sklep, tryb stawiania
+
+            // kupiec-widmo (Etap 4b): łódź pod wyspą raz na noc; obiekt zawsze aktywny (harmonogram), sprite'y chowa sam
+            var merchantGo = new GameObject("GhostMerchant");
+            merchantGo.transform.SetParent(world, false);
+            var merchantBody = MakeSprite("Body", merchantGo.transform, LoadSprite("Sea/ghost_merchant"), Vector3.zero, 700);
+            merchantBody.transform.localPosition = Vector3.zero;
+            var merchantGlow = MakeGlow(merchantBody, LoadSprite("Sea/ghost_merchant_glow"), 701, glowMat);
+            var merchantArea = merchantGo.AddComponent<BoxCollider2D>();
+            merchantArea.size = new Vector2(2f, 2f);
+            merchantArea.offset = new Vector2(0f, 1f);
+            merchantGo.AddComponent<Wyspa.Sea.GhostMerchant>().Setup(merchantBody, merchantGlow, merchantArea);
 
             var islandArt = AssetDatabase.LoadAssetAtPath<IslandArt>(IslandArtPath);
             var waterAnim = water.gameObject.AddComponent<WaterAnimator>();

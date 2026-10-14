@@ -65,3 +65,17 @@ ui.toast.placed,Postawiono: {0},Placed: {0},Aufgestellt: {0},設置した：{0},
 ui.shop.lamps,Lampy,Lamps,Lampen,ランプ,灯,
 ui.shop.more,Budowle i Morze wkrótce.,Buildings and Sea coming soon.,Bauwerke und Meer folgen bald.,建物と海は近日公開。,建筑与海洋即将推出。,
 ui.shop.hint,Kup lampę i postaw ją na wolnym kafelku.,Buy a lamp and place it on a free tile.,Kaufe eine Lampe und stelle sie auf ein freies Landstück.,ランプを買って空きマスに置こう。,购买灯并放在空闲的土地格上。,
+ui.seed.hybrid,Tylko z worka nasion,Seed bag only,Nur aus dem Saatbeutel,種袋からのみ,仅来自种子袋,hybryda
+ui.seed.fullmoon,Rośnie tylko w pełnię,Grows only at full moon,Wächst nur bei Vollmond,満月の夜にだけ育つ,仅在满月时生长,
+ui.seed.bag,W worku: {0},In the bag: {0},Im Beutel: {0},種袋：{0},袋中：{0},
+ui.plot.quality,Jakość: {0}/3,Quality: {0}/3,Qualität: {0}/3,品質：{0}/3,品质：{0}/3,
+ui.plot.need_fullmoon,{0}: czeka na pełnię,{0}: waiting for the full moon,{0}: wartet auf den Vollmond,{0}：満月を待っている,{0}：等待满月,
+ui.plot.fullmoon,Pełnia: rośnie 2x szybciej,Full moon: grows 2x faster,Vollmond: wächst 2x schneller,満月：2倍の速さで育つ,满月：生长速度x2,
+ui.seed.fertilizer,Nawóz: {0} (+1 jakości przy sadzeniu),Fertilizer: {0} (+1 quality when planting),Dünger: {0} (+1 Qualität beim Pflanzen),肥料：{0}（植えると品質+1）,肥料：{0}（种植时品质+1）,
+ui.merchant.seeds,Nasiona: {1} x{0},Seeds: {1} x{0},Samen: {1} x{0},種：{1} x{0},种子：{1} x{0},{1} = roślina
+ui.merchant.fertilizer,Nawóz x{0},Fertilizer x{0},Dünger x{0},肥料 x{0},肥料 x{0},
+ui.merchant.hybrid,Nasiono: {0},Seed: {0},Samen: {0},種：{0},种子：{0},hybryda
+ui.merchant.price,{0} {0:plural:moneta|monety|monet},{0} {0:plural:coin|coins},{0} {0:plural:Münze|Münzen},{0}コイン,{0}金币,
+ui.merchant.price2,{0} {0:plural:moneta|monety|monet} + {1} {1:plural:plon nocy|plony nocy|plonów nocy},{0} {0:plural:coin|coins} + {1} night {1:plural:harvest|harvests},{0} {0:plural:Münze|Münzen} + {1} Nachternte,{0}コイン + 夜の作物{1},{0}金币 + 夜间作物{1},
+ui.merchant.leaves,Odpłynie za {0} min,Leaves in {0} min,Legt in {0} Min. ab,あと{0}分で去る,{0}分钟后离开,
+ui.merchant.sell_crate,Sprzedaj skrzynię ({0}) za 150%,Sell the crate ({0}) at 150%,Kiste ({0}) für 150 % verkaufen,箱（{0}）を150%で売る,以150%出售箱子（{0}）,

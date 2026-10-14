@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 3;
+        public int version = 4;
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
@@ -26,6 +26,9 @@ namespace Wyspa.Save
         public float rhythmDailySeconds;
         public List<CrateEntry> crate = new List<CrateEntry>();
         public IslandSave island;               // v3: wyspa z kafelków (ziarno, kafelki, dekoracje, obiekty)
+        public List<SeedSave> seeds = new List<SeedSave>();   // v4: worek nasion (hybrydy, kupiec, wyprawy)
+        public int fertilizer;                  // v4: nawóz od kupca-widma
+        public string merchantNight;            // v4: noc, w której kupiec-widmo już był
     }
 
     [Serializable]
@@ -34,6 +37,8 @@ namespace Wyspa.Save
         public string id;
         public string cropId;
         public float growth;
+        public float boost;        // v4: sekundy wzrostu w świetle ognika (jakość)
+        public bool fertilized;
     }
 
     /// <summary>
@@ -90,9 +95,13 @@ namespace Wyspa.Save
                 crate = game.Automation != null && game.Automation.Crate != null
                     ? game.Automation.Crate.Snapshot() : new List<CrateEntry>(),
                 island = game.Island != null && game.Island.Ready ? game.Island.Snapshot() : null,
+                seeds = game.Seeds.Snapshot(),
+                fertilizer = game.Fertilizer,
+                merchantNight = Sea.GhostMerchant.Instance != null ? Sea.GhostMerchant.Instance.VisitedNight : "",
             };
             foreach (var plot in FarmPlot.All)
-                data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth });
+                data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
+                                              boost = plot.State.boostSeconds, fertilized = plot.State.fertilized });
 
             try
             {
@@ -143,6 +152,10 @@ namespace Wyspa.Save
             game.Rhythm.Restore(data.rhythmDayTicks, data.rhythmDailySeconds, DateTime.Now);
             if (game.Automation != null && game.Automation.Crate != null)
                 game.Automation.Crate.Restore(data.crate);
+            game.Seeds.Restore(data.seeds);
+            game.Fertilizer = data.fertilizer;
+            if (Sea.GhostMerchant.Instance != null)
+                Sea.GhostMerchant.Instance.VisitedNight = data.merchantNight;
 
             var savedAt = new DateTime(data.savedAtUtcTicks, DateTimeKind.Utc).ToLocalTime();
             float offlineNight = game.Clock.NightSecondsBetween(savedAt, DateTime.Now);
@@ -164,8 +177,15 @@ namespace Wyspa.Save
                 }
                 plot.State.Plant(def);
                 plot.State.growth = saved.growth;
+                plot.State.boostSeconds = saved.boost;
+                plot.State.fertilized = saved.fertilized;
                 if (def.kind == CropKind.Night)
-                    plot.State.growth = Mathf.Min(def.growSeconds, plot.State.growth + offlineNight);
+                {
+                    // pełnia (przybliżenie: stan teraz): rośliny nocy x2, krwawa róża rośnie tylko wtedy
+                    bool fullMoon = game.Clock.IsFullMoon;
+                    float gained = def.requiresFullMoon && !fullMoon ? 0f : offlineNight * (fullMoon ? 2f : 1f);
+                    plot.State.growth = Mathf.Min(def.growSeconds, plot.State.growth + gained);
+                }
             }
 
             if (offlineNight > 0f)

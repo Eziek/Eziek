@@ -32,6 +32,26 @@ namespace Wyspa.Farming
         [Tooltip("Rośliny nocy: ile „plonów nocy” (waluta) daje zbiór.")]
         public int nightHarvestYield = 1;
 
+        [Header("Etap 4a")]
+        [Tooltip("Rośnie tylko w pełnię księżyca (krwawa róża, GDD §4.7).")]
+        public bool requiresFullMoon;
+        [Tooltip("Hybryda: nasiona tylko z mutacji (worek nasion), nie do kupienia.")]
+        public bool hybrid;
+        [Tooltip("Rodzice hybrydy: sąsiednie grządki z tymi roślinami mogą dać nasiono przy zbiorze (§11.3 D).")]
+        public string parentA, parentB;
+        [Tooltip("Ikona nasiona w UI (bez przedrostka icon_), puste = seed_<id>.")]
+        public string seedIcon;
+
+        public string SeedIcon => string.IsNullOrEmpty(seedIcon) ? "seed_" + id : seedIcon;
+
+        /// <summary>Jakość 1-3 gwiazdki: cena x1 / x1.5 / x2.5 (GDD §11.3 D).</summary>
+        public static float QualityMultiplier(int quality) => quality >= 3 ? 2.5f : (quality == 2 ? 1.5f : 1f);
+
+        public int SellPrice(int quality) => Mathf.RoundToInt(sellPrice * QualityMultiplier(quality));
+
+        public bool IsParentPair(string a, string b) =>
+            hybrid && ((a == parentA && b == parentB) || (a == parentB && b == parentA));
+
         public Sprite StageSprite(int stage)
         {
             if (stages == null || stages.Length == 0 || stage < 0)

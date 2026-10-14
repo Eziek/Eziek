@@ -13,6 +13,7 @@ namespace Wyspa.Automation
     {
         public string cropId;
         public int count;
+        public int quality;   // 0 w zapisach sprzed Etapu 4a = 1
     }
 
     /// <summary>
@@ -42,12 +43,23 @@ namespace Wyspa.Automation
             spriteRenderer = renderer;
         }
 
-        public bool TryAdd(CropDefinition crop)
+        // klucz zawartości: id rośliny + jakość (cena zależy od jakości)
+        static string Key(string id, int quality) => id + "#" + Mathf.Clamp(quality, 1, 3);
+
+        static void Split(string key, out string id, out int quality)
+        {
+            int i = key.LastIndexOf('#');
+            id = i < 0 ? key : key.Substring(0, i);
+            quality = i < 0 || !int.TryParse(key.Substring(i + 1), out int q) ? 1 : q;
+        }
+
+        public bool TryAdd(CropDefinition crop, int quality = 1)
         {
             if (crop == null || IsFull)
                 return false;
-            contents.TryGetValue(crop.id, out int n);
-            contents[crop.id] = n + 1;
+            string key = Key(crop.id, quality);
+            contents.TryGetValue(key, out int n);
+            contents[key] = n + 1;
             count++;
             RefreshVisual();
             Changed?.Invoke();
@@ -62,10 +74,11 @@ namespace Wyspa.Automation
             int coins = 0;
             foreach (var kv in contents)
             {
-                var def = crops.Find(kv.Key);
+                Split(kv.Key, out string id, out int quality);
+                var def = crops.Find(id);
                 if (def == null)
                     continue;
-                coins += Mathf.RoundToInt(def.sellPrice * kv.Value * multiplier);
+                coins += Mathf.RoundToInt(def.SellPrice(quality) * kv.Value * multiplier);
                 if (def.kind == CropKind.Night)
                     wallet.Add(CurrencyType.NightHarvest, def.nightHarvestYield * kv.Value);
             }
@@ -109,7 +122,10 @@ namespace Wyspa.Automation
         {
             var list = new List<CrateEntry>();
             foreach (var kv in contents)
-                list.Add(new CrateEntry { cropId = kv.Key, count = kv.Value });
+            {
+                Split(kv.Key, out string id, out int quality);
+                list.Add(new CrateEntry { cropId = id, count = kv.Value, quality = quality });
+            }
             return list;
         }
 
@@ -121,7 +137,9 @@ namespace Wyspa.Automation
                 foreach (var e in list)
                     if (!string.IsNullOrEmpty(e.cropId) && e.count > 0)
                     {
-                        contents[e.cropId] = e.count;
+                        string key = Key(e.cropId, e.quality <= 0 ? 1 : e.quality);
+                        contents.TryGetValue(key, out int n);
+                        contents[key] = n + e.count;
                         count += e.count;
                     }
             RefreshVisual();

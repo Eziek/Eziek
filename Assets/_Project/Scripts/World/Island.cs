@@ -135,6 +135,15 @@ namespace Wyspa.World
             }
         }
 
+        /// <summary>Miejsce na wodzie pod wyspą (łódź kupca-widma): środek lądu w poziomie, kawałek pod klifem.</summary>
+        public Vector3 WaterBelow(int pixelsBelow)
+        {
+            if (picture == null)
+                return new Vector3(0f, -3f, 0f);
+            int cx = (picture.minX + picture.maxX) / 2;
+            return AnchorWorld(cx, picture.maxY + pixelsBelow);
+        }
+
         public IEnumerable<Transform> Trees
         {
             get
@@ -157,6 +166,17 @@ namespace Wyspa.World
         }
 
         public bool Claiming => claiming;
+
+        /// <summary>Grządki na sąsiednich kafelkach (4 kierunki) - do mutacji.</summary>
+        public IEnumerable<FarmPlot> NeighbourPlots(FarmPlot plot)
+        {
+            if (plot == null)
+                yield break;
+            var t = new TilePos(plot.Cell.x, plot.Cell.y);
+            foreach (var n in IslandMap.Neighbours(t))
+                if (plots.TryGetValue(n, out var other) && other != null)
+                    yield return other;
+        }
 
         public bool IsFree(TilePos p) => map.Owns(p) && map.KindAt(p) == TileKind.Grass
                                          && !decorations.ContainsKey(p) && !occupied.ContainsKey(p);
@@ -441,6 +461,7 @@ namespace Wyspa.World
             var fx = crop.gameObject.AddComponent<SpriteFx>();
             fx.Setup(0.15f, crop, glow);
             plot.Setup($"plot_{p.c}_{p.r}", crop, glow, fx);
+            plot.Cell = new Vector2Int(p.c, p.r);
             plot.RefreshVisual();
             return plot;
         }
