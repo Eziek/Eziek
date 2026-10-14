@@ -33,7 +33,22 @@ namespace Wyspa.World
         float dragDistance;
         bool dragging;
 
+        bool mini;
+
         public Vector2Int View => view;
+        public int Scale => windowScale;
+        /// <summary>Mini-tryb (GDD §12.7): najmniejszy kadr w skali x2, np. w rogu ekranu.</summary>
+        public bool Mini
+        {
+            get => mini;
+            set
+            {
+                mini = value;
+                PlayerPrefs.SetInt("viewMini", value ? 1 : 0);
+                Refit();
+            }
+        }
+        int EffectiveScale => mini ? Mathf.Min(2, windowScale) : windowScale;
         /// <summary>Ile pikseli ekranu na piksel gry (skala świata).</summary>
         public int PixelRatio => Mathf.Max(1, Mathf.Min(Screen.width / Mathf.Max(1, view.x), Screen.height / Mathf.Max(1, view.y)));
         /// <summary>Ostatnie puszczenie PPM było przeciąganiem kamery (nie kliknięciem).</summary>
@@ -45,6 +60,9 @@ namespace Wyspa.World
         {
             Instance = this;
             windowScale = Mathf.Clamp(PlayerPrefs.GetInt("viewScale", windowScale), 1, 6);
+            mini = PlayerPrefs.GetInt("viewMini", 0) == 1;
+            if (GetComponent<Wyspa.Platform.DesktopWindow>() == null)
+                gameObject.AddComponent<Wyspa.Platform.DesktopWindow>();
             view = minView;
             Apply(true);
         }
@@ -82,14 +100,14 @@ namespace Wyspa.World
         {
             windowScale = Mathf.Clamp(scale, 1, 6);
             PlayerPrefs.SetInt("viewScale", windowScale);
-            Apply(true);
+            Refit();
         }
 
         Vector2Int MaxView()
         {
             var res = Screen.currentResolution;
-            int w = Mathf.FloorToInt(res.width * maxScreenFraction.x / windowScale / 16f) * 16;
-            int h = Mathf.FloorToInt(res.height * maxScreenFraction.y / windowScale / 16f) * 16;
+            int w = Mathf.FloorToInt(res.width * maxScreenFraction.x / EffectiveScale / 16f) * 16;
+            int h = Mathf.FloorToInt(res.height * maxScreenFraction.y / EffectiveScale / 16f) * 16;
             return new Vector2Int(Mathf.Max(minView.x, w), Mathf.Max(minView.y, h));
         }
 
@@ -103,6 +121,12 @@ namespace Wyspa.World
         /// <summary>Po rozbudowie: kadr dopasowany do lądu (krokami po 16 px, w granicach limitu).</summary>
         void Refit()
         {
+            if (mini)
+            {
+                view = minView;
+                Apply(true);
+                return;
+            }
             var land = LandPixels();
             var max = MaxView();
             int w = Mathf.CeilToInt((land.width + 2 * margin.x) / 16f) * 16;
@@ -119,11 +143,15 @@ namespace Wyspa.World
                 pixelCamera.refResolutionY = view.y;
             }
 #if !UNITY_EDITOR
-            var want = new Vector2Int(Mathf.Max(view.x * windowScale, requiredWindow.x), Mathf.Max(view.y * windowScale, requiredWindow.y));
-            if ((resizeWindow || want != lastWindow) && Screen.fullScreenMode == FullScreenMode.Windowed && want != lastWindow)
+            int scale = EffectiveScale;
+            var want = new Vector2Int(Mathf.Max(view.x * scale, requiredWindow.x), Mathf.Max(view.y * scale, requiredWindow.y));
+            if (Screen.fullScreenMode == FullScreenMode.Windowed && want != lastWindow)
             {
                 lastWindow = want;
-                Screen.SetResolution(want.x, want.y, FullScreenMode.Windowed);
+                // okno bez ramki i w rogu ekranu zmienia rozmiar przez WinAPI (Screen.SetResolution przywróciłby ramkę)
+                var desktop = Wyspa.Platform.DesktopWindow.Instance;
+                if (desktop == null || !desktop.SetClientSize(want))
+                    Screen.SetResolution(want.x, want.y, FullScreenMode.Windowed);
             }
 #endif
             Place();

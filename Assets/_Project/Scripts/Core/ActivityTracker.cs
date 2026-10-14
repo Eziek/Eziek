@@ -17,7 +17,14 @@ namespace Wyspa.Core
         public bool IsActive { get; private set; }
         public float SecondsSinceInput { get; private set; }
 
-        public float IdleThresholdSeconds => idleThresholdSeconds;
+        /// <summary>Próg bezczynności (opcje gracza, PlayerPrefs „idleSeconds”).</summary>
+        public float IdleThresholdSeconds
+        {
+            get => idleThresholdSeconds;
+            set { idleThresholdSeconds = Mathf.Clamp(value, 15f, 900f); PlayerPrefs.SetFloat("idleSeconds", idleThresholdSeconds); }
+        }
+
+        void Awake() => idleThresholdSeconds = PlayerPrefs.GetFloat("idleSeconds", idleThresholdSeconds);
 
         public bool ForceActive
         {

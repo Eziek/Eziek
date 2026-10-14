@@ -13,7 +13,6 @@ namespace Wyspa.UI
 {
     /// <summary>
     /// Księga - główne menu (GDD §12.4): zakładki Sklep, Ulepszenia, Rytuały, Bestiariusz, Statystyki, Opcje.
-    /// Działają: Ulepszenia, Statystyki, Opcje. Pozostałe mają tekst „Wkrótce”.
     /// </summary>
     public class BookView : MonoBehaviour
     {
@@ -750,66 +749,216 @@ namespace Wyspa.UI
 
         // ------------------------------------------------------------------ Opcje
 
+        int optionsSection;   // 0 ogólne, 1 okno, 2 system (GDD §12.7)
+        float resetArmedUntil = -1f;
+        const float OptCol = 124f, OptRow = 19f;
+        static readonly int[] IdleSteps = { 15, 30, 60, 120, 300, 600 };
+
         void BuildOptions()
         {
+            float x = 0;
+            foreach (var (section, key) in new[] { (0, "ui.options.general"), (1, "ui.options.window"), (2, "ui.options.system") })
+            {
+                int sec = section;
+                var b = Ui.Btn(content, "Section", () => { optionsSection = sec; Show(Tab.Options); });
+                var label = Ui.Txt(b.transform, "Text", sec == optionsSection ? Ui.Theme.textGold : Ui.Theme.textLight, TextAlignmentOptions.Center);
+                label.text = Loc.Get(key);
+                float bw = Mathf.Max(40f, Ui.Width(label) + 12f);
+                Ui.Stretch(label.rectTransform);
+                Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, 0), new Vector2(bw, 14));
+                x += bw + 4;
+            }
+            float y = 20;
+            if (optionsSection == 1) BuildWindowOptions(y);
+            else if (optionsSection == 2) BuildSystemOptions(y);
+            else BuildGeneralOptions(y);
+        }
+
+        void BuildGeneralOptions(float y)
+        {
             var game = GameLoop.Instance;
-            float y = 0;
             Header("ui.options.language", ref y);
             float x = 0;
             foreach (var lang in Loc.Languages)
             {
                 var code = lang;
-                var b = Ui.Btn(content, "Lang_" + code, () => Loc.SetLanguage(code));
-                var label = Ui.Txt(b.transform, "Text", code == Loc.Language ? Ui.Theme.textGold : Ui.Theme.textLight, TextAlignmentOptions.Center);
-                label.text = Loc.Get("lang." + code);
-                float w = Mathf.Max(30, Ui.Width(label) + 10);
-                Ui.Stretch(label.rectTransform);
-                Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, -y), new Vector2(w, 16));
+                float w = OptButton("Lang_" + code, Loc.Get("lang." + code), x, y, 30f, () => Loc.SetLanguage(code), code == Loc.Language);
                 x += w + 4;
             }
-            y += 24;
+            y += 22;
 
-            Header("ui.options.brightness", ref y);
             var lighting = FindAnyObjectByType<DayNightLighting>();
-            var value = Ui.Txt(content, "Brightness", Ui.Theme.textDark, TextAlignmentOptions.Center);
-            Ui.Place(value.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(22, -y - 3), new Vector2(30, 10));
-            void ShowValue() => value.text = lighting != null ? $"{Mathf.RoundToInt(lighting.MinBrightness * 100)}%" : "-";
-            void Change(float d)
+            OptLabel("ui.options.brightness", y);
+            Stepper(OptCol, y, lighting != null ? $"{Mathf.RoundToInt(lighting.MinBrightness * 100)}%" : "-", 30f, d =>
             {
                 if (lighting == null) return;
-                lighting.MinBrightness = Mathf.Clamp(lighting.MinBrightness + d, 0.15f, 0.7f);
+                lighting.MinBrightness = Mathf.Clamp(lighting.MinBrightness + d * 0.05f, 0.15f, 0.7f);
                 PlayerPrefs.SetFloat("minBrightness", lighting.MinBrightness);
-                ShowValue();
-            }
-            var minus = Ui.Btn(content, "Minus", () => Change(-0.05f));
-            Ui.Place((RectTransform)minus.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(18, 16));
-            Ui.Stretch(Ui.Txt(minus.transform, "T", Ui.Theme.textLight, TextAlignmentOptions.Center).rectTransform).GetComponent<TextMeshProUGUI>().text = "-";
-            var plus = Ui.Btn(content, "Plus", () => Change(0.05f));
-            Ui.Place((RectTransform)plus.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(56, -y), new Vector2(18, 16));
-            Ui.Stretch(Ui.Txt(plus.transform, "T", Ui.Theme.textLight, TextAlignmentOptions.Center).rectTransform).GetComponent<TextMeshProUGUI>().text = "+";
-            ShowValue();
-            y += 24;
+            });
+            y += OptRow;
 
-            Header("ui.options.rhythm", ref y);
+            var clock = game != null ? game.Clock : null;
+            OptLabel("ui.options.night", y);
+            if (clock != null)
+            {
+                float after = Stepper(OptCol, y, $"{Mathf.RoundToInt(clock.NightStartsAt):00}:00", 26f, d =>
+                {
+                    float v = Mathf.Repeat(Mathf.Round(clock.NightStartsAt) + d, 24f);
+                    if (!Mathf.Approximately(v, clock.NightEndsAt)) clock.NightStartsAt = v;
+                });
+                Stepper(after + 6f, y, $"{Mathf.RoundToInt(clock.NightEndsAt):00}:00", 26f, d =>
+                {
+                    float v = Mathf.Repeat(Mathf.Round(clock.NightEndsAt) + d, 24f);
+                    if (!Mathf.Approximately(v, clock.NightStartsAt)) clock.NightEndsAt = v;
+                });
+            }
+            y += OptRow;
+
             if (game != null)
             {
-                var toggle = Ui.Btn(content, "Rhythm", null);
-                var tl = Ui.Txt(toggle.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
-                Ui.Stretch(tl.rectTransform);
-                void ShowRhythm() => tl.text = Loc.Get(game.Rhythm.RhythmEnabled ? "ui.on" : "ui.off");
-                toggle.onClick.AddListener(() =>
+                OptLabel("ui.options.rhythm", y);
+                Toggle(OptCol, y, game.Rhythm.RhythmEnabled, true, v =>
                 {
-                    game.Rhythm.RhythmEnabled = !game.Rhythm.RhythmEnabled;
-                    PlayerPrefs.SetInt("rhythm", game.Rhythm.RhythmEnabled ? 1 : 0);
-                    ShowRhythm();
+                    game.Rhythm.RhythmEnabled = v;
+                    PlayerPrefs.SetInt("rhythm", v ? 1 : 0);
                 });
-                Ui.Place((RectTransform)toggle.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(40, 16));
-                ShowRhythm();
+                y += OptRow;
+
+                OptLabel("ui.options.idle", y);
+                var activity = game.Activity;
+                int seconds = Mathf.RoundToInt(activity.IdleThresholdSeconds);
+                Stepper(OptCol, y, Loc.Get("ui.options.seconds", seconds), 34f, d =>
+                {
+                    int i = 0;
+                    while (i < IdleSteps.Length - 1 && IdleSteps[i] < seconds) i++;
+                    activity.IdleThresholdSeconds = IdleSteps[Mathf.Clamp(i + d, 0, IdleSteps.Length - 1)];
+                });
             }
-            y += 24;
+            info.text = Loc.Get("ui.options.idle_hint");
+        }
+
+        void BuildWindowOptions(float y)
+        {
+            var view = ViewController.Instance;
+            var desk = Wyspa.Platform.DesktopWindow.Instance;
+            bool native = Wyspa.Platform.DesktopWindow.Supported && desk != null;
+
+            OptLabel("ui.options.scale", y);
+            float x = OptCol;
+            for (int s = 2; s <= 4; s++)
+            {
+                int scale = s;
+                x += OptButton("Scale" + s, "x" + s, x, y, 20f, () => { if (view != null) view.SetScale(scale); },
+                               view != null && view.Scale == s) + 4;
+            }
+            y += OptRow;
+
+            OptLabel("ui.options.mini", y);
+            Toggle(OptCol, y, view != null && view.Mini, view != null, v => view.Mini = v);
+            y += OptRow;
+
+            OptLabel("ui.options.frame", y);
+            Toggle(OptCol, y, desk == null || !desk.Frameless, native && !desk.Transparent, v => desk.Frameless = !v);
+            y += OptRow;
+
+            OptLabel("ui.options.topmost", y);
+            Toggle(OptCol, y, desk != null && desk.TopMost, native, v => desk.TopMost = v);
+            y += OptRow;
+
+            OptLabel("ui.options.transparent", y);
+            Toggle(OptCol, y, desk != null && desk.Transparent, desk != null, v => desk.Transparent = v);
+            y += OptRow;
+
+            OptLabel("ui.options.corner", y);
+            x = OptCol;
+            string[] corners = { "none", "tl", "tr", "bl", "br" };
+            for (int i = 0; i < corners.Length; i++)
+            {
+                var c = (Wyspa.Platform.ScreenCorner)i;
+                var b = OptButtonRef("Corner" + i, Loc.Get("ui.options.corner." + corners[i]), x, y, 18f,
+                                     () => desk.Corner = c, desk != null && desk.Corner == c, out float w);
+                b.interactable = native;
+                x += w + 3;
+            }
+            info.text = Loc.Get(native ? "ui.options.window_hint" : "ui.options.window_build");
+        }
+
+        void BuildSystemOptions(float y)
+        {
+            OptLabel("ui.options.autostart", y);
+            Toggle(OptCol, y, Wyspa.Platform.Autostart.Enabled, Wyspa.Platform.Autostart.Supported,
+                   v => Wyspa.Platform.Autostart.Enabled = v);
+            y += OptRow;
+
+            OptLabel("ui.options.reset", y);
+            bool armed = Time.unscaledTime < resetArmedUntil;
+            var b = OptButtonRef("Reset", Loc.Get(armed ? "ui.options.reset_confirm" : "ui.options.reset_button"), OptCol, y, 40f, () =>
+            {
+                if (Time.unscaledTime < resetArmedUntil)
+                {
+                    var game = GameLoop.Instance;
+                    var save = game != null ? game.GetComponent<Wyspa.Save.SaveSystem>() : null;
+                    if (save != null)
+                    {
+                        Close();
+                        save.ResetAll();
+                    }
+                    return;
+                }
+                resetArmedUntil = Time.unscaledTime + 4f;   // drugi klik w ciągu 4 s potwierdza
+            }, false, out _);
+            if (armed)
+                b.GetComponentInChildren<TextMeshProUGUI>().color = Ui.Theme.textWarn;
+            y += OptRow + 6;
+
             var dbg = Ui.Txt(content, "Debug", Ui.Theme.textMuted);
             LocText.On(dbg, "ui.options.debug");
             Ui.Place(dbg.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 64, 10));
+            info.text = Loc.Get(Wyspa.Platform.Autostart.Supported ? "ui.options.reset_hint" : "ui.options.window_build");
+        }
+
+        // --- małe klocki opcji: etykieta po lewej, przyciski od kolumny OptCol
+
+        void OptLabel(string key, float y)
+        {
+            var t = Ui.Txt(content, key, Ui.Theme.textDark);
+            LocText.On(t, key);
+            Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y - 3), new Vector2(OptCol - 4, 10));
+        }
+
+        float OptButton(string name, string text, float x, float y, float minW, System.Action onClick, bool selected)
+        {
+            OptButtonRef(name, text, x, y, minW, onClick, selected, out float w);
+            return w;
+        }
+
+        /// <summary>Przycisk z tekstem; po kliknięciu strona opcji buduje się od nowa (zaznaczenia, wartości).</summary>
+        Button OptButtonRef(string name, string text, float x, float y, float minW, System.Action onClick, bool selected, out float width)
+        {
+            var b = Ui.Btn(content, name, () => { onClick(); Show(Tab.Options); });
+            var label = Ui.Txt(b.transform, "Text", selected ? Ui.Theme.textGold : Ui.Theme.textLight, TextAlignmentOptions.Center);
+            label.text = text;
+            width = Mathf.Max(minW, Ui.Width(label) + 8f);
+            Ui.Stretch(label.rectTransform);
+            Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, -y), new Vector2(width, 16));
+            return b;
+        }
+
+        void Toggle(float x, float y, bool on, bool interactable, System.Action<bool> set)
+        {
+            var b = OptButtonRef("Toggle", Loc.Get(on ? "ui.on" : "ui.off"), x, y, 40f, () => set(!on), on, out _);
+            b.interactable = interactable;
+        }
+
+        /// <summary>[-] wartość [+]; zwraca x za przyciskiem „+”.</summary>
+        float Stepper(float x, float y, string value, float valueW, System.Action<int> change)
+        {
+            OptButton("Minus", "-", x, y, 16f, () => change(-1), false);
+            var t = Ui.Txt(content, "Value", Ui.Theme.textDark, TextAlignmentOptions.Center);
+            t.text = value;
+            Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(x + 16f, -y - 3), new Vector2(valueW, 10));
+            OptButton("Plus", "+", x + 16f + valueW, y, 16f, () => change(1), false);
+            return x + 32f + valueW;
         }
 
         void Header(string key, ref float y)

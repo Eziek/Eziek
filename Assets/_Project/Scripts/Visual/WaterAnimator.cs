@@ -31,6 +31,9 @@ namespace Wyspa.Visual
         float[] hiddenUntil = new float[0];
         bool anyHidden;
 
+        /// <summary>Sprite morza (przezroczyste okno go chowa).</summary>
+        public SpriteRenderer Renderer => water;
+
         public void Setup(SpriteRenderer waterRenderer, GameClock gameClock)
         {
             water = waterRenderer;

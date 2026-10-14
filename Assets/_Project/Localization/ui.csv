@@ -27,7 +27,7 @@ ui.plot.too_bright,{0}: za jasno (lampa),{0}: too bright (lamp),{0}: zu hell (La
 ui.plot.progress,{0}%,{0}%,{0} %,{0}%,{0}%,postęp wzrostu
 ui.options.language,Język,Language,Sprache,言語,语言,
 ui.options.brightness,Jasność nocy,Night brightness,Nachthelligkeit,夜の明るさ,夜间亮度,
-ui.options.rhythm,"Rytm pracy (seria, przerwa, zmęczenie)","Work rhythm (streak, break, fatigue)","Arbeitsrhythmus (Serie, Pause, Erschöpfung)",作業リズム（連続・休憩・疲労）,工作节奏（连续、休息、疲劳）,
+ui.options.rhythm,Rytm pracy,Work rhythm,Arbeitsrhythmus,作業リズム,工作节奏,"seria, przerwa, zmęczenie"
 ui.options.debug,HUD debugowy: klawisz F1,Debug HUD: F1 key,Debug-HUD: Taste F1,デバッグHUD：F1キー,调试HUD：F1键,
 ui.on,Wł.,On,An,オン,开,
 ui.off,Wył.,Off,Aus,オフ,关,
@@ -134,3 +134,28 @@ ui.event.star,Spadająca gwiazda,Falling star,Sternschnuppe,流れ星,流星,
 ui.event.merchant,Kupiec-widmo,Ghost Merchant,Geisterhändler,幽霊商人,幽灵商人,
 ui.event.monster,Potwór z głębin,Thing from the Deep,Wesen aus der Tiefe,深淵の怪物,深渊怪物,
 ui.event.fullmoon,Pełnia,Full moon,Vollmond,満月,满月,
+ui.options.general,Ogólne,General,Allgemein,一般,常规,
+ui.options.window,Okno,Window,Fenster,ウィンドウ,窗口,
+ui.options.system,System,System,System,システム,系统,
+ui.options.night,Godziny nocy,Night hours,Nachtstunden,夜の時間,夜晚时段,od - do
+ui.options.idle,Próg bezczynności,Idle after,Inaktiv nach,放置判定,闲置判定,
+ui.options.seconds,{0} s,{0} s,{0} s,{0}秒,{0}秒,{0} = sekundy
+ui.options.idle_hint,"Rośliny dnia rosną, gdy pracujesz. Bez myszy i klawiatury dłużej niż próg = przerwa.",Day crops grow while you work. No mouse or keyboard for longer than the limit = a break.,"Tagpflanzen wachsen, während du arbeitest. Länger ohne Maus und Tastatur = Pause.",昼の作物は作業中に育つ。設定時間より長く操作がないと休憩扱い。,你工作时白天作物会生长。超过设定时间没有操作即视为休息。,
+ui.options.scale,Skala,Scale,Skalierung,拡大率,缩放,
+ui.options.mini,Mini-tryb,Mini mode,Minimodus,ミニモード,迷你模式,
+ui.options.frame,Ramka okna,Window frame,Fensterrahmen,ウィンドウ枠,窗口边框,
+ui.options.topmost,Zawsze na wierzchu,Always on top,Immer im Vordergrund,常に最前面,始终置顶,
+ui.options.transparent,Przezroczyste tło,Transparent background,Transparenter Hintergrund,透明な背景,透明背景,bez morza i mgły
+ui.options.corner,Róg ekranu,Screen corner,Bildschirmecke,画面の角,屏幕角落,
+ui.options.corner.none,Brak,None,Keine,なし,无,
+ui.options.corner.tl,LG,TL,OL,左上,左上,lewy górny
+ui.options.corner.tr,PG,TR,OR,右上,右上,prawy górny
+ui.options.corner.bl,LD,BL,UL,左下,左下,lewy dolny
+ui.options.corner.br,PD,BR,UR,右下,右下,prawy dolny
+ui.options.window_hint,"Bez ramki: przeciągnij okno za puste miejsce, puść przy rogu ekranu, a się przyklei.","Frameless: drag the window by an empty spot, release near a screen corner to snap it.","Ohne Rahmen: Fenster an einer leeren Stelle ziehen, nahe einer Ecke loslassen zum Andocken.",枠なし：空いている所をドラッグ。画面の角で離すと吸着する。,无边框：拖动空白处移动窗口，在屏幕角落松开即可吸附。,
+ui.options.window_build,"Ramka, wierzch, róg i autostart działają w zbudowanej grze na Windows.","Frame, on top, corner and autostart work in the built game on Windows.","Rahmen, Vordergrund, Ecke und Autostart gehen im fertigen Spiel unter Windows.",枠・最前面・角・自動起動はWindows版のビルドで動作。,边框、置顶、角落和自启动仅在Windows版游戏中生效。,
+ui.options.autostart,Start z Windows,Start with Windows,Mit Windows starten,Windowsと起動,随Windows启动,
+ui.options.reset,Reset zapisu,Reset save,Spielstand löschen,セーブをリセット,重置存档,
+ui.options.reset_button,Resetuj,Reset,Löschen,リセット,重置,
+ui.options.reset_confirm,Na pewno?,Sure?,Sicher?,本当に？,确定？,drugi klik w ciągu 4 s
+ui.options.reset_hint,Reset usuwa wyspę i cały postęp (opcje zostają). Kliknij dwa razy.,Reset deletes the island and all progress (options stay). Click twice.,Löscht die Insel und den Fortschritt (Optionen bleiben). Zweimal klicken.,島と進行状況をすべて消す（設定は残る）。2回クリック。,重置会删除岛屿和全部进度（设置保留）。点击两次。,

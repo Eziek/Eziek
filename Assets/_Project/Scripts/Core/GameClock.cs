@@ -17,6 +17,26 @@ namespace Wyspa.Core
         const double SynodicMonthDays = 29.530588853;
         static readonly DateTime KnownNewMoonUtc = new DateTime(2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
 
+        /// <summary>Godzina początku nocy (opcje gracza, PlayerPrefs „nightStart”).</summary>
+        public float NightStartsAt
+        {
+            get => nightStartsAt;
+            set { nightStartsAt = Mathf.Repeat(value, 24f); PlayerPrefs.SetFloat("nightStart", nightStartsAt); }
+        }
+
+        /// <summary>Godzina końca nocy (PlayerPrefs „nightEnd”).</summary>
+        public float NightEndsAt
+        {
+            get => nightEndsAt;
+            set { nightEndsAt = Mathf.Repeat(value, 24f); PlayerPrefs.SetFloat("nightEnd", nightEndsAt); }
+        }
+
+        void Awake()
+        {
+            nightStartsAt = PlayerPrefs.GetFloat("nightStart", nightStartsAt);
+            nightEndsAt = PlayerPrefs.GetFloat("nightEnd", nightEndsAt);
+        }
+
         public bool UseDebugHour
         {
             get => useDebugHour;

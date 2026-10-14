@@ -211,6 +211,23 @@ Po pobraniu zmian: **Wyspa → 3** (dodaje obiekt kroniki do sceny), potem Play.
    (ognik, gwiazda, kupiec, potwór, pełnia) i lore (znaleziska, zabytki) się odkrywają. Pełna strona: przycisk „Odbierz: +N pkt”.
 5. Zapiski lore: po 4 na stronę, strzałki na dole.
 
+## 4j. Etap 6a: okno i opcje (test)
+Po pobraniu zmian: **Wyspa → 1** (wyłącza „DXGI flip model”, potrzebne do przezroczystego okna). Sceny nie trzeba budować od nowa.
+**W edytorze** (Księga → Opcje):
+1. **Ogólne:** język, jasność nocy, godziny nocy (np. 22:00 - 6:00; F1 → godzina, żeby sprawdzić), rytm pracy, próg bezczynności.
+2. **Okno:** skala ×2/×3/×4 i mini-tryb zmieniają kadr. **Przezroczyste tło** w edytorze tylko chowa morze i mgłę (podgląd).
+   Ramka, wierzch i róg są wyszarzone (działają w buildzie).
+3. **System:** Reset zapisu: pierwszy klik zmienia napis na „Na pewno?”, drugi w ciągu 4 s zaczyna grę od nowa. Opcje zostają.
+
+**W buildzie** (File → Build Profiles → Windows → Build):
+4. Ramka wył.: okno bez paska tytułu; przeciągnij je LPM za puste miejsce (woda). Puść przy rogu ekranu: przyklei się.
+   Kupienie kafelka (okno rośnie) w rogu: okno rośnie od rogu.
+5. Zawsze na wierzchu: okno zostaje nad innymi programami.
+6. Przezroczyste tło: wyspa bez morza na pulpicie; klik w puste miejsce trafia w pulpit/okno pod spodem, w ląd i UI w grę.
+   Jeśli zamiast przezroczystości widać czarne tło: sprawdź, czy Wyspa → 1 wyłączyło flip model (Player Settings →
+   Resolution and Presentation → „Use DXGI flip model swapchain for D3D11” odznaczone) i czy kamera nie ma HDR w URP Asset.
+7. Start z Windows: wpis „Pockland” w Menedżerze zadań → Aplikacje autostartu. Wył. usuwa wpis.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

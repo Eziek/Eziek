@@ -81,6 +81,24 @@ namespace Wyspa.Save
                 Save(owner);
         }
 
+        /// <summary>Reset zapisu (Opcje, z potwierdzeniem): plik znika, scena ładuje się od nowa z nową wyspą. Opcje gracza zostają.</summary>
+        public void ResetAll()
+        {
+            owner = null;   // bez autozapisu w tej klatce
+            try
+            {
+                if (File.Exists(FilePath))
+                    File.Delete(FilePath);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Wyspa] Nie udało się usunąć zapisu: {e.Message}");
+                return;
+            }
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(scene.buildIndex >= 0 ? scene.buildIndex : 0);
+        }
+
         public void Save(GameLoop game)
         {
             owner = game;

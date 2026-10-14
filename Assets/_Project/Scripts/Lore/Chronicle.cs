@@ -38,7 +38,11 @@ namespace Wyspa.Lore
         public int MoonPoints => moonPoints;
         public event Action Changed;
 
-        void Awake() => Instance = this;
+        void Awake()
+        {
+            Instance = this;
+            Rituals.Apply(this);   // efekty są statyczne: po resecie zapisu nie mogą zostać z poprzedniej gry
+        }
 
         void OnDestroy()
         {

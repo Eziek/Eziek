@@ -26,6 +26,9 @@ namespace Wyspa.Visual
 
         public float Density => density;
 
+        /// <summary>Sprite mgły (przezroczyste okno go chowa).</summary>
+        public SpriteRenderer Renderer => fog;
+
         public void Setup(SpriteRenderer fogRenderer, GameClock gameClock)
         {
             fog = fogRenderer;

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace UnityEngine
 {
     public class Object { public string name; public static implicit operator bool(Object o) => o != null; public static void Destroy(Object o) { } public static T FindAnyObjectByType<T>() where T : Object => default; }
-    public class Component : Object { public Transform transform; public GameObject gameObject; public T GetComponent<T>() => default; public T[] GetComponentsInChildren<T>(bool inactive) => null; public T[] GetComponents<T>() => null; public void SendMessage(string m, SendMessageOptions o) { } public bool TryGetComponent<T>(out T c) { c = default; return false; } public string tag; }
+    public class Component : Object { public Transform transform; public GameObject gameObject; public T GetComponent<T>() => default; public T[] GetComponentsInChildren<T>(bool inactive) => null; public T GetComponentInChildren<T>() => default; public T[] GetComponents<T>() => null; public void SendMessage(string m, SendMessageOptions o) { } public bool TryGetComponent<T>(out T c) { c = default; return false; } public string tag; }
     public class Behaviour : Component { public bool enabled; public bool isActiveAndEnabled; }
     public class MonoBehaviour : Behaviour { public Coroutine StartCoroutine(IEnumerator e) => null; public void StopCoroutine(Coroutine c) { } public void StopAllCoroutines() { } }
     public class ScriptableObject : Object { public static T CreateInstance<T>() where T : ScriptableObject => default; }
@@ -18,7 +18,7 @@ namespace UnityEngine
     public class Canvas : Behaviour { public RenderMode renderMode; public bool pixelPerfect; public int sortingOrder; }
     public class CanvasGroup : Behaviour { public float alpha; public bool blocksRaycasts, interactable; }
     public class Font : Object { }
-    public static class PlayerPrefs { public static bool HasKey(string k) => false; public static float GetFloat(string k) => 0; public static void SetFloat(string k, float v) { } public static int GetInt(string k) => 0; public static int GetInt(string k, int d) => d; public static void SetInt(string k, int v) { } public static string GetString(string k, string d = "") => d; public static void SetString(string k, string v) { } public static void Save() { } }
+    public static class PlayerPrefs { public static bool HasKey(string k) => false; public static float GetFloat(string k) => 0; public static float GetFloat(string k, float d) => d; public static void SetFloat(string k, float v) { } public static int GetInt(string k) => 0; public static int GetInt(string k, int d) => d; public static void SetInt(string k, int v) { } public static string GetString(string k, string d = "") => d; public static void SetString(string k, string v) { } public static void Save() { } }
     public enum SystemLanguage { Chinese, German, Japanese, Polish, English, ChineseSimplified, ChineseTraditional, Unknown }
     public enum KeyCode { Escape, F1 }
     public class Renderer : Component { public int sortingOrder; public Material sharedMaterial; public Material material; public bool enabled; public void GetPropertyBlock(MaterialPropertyBlock b) { } public void SetPropertyBlock(MaterialPropertyBlock b) { } }
@@ -32,7 +32,7 @@ namespace UnityEngine
     public class Texture : Object { public FilterMode filterMode; public TextureWrapMode wrapMode; }
     public enum TextureFormat { RGBA32 = 4 }
     public class Texture2D : Texture { public static Texture2D whiteTexture; public Texture2D(int w, int h, TextureFormat f, bool mip, bool linear) { } public void LoadRawTextureData(byte[] d) { } public void Apply(bool mips) { } }
-    public class Camera : Behaviour { public static Camera main; public bool orthographic; public float orthographicSize; public CameraClearFlags clearFlags; public Color backgroundColor; public Vector3 ScreenToWorldPoint(Vector3 p) => p; public Vector3 WorldToScreenPoint(Vector3 p) => p; }
+    public class Camera : Behaviour { public static Camera main; public bool orthographic; public float orthographicSize; public CameraClearFlags clearFlags; public Color backgroundColor; public bool allowHDR; public Vector3 ScreenToWorldPoint(Vector3 p) => p; public Vector3 WorldToScreenPoint(Vector3 p) => p; }
     public enum CameraClearFlags { Skybox, SolidColor }
     public class Collider2D : Behaviour { public Vector2 offset; }
     public class BoxCollider2D : Collider2D { public Vector2 size; }
@@ -83,7 +83,8 @@ namespace UnityEngine
     public class DefaultExecutionOrder : Attribute { public DefaultExecutionOrder(int o) { } }
     public class RequireComponent : Attribute { public RequireComponent(Type t) { } }
 }
-namespace UnityEngine.SceneManagement { public struct Scene { } }
+namespace UnityEngine.SceneManagement { public struct Scene { public int buildIndex => 0; public string name => ""; } public static class SceneManager { public static Scene GetActiveScene() => default; public static void LoadScene(int buildIndex) { } } }
+namespace AOT { [System.AttributeUsage(System.AttributeTargets.Method)] public class MonoPInvokeCallbackAttribute : System.Attribute { public MonoPInvokeCallbackAttribute(System.Type t) { } } }
 namespace UnityEngine.Rendering { public class RenderPipelineAsset : UnityEngine.Object { } public static class GraphicsSettings { public static RenderPipelineAsset defaultRenderPipeline; } }
 namespace UnityEngine.Rendering.Universal
 {
@@ -114,7 +115,7 @@ namespace UnityEditor
     public static class AssetDatabase { public static T LoadAssetAtPath<T>(string p) where T : UnityEngine.Object => default; public static void CreateAsset(UnityEngine.Object o, string p) { } public static void SaveAssets() { } public static void Refresh() { } public static bool IsValidFolder(string p) => true; public static string CreateFolder(string a, string b) => ""; public static string[] FindAssets(string f, string[] d) => null; public static string GUIDToAssetPath(string g) => ""; public static void ImportAsset(string p, ImportAssetOptions o) { } }
     public class MenuItem : Attribute { public MenuItem(string s) { } public int priority; }
     public static class EditorUtility { public static void SetDirty(UnityEngine.Object o) { } }
-    public static class PlayerSettings { public static FullScreenMode fullScreenMode; public static int defaultScreenWidth, defaultScreenHeight; public static bool resizableWindow, runInBackground, visibleInBackground; }
+    public static class PlayerSettings { public static FullScreenMode fullScreenMode; public static int defaultScreenWidth, defaultScreenHeight; public static bool useFlipModelSwapchain; public static bool resizableWindow, runInBackground, visibleInBackground; }
     public class SerializedObject { public SerializedObject(UnityEngine.Object o) { } public SerializedProperty FindProperty(string n) => null; public bool ApplyModifiedPropertiesWithoutUndo() => true; }
     public class SerializedProperty { public UnityEngine.Object objectReferenceValue; public bool isArray; public int arraySize; public int intValue; public SerializedProperty GetArrayElementAtIndex(int i) => null; }
     public class EditorBuildSettingsScene { public EditorBuildSettingsScene(string p, bool e) { } }
@@ -131,11 +132,12 @@ namespace UnityEngine.Events { public class UnityEvent { public void AddListener
 namespace UnityEngine.EventSystems
 {
     public class UIBehaviour : UnityEngine.MonoBehaviour { }
-    public class EventSystem : UIBehaviour { public static EventSystem current; public bool IsPointerOverGameObject() => false; }
+    public class EventSystem : UIBehaviour { public static EventSystem current; public bool IsPointerOverGameObject() => false; public void RaycastAll(PointerEventData e, System.Collections.Generic.List<RaycastResult> results) { } }
+    public struct RaycastResult { public UnityEngine.GameObject gameObject; }
     public class BaseInputModule : UIBehaviour { }
     public class StandaloneInputModule : BaseInputModule { }
     public class BaseEventData { }
-    public class PointerEventData : BaseEventData { }
+    public class PointerEventData : BaseEventData { public PointerEventData(EventSystem es) { } public UnityEngine.Vector2 position; }
     public interface IEventSystemHandler { }
     public interface IPointerEnterHandler : IEventSystemHandler { void OnPointerEnter(PointerEventData e); }
     public interface IPointerExitHandler : IEventSystemHandler { void OnPointerExit(PointerEventData e); }

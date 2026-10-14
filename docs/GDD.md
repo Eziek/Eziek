@@ -33,7 +33,7 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 | Silnik | **Unity 6.6 (`6000.6.5f1`)**, szablon **Universal 2D** (URP z 2D Rendererem), Shader Graph, Input System |
 | Platforma | **Windows** (na start) |
 | Wykrywanie aktywności | `GetLastInputInfo` (user32.dll), czyli czas od ostatniego inputu w całym systemie. Bez globalnych hooków, więc antywirusy nie reagują. Gracz jest „aktywny”, gdy od ostatniego inputu minęło < ~60 s |
-| Okno | Na start zwykłe małe okno. Później bez ramki / zawsze na wierzchu / przezroczyste (paczka **UniWindowController**, kirurobo) |
+| Okno | Zwykłe małe okno albo (opcje, Etap 6a) bez ramki / zawsze na wierzchu / w rogu ekranu / przezroczyste. **Własny kod WinAPI** (`Scripts/Platform/`), bez paczki UniWindowController |
 | Praca w tle | `Application.runInBackground = true` |
 | Wydajność (krytyczna, gra działa godzinami) | Animacje skokowe ok. **10 kl./s**, więc `targetFrameRate` 10–15 w tle i ~30 przy hoverze. `vSyncCount = 0`. Rozważyć `OnDemandRendering`. Symulacja w tickach (np. co 1 s), nie w każdym `Update` |
 | Batching | Jeden materiał dla roślin. Faza kołysania liczona z pozycji w świecie, a nie z właściwości per-renderer |
@@ -280,6 +280,14 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   (rośliny dnia +10%, 2 pkt + 20 drewna), Szept mgły (kupiec x2 dłużej, 2 pkt + 2 odłamki), Pamięć przypływu (wyprawy -25%,
   3 pkt + 1 dar).
 - [x] Chiński: **uproszczony (zh-Hans)**.
+- [x] Okno (Etap 6a): własny kod WinAPI zamiast UniWindowController (bez zależności, kompiluje się na atrapach). Działa tylko
+  w buildzie na Windows; w edytorze działają skala, mini-tryb i podgląd przezroczystości (schowane morze i mgła).
+- [x] Przezroczyste okno: bez morza i mgły, wyspa „leży” na pulpicie; klik w puste miejsce idzie do pulpitu (ląd, obiekty
+  i UI łapią klik). Wymaga wyłączonego „DXGI flip model” (ustawia Wyspa → 1). Łowienie ryb w tym trybie jest trudne (ryby
+  są w wodzie), do przemyślenia.
+- [x] Mini-tryb = najmniejszy kadr (144×112) w skali ×2. Okno bez ramki przesuwa się LPM za puste miejsce; puszczone przy rogu
+  ekranu przykleja się do niego (i rośnie od rogu).
+- [x] Reset zapisu: dwa kliknięcia w 4 s, opcje gracza (PlayerPrefs) zostają.
 - [x] Cząsteczki: **własny system pikselowy** (pula sprite'ów, 12 kl./s) zamiast ParticleSystem, dla ostrych pikseli.
 - [x] Woda i mgła: **liczone w shaderze z mapy danych** (port prototypu), ryby i potwór w shaderze, nie jako osobne sprite'y.
 - [ ] Rozmiar fontu tekstu: 10 px czy 12 px. Sprawdzimy później w Unity (§16.3).
@@ -398,6 +406,10 @@ Obrazki referencyjne (kopie): `docs/img/`
 33. **5c:** Kronika wyspy liczy osiągnięcia cyklu księżyca (od nowiu do nowiu, z zegara komputera) i przy nowiu zamienia je
     w punkty księżyca (wyspa nic nie traci). Księga ma zakładki Rytuały (6 stałych bonusów za punkty i surowce, §7)
     i Bestiariusz (rośliny, ryby, zjawy, zapiski lore; nieodkryte jako „???”, pełna strona = punkty). Zapis v5.
+34. **Etap 6** w częściach: 6a okno i opcje, 6b dźwięk, ikona w zasobniku i powiadomienia, 6c wprowadzenie (karteczki),
+    dopracowanie UI i balans. 6a: Opcje w Księdze mają sekcje Ogólne (język, jasność nocy, godziny nocy, rytm pracy, próg
+    bezczynności), Okno (skala ×2–×4, mini-tryb, ramka, zawsze na wierzchu, przezroczyste tło, róg ekranu) i System (start
+    z Windows przez HKCU\Run, reset zapisu). Okno obsługuje własny kod WinAPI.
 
 ---
 
@@ -449,6 +461,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Sea/Expedition.cs` | łódź i wyprawy (postęp z aktywnej pracy, łup) |
 | `Scripts/Sea/NightEvents.cs`, `WillOWisp.cs`, `StarPickup.cs`, `MonsterEvent.cs`, `Altar.cs` | nocne zdarzenia (harmonogram, ogniki, gwiazdy, potwór), ołtarz |
 | `Scripts/Lore/Chronicle.cs`, `Rituals.cs` | kronika: liczniki cyklu, punkty księżyca przy nowiu, odkrycia do bestiariusza, rytuały i ich efekty (statyczne mnożniki) |
+| `Scripts/Platform/WinApi.cs`, `DesktopWindow.cs` | okno na pulpicie (tylko build Windows): ramka, na wierzchu, róg ekranu, przeciąganie, przezroczystość z klikiem przez tło, `Autostart` (HKCU\Run) |
 | `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |
 | `Scripts/UI/PlacementMode.cs` | tryb stawiania: duch na kafelku, okrąg zasięgu światła, licznik oświetlonych grządek, kupno lampy, przenoszenie |
@@ -583,7 +596,10 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Etap 5a (gotowy, do testu w Unity):** strefy: podłoża, dekoracje, zabytki z lore, bonusy ziemi, stworzenia tła.
 - **Etap 5b (gotowy, do testu w Unity):** nocne zdarzenia (błędne ogniki, spadająca gwiazda), potwór i ołtarz, latarnia morska.
 - **Etap 5c (gotowy, do testu w Unity):** Księga rytuałów i cykl księżyca, bestiariusz, kolekcja lore.
-- **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
+- **Etap 6a (gotowy, do testu w Unity i w buildzie):** opcje w sekcjach, tryby okna (ramka, na wierzchu, róg, mini, przezroczystość),
+  start z Windows, godziny nocy, próg bezczynności, reset zapisu.
+- **Etap 6b:** dźwięk (ambient, efekty, głośność), ikona w zasobniku i powiadomienia (plony dojrzały, kupiec, potwór).
+- **Etap 6c:** wprowadzenie (karteczki, §12.8), dopracowanie UI, balans.
 
 ---
 
@@ -637,6 +653,7 @@ półprzezroczysty (alfa, nie dithering), okrąg zasięgu i licznik grządek jak
 - Zdarzenia z czasem (kupiec-widmo) pokazują odliczanie. Później powiadomienia także w zasobniku systemowym (tray).
 
 ### 12.7 Opcje
+**Stan (Etap 6a):** sekcje Ogólne / Okno / System jak niżej, bez dźwięku (6b). Godziny nocy krokami po 1 h.
 - **Okno:** skala ×2/×3, zawsze na wierzchu, przezroczyste tło, przyklejenie do rogu ekranu, mini-tryb.
 - **Noc:** godziny nocy, minimalna jasność (suwak).
 - **Praca:** próg bezczynności (domyślnie 60 s), rytm pracy i zmęczenie (włącz/wyłącz).

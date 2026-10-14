@@ -117,6 +117,8 @@ namespace Wyspa.EditorTools
             PlayerSettings.resizableWindow = true;
             PlayerSettings.runInBackground = true;
             PlayerSettings.visibleInBackground = true;
+            // przezroczyste okno (DWM, opcja gracza) wymaga łańcucha wymiany bez „flip model” (GDD §12.7)
+            PlayerSettings.useFlipModelSwapchain = false;
 
             var rp = GraphicsSettings.defaultRenderPipeline as UniversalRenderPipelineAsset;
             if (rp == null)
