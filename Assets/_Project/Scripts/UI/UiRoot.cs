@@ -58,7 +58,10 @@ namespace Wyspa.UI
 
             Ui.Theme = theme;
             Loc.Init(theme.tables);
-            Ui.Font = CreateFont(theme.font);
+            pixelFont = CreateFont(theme.font);
+            readableFont = CreateFont(theme.fontReadable, 512);
+            FitLineHeight(readableFont);
+            Ui.Font = ReadableFont && readableFont != null ? readableFont : pixelFont;
             SetupCjkFallbacks();
             Build();
             Instance = this;   // dopiero po zbudowaniu - grządki wołają Instance.Wheel
@@ -93,6 +96,47 @@ namespace Wyspa.UI
         }
 
         TMP_FontAsset cjkJa, cjkZh;
+        TMP_FontAsset pixelFont, readableFont;
+
+        /// <summary>
+        /// Czytelny font (po teście gracza: „UI mocno nieczytelny”): Fusion Pixel 8px z małymi literami zamiast fontu 3x5
+        /// z samymi wielkimi. Domyślnie włączony, Opcje → Ogólne → Czcionka.
+        /// </summary>
+        public static bool ReadableFont
+        {
+            get => PlayerPrefs.GetInt("fontReadable", 1) == 1;
+            private set => PlayerPrefs.SetInt("fontReadable", value ? 1 : 0);
+        }
+
+        /// <summary>Przełącza font całego UI od razu (otwarte widoki przebudowują się przy następnym odświeżeniu).</summary>
+        public void SetReadableFont(bool on)
+        {
+            ReadableFont = on;
+            var old = Ui.Font;
+            var next = on && readableFont != null ? readableFont : pixelFont;
+            if (next == null || next == old)
+                return;
+            Ui.Font = next;
+            OrderCjkFallbacks();
+            foreach (var t in GetComponentsInChildren<TMP_Text>(true))
+                if (t.font == old)
+                    t.font = next;
+        }
+
+        /// <summary>
+        /// Fusion Pixel ma linię 12 px (wysokie akcenty i ogonki), układy UI liczą wiersze po 10 px: linia 10 px,
+        /// górna krawędź tekstu 8 px nad linią bazową (jak font 3x5), więc tekst stoi w tym samym miejscu co dawniej.
+        /// </summary>
+        static void FitLineHeight(TMP_FontAsset fa)
+        {
+            if (fa == null)
+                return;
+            var fi = fa.faceInfo;
+            fi.ascentLine = 8f;
+            fi.descentLine = -2f;
+            fi.lineHeight = 10f;
+            fa.faceInfo = fi;
+        }
 
         /// <summary>
         /// Znaki japońskie i chińskie (GDD §16.2): Fusion Pixel 8px jako zapasowe fonty pikselowego fontu UI.
@@ -117,7 +161,9 @@ namespace Wyspa.UI
             foreach (var fa in zhFirst ? new[] { cjkZh, cjkJa } : new[] { cjkJa, cjkZh })
                 if (fa != null)
                     list.Add(fa);
-            Ui.Font.fallbackFontAssetTable = list;
+            foreach (var fa in new[] { pixelFont, readableFont })
+                if (fa != null)
+                    fa.fallbackFontAssetTable = list;
         }
 
         static TMP_FontAsset CreateFont(Font font, int atlasSize = 256)

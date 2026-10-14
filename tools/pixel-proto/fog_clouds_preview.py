@@ -118,7 +118,7 @@ def fog(mode, edge, T, dist=None, w=W, h=H, s=S):
             rim = np.where(inside, np.where(lit_edge, 1.0, np.where(dark_edge, -1.0, np.where(caps, CAP_TONE, 0.0))), rim)
             depth = np.where(inside, np.clip((dc - edge) / DEPTH, 0, 1), depth)
     has = best_y > -1e8
-    base = (d > edge + 10.0) if not band else np.zeros(d.shape, bool)
+    base = (d > edge + 10.0) if not band else ((d > edge - 3.0) & (d < edge + 9.0))
     jit = hash4(np.floor(xx / 2.0) + 3.0, yy + 11.0)[..., 0] - 0.5
     t = TONE_MID + big * TONE_SPAN + rim * RIM_TONE - depth * DEPTH_TONES + jit * JIT
     t = np.where(has, t, BASE_TONE - np.clip((d - edge) / 30.0, 0, 1) + jit * JIT)

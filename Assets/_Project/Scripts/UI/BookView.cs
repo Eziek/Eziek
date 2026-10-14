@@ -84,7 +84,10 @@ namespace Wyspa.UI
             // treść w przewijanym oknie (po teście gracza: drzewko i lista budowli nie mieściły się na stronie):
             // kółko myszy przewija, przeciąganie przesuwa; wszystko poza oknem jest przycięte
             viewport = Ui.Place(Ui.Rect("Viewport", page.transform), Ui.TopLeft, Ui.TopLeft, new Vector2(10, -30), new Vector2(W - 64, ViewH));
-            viewport.gameObject.AddComponent<RectMask2D>();
+            // maska sięga 4 px poza okno w poziomie (po teście gracza: pierwsza kolumna pikseli liter była ucinana na krawędzi maski)
+            var mask = viewport.gameObject.AddComponent<RectMask2D>();
+            mask.padding = new Vector4(-4f, -1f, -4f, -1f);
+            mask.softness = Vector2Int.zero;
             var hit = Ui.Img(viewport, "DragArea", null, false, true);   // przeciąganie także w pustym miejscu strony
             hit.color = new Color(0, 0, 0, 0);
             Ui.Stretch(hit.rectTransform);
@@ -1279,6 +1282,17 @@ namespace Wyspa.UI
                 x += w + 4;
             }
             y += 22;
+
+            // czcionka: czytelna (małe litery) albo dawna 3x5; przełącza się od razu
+            OptLabel("ui.options.font", y);
+            float fx = OptCol;
+            foreach (bool readable in new[] { true, false })
+            {
+                bool r = readable;
+                fx += OptButton("Font_" + r, Loc.Get(r ? "ui.options.font_readable" : "ui.options.font_pixel"), fx, y, 30f,
+                                () => { if (UiRoot.Instance != null) UiRoot.Instance.SetReadableFont(r); }, UiRoot.ReadableFont == r) + 4;
+            }
+            y += OptRow;
 
             var lighting = FindAnyObjectByType<DayNightLighting>();
             OptLabel("ui.options.brightness", y);

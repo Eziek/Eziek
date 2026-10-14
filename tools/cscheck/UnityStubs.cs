@@ -26,7 +26,7 @@ namespace UnityEngine
     public class SpriteRenderer : Renderer { public Sprite sprite; public Color color; public bool flipX, flipY; public SpriteMaskInteraction maskInteraction { get; set; } }
     public enum SpriteMaskInteraction { None = 0, VisibleInsideMask = 1, VisibleOutsideMask = 2 }
     public class SpriteMask : Renderer { public Sprite sprite { get; set; } public float alphaCutoff { get; set; } }
-    public class Sprite : Object { public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu, uint extrude, SpriteMeshType mesh) => null; public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu) => null; public Bounds bounds; public Vector2 pivot; public Texture2D texture; public Rect rect; }
+    public class Sprite : Object { public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu, uint extrude, SpriteMeshType mesh) => null; public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu) => null; public Bounds bounds; public Vector2 pivot; public Texture2D texture; public Rect rect; public float pixelsPerUnit; }
     public struct Bounds { public Vector3 size, center, max, min; }
     public class Material : Object { public Material(Shader s) { } public Material(Material m) { } public Shader shader; public void SetFloat(int id, float v) { } public void SetFloat(string n, float v) { } public bool HasProperty(int id) => false; public float GetFloat(int id) => 0; public void SetColor(string n, Color c) { } public void SetColor(int id, Color c) { } public void SetTexture(string n, Texture t) { } public void SetTexture(int id, Texture t) { } public void SetVector(int id, Vector4 v) { } public void SetVectorArray(int id, Vector4[] v) { } }
     public class Shader : Object { public static Shader Find(string n) => null; public static void SetGlobalFloat(int id, float v) { } public static int PropertyToID(string n) => 0; public bool isSupported; }
@@ -211,10 +211,11 @@ namespace UnityEngine.UI
     public class Button : Selectable { public class ButtonClickedEvent : UnityEngine.Events.UnityEvent { } public ButtonClickedEvent onClick; }
     public class CanvasScaler : UIBehaviour { public enum ScaleMode { ConstantPixelSize, ScaleWithScreenSize, ConstantPhysicalSize } public ScaleMode uiScaleMode; public float referencePixelsPerUnit; public float scaleFactor; }
     public class GraphicRaycaster : UIBehaviour { }
-    public class RectMask2D : UIBehaviour { }
+    public class RectMask2D : UIBehaviour { public UnityEngine.Vector4 padding; public UnityEngine.Vector2Int softness; }
     public class ScrollRect : UIBehaviour { public enum MovementType { Unrestricted, Elastic, Clamped } public RectTransform content, viewport; public bool horizontal, vertical, inertia; public MovementType movementType; public float scrollSensitivity; public void StopMovement() { } }
 }
 namespace UnityEngine.InputSystem.UI { public class InputSystemUIInputModule : UnityEngine.EventSystems.BaseInputModule { } }
+namespace UnityEngine.TextCore { public struct FaceInfo { public float lineHeight { get; set; } public float ascentLine { get; set; } public float descentLine { get; set; } public float pointSize { get; set; } } }
 namespace UnityEngine.TextCore.LowLevel { public enum GlyphRenderMode { SMOOTH_HINTED = 4121, SMOOTH = 4117, RASTER_HINTED = 4161, RASTER = 4157, SDF = 4134, SDFAA = 4165 } }
 namespace TMPro
 {
@@ -227,6 +228,7 @@ namespace TMPro
     public class TMP_FontAsset : ScriptableObject
     { public System.Collections.Generic.List<TMP_FontAsset> fallbackFontAssetTable;
         public Texture2D atlasTexture;
+        public UnityEngine.TextCore.FaceInfo faceInfo { get; set; }
         public static TMP_FontAsset CreateFontAsset(Font font, int samplingPointSize, int atlasPadding, UnityEngine.TextCore.LowLevel.GlyphRenderMode renderMode, int atlasWidth, int atlasHeight, AtlasPopulationMode atlasPopulationMode = AtlasPopulationMode.Dynamic, bool enableMultiAtlasSupport = true) => null;
     }
     public class TMP_Text : UnityEngine.UI.MaskableGraphic

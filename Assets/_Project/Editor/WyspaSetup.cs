@@ -673,6 +673,7 @@ namespace Wyspa.EditorTools
             art.swayTree = LoadMat("SwayTree");
             art.swayTreeGlow = LoadMat("SwayTreeGlow");
             art.glow = GlowMaterial();
+            art.floatMat = FxMaterialAsset("Float", "SpriteFloat", null);   // łodzie i boja w wodzie (Visual/Floating)
             EditorUtility.SetDirty(art);
             return art;
         }
@@ -719,6 +720,7 @@ namespace Wyspa.EditorTools
             if (theme.font == null)
                 Debug.LogWarning("[Wyspa] Brak fontu: " + FontPath);
             // CJK: Fusion Pixel 8px (TakWolf, SIL OFL 1.1, licencja w Art/Fonts/FusionPixel/OFL.txt)
+            theme.fontReadable = AssetDatabase.LoadAssetAtPath<Font>(Root + "/Art/Fonts/FusionPixel/fusion-pixel-8px-proportional-latin.otf");
             theme.cjkJa = AssetDatabase.LoadAssetAtPath<Font>(Root + "/Art/Fonts/FusionPixel/fusion-pixel-8px-proportional-ja.otf");
             theme.cjkZhHans = AssetDatabase.LoadAssetAtPath<Font>(Root + "/Art/Fonts/FusionPixel/fusion-pixel-8px-proportional-zh_hans.otf");
             if (theme.cjkJa == null || theme.cjkZhHans == null)

@@ -153,6 +153,8 @@ namespace Wyspa.World
         public Material swayCropGlow;
         public Material swayTree;
         public Material glow;
+        [Tooltip("Sprite na wodzie: linia wody, piana, kołysanie (SpriteFloat.shader, Visual/Floating).")]
+        public Material floatMat;
 
         public LampDefinition Lamp(string id)
         {

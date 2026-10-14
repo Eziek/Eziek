@@ -236,7 +236,9 @@ Shader "Wyspa/Fog"
                     bestY = o.c.y;
                     has = true;
                 }
-                bool base = !band && d > edge + 10.0;   // zwykłe okno: dalej od wyspy morze całe w mgle
+                // zwykłe okno: dalej od wyspy morze całe w mgle; przezroczyste: ciemny pas pod chmurami od krawędzi wody
+                // (zachodzi 3 px na wodę, bez szczeliny z pulpitem między wodą a chmurami - po teście gracza)
+                bool base = band ? (d > edge - 3.0 && d < edge + 9.0) : d > edge + 10.0;
 
                 float jit = WyspaHash(float2(floor(p.x / 2.0) + 3.0, q.y + 11.0)).x - 0.5;
                 float t = has ? TONE_MID + big * TONE_SPAN + rim * TONE_RIM - depth * TONE_DEPTH + jit * TONE_JIT

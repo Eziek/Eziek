@@ -37,6 +37,9 @@ ui.plot.too_bright,{0}: za jasno (lampa),{0}: too bright (lamp),{0}: zu hell (La
 ui.plot.progress,{0}%,{0}%,{0} %,{0}%,{0}%,postęp wzrostu
 ui.options.language,Język,Language,Sprache,言語,语言,
 ui.options.brightness,Jasność nocy,Night brightness,Nachthelligkeit,夜の明るさ,夜间亮度,
+ui.options.font,Czcionka,Font,Schrift,フォント,字体,
+ui.options.font_readable,Czytelna,Readable,Lesbar,読みやすい,易读,
+ui.options.font_pixel,Pikselowa 3x5,Pixel 3x5,Pixel 3x5,ピクセル3x5,像素3x5,
 ui.options.rhythm,Rytm pracy,Work rhythm,Arbeitsrhythmus,作業リズム,工作节奏,"seria, przerwa, zmęczenie"
 ui.options.debug,HUD debugowy: klawisz F1,Debug HUD: F1 key,Debug-HUD: Taste F1,デバッグHUD：F1キー,调试HUD：F1键,
 ui.on,Wł.,On,An,オン,开,

@@ -1115,6 +1115,7 @@ namespace Wyspa.World
             col.offset = new Vector2(0f, 8f / Ppu);
             boat = go.AddComponent<Sea.Expedition>();
             boat.Init(body, glowSr, col);
+            Visual.Floating.Attach(body, 5f, art != null ? art.floatMat : null);   // kadłub w wodzie, piana, kręgi
             Changed?.Invoke();
             return true;
         }
@@ -1219,6 +1220,7 @@ namespace Wyspa.World
             sr.sprite = art != null ? art.netBuoy : null;
             sr.sortingOrder = pier.GetComponent<SpriteRenderer>().sortingOrder + 1;
             sr.gameObject.AddComponent<Sea.FishingNets>();
+            Visual.Floating.Attach(sr, 5f, art != null ? art.floatMat : null);   // boja w wodzie, kręgi
             nets = sr.gameObject;
             Changed?.Invoke();
             return true;

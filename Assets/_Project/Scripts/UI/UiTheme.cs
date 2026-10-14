@@ -19,6 +19,8 @@ namespace Wyspa.UI
         [Tooltip("Fusion Pixel 8px (OFL 1.1): zapasowe fonty dla znaków japońskich i chińskich (GDD §16.2).")]
         public Font cjkJa;
         public Font cjkZhHans;
+        [Tooltip("Czytelny font UI (Fusion Pixel 8px latin, OFL 1.1): małe litery, polskie i niemieckie znaki. Opcje → Ogólne.")]
+        public Font fontReadable;
         public TextAsset[] tables;
 
         [Header("9-slice")]

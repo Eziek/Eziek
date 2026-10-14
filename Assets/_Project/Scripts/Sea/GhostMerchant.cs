@@ -122,6 +122,8 @@ namespace Wyspa.Sea
         {
             if (stay < 0f)
                 stay = StaySeconds;
+            if (body != null && Island.Instance != null && Island.Instance.Art != null)
+                Visual.Floating.Attach(body, 5f, Island.Instance.Art.floatMat);   // łódź kupca w wodzie (raz, potem bez zmian)
             var game = GameLoop.Instance;
             if (game == null)
                 return;
