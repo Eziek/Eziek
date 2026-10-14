@@ -52,6 +52,7 @@ namespace UnityEngine
     public enum TextureWrapMode { Clamp }
     public enum SpriteAlignment { Center, Custom = 9 }
     public enum SpriteMeshType { FullRect, Tight }
+    public class Event { public static Event current; public Vector2 mousePosition; }
     public class GUIContent { public static GUIContent none; }
     public class GUISkin { public GUIStyle box; }
     public class GUIStyle { }

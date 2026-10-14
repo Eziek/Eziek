@@ -10,6 +10,9 @@ namespace Wyspa.Lighting
     {
         public static readonly List<Lamp> All = new List<Lamp>();
 
+        /// <summary>Do testów: wszystkie lampy zgaszone (np. żeby sprawdzić rośliny nocy).</summary>
+        public static bool DebugAllOff;
+
         [SerializeField] LampDefinition definition;
         [SerializeField] Light2D light2D;
         [SerializeField] SpriteRenderer glowRenderer;
@@ -41,7 +44,7 @@ namespace Wyspa.Lighting
         /// <summary>Wywoływane co tick przez GameLoop (najtańsze lampy pierwsze).</summary>
         public void Tick(float dt, bool night, EssenceStore essence)
         {
-            bool on = night && definition != null && essence.TryConsume(definition.essencePerMinute * dt / 60f);
+            bool on = !DebugAllOff && night && definition != null && essence.TryConsume(definition.essencePerMinute * dt / 60f);
             SetOn(on);
         }
 

@@ -112,17 +112,20 @@ namespace Wyspa.Core
                 lamp.Tick(dt, night, essence);
 
             foreach (var plot in FarmPlot.All)
+                plot.Tick(dt, ContextFor(plot, night));
+        }
+
+        /// <summary>Warunki wzrostu dla grządki (światło, noc, aktywność) - używane też przez HUD.</summary>
+        public GrowthContext ContextFor(FarmPlot plot, bool night)
+        {
+            Vector2 p = plot.LightProbe;
+            return new GrowthContext
             {
-                Vector2 p = plot.LightProbe;
-                var ctx = new GrowthContext
-                {
-                    playerActive = activity.IsActive,
-                    night = night,
-                    lit = Illumination.IsLit(p, night),
-                    multiplier = night ? Illumination.GrowthMultiplier(p) : 1f,
-                };
-                plot.Tick(dt, ctx);
-            }
+                playerActive = activity.IsActive,
+                night = night,
+                lit = Illumination.IsLit(p, night),
+                multiplier = night ? Illumination.GrowthMultiplier(p) : 1f,
+            };
         }
 
         static float Cost(Lamp lamp) => lamp.Definition != null ? lamp.Definition.essencePerMinute : 0f;

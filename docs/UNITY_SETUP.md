@@ -80,9 +80,13 @@ Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (dodaje dane ulepsze
   Zakup działa i zapisuje się, a efekty automatyzacji dojdą w Etapie 2b. Szybki test: przycisk **Cheat: +500 monet**.
 - **Rytm pracy:**
   - przy **x60** po ok. 25 s aktywności pojawia się „Seria … (+25%)”, a Esencja rośnie szybciej;
-  - **przerwa:** odznacz „Wymuś aktywność” i nie ruszaj myszą. Po ok. 5–30 s (przy x60) wróć, a pojawi się „odświeżony”;
+  - **przerwa:** zaznacz **„Wymuś bezczynność (przerwa)”** i odczekaj 5–30 s (przy x60 to 5–30 min gry), potem ją odznacz.
+    Pojawi się „odświeżony”. Bez przełącznika gra uznaje Cię za nieaktywnego dopiero po **60 prawdziwych sekundach**
+    bez ruchu myszy i klawiatury (próg nie przyspiesza przy x60);
   - **zmęczenie** po 8 h pracy w dobie (przy x60 ok. 8 min).
-- **Rośliny nocy** dają przy zbiorze **plony nocy** (waluta do ulepszeń).
+- **Rośliny nocy** dają przy zbiorze **plony nocy** (waluta do ulepszeń). Rosną tylko w ciemności, a w scenie prototypu
+  lampy oświetlają 7 z 8 grządek (ciemna jest górny rząd, trzecia od lewej). Do testu zaznacz **„Zgaś lampy”**.
+  HUD pokazuje stan grządki pod kursorem: czy jest w świetle, czy rośnie i dlaczego nie.
 - Stary zapis gry wczyta się bez utraty monet (zapis v2).
 
 ## 4b. UI i font (przygotowane, jeszcze niepodpięte w kodzie)

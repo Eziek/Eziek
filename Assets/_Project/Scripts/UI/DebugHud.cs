@@ -2,6 +2,7 @@ using UnityEngine;
 using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Farming;
+using Wyspa.Lighting;
 using Wyspa.Upgrades;
 
 namespace Wyspa.UI
@@ -51,7 +52,8 @@ namespace Wyspa.UI
             GUILayout.Label($"Dziś: {r.DailyActiveHours:0.0} h  x{r.EssenceMultiplier:0.00} {state}");
 
             GUILayout.Label($"Godzina: {clock.Now:HH:mm}  {(clock.IsNight ? "NOC" : "dzień")}");
-            GUILayout.Label($"Aktywny: {(game.Activity.IsActive ? "tak" : "nie")} ({game.Activity.SecondsSinceInput:0}s)");
+            GUILayout.Label($"Aktywny: {(game.Activity.IsActive ? "tak" : "nie")} ({game.Activity.SecondsSinceInput:0}s / próg {game.Activity.IdleThresholdSeconds:0}s, czas rzeczywisty)");
+            GUILayout.Label(PlotUnderMouse(game));
             GUILayout.Label($"Księżyc: {clock.MoonPhase:0.00}{(clock.IsFullMoon ? "  PEŁNIA" : "")}");
 
             GUILayout.Space(4);
@@ -115,7 +117,11 @@ namespace Wyspa.UI
             if (GUILayout.Button("x1")) game.DebugTimeScale = 1f;
             if (GUILayout.Button("x60")) game.DebugTimeScale = 60f;
             GUILayout.EndHorizontal();
-            game.Activity.ForceActive = GUILayout.Toggle(game.Activity.ForceActive, "Wymuś aktywność");
+            bool fa = GUILayout.Toggle(game.Activity.ForceActive, "Wymuś aktywność");
+            if (fa != game.Activity.ForceActive) game.Activity.ForceActive = fa;
+            bool fi = GUILayout.Toggle(game.Activity.ForceIdle, "Wymuś bezczynność (przerwa)");
+            if (fi != game.Activity.ForceIdle) game.Activity.ForceIdle = fi;
+            Lamp.DebugAllOff = GUILayout.Toggle(Lamp.DebugAllOff, "Zgaś lampy (test roślin nocy)");
             r.RhythmEnabled = GUILayout.Toggle(r.RhythmEnabled, "Rytm pracy (seria/przerwa/zmęczenie)");
             if (GUILayout.Button("Cheat: +500 monet, +5 plonów nocy"))
             {
@@ -125,6 +131,35 @@ namespace Wyspa.UI
 
             GUILayout.EndScrollView();
             GUILayout.EndArea();
+        }
+
+        /// <summary>Stan grządki pod kursorem: co rośnie, czy jest w świetle i dlaczego nie rośnie.</summary>
+        static string PlotUnderMouse(GameLoop game)
+        {
+            var cam = Camera.main;
+            if (cam == null || Event.current == null)
+                return "Grządka: -";
+            var m = Event.current.mousePosition;
+            Vector2 world = cam.ScreenToWorldPoint(new Vector3(m.x, Screen.height - m.y, 0f));
+            var hit = Physics2D.OverlapPoint(world);
+            if (hit == null || !hit.TryGetComponent(out FarmPlot plot))
+                return "Grządka: (najedź kursorem na grządkę)";
+            var s = plot.State;
+            bool night = game.Clock.IsNight;
+            var ctx = game.ContextFor(plot, night);
+            string light = ctx.lit ? (night ? "w świetle lampy" : "w świetle dnia") : "w ciemności";
+            if (s.IsEmpty)
+                return $"Grządka: pusta, {light}";
+            if (s.IsRipe)
+                return $"Grządka: {s.crop.displayName} dojrzała, {light}";
+            string why;
+            if (s.CanGrow(ctx))
+                why = "rośnie";
+            else if (s.crop.kind == CropKind.Day)
+                why = !ctx.lit ? "nie rośnie: potrzebuje światła" : "nie rośnie: potrzebuje Twojej aktywności";
+            else
+                why = !night ? "nie rośnie: czeka na noc" : "nie rośnie: za jasno (lampa)";
+            return $"Grządka: {s.crop.displayName} faza {s.Stage}, {light}, {why}";
         }
 
         static string Short(CurrencyType t)

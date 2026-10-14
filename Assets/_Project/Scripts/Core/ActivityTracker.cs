@@ -11,18 +11,36 @@ namespace Wyspa.Core
         [Tooltip("Do testów: gracz zawsze aktywny.")]
         [SerializeField] bool forceActive;
 
+        [Tooltip("Do testów: gracz zawsze nieaktywny (symulacja przerwy).")]
+        [SerializeField] bool forceIdle;
+
         public bool IsActive { get; private set; }
         public float SecondsSinceInput { get; private set; }
+
+        public float IdleThresholdSeconds => idleThresholdSeconds;
 
         public bool ForceActive
         {
             get => forceActive;
-            set => forceActive = value;
+            set { forceActive = value; if (value) forceIdle = false; }
+        }
+
+        public bool ForceIdle
+        {
+            get => forceIdle;
+            set { forceIdle = value; if (value) forceActive = false; }
         }
 
         /// <summary>Wywoływane co tick przez GameLoop.</summary>
         public void Refresh()
         {
+            if (forceIdle)
+            {
+                SecondsSinceInput = idleThresholdSeconds;
+                IsActive = false;
+                return;
+            }
+
             if (forceActive)
             {
                 SecondsSinceInput = 0f;
