@@ -932,10 +932,13 @@ namespace Wyspa.Automation
             ShowCarried();
         }
 
-        /// <summary>Niesione rzeczy jako małe sprite'y pod ognikiem (pół rozmiaru, jeden obok drugiego).</summary>
+        /// <summary>Niesione rzeczy jako małe sprite'y: zbieracz w koszyku, drwal pod sobą (drewno, kamień); ogrodnik i siewca bez.</summary>
         void ShowCarried(Sprite single = null, int singleCount = 0)
         {
             int count = single != null ? singleCount : carried.Count;
+            // ogrodnik i siewca nie pokazują plonów ani nasion pod sobą (mają sierp i worek); zbieracz w koszyku
+            if (kind == WispKind.Gardener || kind == WispKind.Sower)
+                count = 0;
             while (carriedSprites.Count < count)
             {
                 var go = new GameObject("Carried");

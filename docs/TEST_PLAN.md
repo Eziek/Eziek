@@ -251,6 +251,7 @@ Najpierw **Wyspa → 2** (grafiki narzędzi). Bez tego ogniki są bez narzędzi,
 2. Drwal: przy każdym uderzeniu głowica opada (dźwięk „chop”). Ogrodnik: zamach sierpem przy zbiorze. Siewca: worek
    przechyla się nad grządką przy sadzeniu.
 3. Zbieracz: zebrane owoce, odłamki gwiazd i monety z trawy leżą w koszyku (wystają nad brzeg), obracają się z koszykiem.
+   Ogrodnik i siewca nie mają pod sobą plonów ani nasion (zbiór, dostawa do skrzyni i sadzenie działają jak wcześniej).
 4. Latarenka i fiolka świecą w nocy (piksele emisyjne), płomyk migocze, wywar bulgocze.
 5. Pogaduszki i odsuwanie się ogników działają jak wcześniej, narzędzia nie zasłaniają dymków.
 

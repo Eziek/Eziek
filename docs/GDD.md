@@ -704,6 +704,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     drwal siekiero-kilof (przy każdym uderzeniu w drzewo albo kamień opada), ogrodnik sierp (zamach przy zbiorze),
     siewca worek nasion (przechyla się i sypie przy sadzeniu), alchemik fiolka (wywar bulgocze i świeci), latarnik
     latarenka (płomyk migocze i świeci w nocy), zbieracz koszyk: zebrane rzeczy (owoce, odłamki, błyskotki) leżą w koszyku.
+    Ogrodnik i siewca nie pokazują już niesionych plonów ani nasion pod sobą (zgłoszenie gracza); drwal nadal niesie
+    drewno i kamień pod sobą.
     Grafika: `tools/pixel-proto/wisp_tools.py` + `export_unity_wisp_tools.py` → `Automation/tool_<nazwa>_<0|1>.png`
     (pivot = chwyt), w Unity Wyspa → 2. Kod: `Wisp.SetTool`, `Wisp.Pose`. Podgląd: `docs/img/narzedzia_ognikow.png`.
 88. **Sklep z czapkami dla ogników** (prośba gracza): Księga → Sklep → Czapki. 15 czapek, kosmetyka bez wpływu na grę:
