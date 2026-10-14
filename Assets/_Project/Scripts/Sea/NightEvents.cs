@@ -135,12 +135,12 @@ namespace Wyspa.Sea
             go.AddComponent<StarPickup>().Setup(target, order, starFrames, starGlow, shard, shardGlow, glowMaterial);
         }
 
-        public void SpawnMonster()
+        public bool SpawnMonster()
         {
             var island = Island.Instance;
             var game = GameLoop.Instance;
             if (island == null || monster != null || tentacle == null || tentacle.Length == 0)
-                return;
+                return false;
             if (game != null)
                 monsterNight = game.Clock.NightKey;
             var go = new GameObject("Monster");
@@ -149,6 +149,7 @@ namespace Wyspa.Sea
             monster = go.AddComponent<MonsterEvent>();
             monster.Setup(tentacle, eye, eyeGlow, glowMaterial);
             GameEvents.RaiseToast("toast.monster.rises");
+            return true;
         }
     }
 }

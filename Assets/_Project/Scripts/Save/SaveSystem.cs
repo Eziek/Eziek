@@ -117,10 +117,11 @@ namespace Wyspa.Save
                 {
                     Debug.LogError($"[Wyspa] Nie udało się odczytać slotu {i + 1}: {e.Message}");
                 }
+                // plik jest, ale się nie czyta (uszkodzony): slot dalej zajęty, żeby „Nowa gra” go nie nadpisała
+                bool fileThere = File.Exists(SlotPath(i));
                 if (info == null)
                     info = new SlotInfo();
-                else
-                    info.exists = true;
+                info.exists = fileThere;
                 info.index = i;
                 list.Add(info);
             }
@@ -223,6 +224,7 @@ namespace Wyspa.Save
         {
             if (InMenu)
                 return;
+            var keep = owner;
             owner = null;   // bez autozapisu w tej klatce
             try
             {
@@ -232,6 +234,7 @@ namespace Wyspa.Save
             catch (Exception e)
             {
                 Debug.LogError($"[Wyspa] Nie udało się usunąć zapisu: {e.Message}");
+                owner = keep;   // reset nieudany: autozapis działa dalej
                 return;
             }
             ReloadScene();
@@ -272,11 +275,33 @@ namespace Wyspa.Save
 
             try
             {
-                File.WriteAllText(FilePath, JsonUtility.ToJson(data, true));
+                // najpierw plik tymczasowy, potem podmiana: przerwany zapis (ubity proces) nie zostawi uciętego JSON-a
+                string tmp = FilePath + ".tmp";
+                File.WriteAllText(tmp, JsonUtility.ToJson(data, true));
+                if (!File.Exists(FilePath))
+                    File.Move(tmp, FilePath);
+                else
+                {
+                    try { File.Replace(tmp, FilePath, null); }
+                    catch (IOException) { File.Copy(tmp, FilePath, true); File.Delete(tmp); }   // dysk bez obsługi podmiany
+                }
             }
             catch (Exception e)
             {
                 Debug.LogError($"[Wyspa] Nie udało się zapisać gry: {e.Message}");
+            }
+        }
+
+        /// <summary>Nieczytelny zapis: kopia obok (save_N.corrupt.json), zanim autozapis go nadpisze.</summary>
+        void BackupCorrupt()
+        {
+            try
+            {
+                File.Copy(FilePath, Path.ChangeExtension(FilePath, ".corrupt.json"), true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Wyspa] Nie udało się skopiować uszkodzonego zapisu: {e.Message}");
             }
         }
 
@@ -296,11 +321,15 @@ namespace Wyspa.Save
             }
             catch (Exception e)
             {
-                Debug.LogError($"[Wyspa] Uszkodzony zapis, start od zera: {e.Message}");
+                Debug.LogError($"[Wyspa] Uszkodzony zapis, start od zera (kopia: *.corrupt.json): {e.Message}");
+                BackupCorrupt();
                 return;
             }
             if (data == null)
+            {
+                BackupCorrupt();
                 return;
+            }
             if (!string.IsNullOrEmpty(data.slotName))
                 CurrentName = data.slotName;
 

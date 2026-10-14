@@ -130,7 +130,8 @@ namespace Wyspa.Weather
                 root.SetParent(transform, false);
             }
             var land = island.LandRect;
-            spawnAcc += rate * dt;
+            // długa klatka (schowane okno, uśpienie) nie zostawia zaległych kropel na minuty po przejaśnieniu
+            spawnAcc = rate > 0 ? Mathf.Min(spawnAcc + rate * dt, MaxDrops) : 0f;
             while (spawnAcc >= 1f)
             {
                 spawnAcc -= 1f;

@@ -41,7 +41,10 @@ namespace Wyspa.Core
         // ------------------------------------------------------------ czas cyklu
 
         /// <summary>Czas od początku epoki w cyklach (część całkowita = numer doby gry).</summary>
-        static double Cycles(DateTime utc) => (utc - EpochUtc).TotalSeconds / CycleSeconds;
+        static double Cycles(DateTime utc) => ((utc - EpochUtc).TotalSeconds + DebugOffsetSeconds) / CycleSeconds;
+
+        /// <summary>Do testów (HUD debugowy): przesunięcie cyklu gry, np. +1 cykl bez czekania godziny.</summary>
+        public static double DebugOffsetSeconds;
 
         /// <summary>Sekunda cyklu (0..3600): 0 = 06:00, 2400 = 20:00 (początek nocy).</summary>
         static float SecondOfCycle(double cycles) => (float)((cycles - Math.Floor(cycles)) * CycleSeconds);

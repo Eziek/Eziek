@@ -36,10 +36,10 @@ namespace Wyspa.Farming
             new TreeSpecies { id = "elder", saplingCoins = 200, growSeconds = 50 * 60, fruitSeconds = 800, fruitCount = 5, fruitPrice = 10 },
             new TreeSpecies { id = "rowan", saplingCoins = 250, growSeconds = 60 * 60, fruitSeconds = 15 * 60, fruitCount = 6, fruitPrice = 9, cemeteryBonus = true },
             new TreeSpecies { id = "ghostpear", saplingCoins = 500, extraCost = new CurrencyAmount(CurrencyType.NightHarvest, 5),
-                              growSeconds = 80 * 60, fruitSeconds = 2 * GameClock.NightSeconds, fruitCount = 4, fruitPrice = 30, fruitsAtNight = true,
+                              growSeconds = 80 * 60, fruitSeconds = 2 * GameClock.NightSeconds * 0.95f, fruitCount = 4, fruitPrice = 30, fruitsAtNight = true,
                               lightColor = new Color(0.45f, 1.15f, 1.05f), lightRadius = 34f / 16f },
             new TreeSpecies { id = "moon", saplingCoins = 800, extraCost = new CurrencyAmount(CurrencyType.StarShard, 2),
-                              growSeconds = 100 * 60, fruitSeconds = GameClock.NightSeconds, fruitCount = 3, fruitPrice = 120, fruitsAtNight = true, fruitsAtFullMoon = true,
+                              growSeconds = 100 * 60, fruitSeconds = GameClock.NightSeconds * 0.95f, fruitCount = 3, fruitPrice = 120, fruitsAtNight = true, fruitsAtFullMoon = true,
                               lightColor = new Color(0.9f, 0.85f, 1.25f), lightRadius = 40f / 16f },
         };
 

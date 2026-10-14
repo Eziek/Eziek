@@ -31,9 +31,12 @@ namespace Wyspa.Sea
             bool can = night && !used && game.Wallet.Get(CurrencyType.NightHarvest) >= SummonCost;
             info.Button(Loc.Get("ui.altar.summon", SummonCost), () =>
             {
+                // panel mógł wisieć otwarty: warunki sprawdzamy w chwili kliknięcia, a płacimy dopiero, gdy potwór się pojawił
                 var cost = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.NightHarvest, SummonCost) };
-                if (game.Wallet.TrySpend(cost))
-                    events.SpawnMonster();
+                if (!game.Clock.IsNight || events.MonsterNight == game.Clock.NightKey || !game.Wallet.CanAfford(cost))
+                    return;
+                if (events.SpawnMonster())
+                    game.Wallet.TrySpend(cost);
             }, can);
         }
     }

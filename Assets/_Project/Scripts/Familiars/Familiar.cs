@@ -277,7 +277,7 @@ namespace Wyspa.Familiars
                 transform.position = Snap(spot);
                 flying = false;
                 SetFrame(2);
-                while (!Night)
+                while (!Night || Lamp.All.Count == 0)
                     yield return new WaitForSecondsRealtime(2f);
             }
         }

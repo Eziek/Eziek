@@ -259,7 +259,7 @@ namespace Wyspa.Sea
         void Buy(Offer o)
         {
             var game = GameLoop.Instance;
-            if (game == null || o.sold)
+            if (game == null || o.sold || !present)   // panel otwarty po odpłynięciu kupca
                 return;
             var cost = new System.Collections.Generic.List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, o.coins) };
             if (o.night > 0)
@@ -274,6 +274,8 @@ namespace Wyspa.Sea
         /// <summary>Kupiec skupuje zawartość wszystkich skrzyń na plony.</summary>
         void SellCrates(GameLoop game)
         {
+            if (!present)
+                return;
             int coins = 0;
             foreach (var crate in HarvestCrate.All.ToArray())
                 coins += crate.SellAll(game.Wallet, game.Crops, SellMultiplier);

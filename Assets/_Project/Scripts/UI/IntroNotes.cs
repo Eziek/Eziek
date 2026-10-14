@@ -62,8 +62,21 @@ namespace Wyspa.UI
             counter = Ui.Txt(note, "Counter", t.textMuted, TextAlignmentOptions.TopRight);
         }
 
-        void OnEnable() => GameEvents.Harvested += OnHarvest;
-        void OnDisable() => GameEvents.Harvested -= OnHarvest;
+        void OnEnable()
+        {
+            GameEvents.Harvested += OnHarvest;
+            Loc.Changed += Relayout;
+        }
+
+        void OnDisable()
+        {
+            GameEvents.Harvested -= OnHarvest;
+            Loc.Changed -= Relayout;
+        }
+
+        void Relayout() => shownStep = -1;
+        float shownWidth;
+        float finishedAt = -1f;
         void OnDestroy()
         {
             if (Instance == this)
@@ -99,7 +112,7 @@ namespace Wyspa.UI
                 if (Completed(island))
                     Advance(island);
             }
-            if (shownStep != Step)
+            if (shownStep != Step || !Mathf.Approximately(shownWidth, root.rect.width))
                 Layout();
             float alpha = hud != null ? hud.Alpha : 1f;
             group.alpha = alpha;
@@ -128,7 +141,10 @@ namespace Wyspa.UI
                 case 4:
                     return island.CountLamps() >= 2;   // startowa latarnia + kupiona (także kupiona wcześniej)
                 default:
-                    return false;   // „gotowe” wisi do rozbiórki tablicy
+                    // „gotowe” wisi chwilę, potem wprowadzenie się kończy, gdy na tablicy jest pierwsze zamówienie
+                    if (finishedAt < 0f) finishedAt = Time.unscaledTime;
+                    var orders = Orders.OrderBook.Instance;
+                    return Time.unscaledTime - finishedAt > 20f && orders != null && orders.Orders.Count > 0;
             }
         }
 
@@ -143,6 +159,7 @@ namespace Wyspa.UI
         void Layout()
         {
             shownStep = Step;
+            shownWidth = root.rect.width;
             text.text = Loc.Get(CurrentKey);
             counter.text = Finished ? "" : Loc.Get("ui.intro.counter", Step + 1, Steps);
             float cw = counter.text.Length > 0 ? Ui.Width(counter) : 0f;

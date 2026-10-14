@@ -140,6 +140,13 @@ namespace Wyspa.UI
                 if (info.verticalButtons)
                     w = Mathf.Max(w, bw);
             }
+            if (!info.verticalButtons && rowW > maxW)
+            {
+                // przyciski nie mieszczą się w jednym rzędzie (małe okno): jeden pod drugim
+                info.verticalButtons = true;
+                foreach (var (_, _, bw) in buttons)
+                    w = Mathf.Max(w, bw);
+            }
             if (!info.verticalButtons && buttons.Count > 0)
                 w = Mathf.Max(w, Mathf.Min(maxW, rowW));
 

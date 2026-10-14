@@ -549,6 +549,11 @@ Obrazki referencyjne (kopie): `docs/img/`
 54. Pogoda: deszcz, burza z piorunami, nocna mgła, losowana na każde 20 min cyklu gry.
 55. Etap 6c, część 1: dźwięk (tła, efekty, głośność w Opcjach), placeholdery z syntezy.
 56. Etap 6c, część 2: ikona w zasobniku Windows z menu i powiadomieniami.
+57. Przegląd kodu (3 obszary) przed testem: poprawione m.in. ciche efekty dźwiękowe, mikstury przechodzące między slotami,
+    zamówienia blokowane przez karteczkę „gotowe”, atomowy zapis i kopia uszkodzonego pliku (`save_N.corrupt.json`, slot
+    „Zapis nieczytelny”), ikona w zasobniku po restarcie Eksploratora, karetka w polu nazwy, przyciski panelu w małym oknie,
+    ołtarz i kupiec przy otwartym panelu, deszcz po długiej klatce, owoce drzewa księżyca w zamówieniach.
+    Lista testowa: `docs/TEST_PLAN.md`; F1: „+20 min”, „+1 cykl”, „Wszystkie chowańce”, „Zamówienie teraz”.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

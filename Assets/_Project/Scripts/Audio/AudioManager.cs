@@ -71,7 +71,7 @@ namespace Wyspa.Audio
             s.playOnAwake = false;
             s.loop = loop;
             s.spatialBlend = 0f;
-            s.volume = 0f;
+            s.volume = loop ? 0f : 1f;   // pętle podkręca Update; efekty grają przez PlayOneShot z własną skalą
             return s;
         }
 
@@ -120,6 +120,8 @@ namespace Wyspa.Audio
             float amb = AmbientVolume;
             ambA.volume = ambA_level * amb;
             ambB.volume = ambB_level * amb;
+            if (ambA_level <= 0f && ambA.isPlaying) ambA.Stop();   // wygaszone tło nie gra po cichu dalej
+            if (ambB_level <= 0f && ambB.isPlaying) ambB.Stop();
 
             // deszcz ponad tłem (burza głośniej)
             float rainTarget = Weather.WeatherSystem.Current == Weather.WeatherKind.Storm ? 1f

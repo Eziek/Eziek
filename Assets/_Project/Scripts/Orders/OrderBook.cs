@@ -75,7 +75,7 @@ namespace Wyspa.Orders
             {
                 var island = Island.Instance;
                 var intro = UI.IntroNotes.Instance;
-                return island != null && island.Ready && island.Board != null && (intro == null || !intro.Active)
+                return island != null && island.Ready && island.Board != null && (intro == null || !intro.Active || intro.Finished)
                        && !Save.SaveSystem.InMenu;
             }
         }
@@ -114,6 +114,13 @@ namespace Wyspa.Orders
                     BoardNote();
                 }
             }
+        }
+
+        /// <summary>Do testów (HUD debugowy): następna karteczka przy najbliższym sprawdzeniu (gdy tablica działa).</summary>
+        public void DebugNextNow()
+        {
+            nextCycle = 0;
+            timer = 0f;
         }
 
         // ------------------------------------------------------------ postęp i nagrody
@@ -193,7 +200,7 @@ namespace Wyspa.Orders
                         list.Add(("crop:" + c.id, c.sellPrice, c.kind == CropKind.Night));
             var seen = new HashSet<string>();
             foreach (var t in FruitTree.All)
-                if (t != null && t.Adult && t.Species != null && seen.Add(t.Species.id))
+                if (t != null && t.Adult && t.Species != null && !t.Species.fruitsAtFullMoon && seen.Add(t.Species.id))
                     list.Add(("fruit:" + t.Species.id, t.Species.fruitPrice, t.Species.fruitsAtNight));
             return list;
         }

@@ -126,6 +126,7 @@ namespace Wyspa.Core
             if (rhythm == null) rhythm = gameObject.AddComponent<WorkRhythm>();
             if (upgrades == null) upgrades = GetComponent<UpgradeState>();
             if (upgrades == null) upgrades = gameObject.AddComponent<UpgradeState>();
+            Alchemy.Potions.Restore(null);   // statyczne: bez tego mikstury z poprzedniego slotu działałyby dalej
             if (GetComponent<Orders.OrderBook>() == null) gameObject.AddComponent<Orders.OrderBook>();   // zamówienia z tablicy
             if (GetComponent<Familiars.FamiliarSystem>() == null) gameObject.AddComponent<Familiars.FamiliarSystem>();   // chowańce
             if (GetComponent<Weather.WeatherSystem>() == null) gameObject.AddComponent<Weather.WeatherSystem>();   // pogoda

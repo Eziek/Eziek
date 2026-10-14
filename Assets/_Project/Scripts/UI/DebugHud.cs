@@ -166,6 +166,14 @@ namespace Wyspa.UI
             GUILayout.Label($"Czas x{game.DebugTimeScale:0}");
             if (GUILayout.Button("x1")) game.DebugTimeScale = 1f;
             if (GUILayout.Button("x60")) game.DebugTimeScale = 60f;
+            if (GUILayout.Button("+20 min")) GameClock.DebugOffsetSeconds += 1200;
+            if (GUILayout.Button("+1 cykl")) GameClock.DebugOffsetSeconds += GameClock.CycleSeconds;
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            if (Wyspa.Familiars.FamiliarSystem.Instance != null && GUILayout.Button("Wszystkie chowańce"))
+                Wyspa.Familiars.FamiliarSystem.Instance.DebugArriveAll();
+            if (Wyspa.Orders.OrderBook.Instance != null && GUILayout.Button("Zamówienie teraz"))
+                Wyspa.Orders.OrderBook.Instance.DebugNextNow();
             GUILayout.EndHorizontal();
             bool fa = GUILayout.Toggle(game.Activity.ForceActive, "Wymuś aktywność");
             if (fa != game.Activity.ForceActive) game.Activity.ForceActive = fa;

@@ -108,7 +108,9 @@ namespace Wyspa.UI
             {
                 var when = Ui.Txt(rt, "When", t.textMuted);
                 // data i godzina zapisu w formacie języka gry (np. 14.10.2026 13:45)
-                when.text = Loc.Get("ui.menu.slot_info", info.SavedLocal.ToString("g", LocCore.Culture(Loc.Language)));
+                when.text = info.savedAtUtcTicks > 0
+                    ? Loc.Get("ui.menu.slot_info", info.SavedLocal.ToString("g", LocCore.Culture(Loc.Language)))
+                    : Loc.Get("ui.menu.unreadable");   // plik jest, ale się nie czyta (kopia trafi do *.corrupt.json)
                 Ui.Place(when.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -15), new Vector2(120, 10));
             }
 
@@ -140,6 +142,7 @@ namespace Wyspa.UI
                 var create = TextButton(rt, "New", Loc.Get("ui.menu.new"), Vector2.zero, () =>
                 {
                     editing = i;
+                    armedDelete = -1;   // wygasające „Na pewno?” nie przebuduje menu w trakcie pisania
                     draftName = Loc.Get("ui.menu.default_name", i + 1);
                     Build();
                 });
@@ -172,6 +175,8 @@ namespace Wyspa.UI
             placeholder.text = Loc.Get("ui.menu.default_name", slot + 1);
             Ui.Stretch(placeholder.rectTransform);
 
+            // TMP_InputField buduje karetkę i zaznaczenie w OnEnable, gdy zna już pole tekstowe: konfiguracja przy wyłączonym obiekcie
+            bg.gameObject.SetActive(false);
             field = bg.gameObject.AddComponent<TMP_InputField>();
             field.textViewport = area;
             field.textComponent = text;
@@ -185,6 +190,7 @@ namespace Wyspa.UI
             field.text = draftName ?? "";
             field.onValueChanged.AddListener(v => draftName = v);
             field.onSubmit.AddListener(v => SaveSystem.Play(slot, v));
+            bg.gameObject.SetActive(true);
             field.ActivateInputField();
         }
 

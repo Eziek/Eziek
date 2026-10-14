@@ -68,10 +68,10 @@ namespace Wyspa.UI
         public void FillContext(ContextInfo info)
         {
             var intro = IntroNotes.Instance;
-            if (intro != null && intro.Active)
+            if (intro != null && intro.Active && !intro.Finished)
             {
                 info.lines.Add(Loc.Get(intro.CurrentKey));
-                info.lines.Add(Loc.Get(intro.Finished ? "ui.board.done" : "ui.board.skip"));
+                info.lines.Add(Loc.Get("ui.board.skip"));
                 return;
             }
             // po wprowadzeniu: zamówienia od mieszkańców mgły

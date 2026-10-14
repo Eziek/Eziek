@@ -151,6 +151,14 @@ namespace Wyspa.Familiars
             return f;
         }
 
+        /// <summary>Do testów (HUD debugowy): wszystkie chowańce od razu.</summary>
+        public void DebugArriveAll()
+        {
+            foreach (var kind in Kinds)
+                if (arrived.Add(kind))
+                    Spawn(kind);
+        }
+
         // ---- zapis
         public FamiliarSave Snapshot() => new FamiliarSave { arrived = new List<string>(arrived), nightHarvests = nightHarvests, lastGiftCycle = lastGiftCycle };
 

@@ -13,7 +13,8 @@ namespace Wyspa.Platform
     /// Ikona w zasobniku Windows (Etap 6c, tylko build na Windows). Lewy klik: pokaż / schowaj okno gry. Prawy klik: menu
     /// (pokaż/schowaj, zawsze na wierzchu, mini-tryb, wyjście). Powiadomienia Windows, gdy okno jest schowane albo nieaktywne:
     /// kupiec-widmo, potwór, zamówienia, chowaniec, gotowa mikstura i dojrzałe plony (najwyżej co minutę, opcja w Opcjach → System).
-    /// Komunikaty ikony odbiera osobne, niewidoczne okno (HWND_MESSAGE), które Unity obsługuje w swojej pętli komunikatów.
+    /// Komunikaty ikony odbiera osobne, nigdy niepokazywane okno, które Unity obsługuje w swojej pętli komunikatów;
+    /// po restarcie Eksploratora (komunikat „TaskbarCreated”) ikona dodaje się od nowa.
     /// </summary>
     public class TrayIcon : MonoBehaviour
     {
@@ -44,7 +45,8 @@ namespace Wyspa.Platform
         const uint MF_STRING = 0x0, MF_SEPARATOR = 0x800, MF_CHECKED = 0x8;
         const uint TPM_RIGHTBUTTON = 0x2, TPM_NONOTIFY = 0x80, TPM_RETURNCMD = 0x100;
         const int SW_HIDE = 0, SW_SHOW = 5;
-        static readonly IntPtr HWND_MESSAGE = new IntPtr(-3);
+        static uint taskbarCreated;   // komunikat po restarcie Eksploratora (pasek zadań odtworzony): ikonę trzeba dodać od nowa
+        static bool readd;
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         struct NOTIFYICONDATAW
@@ -98,6 +100,7 @@ namespace Wyspa.Platform
         [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr hwnd, int cmd);
         [DllImport("user32.dll")] static extern bool PostMessageW(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)] static extern IntPtr GetModuleHandleW(string name);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern uint RegisterWindowMessageW(string name);
 
         static WndProc procKeep;   // delegat trzymany statycznie, żeby GC go nie zebrał
         static readonly Queue<uint> clicks = new Queue<uint>();
@@ -114,6 +117,8 @@ namespace Wyspa.Platform
                     clicks.Enqueue(mouse);   // obsługa w Update (poza procedurą okna)
                 return IntPtr.Zero;
             }
+            if (taskbarCreated != 0 && msg == taskbarCreated)
+                readd = true;   // ponowne dodanie w Update
             return DefWindowProcW(hwnd, msg, wParam, lParam);
         }
 
@@ -129,7 +134,9 @@ namespace Wyspa.Platform
                 lpszClassName = "PocklandTray",
             };
             RegisterClassExW(ref cls);   // przy drugim uruchomieniu w tym samym procesie klasa już jest - to nie błąd
-            msgWindow = CreateWindowExW(0, "PocklandTray", "Pockland tray", 0, 0, 0, 0, 0, HWND_MESSAGE, IntPtr.Zero, inst, IntPtr.Zero);
+            taskbarCreated = RegisterWindowMessageW("TaskbarCreated");
+            // zwykłe, nigdy niepokazywane okno (nie HWND_MESSAGE): tylko takie dostaje rozgłaszany „TaskbarCreated”
+            msgWindow = CreateWindowExW(0, "PocklandTray", "Pockland tray", 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, inst, IntPtr.Zero);
             if (msgWindow == IntPtr.Zero)
                 return;
             // ikona z pliku gry (ikona ustawiona w Player Settings), inaczej domyślna ikona aplikacji
@@ -180,6 +187,12 @@ namespace Wyspa.Platform
 
         void HandleClicks()
         {
+            if (readd && msgWindow != IntPtr.Zero)
+            {
+                readd = false;
+                var data = Data(NIF_MESSAGE | NIF_ICON | NIF_TIP);
+                added = Shell_NotifyIconW(NIM_ADD, ref data);
+            }
             while (clicks.Count > 0)
             {
                 uint c = clicks.Dequeue();
