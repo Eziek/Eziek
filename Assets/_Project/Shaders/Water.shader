@@ -246,6 +246,21 @@ Shader "Wyspa/Water"
                         alpha = 0;
                 }
                 half4 lit = WyspaLight(col, alpha, input.uv, input.lightingUV);
+
+                // --- odbicia światła (prośba gracza): iskierki tam, gdzie pada światło - przy lampach w ich kolorze,
+                // w dzień w słońcu po całej wodzie, w ciemności prawie wcale. Komórki 3x1 px, każda iskra trwa 0.4 s.
+                if (!emit && cls >= 1 && cls <= 4 && d > 3.0 && alpha > 0)
+                {
+                    half3 light = WyspaLight(half3(1, 1, 1), 1, input.uv, input.lightingUV).rgb;
+                    float b = max(light.r, max(light.g, light.b));
+                    float chance = 0.025 * saturate((b - 0.4) / 0.8);
+                    float2 cell = float2(floor(x / 3.0), y);
+                    float4 g = WyspaHash(cell * 1.37 + floor(f / 4.0) * 7.31);
+                    int gx = (int)(cell.x * 3.0 + floor(g.y * 2.0));
+                    int glen = g.z < 0.3 ? 2 : 1;
+                    if (g.x < chance && x >= gx && x < gx + glen)
+                        lit.rgb = max(lit.rgb, _ColFo.rgb * light * 1.25);
+                }
                 return emit ? half4(emitCol, alpha) : lit;
             }
             ENDHLSL

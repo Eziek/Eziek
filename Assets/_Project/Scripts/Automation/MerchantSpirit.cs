@@ -21,9 +21,8 @@ namespace Wyspa.Automation
         [SerializeField] SpriteRenderer glow;
         [SerializeField] Sprite[] frames = new Sprite[4];
         [SerializeField] Sprite[] glowFrames = new Sprite[4];
-        [SerializeField] float flightSeconds = 0.6f;
-
         Vector3 home;
+        float seed;
         float timer;
         float lastInterval = 3600f;
         Coroutine flight;
@@ -38,7 +37,11 @@ namespace Wyspa.Automation
             glowFrames = glowSprites;
         }
 
-        void Awake() => home = transform.position;
+        void Awake()
+        {
+            home = transform.position;
+            seed = Random.value * 10f;
+        }
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
 
@@ -75,7 +78,7 @@ namespace Wyspa.Automation
                 if (isActiveAndEnabled)
                 {
                     if (flight != null) StopCoroutine(flight);
-                    flight = StartCoroutine(Flight(crate.transform.position + new Vector3(0f, 0.5f, 0f)));
+                    flight = StartCoroutine(Visit(crate.transform.position + new Vector3(0f, 0.7f, 0f)));
                 }
             }
             return coins;
@@ -87,20 +90,20 @@ namespace Wyspa.Automation
             info.lines.Add(Loc.Get("ui.merchant_spirit.crates", HarvestCrate.All.Count, HarvestCrate.TotalCount()));
         }
 
-        IEnumerator Flight(Vector3 target)
+        /// <summary>Płynny lot do skrzyni i z powrotem (sprzedaż dzieje się od razu, lot jest efektem).</summary>
+        IEnumerator Visit(Vector3 target)
         {
-            const float step = 0.1f;
-            var wait = new WaitForSecondsRealtime(step);
-            int n = Mathf.Max(1, Mathf.RoundToInt(flightSeconds / step));
-            for (int i = 1; i <= n; i++) { transform.position = Vector3.Lerp(home, target, i / (float)n); yield return wait; }
-            for (int i = 0; i < 3; i++) yield return wait;   // chwila przy skrzyni
-            for (int i = 1; i <= n; i++) { transform.position = Vector3.Lerp(target, home, i / (float)n); yield return wait; }
-            transform.position = home;
+            var from = transform.position;
+            yield return Flight.Arc(transform, from, target, 2.5f, 0.5f);
+            yield return new WaitForSecondsRealtime(0.4f);   // chwila przy skrzyni
+            yield return Flight.Arc(transform, target, home, 2.5f, 0.5f);
             flight = null;
         }
 
         void Update()
         {
+            if (flight == null)
+                transform.position = Flight.Hover(home, seed);
             if (frames == null || frames.Length == 0)
                 return;
             int f = Mathf.FloorToInt(Time.unscaledTime * 6f) % frames.Length;

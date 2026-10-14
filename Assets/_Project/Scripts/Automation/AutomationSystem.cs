@@ -93,19 +93,16 @@ namespace Wyspa.Automation
                 granted.Add(kind);   // bez wolnego kafelka (toast) spróbuje przy następnym zakupie albo wczytaniu
         }
 
-        /// <summary>Tick automatyki: ogniki zbierają do skrzyń (zebrane grządki trafiają do harvested), duszki sprzedają, runy sieją.</summary>
+        /// <summary>Tick automatyki: ogniki wylatują na kursy, duszki sprzedają, runy sieją. harvested: zbiory do AfterHarvest (na razie puste - ogniki zgłaszają same).</summary>
         public void Tick(float dt, GameLoop game, List<(FarmPlot plot, CropDefinition crop)> harvested)
         {
             var upgrades = game.Upgrades;
             if (upgrades.Has(UpgradeIds.WispGardener))
             {
                 float interval = upgrades.Value(UpgradeIds.WispGardener, 30f);
+                // ogniki zbierają w trakcie lotu (kurs do 3 plonów) i same wołają GameLoop.AfterHarvest
                 for (int i = WispGardener.All.Count - 1; i >= 0; i--)
-                {
-                    var plot = WispGardener.All[i].Tick(dt, interval, out var crate);
-                    if (plot != null && crate != null && crate.TryAdd(plot.State.crop, plot.State.Quality))
-                        harvested.Add((plot, plot.HarvestSilently()));
-                }
+                    WispGardener.All[i].Tick(dt, interval);
             }
             if (upgrades.Has(UpgradeIds.MerchantChest))
             {

@@ -268,6 +268,16 @@ Po pobraniu: **Wyspa → 2** (motyw UI dostaje fonty Fusion Pixel z `Art/Fonts/F
 2. Przełącz na 日本語 i 简体中文: teksty w HUD, Księdze, dymkach są czytelne (piksele 8 px, bez rozmycia).
 3. W `Player.log` nie ma już „The character … was not found in the font asset”.
 
+## 4o. Upiększanie: światło, odbicia na wodzie, płynne duszki (test)
+Po pobraniu: **Wyspa → 2** (materiał `LightShafts`, nowe klatki ognika i duszka bez podskoku), potem **Wyspa → 3**
+(obiekt `LightShafts` w scenie). Jeśli sprite'y wyglądają źle: **Wyspa → Narzędzia → Reimportuj sprite'y**.
+1. Dzień: ukośne, ciepłe snopy światła przez wyspę i wodę (pikselowe, powoli dryfują). Zmierzch: pomarańczowe.
+2. Noc (F1 → 23:30): blade promienie księżyca (w pełnię wyraźniejsze, F1 → pełnia), wokół zapalonych lamp poświata w pikselach.
+3. Woda: iskierki odbić; w dzień po całej wodzie, w nocy tylko przy lampach (w ich kolorze).
+4. Ognik: płynny lot po łuku; zbiera do 3 dojrzałych plonów (widać je pod nim), potem leci do skrzyni i wraca.
+   Klik w ognika w locie: „W locie: niesie N”. Duszek-handlarz też lata płynnie, a oba unoszą się w miejscu.
+5. F1 → „Shadery efektów” wyłącza też światło (porównanie przed/po).
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

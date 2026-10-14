@@ -23,6 +23,7 @@ float4 WyspaHash(float2 p)
     return frac((p4.xxyz + p4.yzzw) * p4.zywx);
 }
 
+#ifndef WYSPA_NO_LIGHT
 // Kolor policzony w shaderze oświetlony światłami 2D (jak CommonLitFragment, bez tekstur maski i normalnych)
 half4 WyspaLight(half3 albedo, half alpha, float2 uv, half2 lightingUV)
 {
@@ -32,5 +33,6 @@ half4 WyspaLight(half3 albedo, half alpha, float2 uv, half2 lightingUV)
     InitializeInputData(uv, lightingUV, inputData);
     return CombinedShapeLightShared(surfaceData, inputData);
 }
+#endif
 
 #endif

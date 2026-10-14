@@ -541,6 +541,7 @@ namespace Wyspa.EditorTools
                 Debug.LogWarning("[Wyspa] Brak Ground/water_data.png - uruchom tools/pixel-proto/export_unity_fx.py.");
             FxMaterialAsset("Water", "Water", m => m.SetTexture("_DataTex", data));
             FxMaterialAsset("Fog", "Fog", null);
+            FxMaterialAsset("LightShafts", "LightShafts", null);
         }
 
         /// <summary>Klikalny obszar = kafelek pod obiektem (podstawa 6 px pod środkiem kafelka), jak w Island.</summary>
@@ -588,7 +589,7 @@ namespace Wyspa.EditorTools
             var glowMat = GlowMaterial();
             var uiTheme = AssetDatabase.LoadAssetAtPath<UiTheme>(ThemePath);
             Material swayCrop = LoadMat("SwayCrop"), swayCropGlow = LoadMat("SwayCropGlow"), swayTree = LoadMat("SwayTree");
-            Material waterMat = LoadMat("Water"), fogMat = LoadMat("Fog");
+            Material waterMat = LoadMat("Water"), fogMat = LoadMat("Fog"), shaftsMat = LoadMat("LightShafts");
             if (db == null)
                 Debug.LogError("[Wyspa] Nie znaleziono " + DataDir + "/CropDatabase.asset - uruchom Wyspa > 2.");
             float W = layout.width, H = layout.height;
@@ -626,6 +627,9 @@ namespace Wyspa.EditorTools
             // mgła nad morzem, gęstnieje z odległością od brzegu (sprite = mapa danych wody, rysuje tylko shader)
             var fog = MakeSprite("Fog", world, LoadSprite("Ground/water_data"), Vector3.zero, 5000);
             UseFx(fog, fogMat, true);
+            // promienie słońca / księżyca i poświata lamp (addytywnie, pod mgłą, nad obiektami)
+            var shafts = MakeSprite("LightShafts", world, LoadSprite("Ground/water_data"), Vector3.zero, 4800);
+            UseFx(shafts, shaftsMat, true);
 
             // --- obiekty stawiane na kafelkach (do Etapu 3c samoczynnie, na wolnej trawie) ---
             var objectsRoot = new GameObject("TileObjects").transform;
@@ -701,6 +705,7 @@ namespace Wyspa.EditorTools
             // --- efekty: woda, mgła, cząsteczki (Etap 3a) ---
             waterAnim.Setup(water, clock);
             fog.gameObject.AddComponent<FogController>().Setup(fog, clock);
+            shafts.gameObject.AddComponent<LightShafts>().Setup(shafts, fog, clock);
             var fxGo = new GameObject("Fx");
             var particles = fxGo.AddComponent<PixelParticles>();
             particles.Setup(glowMat);

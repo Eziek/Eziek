@@ -444,6 +444,11 @@ Obrazki referencyjne (kopie): `docs/img/`
 39. Uwagi gracza po teście: zasypywanie grządek i rozbiórka budowli, „Wyjdź z gry” (brak X w oknie bez ramki), powiększenie
     x2..x6 + Ctrl + kółko, koło nasion z podziałem dzień / noc, mgła tylko nad pasem wody, **tempo pracy** (pisanie i mysz
     przyspieszają rośliny dnia do x1.5, §4.1).
+41. Upiększanie („cozy”, prośba gracza): światło „wolumetryczne” w pikselach (`LightShafts`: snopy słońca w dzień,
+    pomarańczowe o zmierzchu, blade promienie księżyca w nocy, mocniejsze w pełnię, dithered poświata zapalonych lamp),
+    iskierki odbić na wodzie tam, gdzie pada światło (w kolorze lampy/słońca), płynny lot duszków po łuku i unoszenie
+    w kodzie zamiast skaczących klatek, ognik zbiera na jeden kurs do 3 plonów (zbiór w chwili dolotu, niesione plony
+    widać pod nim) i dopiero wtedy leci do skrzyni.
 40. Fonty CJK: Fusion Pixel 8px (JA i zh-Hans) jako zapasowe dla `WyspaPixel` (§16.2). Log z buildu pokazywał kwadraciki
     zamiast „日本語” i „简体中文” na przyciskach języków.
 
@@ -563,8 +568,8 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 **E. Automatyzacja (kamienie milowe, bez niej gra przeszkadza w pracy)**
 **Stan (Etap 6b):** ulepszenie odblokowuje rodzaj budowli i daje pierwszą sztukę za darmo; kolejne w Sklep → Budowle
 (monety x1.6 za każdą posiadaną sztukę + stały materiał). Budowle stawia się i przenosi jak lampy.
-1. **Ognik-ogrodnik** (300 monet + 5 plonów nocy): co 30 s zbiera jeden dojrzały plon z pól **5x5 wokół siebie** i niesie
-   do najbliższej skrzyni z miejscem. Kolejne: 250 monet + 5 plonów nocy. **Skrzynia na plony** (20 miejsc): 60 monet + 4 drewna.
+1. **Ognik-ogrodnik** (300 monet + 5 plonów nocy): co 30 s wylatuje na kurs: zbiera **do 3** dojrzałych plonów z pól
+   **5x5 wokół siebie** (po kolei najbliższe), niesie je do najbliższej skrzyni z miejscem i wraca. Lot płynny, po łuku. Kolejne: 250 monet + 5 plonów nocy. **Skrzynia na plony** (20 miejsc): 60 monet + 4 drewna.
 2. **Runa siewu** (dawna pamięć ziemi, 500 monet): sadzi na pustych grządkach **3x3 wokół siebie** (co 2 s). Klik w runę →
    „Nasiona”: pamięć ziemi (to samo, co rosło), wybrana roślina albo nic. Nasiono z worka, inaczej za monety. Kolejne: 150 monet + 5 kamienia.
 3. **Duszek-handlarz** (dawna skrzynia kupca, 800 monet): raz na godzinę leci do najpełniejszej skrzyni na wyspie i sprzedaje

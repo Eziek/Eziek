@@ -120,6 +120,9 @@ namespace Wyspa.World
 
         public static Vector3 PixelToWorld(float px, float py) => new Vector3((px - Half) / Ppu, (Half - py) / Ppu, 0f);
 
+        /// <summary>Odwrotność PixelToWorld: piksele obrazu wyspy (y w dół), np. dla shaderów liczących z mapy danych.</summary>
+        public static Vector2 WorldToPixel(Vector2 world) => new Vector2(world.x * Ppu + Half, Half - world.y * Ppu);
+
         /// <summary>Punkt zaczepienia sprite'a: środek kolumny px, dolna krawędź wiersza py (jak Anchor w WyspaSetup).</summary>
         public static Vector3 AnchorWorld(int px, int py) => new Vector3((px + 0.5f - Half) / Ppu, (Half - (py + 1)) / Ppu, 0f);
 

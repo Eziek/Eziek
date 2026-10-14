@@ -48,6 +48,7 @@ for cid, fn in S6.CROPS_NIGHT.items():
 
 for f in range(4):
     save(S6.merchant_spirit(f), "Automation", f"merchant_spirit_{f}")
+    save(S3.wisp_gardener(f, bob=False), "Automation", f"wisp_gardener_{f}")   # bez podskoku: płynny lot w kodzie
 
 for name, rows in S6.ICON_MAPS.items():
     save(K.from_map(rows), "UI/Icons", "icon_" + name, pivot=(0.5, 0.5), glow=False)

@@ -160,9 +160,10 @@ def blood_rose(stage):
 
 
 # ---------------- automatyka ----------------
-def wisp_gardener(f):
+def wisp_gardener(f, bob=True):
+    """bob=False: bez podskoku w klatkach (Etap 6c+: płynne unoszenie robi kod), klatki zmieniają tylko płomień."""
     s = Sprite(16, 20, 8, 19)
-    dy = (0, -1, 0, 1)[f % 4]
+    dy = (0, -1, 0, 1)[f % 4] if bob else 0
     s.blob(8, 10 + dy, 3.6, 4.2, ['wi', 'wi', 'wl'])
     for i, (x, y) in enumerate(((7, 5), (8, 4), (9, 5), (8, 3))):
         if i < 3 or f % 2: s.set(x, 4 + dy - (4 - y) + 1, 'wl')

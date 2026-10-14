@@ -127,7 +127,7 @@ CROPS_NIGHT = {'mandrake': mandrake, 'belladonna': belladonna, 'graveivy': grave
 def merchant_spirit(f):
     """Złoty duszek z sakiewką: lata do skrzyń i sprzedaje plony (Etap 6b)."""
     s = Sprite(16, 22, 8, 21)
-    dy = (0, -1, 0, 1)[f % 4]
+    dy = 0   # unoszenie robi kod (płynnie), klatki zmieniają tylko płomień
     s.blob(8, 8 + dy, 3.4, 4, ['fx', 'fl', 'fl'])
     for x, y in ((7, 3), (8, 2), (9, 3)):
         if f % 2 or y == 3: s.set(x, y + dy, 'fl')
