@@ -384,6 +384,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     bestiariusz i lore. 5a: podłoża stref w malarzu wyspy (port `sprites4.py`), dekoracje stref na 55% kafelków strefy,
     zabytki w środku strefy (krypta, posąg + kamienne schody; na bagnie namorzyn), toast „Odkryto: …”, bonus ziemi
     (cmentarz: rośliny nocy x1.5, bagno: trupi grzyb x1.5), wrony, żaby i bąble jako tło.
+32. Poprawka pomostu (gracz zabudował go lądem): woda pod deskami i przy łodzi jest wyłączona z rozbudowy, stare zapisy
+    z zasypanym pomostem dostają zwrot kosztów. **5b:** nocne zdarzenia (błędne ognik: +3 Esencji, spadająca gwiazda:
+    odłamek leży 2 min, potwór: ofiara 5 plonów nocy = dar z głębin, raz na noc), ołtarz na brzegu (500 monet + 10 kamienia:
+    potwór x3, przywołanie za 3 plony nocy), latarnia morska (2000 monet + 10 odłamków, lampa 0.3 Esencji/min:
+    mgła o 25% dalej, zdarzenia x2).
 
 ---
 
@@ -433,6 +438,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Sea/GhostMerchant.cs` | kupiec-widmo: harmonogram nocy, oferta, skup skrzyni |
 | `Scripts/Sea/Pier.cs`, `FishingNets.cs` | pomost i łowisko (ryby liczone tak jak w `Water.shader`), sieci co godzinę |
 | `Scripts/Sea/Expedition.cs` | łódź i wyprawy (postęp z aktywnej pracy, łup) |
+| `Scripts/Sea/NightEvents.cs`, `WillOWisp.cs`, `StarPickup.cs`, `MonsterEvent.cs`, `Altar.cs` | nocne zdarzenia (harmonogram, ogniki, gwiazdy, potwór), ołtarz |
 | `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |
 | `Scripts/UI/PlacementMode.cs` | tryb stawiania: duch na kafelku, okrąg zasięgu światła, licznik oświetlonych grządek, kupno lampy, przenoszenie |
@@ -565,7 +571,7 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Etap 4 (gotowy, do testu w Unity):** jakość i mutacje (dynia-upiór), pełnia (rośliny nocy x2, krwawa róża),
   worek nasion i nawóz, kupiec-widmo, pomost i łowienie, sieci, łódź i wyprawy. Grafiki roślin nocy były gotowe wcześniej.
 - **Etap 5a (gotowy, do testu w Unity):** strefy: podłoża, dekoracje, zabytki z lore, bonusy ziemi, stworzenia tła.
-- **Etap 5b:** nocne zdarzenia (błędne ogniki, spadająca gwiazda), potwór i ołtarz, latarnia morska.
+- **Etap 5b (gotowy, do testu w Unity):** nocne zdarzenia (błędne ogniki, spadająca gwiazda), potwór i ołtarz, latarnia morska.
 - **Etap 5c:** Księga rytuałów i cykl księżyca, bestiariusz, kolekcja lore.
 - **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
 

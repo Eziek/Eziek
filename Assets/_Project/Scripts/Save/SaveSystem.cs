@@ -29,6 +29,7 @@ namespace Wyspa.Save
         public List<SeedSave> seeds = new List<SeedSave>();   // v4: worek nasion (hybrydy, kupiec, wyprawy)
         public int fertilizer;                  // v4: nawóz od kupca-widma
         public string merchantNight;            // v4: noc, w której kupiec-widmo już był
+        public string monsterNight;             // v5: noc, w której potwór już się wynurzył
     }
 
     [Serializable]
@@ -98,6 +99,7 @@ namespace Wyspa.Save
                 seeds = game.Seeds.Snapshot(),
                 fertilizer = game.Fertilizer,
                 merchantNight = Sea.GhostMerchant.Instance != null ? Sea.GhostMerchant.Instance.VisitedNight : "",
+                monsterNight = Sea.NightEvents.Instance != null ? Sea.NightEvents.Instance.MonsterNight : "",
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
@@ -156,6 +158,8 @@ namespace Wyspa.Save
             game.Fertilizer = data.fertilizer;
             if (Sea.GhostMerchant.Instance != null)
                 Sea.GhostMerchant.Instance.VisitedNight = data.merchantNight;
+            if (Sea.NightEvents.Instance != null)
+                Sea.NightEvents.Instance.MonsterNight = data.monsterNight;
 
             var savedAt = new DateTime(data.savedAtUtcTicks, DateTimeKind.Utc).ToLocalTime();
             float offlineNight = game.Clock.NightSecondsBetween(savedAt, DateTime.Now);

@@ -111,3 +111,7 @@ deco.rune_tablet,Tablica runiczna,Rune tablet,Runentafel,ルーン石板,符文�
 deco.vine_pillar,Filar w pnączach,Vine-covered pillar,Rankensäule,蔦の柱,藤蔓石柱,dekoracja strefy
 deco.broken_pillar,Złamany filar,Broken pillar,Gebrochene Säule,折れた柱,断柱,dekoracja strefy
 deco.ruined_arch,Ruina łuku,Ruined arch,Verfallener Bogen,崩れたアーチ,残破的拱门,dekoracja strefy
+term.will_o_wisp,Błędny ognik,Will-o'-the-wisp,Irrlicht,鬼火,鬼火,nocne zdarzenie
+term.falling_star,Spadająca gwiazda,Falling star,Sternschnuppe,流れ星,流星,
+term.monster,Potwór z głębin,Thing from the Deep,Wesen aus der Tiefe,深淵の怪物,深渊怪物,"nie postać, zdarzenie"
+lamp.lighthouse,Latarnia morska,Lighthouse,Leuchtturm,灯台,灯塔,jak bld.lighthouse (nazwa lampy)

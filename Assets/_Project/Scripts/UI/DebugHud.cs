@@ -169,6 +169,15 @@ namespace Wyspa.UI
             var merchant = Wyspa.Sea.GhostMerchant.Instance;
             if (merchant != null && !merchant.Present && GUILayout.Button("Przywołaj kupca-widmo"))
                 merchant.Arrive();
+            var events = Wyspa.Sea.NightEvents.Instance;
+            if (events != null)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Ognik")) events.SpawnWisp();
+                if (GUILayout.Button("Gwiazda")) events.SpawnStar();
+                if (GUILayout.Button("Potwór")) events.SpawnMonster();
+                GUILayout.EndHorizontal();
+            }
             GUILayout.Label($"Worek: nawóz {game.Fertilizer}, hybrydy {game.Seeds.Count("hybridpumpkin")}");
 
             var island = game.Island;

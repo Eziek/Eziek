@@ -13,7 +13,7 @@ namespace Wyspa.World
 {
     [Serializable] public class TileSave { public int c, r; public TileKind kind; }
     [Serializable] public class DecoSave { public int c, r; public DecoKind kind; }
-    [Serializable] public class ObjectSave { public string id; public int c, r; public string lamp; }
+    [Serializable] public class ObjectSave { public string id; public int c, r; public string lamp; public string building; }
 
     [Serializable]
     public class IslandSave
@@ -267,6 +267,8 @@ namespace Wyspa.World
                 var tile = new TilePos(o.c, o.r);
                 if (def != null && IsFree(tile))
                     SpawnLamp(def, tile, o.id);
+                else if (o.building == "altar" && IsFree(tile))
+                    SpawnAltar(tile, o.id);
             }
             PlacePending();   // obiekty chciane wcześniej (np. skrzynia po wczytaniu ulepszeń)
             Changed?.Invoke();
@@ -295,7 +297,7 @@ namespace Wyspa.World
                     s.decorations.Add(new DecoSave { c = kv.Key.c, r = kv.Key.r, kind = kv.Value.Kind });
             foreach (var o in AllObjects())
                 if (o.Placed && o.NeedsTile)
-                    s.objects.Add(new ObjectSave { id = o.Id, c = o.Tile.c, r = o.Tile.r, lamp = o.LampId });
+                    s.objects.Add(new ObjectSave { id = o.Id, c = o.Tile.c, r = o.Tile.r, lamp = o.LampId, building = o.BuildingId });
             return s;
         }
 
@@ -866,6 +868,52 @@ namespace Wyspa.World
             nets = sr.gameObject;
             Changed?.Invoke();
             return true;
+        }
+
+        // ================================================================ budowle na brzegu (Etap 5b)
+
+        /// <summary>Wolny kafelek lądu przy wodzie (ołtarz, latarnia morska stoją na brzegu).</summary>
+        public bool IsShoreFree(TilePos p)
+        {
+            if (!IsFree(p))
+                return false;
+            foreach (var n in IslandMap.Neighbours(p))
+                if (!map.Owns(n))
+                    return true;
+            return false;
+        }
+
+        public bool HasBuilding(string id)
+        {
+            foreach (var o in spawned)
+                if (o != null && (o.BuildingId == id || o.LampId == id))
+                    return true;
+            return false;
+        }
+
+        public TileObject SpawnAltar(TilePos tile, string id = null)
+        {
+            if (!IsFree(tile) || HasBuilding("altar"))
+                return null;
+            var sr = NewSprite("Altar", decoRoot, Vector3.zero, 0);
+            sr.sprite = art != null ? art.altar : null;
+            if (art != null && art.altarGlow != null)
+            {
+                var g = NewSprite("Glow", sr.transform, Vector3.zero, 1);
+                g.sprite = art.altarGlow;
+                if (art.glow != null)
+                    g.sharedMaterial = art.glow;
+            }
+            sr.gameObject.AddComponent<Sea.Altar>();
+            AddTileCollider(sr.gameObject);
+            var obj = sr.gameObject.AddComponent<TileObject>();
+            obj.Setup(string.IsNullOrEmpty(id) ? "altar" : id, "bld.altar");
+            obj.BuildingId = "altar";
+            obj.Wanted = true;
+            spawned.Add(obj);
+            PutOnTile(obj, tile);
+            Changed?.Invoke();
+            return obj;
         }
 
         // ================================================================ lampy (sklep, tryb stawiania)

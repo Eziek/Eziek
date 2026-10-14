@@ -69,6 +69,10 @@ namespace Wyspa.World
         public Sprite netBuoy;
         public Sprite boat;
         public Sprite boatGlow;
+        public Sprite altar;
+        public Sprite altarGlow;
+        [Tooltip("Latarnia morska (Etap 5b): lampa spoza sklepu lamp, stawiana z Morza.")]
+        public LampDefinition lighthouse;
 
         [Header("Tryb rozbudowy")]
         public Sprite frameBuy;
@@ -88,7 +92,7 @@ namespace Wyspa.World
             foreach (var l in lamps)
                 if (l != null && l.id == id)
                     return l;
-            return null;
+            return lighthouse != null && lighthouse.id == id ? lighthouse : null;
         }
 
         public DecoArt Deco(DecoKind kind)

@@ -407,6 +407,26 @@ namespace Wyspa.UI
                 blockedKey = i => i.HasBoat ? "ui.shop.built" : (!i.HasPier ? "ui.shop.needs_pier" : null),
                 buy = i => BuyDirect(i, Cost(600, 15), i.BuildBoat, "bld.boat"),
             });
+            seaItems.Add(new SeaItem
+            {
+                nameKey = "bld.altar", descKey = "ui.shop.altar.desc", sprite = art != null ? art.altar : null,
+                cost = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, 500), new CurrencyAmount(CurrencyType.Stone, 10) },
+                blockedKey = i => i.HasBuilding("altar") ? "ui.shop.built" : null,
+                buy = i => StartShore(i, "bld.altar", i.Art != null ? i.Art.altar : null,
+                    new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, 500), new CurrencyAmount(CurrencyType.Stone, 10) },
+                    t => i.SpawnAltar(t) != null),
+            });
+            var lighthouse = art != null ? art.lighthouse : null;
+            if (lighthouse != null)
+                seaItems.Add(new SeaItem
+                {
+                    nameKey = "bld.lighthouse", descKey = "ui.shop.lighthouse.desc", sprite = lighthouse.sprite,
+                    cost = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, lighthouse.price), new CurrencyAmount(CurrencyType.StarShard, 10) },
+                    blockedKey = i => i.HasBuilding("lighthouse") ? "ui.shop.built" : null,
+                    buy = i => StartShore(i, "bld.lighthouse", lighthouse.sprite,
+                        new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, lighthouse.price), new CurrencyAmount(CurrencyType.StarShard, 10) },
+                        t => i.SpawnLamp(lighthouse, t) != null, lighthouse),
+                });
             foreach (var it in seaItems)
             {
                 var row = Ui.Place(Ui.Rect("Sea_" + it.nameKey, content), Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 64, 26));
@@ -449,6 +469,27 @@ namespace Wyspa.UI
                     if (!island.BuildPier(t))
                         return false;
                     GameEvents.RaiseToast("ui.toast.placed", Loc.Get("bld.pier"));
+                    return true;
+                },
+            });
+        }
+
+        /// <summary>Budowla na brzegu (ołtarz, latarnia): tryb stawiania na wolnym kafelku lądu przy wodzie.</summary>
+        void StartShore(Island island, string nameKey, Sprite sprite, List<CurrencyAmount> cost, System.Func<TilePos, bool> build,
+                        LampDefinition light = null)
+        {
+            if (UiRoot.Instance == null)
+                return;
+            UiRoot.Instance.StartPlacement(new PlacementMode.Request
+            {
+                nameKey = nameKey, sprite = sprite, cost = cost, light = light,
+                valid = island.IsShoreFree,
+                ghostAt = t => (Island.TileAnchor(t, 13, out _), false),
+                confirm = t =>
+                {
+                    if (!build(t))
+                        return false;
+                    GameEvents.RaiseToast("ui.toast.placed", Loc.Get(nameKey));
                     return true;
                 },
             });

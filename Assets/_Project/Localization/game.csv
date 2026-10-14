@@ -50,3 +50,9 @@ lore.crypt,"Na drzwiach krypty ktoś wydrapał: ""Nie gaś latarni"".","Someone 
 lore.statue,Posąg patrzy w mgłę. Jego oczy są wilgotne od soli.,The statue gazes into the fog. Its eyes are damp with salt.,Die Statue blickt in den Nebel. Ihre Augen sind feucht vom Salz.,石像は霧を見つめている。その目は塩で湿っている。,雕像凝视着迷雾，眼中带着盐的湿意。,zabytek
 lore.stairs,"Schody prowadzą w dół, pod wodę. Ktoś nimi kiedyś wracał.","The stairs lead down, under the water. Someone once came back up them.","Die Treppe führt hinab, unter das Wasser. Einst kam jemand sie herauf.",石段は水の下へと続く。かつて誰かがそこから戻ってきた。,石阶通向水下。曾有人从那里走回来。,zabytek
 toast.pier.refund,"Ląd zasypał pomost: rozebrany, koszt zwrócony","The land buried the pier: dismantled, cost refunded","Das Land hat den Steg verschüttet: abgebaut, Kosten erstattet",陸が桟橋を埋めた：解体し、費用を返却,陆地掩埋了栈桥：已拆除，费用已退还,zapis sprzed poprawki
+toast.wisp.caught,Błędny ognik: +{0} Esencji,Will-o'-the-wisp: +{0} Essence,Irrlicht: +{0} Essenz,鬼火：エッセンス +{0},鬼火：精华 +{0},
+toast.star.fell,Gwiazda spadła na wyspę!,A star fell on the island!,Ein Stern ist auf die Insel gefallen!,星が島に落ちた！,一颗星星落在了岛上！,
+toast.star.found,Odłamek gwiazdy!,A star shard!,Ein Sternensplitter!,星のかけら！,星之碎片！,
+toast.monster.rises,Coś ogromnego wynurza się z głębin...,Something enormous rises from the deep...,Etwas Gewaltiges steigt aus der Tiefe ...,深みから巨大な何かが現れる…,有什么巨大的东西从深渊中浮起……,
+toast.monster.gift,Potwór przyjął ofiarę: dar z głębin,The Thing accepted the offering: a gift of the deep,Das Wesen nahm das Opfer an: eine Gabe der Tiefe,怪物は捧げ物を受け取った：深淵の贈り物,怪物接受了祭品：深渊之礼,
+lore.monster,Oko wielkości łodzi patrzy na wyspę. Czeka na coś.,An eye the size of a boat watches the island. It is waiting.,Ein Auge so groß wie ein Boot beobachtet die Insel. Es wartet.,小舟ほどの目が島を見つめている。何かを待っている。,一只船那么大的眼睛注视着岛屿。它在等待。,potwór

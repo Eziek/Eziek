@@ -30,6 +30,8 @@ namespace Wyspa.World
 
         /// <summary>Lampa kupiona w sklepie: id definicji (do odtworzenia z zapisu). Puste dla obiektów ze sceny.</summary>
         public string LampId { get; set; }
+        /// <summary>Budowla kupiona w sklepie (np. ołtarz) - do odtworzenia z zapisu.</summary>
+        public string BuildingId { get; set; }
         public bool Wanted { get; set; }
         public bool Placed { get; set; }
         public TilePos Tile { get; set; }

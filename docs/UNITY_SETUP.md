@@ -191,6 +191,15 @@ Najszybciej: F1 → **+10 kafelków** kilka razy (albo cheat monet i rozbudowa w
 4. **Bonusy:** grządka przekopana na cmentarzu - rośliny nocy rosną 1.5x szybciej; na bagnie trupi grzyb 1.5x (dymek nad grządką).
 5. **Życie stref:** wrona na cmentarzu, żaba i bąble na bagnie (skokowe klatki, losowe przerwy).
 
+## 4h. Etap 5b: nocne zdarzenia, potwór, latarnia (test)
+Po pobraniu zmian: **Wyspa → 3**, potem Play. W nocy (F1 → 23:30) zdarzenia przychodzą same; do testu F1: **Ognik / Gwiazda / Potwór**.
+1. **Błędny ognik** krąży nad wodą przy brzegu przez minutę: klik = +3 Esencji.
+2. **Spadająca gwiazda** przelatuje ukosem i zostawia na lądzie odłamek (świeci, miga przed zniknięciem po 2 min): klik = +1 odłamek.
+3. **Potwór**: macki i oko wychodzą z wody pod wyspą. Klik: ofiara 5 plonów nocy = dar z głębin. Po 3 min się zanurza.
+4. **Ołtarz** (Sklep → Morze, 500 monet + 10 kamienia; na lądzie przy wodzie): potwór częściej, w nocy przywołanie za 3 plony nocy.
+5. **Latarnia morska** (2000 monet + 10 odłamków; na brzegu): świeci jak lampa, mgła odsuwa się, zdarzenia dwa razy częściej.
+6. **Pomost:** woda pod deskami i przy łodzi nie ma już ramek rozbudowy. Zapis z zasypanym pomostem: toast o zwrocie kosztów.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

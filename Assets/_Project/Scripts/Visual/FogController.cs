@@ -38,7 +38,8 @@ namespace Wyspa.Visual
             if (timer > 0f)
                 return;
             timer = 0.5f;
-            float target = Target();
+            // latarnia morska rozświetla mgłę (GDD §11.3 C): odsuwa ją o ćwierć
+            float target = Target() * (Sea.NightEvents.LighthouseLit ? 0.75f : 1f);
             density = density < 0f ? target : Mathf.MoveTowards(density, target, speed * 0.5f);
             Apply();
         }

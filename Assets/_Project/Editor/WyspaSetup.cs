@@ -206,6 +206,22 @@ namespace Wyspa.EditorTools
                 }
             }
 
+            // latarnia morska (Etap 5b): lampa spoza układu prototypu, stawiana z Morza
+            var lh = LoadOrCreate<LampDefinition>($"{DataDir}/Lamps/Lamp_lighthouse.asset");
+            lh.id = "lighthouse";
+            lh.displayName = "Latarnia morska";
+            lh.price = 2000;
+            lh.essencePerMinute = 0.3f;
+            lh.growthMultiplier = 1f;
+            lh.flicker = false;
+            lh.radius = 5f;
+            lh.color = new Color(0.95f, 0.88f, 0.68f);
+            lh.intensity = 1.1f;
+            lh.sprite = LoadSprite("Sea/lighthouse");
+            lh.glowSprite = LoadSprite("Sea/lighthouse_glow");
+            lh.lightOffset = new Vector2(0f, 45.5f / Ppu);   // środek okna latarni (glow) nad podstawą
+            EditorUtility.SetDirty(lh);
+
             CreateUpgrades();
             CreateUiTheme();
             GlowMaterial();
@@ -353,6 +369,9 @@ namespace Wyspa.EditorTools
             art.netBuoy = LoadSprite("Sea/net_buoy");
             art.boat = LoadSprite("Sea/boat");
             art.boatGlow = LoadSprite("Sea/boat_glow");
+            art.altar = LoadSprite("Sea/altar");
+            art.altarGlow = LoadSprite("Sea/altar_glow");
+            art.lighthouse = AssetDatabase.LoadAssetAtPath<LampDefinition>($"{DataDir}/Lamps/Lamp_lighthouse.asset");
             art.lamps = new List<LampDefinition>();
             foreach (var id in new[] { "lantern", "skull", "wisp", "mushrooms" })
             {
@@ -597,6 +616,21 @@ namespace Wyspa.EditorTools
             AsTileObject(rune, "rune", "bld.soil_memory");
 
             // lampy (także startową latarnię) stawia Island w trakcie gry: IslandArt.lamps, sklep, tryb stawiania
+
+            // nocne zdarzenia (Etap 5b): ogniki, spadające gwiazdy, potwór
+            Sprite E(string n) => LoadSprite("Events/" + n);
+            Sprite Eg(string n) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Events/{n}_glow.png");
+            var eventsGo = new GameObject("NightEvents");
+            eventsGo.AddComponent<Wyspa.Sea.NightEvents>().Setup(
+                new[] { LoadSprite("Automation/wisp_gardener_0"), LoadSprite("Automation/wisp_gardener_1"),
+                        LoadSprite("Automation/wisp_gardener_2"), LoadSprite("Automation/wisp_gardener_3") },
+                new[] { LoadSprite("Automation/wisp_gardener_0_glow"), LoadSprite("Automation/wisp_gardener_1_glow"),
+                        LoadSprite("Automation/wisp_gardener_2_glow"), LoadSprite("Automation/wisp_gardener_3_glow") },
+                new[] { E("falling_star_0"), E("falling_star_1"), E("falling_star_2") },
+                new[] { Eg("falling_star_0"), Eg("falling_star_1"), Eg("falling_star_2") },
+                E("star_shard"), Eg("star_shard"),
+                new[] { E("tentacle_0"), E("tentacle_1"), E("tentacle_2") },
+                new[] { E("monster_eye_0"), E("monster_eye_1"), E("monster_eye_2") }, Eg("monster_eye_2"), glowMat);
 
             // kupiec-widmo (Etap 4b): łódź pod wyspą raz na noc; obiekt zawsze aktywny (harmonogram), sprite'y chowa sam
             var merchantGo = new GameObject("GhostMerchant");
