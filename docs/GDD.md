@@ -450,6 +450,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     przy zbiorze owoce spadają z korony (zamiast podskakującego całego drzewa), nowa faza = sprężyste pyknięcie, owocujące
     drzewa iskrzą, ścinanie: trzy uderzenia, liście, przyspieszające przewracanie. **Ptaki** (`AmbientBirds`): w dzień wrona
     albo ptaszek przylatuje co 25-70 s, siada na drzewie lub wolnym kafelku, dziobie, podskakuje, odlatuje; kursor je płoszy.
+45. Po teście: **skrzynia na plony ma dokładnie 16 px szerokości** razem z obrysem (wcześniej 20 px na kafelku 16 px),
+    więc sąsiednie skrzynie stykają się bokami zamiast na siebie nachodzić. Trzy stany zapełnienia bez zmian.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

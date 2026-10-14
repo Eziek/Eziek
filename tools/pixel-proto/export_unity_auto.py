@@ -54,6 +54,9 @@ for kind in ('crow', 'finch'):
     for pose in S6.BIRD_POSES:
         save(S6.bird(kind, pose), "Critters", f"bird_{kind}_{pose}", glow=False)
 
+for fill in range(3):   # skrzynia na plony 16 px (sąsiednie nie nachodzą na siebie)
+    save(S3.harvest_crate(fill), "Automation", f"harvest_crate_{fill}")
+
 for name, rows in S6.ICON_MAPS.items():
     save(K.from_map(rows), "UI/Icons", "icon_" + name, pivot=(0.5, 0.5), glow=False)
 

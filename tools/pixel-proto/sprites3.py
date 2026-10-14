@@ -176,20 +176,21 @@ def wisp_gardener(f, bob=True):
 
 
 def harvest_crate(fill):
-    """fill: 0 pusta, 1 do połowy, 2 pełna."""
-    s = Sprite(20, 18, 10, 16)
+    """fill: 0 pusta, 1 do połowy, 2 pełna. Dokładnie 16 px szerokości z obrysem (kafelek), więc sąsiednie skrzynie
+    stykają się bokami zamiast na siebie nachodzić."""
+    s = Sprite(16, 18, 8, 16)
     if fill >= 1:
-        s.blob(6.5, 6.5, 2.5, 2.5, ORANGE); s.blob(12, 6.5, 2.5, 2.2, ['p1', 'b3', 'fo'])
+        s.blob(5, 6.5, 2.4, 2.4, ORANGE); s.blob(10.5, 6.5, 2.3, 2.1, ['p1', 'b3', 'fo'])
     if fill >= 2:
-        s.blob(9.5, 4.5, 2.5, 2.5, ORANGE); s.blob(15, 5, 2.4, 2.2, ['g1', 'g2', 'g3']); s.blob(4, 5, 2, 2, ['p0', 'p1', 'p2'])
-    s.rect(1, 6, 18, 7, 'e0')
+        s.blob(8, 4.5, 2.4, 2.4, ORANGE); s.blob(12.2, 4.8, 1.9, 2.0, ['g1', 'g2', 'g3']); s.blob(3.6, 5, 1.8, 1.9, ['p0', 'p1', 'p2'])
+    s.rect(1, 6, 14, 7, 'e0')
     for y in range(8, 16):
-        for x in range(1, 19):
+        for x in range(1, 15):
             k = 'e2' if y in (8, 12) else ('e1' if y in (11, 15) else 'e3')
-            if x in (1, 18): k = 'e1'
+            if x in (1, 14): k = 'e1'
             s.set(x, y, k)
     for y in range(8, 16):
-        s.set(5, y, 'e1'); s.set(14, y, 'e1')
+        s.set(5, y, 'e1'); s.set(10, y, 'e1')
     return s.outline()
 
 

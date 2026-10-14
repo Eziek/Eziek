@@ -304,6 +304,8 @@ Po pobraniu: **Wyspa → 2** (materiał `SwayTreeGlow`, ikony owoców i ptaki w 
 5. Ścinanie: trzy uderzenia z liśćmi, potem przewracanie przyspiesza, na końcu deszcz liści.
 6. Ptaki: w dzień co 25-70 s przylatuje wrona albo ptaszek, siada na drzewie albo na trawie, dziobie, na ziemi podskakuje,
    po chwili odlatuje. Najedź kursorem blisko: zrywa się do lotu. W nocy ptaków nie ma.
+7. Skrzynie na plony: postaw dwie obok siebie. Stykają się bokami, nie nachodzą na siebie (sprite ma teraz 16 px).
+   Jeśli skrzynia stoi krzywo albo jest rozmyta: **Wyspa → Narzędzia → Reimportuj sprite'y**.
 
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
