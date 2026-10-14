@@ -986,6 +986,11 @@
       "y": 0.5
     },
     {
+      "name": "intro_arrow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
       "name": "iron_fence",
       "x": 0.52778,
       "y": 0.07143
@@ -1139,6 +1144,16 @@
       "name": "net_buoy",
       "x": 0.53125,
       "y": 0.14286
+    },
+    {
+      "name": "notice_board",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
+      "name": "notice_board_empty",
+      "x": 0.53125,
+      "y": 0.04545
     },
     {
       "name": "pier",

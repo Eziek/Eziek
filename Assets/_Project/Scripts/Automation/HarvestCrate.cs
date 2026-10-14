@@ -103,6 +103,22 @@ namespace Wyspa.Automation
             return true;
         }
 
+        const string FruitPrefix = "fruit:";
+
+        /// <summary>Owoc z drzewa (ognik strąca i zbiera z ziemi): zajmuje miejsce jak plon, sprzedaje się po cenie owocu.</summary>
+        public bool TryAddFruit(TreeSpecies species)
+        {
+            if (species == null || IsFull)
+                return false;
+            string key = Key(FruitPrefix + species.id, 1);
+            contents.TryGetValue(key, out int n);
+            contents[key] = n + 1;
+            count++;
+            RefreshVisual();
+            Changed?.Invoke();
+            return true;
+        }
+
         /// <summary>Sprzedaje całą zawartość. multiplier = 1 (ręcznie) albo 0.9 (skrzynia kupca). Zwraca monety.</summary>
         public int SellAll(Wallet wallet, CropDatabase crops, float multiplier)
         {
@@ -112,6 +128,13 @@ namespace Wyspa.Automation
             foreach (var kv in contents)
             {
                 Split(kv.Key, out string id, out int quality);
+                if (id.StartsWith(FruitPrefix))
+                {
+                    var tree = TreeSpecies.Find(id.Substring(FruitPrefix.Length));
+                    if (tree != null)
+                        coins += Mathf.RoundToInt(tree.fruitPrice * kv.Value * multiplier);
+                    continue;
+                }
                 var def = crops.Find(id);
                 if (def == null)
                     continue;
@@ -130,6 +153,8 @@ namespace Wyspa.Automation
         public void FillContext(ContextInfo info)
         {
             info.lines.Add(Loc.Get("crate.contents", count, capacity));
+            if (MerchantSpirit.Of(this) != null)
+                info.lines.Add(Loc.Get("ui.crate.merchant"));
             info.Button(Loc.Get("ui.crate.sell"), SellNow, count > 0);
         }
 

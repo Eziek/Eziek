@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 7;   // v7: drzewa owocowe w obiektach wyspy
+        public int version = 8;   // v8: krok wprowadzenia (tablica z karteczkami)
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
@@ -33,6 +33,7 @@ namespace Wyspa.Save
         public Lore.ChronicleSave chronicle;    // v5: cykl księżyca, punkty, rytuały, bestiariusz
         public List<string> unlockedSeeds = new List<string>();      // v6: nasiona odblokowane w sklepie
         public List<string> automationGranted = new List<string>();  // v6: darmowa pierwsza sztuka budowli już była
+        public int intro;                       // v8: krok wprowadzenia (starsze zapisy: wprowadzenie skończone)
     }
 
     [Serializable]
@@ -122,6 +123,7 @@ namespace Wyspa.Save
                 merchantNight = Sea.GhostMerchant.Instance != null ? Sea.GhostMerchant.Instance.VisitedNight : "",
                 monsterNight = Sea.NightEvents.Instance != null ? Sea.NightEvents.Instance.MonsterNight : "",
                 chronicle = Lore.Chronicle.Instance != null ? Lore.Chronicle.Instance.Snapshot() : null,
+                intro = UI.IntroNotes.Instance != null ? UI.IntroNotes.Instance.Step : UI.IntroNotes.Done,
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
@@ -187,6 +189,8 @@ namespace Wyspa.Save
                 Sea.NightEvents.Instance.MonsterNight = data.monsterNight;
             if (Lore.Chronicle.Instance != null)
                 Lore.Chronicle.Instance.Restore(data.chronicle);
+            if (UI.IntroNotes.Instance != null)
+                UI.IntroNotes.Instance.Step = data.version >= 8 ? Mathf.Clamp(data.intro, 0, UI.IntroNotes.Done) : UI.IntroNotes.Done;
 
             var savedAt = new DateTime(data.savedAtUtcTicks, DateTimeKind.Utc).ToLocalTime();
             float offlineNight = game.Clock.NightSecondsBetween(savedAt, DateTime.Now);

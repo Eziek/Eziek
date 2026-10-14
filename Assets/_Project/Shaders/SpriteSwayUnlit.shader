@@ -7,6 +7,7 @@ Shader "Wyspa/SpriteSwayUnlit"
         _SwayAmount("Sway amount (px at top)", Float) = 1
         _SwaySpeed("Sway speed (cycles per second)", Float) = 0.42
         _SwayPhase("Sway phase (set by SpriteFx)", Float) = 0
+        [HideInInspector] _SwayX("World X in px (set by SpriteFx)", Float) = 0
         _OutlineColor("Outline (set by SpriteFx)", Color) = (0,0,0,0)
         [MaterialToggle] _ZWrite("ZWrite", Float) = 0
 

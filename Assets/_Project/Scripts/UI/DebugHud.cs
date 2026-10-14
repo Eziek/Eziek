@@ -111,8 +111,8 @@ namespace Wyspa.UI
                 if (GUILayout.Button("Odblokuj wszystkie nasiona"))
                     game.DebugUnlockAll();
                 GUILayout.Label($"Ogniki: {WispGardener.All.Count}, duszki: {MerchantSpirit.All.Count}, runy: {SeedRune.All.Count}");
-                if (ups.Has(UpgradeIds.MerchantChest) && MerchantSpirit.All.Count > 0)
-                    GUILayout.Label($"Duszek: sprzedaż za {MerchantSpirit.All[0].SecondsToNext(ups.Value(UpgradeIds.MerchantChest, 3600f)) / 60f:0} min");
+                if (MerchantSpirit.All.Count > 0)
+                    GUILayout.Label($"Duszki-handlarze: {MerchantSpirit.All.Count} (sprzedają pełne skrzynie)");
             }
             else
                 GUILayout.Label("(brak automatyki w scenie: Wyspa > 3)");

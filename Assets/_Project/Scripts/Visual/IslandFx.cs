@@ -241,8 +241,12 @@ namespace Wyspa.Visual
         class Mote { public SpriteRenderer sr; public Vector2 pos; public float speed, phase, age, life; }
         readonly List<Mote> motes = new List<Mote>();
         float gustTimer = 3f;
-        float gustTime, gustLength;   // trwający podmuch (kołysanie roślin i drzew przez _WyspaWind)
-        static readonly int WindId = Shader.PropertyToID("_WyspaWind");
+        // trwający podmuch: czoło przesuwa się nad wyspą (piksele świata), rośliny pochylają się, gdy do nich dotrze
+        float gustFront, gustEnd, gustPower;
+        bool gusting;
+        const float GustSpeed = 55f;   // px/s, jak smugi wiatru
+        static readonly int WindFrontId = Shader.PropertyToID("_WyspaWindFront");
+        static readonly int WindPowerId = Shader.PropertyToID("_WyspaWindPower");
         Sprite streakSprite, moteSprite;
         static readonly Color DayMote = new Color(1f, 0.9f, 0.6f, 0.8f);
         static readonly Color NightMote = new Color(0.45f, 1f, 0.9f, 0.7f);
@@ -272,7 +276,8 @@ namespace Wyspa.Visual
         void UpdateWind(bool night)
         {
             float dt = Time.unscaledDeltaTime;
-            gustTimer -= dt;
+            if (!gusting)
+                gustTimer -= dt;   // nowy podmuch dopiero po poprzednim (inaczej rośliny przeskoczyłyby w pół drgania)
             if (gustTimer <= 0f)
             {
                 gustTimer = Random.Range(3f, 8f);
@@ -301,18 +306,20 @@ namespace Wyspa.Visual
                     s.phase = Random.value * 6.28f;
                     s.sr.color = night ? new Color(0.6f, 0.75f, 0.9f, 0f) : new Color(1f, 1f, 0.95f, 0f);
                     s.sr.enabled = true;
-                    gustLength = Mathf.Max(gustLength, s.life);
                 }
-                gustTime = 0f;
+                // czoło podmuchu startuje za lewym brzegiem; koniec, gdy ostatnie rośliny przestaną się bujać (ok. 4 szerokości fali)
+                gustFront = (area.xMin - 1.5f) * Ppu;
+                gustEnd = (area.xMax + 1f) * Ppu + 160f;
+                gustPower = Random.Range(0.6f, 1f);
+                gusting = true;
             }
-            // podmuch: rośliny i drzewa pochylają się z wiatrem (płynnie narasta i opada)
-            if (gustLength > 0f)
+            if (gusting)
             {
-                gustTime += dt;
-                float u = gustTime / gustLength;
-                Shader.SetGlobalFloat(WindId, u < 1f ? Mathf.Sin(u * Mathf.PI) * 0.8f : 0f);
-                if (u >= 1f)
-                    gustLength = 0f;
+                gustFront += GustSpeed * dt;
+                if (gustFront > gustEnd)
+                    gusting = false;
+                Shader.SetGlobalFloat(WindFrontId, gustFront);
+                Shader.SetGlobalFloat(WindPowerId, gusting ? gustPower : 0f);
             }
             foreach (var s in streaks)
             {

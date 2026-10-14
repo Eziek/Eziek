@@ -108,8 +108,10 @@ namespace Wyspa.World
     /// <summary>Ceny (GDD §13.2): kafelek = monety + Esencja, krzywa kwadratowa; przekopanie na grządkę tanio.</summary>
     public static class IslandEconomy
     {
-        public static int TileCoins(int n) => (int)Math.Round(10 + 4 * n + 0.06 * n * n);
-        public static int TileEssence(int n) => 3 + n / 8;
+        // Etap 6d (balans, tempo „szybkie”, tools/balance/sim.py): 25 kafelków po ok. 3 dniach pracy, 100 po ok. 2 tygodniach,
+        // 150 po ok. miesiącu (8 h pracy dziennie)
+        public static int TileCoins(int n) => (int)Math.Round(10 + 8 * n + 0.5 * n * n);
+        public static int TileEssence(int n) => 3 + n / 4;
 
         /// <summary>Przekopanie kafelka na grządkę: 10 monet, potem +5 za każdą kolejną ponad dwie startowe.</summary>
         public static int DigCoins(int soilTiles) => 10 + 5 * Math.Max(0, soilTiles - 2);

@@ -76,7 +76,9 @@ namespace Wyspa.UI
             yield return new WaitForSecondsRealtime(3f);
             while (PlayerPrefs.GetInt("hintRing", 0) == 0)
             {
-                GameEvents.RaiseToast("toast.hint.ring");
+                // w trakcie wprowadzenia menu PPM opisuje karteczka (krok z lampą)
+                if (IntroNotes.Instance == null || !IntroNotes.Instance.Active)
+                    GameEvents.RaiseToast("toast.hint.ring");
                 yield return new WaitForSecondsRealtime(180f);
             }
         }
@@ -170,6 +172,7 @@ namespace Wyspa.UI
 
             Tooltip = TooltipView.Create(canvasRect);
             Hud = HudView.Create(canvasRect);
+            IntroNotes.Create(canvasRect, Hud);
             Expansion = ExpansionMode.Create(canvasRect, Tooltip);
             Toasts = ToastView.Create(canvasRect);
             Wheel = SeedWheel.Create(canvasRect, Tooltip);

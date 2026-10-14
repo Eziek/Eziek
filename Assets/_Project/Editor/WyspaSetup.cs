@@ -60,17 +60,17 @@ namespace Wyspa.EditorTools
             new CropSpec { id = "wheat", name = "Zboże", sprite = "crop_wheat", kind = CropKind.Day, seconds = 900, seed = 8, sell = 18 },
             new CropSpec { id = "pumpkin", name = "Dynia", sprite = "crop_pumpkin", kind = CropKind.Day, seconds = 1500, seed = 15, sell = 40 },
             // Etap 6b: do odblokowania w Sklep → Nasiona (unlock = monety, jednorazowo)
-            new CropSpec { id = "garlic", name = "Czosnek", sprite = "crop_garlic", kind = CropKind.Day, seconds = 720, seed = 6, sell = 15, unlock = 80 },
-            new CropSpec { id = "poppy", name = "Mak", sprite = "crop_poppy", kind = CropKind.Day, seconds = 1200, seed = 12, sell = 30, unlock = 200 },
-            new CropSpec { id = "wormwood", name = "Piołun", sprite = "crop_wormwood", kind = CropKind.Day, seconds = 2400, seed = 25, sell = 70, unlock = 450 },
+            new CropSpec { id = "garlic", name = "Czosnek", sprite = "crop_garlic", kind = CropKind.Day, seconds = 720, seed = 6, sell = 15, unlock = 100 },
+            new CropSpec { id = "poppy", name = "Mak", sprite = "crop_poppy", kind = CropKind.Day, seconds = 1200, seed = 12, sell = 30, unlock = 260 },
+            new CropSpec { id = "wormwood", name = "Piołun", sprite = "crop_wormwood", kind = CropKind.Day, seconds = 2400, seed = 25, sell = 70, unlock = 600 },
             // rośliny nocy: czas = sekundy ciemności (rosną też offline)
             new CropSpec { id = "corpseshroom", name = "Trupi grzyb", sprite = "crop_corpseshroom", kind = CropKind.Night, seconds = 3 * 3600, seed = 15, sell = 45 },
             new CropSpec { id = "moonflower", name = "Księżycowy kwiat", sprite = "crop_moonflower", kind = CropKind.Night, seconds = 4 * 3600, seed = 20, sell = 60 },
             new CropSpec { id = "ghostpumpkin", name = "Upiorna dynia", sprite = "crop_ghostpumpkin", kind = CropKind.Night, seconds = 6 * 3600, seed = 30, sell = 90 },
             new CropSpec { id = "bloodrose", name = "Krwawa róża", sprite = "crop_bloodrose", kind = CropKind.Night, seconds = 8 * 3600, seed = 50, sell = 200, fullMoon = true },
-            new CropSpec { id = "belladonna", name = "Wilcza jagoda", sprite = "crop_belladonna", kind = CropKind.Night, seconds = 2 * 3600, seed = 12, sell = 35, unlock = 250 },
-            new CropSpec { id = "mandrake", name = "Mandragora", sprite = "crop_mandrake", kind = CropKind.Night, seconds = 5 * 3600, seed = 35, sell = 120, unlock = 600 },
-            new CropSpec { id = "graveivy", name = "Cmentarny bluszcz", sprite = "crop_graveivy", kind = CropKind.Night, seconds = 10 * 3600, seed = 60, sell = 260, unlock = 1200 },
+            new CropSpec { id = "belladonna", name = "Wilcza jagoda", sprite = "crop_belladonna", kind = CropKind.Night, seconds = 2 * 3600, seed = 12, sell = 35, unlock = 320 },
+            new CropSpec { id = "mandrake", name = "Mandragora", sprite = "crop_mandrake", kind = CropKind.Night, seconds = 5 * 3600, seed = 35, sell = 120, unlock = 800 },
+            new CropSpec { id = "graveivy", name = "Cmentarny bluszcz", sprite = "crop_graveivy", kind = CropKind.Night, seconds = 10 * 3600, seed = 60, sell = 260, unlock = 1600 },
             // hybryda (Etap 4a): nasiona tylko z mutacji dyni i upiornej dyni na sąsiednich grządkach
             new CropSpec { id = "hybridpumpkin", name = "Dynia-upiór", sprite = "crop_hybridpumpkin", kind = CropKind.Night, seconds = 5 * 3600, seed = 0, sell = 150,
                            hybrid = true, parentA = "pumpkin", parentB = "ghostpumpkin", seedIcon = "seed_hybrid" },
@@ -93,7 +93,7 @@ namespace Wyspa.EditorTools
             new UpgradeSpec { id = UpgradeIds.EssenceJar, name = "Słój Esencji", category = UpgradeCategory.Essence,
                 levels = new[] { (120f, new[] { Coins(100) }), (240f, new[] { Coins(400) }), (480f, new[] { Coins(1500) }) } },
             new UpgradeSpec { id = UpgradeIds.WispGardener, name = "Ognik-ogrodnik", category = UpgradeCategory.Automation,
-                levels = new[] { (30f, new[] { Coins(300), Night(5) }) } },
+                levels = new[] { (30f, new[] { Coins(100) }) } },   // 6d: pierwszy ognik w ciągu ok. 1-3 h pracy
             new UpgradeSpec { id = UpgradeIds.SoilMemory, name = "Runa siewu", category = UpgradeCategory.Automation,
                 levels = new[] { (1f, new[] { Coins(500) }) }, requires = new[] { UpgradeIds.WispGardener } },
             new UpgradeSpec { id = UpgradeIds.MerchantChest, name = "Duszek-handlarz", category = UpgradeCategory.Automation,
@@ -443,6 +443,9 @@ namespace Wyspa.EditorTools
                                                    LoadSprite($"Critters/bird_{kind}_fly0"), LoadSprite($"Critters/bird_{kind}_fly1") };
             art.birdCrow = Bird("crow");
             art.birdFinch = Bird("finch");
+            art.noticeBoard = LoadSprite("Objects/notice_board");
+            art.noticeBoardEmpty = LoadSprite("Objects/notice_board_empty");
+            art.introArrow = LoadSprite("Fx/intro_arrow");
             art.rune = LoadSprite("Automation/rune_stone");
             art.runeGlow = LoadSprite("Automation/rune_stone_glow");
             art.lamps = new List<LampDefinition>();

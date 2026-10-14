@@ -85,6 +85,12 @@ namespace Wyspa.World
         public Sprite[] birdCrow;
         public Sprite[] birdFinch;
 
+        [Header("Wprowadzenie (Etap 6d): tablica z karteczkami")]
+        public Sprite noticeBoard;
+        public Sprite noticeBoardEmpty;
+        [Tooltip("Złota strzałka nad celem kroku wprowadzenia.")]
+        public Sprite introArrow;
+
         public Farming.TreeArt Tree(string id)
         {
             foreach (var t in trees)

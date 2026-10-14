@@ -307,6 +307,23 @@ Po pobraniu: **Wyspa → 2** (materiał `SwayTreeGlow`, ikony owoców i ptaki w 
 7. Skrzynie na plony: postaw dwie obok siebie. Stykają się bokami, nie nachodzą na siebie (sprite ma teraz 16 px).
    Jeśli skrzynia stoi krzywo albo jest rozmyta: **Wyspa → Narzędzia → Reimportuj sprite'y**.
 
+## 4r. Etap 6d: pasek HUD, tablica ogłoszeń, balans, owoce, duszek przy skrzyni (test)
+Po pobraniu: **Wyspa → 2** (tablica, strzałka, nowe ceny nasion i ognika w danych), potem Play. Wprowadzenie widać tylko na
+nowej wyspie: Opcje → System → reset zapisu (albo usuń `save.json`). Jeśli sprite'y są rozmyte: **Wyspa → Narzędzia → Reimportuj sprite'y**.
+1. HUD: jeden pasek tuż nad wyspą (waluty i Esencja u góry, rytm, tempo i zegar pod spodem). Chowa się po 5 s bez ruchu myszy.
+   Przy przewiniętej dużej wyspie zostaje u góry okna. Toasty w prawym górnym rogu.
+2. Nowa wyspa: na czwartym kafelku stoi tablica z karteczką, pod wyspą karteczka „1/5”, złota strzałka nad pustą grządką.
+   Posadź → karteczka odpada, nowa: „pracuj”, potem „zbierz”, „kup lampę”, „dokup kafelek”, na końcu „gotowe”.
+   Klik w tablicę: treść i „Rozbierz” (drugi klik potwierdza, +3 drewna, wprowadzenie znika).
+3. Ognik i drzewo: owocujące drzewo w zasięgu ognika (5x5). Ognik podlatuje, dwa razy wpada w koronę, owoce spadają pod drzewo,
+   ognik zbiera je z ziemi i niesie do skrzyni. Klik w drzewo z owocami na ziemi: zbierasz je sam.
+4. Duszek-handlarz: unosi się obok skrzyni. Gdy skrzynia dojdzie do 20/20, od razu sprzedaje (monety lecą). Sklep → Budowle →
+   duszek: kliknij skrzynię bez duszka. Przeniesienie skrzyni zabiera duszka.
+5. Przezroczyste okno: mgła gęsta, przyklejona do pasa wody (bez przerwy), z postrzępioną krawędzią.
+6. Wiatr: przy smugach wiatru rośliny pochylają się po kolei z lewej na prawą, czubki gną się mocniej, potem wracają
+   z małym odbiciem.
+7. Ceny: kafelki droższe (np. 10. kafelek 140 monet + 5 Esencji), ognik 100 monet, czosnek 100, piołun 600.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

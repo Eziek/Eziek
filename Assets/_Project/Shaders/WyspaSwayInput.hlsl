@@ -7,6 +7,7 @@ CBUFFER_START(UnityPerMaterial)
     float _SwayAmount;
     float _SwaySpeed;
     float _SwayPhase;
+    float _SwayX;          // położenie sprite'a na świecie (piksele) - podmuch dociera do niego w swoim czasie
     half4 _OutlineColor;
 CBUFFER_END
 #endif

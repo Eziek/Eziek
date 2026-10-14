@@ -9,16 +9,31 @@ float WyspaStepTime(float fps)
     return floor(_Time.y * fps) / fps;
 }
 
-// Podmuch wiatru 0..1 (globalnie, ustawia IslandFx razem ze smugami wiatru): mocniejsze kołysanie i pochylenie z wiatrem.
-float _WyspaWind;
+// Podmuch wiatru (globalnie, ustawia IslandFx razem ze smugami): czoło podmuchu przechodzi przez wyspę z lewej na prawą,
+// więc rośliny pochylają się po kolei, falą, a nie wszystkie naraz (prośba gracza: ładniejszy wiatr).
+float _WyspaWindFront;   // piksele świata: gdzie jest teraz czoło podmuchu
+float _WyspaWindPower;   // 0..1 siła bieżącego podmuchu (0 = bez wiatru)
+#define WYSPA_WIND_WIDTH 40.0
+
+// Pochylenie w miejscu x: zero przed czołem, szybkie pochylenie, gdy czoło przechodzi, potem sprężysty powrót
+// z małym odbiciem w drugą stronę (tłumione drganie: exp * sin, maksimum ok. 1 przy u = 0.36).
+float WyspaGust(float x)
+{
+    float u = (_WyspaWindFront - x) / WYSPA_WIND_WIDTH;
+    if (u <= 0.0 || _WyspaWindPower <= 0.0)
+        return 0;
+    return _WyspaWindPower * 2.0 * exp(-1.6 * u) * sin(3.0 * u);
+}
 
 float2 WyspaSwayUV(float2 uv)
 {
     float h = floor(uv.y * _MainTex_TexelSize.w) * _MainTex_TexelSize.y;   // 0 = dolny wiersz tekstury
+    float bend = h * sqrt(h);   // sztywna podstawa, giętki czubek (łodyga się zgina, a nie przechyla jak deska)
     float t = _Time.y;
     float s = sin(6.2831853 * _SwaySpeed * t + _SwayPhase);
-    float w = saturate(_WyspaWind);
-    float shift = round(_SwayAmount * (s * (1.0 + w) + w * 1.2) * h);
+    float g = WyspaGust(_SwayX);
+    float flutter = abs(g) * 0.4 * sin(t * 11.0 + _SwayPhase * 3.0);   // drżenie liści, póki wieje
+    float shift = round(_SwayAmount * (s * (1.0 + 0.5 * abs(g)) + 2.2 * g + flutter) * bend);
     uv.x -= shift * _MainTex_TexelSize.x;
     return uv;
 }

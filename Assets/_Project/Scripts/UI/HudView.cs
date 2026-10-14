@@ -10,12 +10,16 @@ using Wyspa.Localization;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// HUD (GDD §12.2): u góry waluty i Esencja, w lewym dolnym rogu rytm pracy i zegar. Menu jest w pierścieniu akcji (PPM, §12.10).
-    /// Znika po kilku sekundach bez ruchu myszy, wraca po jej poruszeniu.
+    /// HUD (GDD §12.2, §12.10, Etap 6d): jeden zwarty pasek tuż nad wyspą. Górny wiersz: waluty i Esencja, dolny: rytm pracy,
+    /// tempo i zegar. Pasek idzie za lądem (nie przykleja się do rogów okna, więc w przezroczystym oknie nie wisi nad pulpitem).
+    /// Znika po kilku sekundach bez ruchu myszy, wraca po jej poruszeniu. W mini-trybie go nie ma.
     /// </summary>
     public class HudView : MonoBehaviour
     {
         const float HideAfter = 5f;
+        const float Pad = 4f;
+        const float RowH = 13f;
+        const float Gap = 3f;   // piksele UI między paskiem a górą lądu
 
         class Item
         {
@@ -42,6 +46,11 @@ namespace Wyspa.UI
         int flying;
 
         public bool ForceVisible { get; set; }
+        /// <summary>Widoczność paska (0..1): karteczka wprowadzenia pokazuje się i chowa razem z nim.</summary>
+        public float Alpha => group != null ? group.alpha : 0f;
+
+        /// <summary>Prostokąt paska w układzie płótna (np. żeby toasty i karteczki go omijały).</summary>
+        public RectTransform Bar => bar;
 
         public static HudView Create(RectTransform canvasRoot)
         {
@@ -64,31 +73,24 @@ namespace Wyspa.UI
         {
             this.root = root;
             var t = Ui.Theme;
-            // --- pasek walut ---
-            var barImg = Ui.Img(root, "TopBar", t.tooltip, true);
-            bar = Ui.Place(barImg.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(4, -4), new Vector2(100, 18));
+            var barImg = Ui.Img(root, "IslandBar", t.tooltip, true);
+            bar = Ui.Place(barImg.rectTransform, Ui.BottomLeft, new Vector2(0.5f, 0f), Vector2.zero, new Vector2(120, 2 * RowH + Pad + 2));
+            // --- górny wiersz: waluty ---
             items.Add(MakeItem("coin", CurrencyType.Coins));
             essenceItem = MakeItem("essence", null);
-            essenceFill = Ui.Bar(essenceItem.root.transform, "EssenceBar", t.barFillEssence, Ui.TopLeft, Ui.TopLeft, new Vector2(14, -2), new Vector2(34, 8));
+            essenceFill = Ui.Bar(essenceItem.root.transform, "EssenceBar", t.barFillEssence, Ui.TopLeft, Ui.TopLeft, new Vector2(14, -2), new Vector2(30, 8));
             items.Add(essenceItem);
             items.Add(MakeItem("nightcrop", CurrencyType.NightHarvest));
             items.Add(MakeItem("starshard", CurrencyType.StarShard));
             items.Add(MakeItem("wood", CurrencyType.Wood));
             items.Add(MakeItem("stone", CurrencyType.Stone));
 
-            // --- rytm pracy ---
-            var rp = Ui.Img(root, "Rhythm", t.tooltip, true);
-            Ui.Place(rp.rectTransform, Ui.BottomLeft, Ui.BottomLeft, new Vector2(4, 4), new Vector2(172, 22));
-            rhythmIcon = Ui.Img(rp.transform, "Icon", t.Icon("focus"), false);
-            Ui.Place(rhythmIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(3, -3), new Vector2(12, 12));
-            rhythmText = Ui.Txt(rp.transform, "Text", t.textLight);
-            Ui.Place(rhythmText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(18, -3), new Vector2(100, 10));
-            rhythmFill = Ui.Bar(rp.transform, "RhythmBar", t.barFillRhythm, Ui.TopLeft, Ui.TopLeft, new Vector2(18, -12), new Vector2(90, 7));
-            clockText = Ui.Txt(rp.transform, "Clock", t.textMuted, TextAlignmentOptions.TopRight);
-            Ui.Place(clockText.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-4, -3), new Vector2(30, 10));
-            // tempo pracy (pisanie, mysz): mnożnik wzrostu roślin dnia pod zegarem
-            tempoText = Ui.Txt(rp.transform, "Tempo", t.textGold, TextAlignmentOptions.TopRight);
-            Ui.Place(tempoText.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-4, -12), new Vector2(50, 10));
+            // --- dolny wiersz: rytm pracy, tempo, zegar ---
+            rhythmIcon = Ui.Img(bar, "RhythmIcon", t.Icon("focus"), false);
+            rhythmText = Ui.Txt(bar, "Rhythm", t.textLight);
+            rhythmFill = Ui.Bar(bar, "RhythmBar", t.barFillRhythm, Ui.TopLeft, Ui.TopLeft, Vector2.zero, new Vector2(30, 7));
+            tempoText = Ui.Txt(bar, "Tempo", t.textGold);
+            clockText = Ui.Txt(bar, "Clock", t.textMuted);
         }
 
         Item MakeItem(string icon, CurrencyType? currency)
@@ -109,9 +111,10 @@ namespace Wyspa.UI
                 lastMouse = mouse;
                 lastMove = Time.unscaledTime;
             }
-            bool visible = ForceVisible || flying > 0 || Time.unscaledTime - lastMove < HideAfter;
+            var view = Wyspa.World.ViewController.Instance;
+            bool mini = view != null && view.Mini;
+            bool visible = !mini && (ForceVisible || flying > 0 || Time.unscaledTime - lastMove < HideAfter);
             float target = visible ? 1f : 0f;
-            // skokowe zanikanie (ok. 10 kl./s)
             group.alpha = Mathf.MoveTowards(group.alpha, target, Time.unscaledDeltaTime * 4f);
             group.blocksRaycasts = group.alpha > 0.5f;
 
@@ -121,6 +124,28 @@ namespace Wyspa.UI
                 refresh = 0.25f;
                 Refresh();
             }
+            Follow();
+        }
+
+        /// <summary>Pasek nad środkiem lądu, w granicach płótna (przy przewiniętej dużej wyspie zostaje u góry okna).</summary>
+        void Follow()
+        {
+            var cam = Camera.main;
+            var island = Wyspa.World.Island.Instance;
+            if (cam == null || island == null || root == null)
+                return;
+            var land = island.LandRect;
+            Vector2 screen = cam.WorldToScreenPoint(new Vector3(land.center.x, land.yMax, 0f));
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(root, screen, null, out var local))
+                return;
+            var r = root.rect;
+            var size = bar.sizeDelta;
+            // pozycja od lewego dolnego rogu płótna, pivot paska: środek dolnej krawędzi
+            float x = local.x - r.xMin;
+            float y = local.y - r.yMin + Gap;
+            x = Mathf.Clamp(x, size.x / 2f + 2f, Mathf.Max(size.x / 2f + 2f, r.width - size.x / 2f - 2f));
+            y = Mathf.Clamp(y, 2f, Mathf.Max(2f, r.height - size.y - 2f));
+            bar.anchoredPosition = new Vector2(Mathf.Round(x - size.x / 2f) + size.x / 2f, Mathf.Round(y));
         }
 
         void Refresh()
@@ -129,7 +154,7 @@ namespace Wyspa.UI
             if (game == null)
                 return;
             var w = game.Wallet;
-            float x = 4;
+            float x = Pad;
             foreach (var it in items)
             {
                 bool show;
@@ -138,7 +163,7 @@ namespace Wyspa.UI
                     show = true;
                     it.text.text = $"{game.Essence.Amount:0}/{game.Essence.Capacity:0}";
                     Ui.SetBar(essenceFill, game.Essence.Normalized);
-                    it.text.rectTransform.anchoredPosition = new Vector2(50, -2);
+                    it.text.rectTransform.anchoredPosition = new Vector2(46, -2);
                 }
                 else
                 {
@@ -151,13 +176,13 @@ namespace Wyspa.UI
                 it.root.SetActive(show);
                 if (!show)
                     continue;
-                float textX = it == essenceItem ? 50 : 14;
+                float textX = it == essenceItem ? 46 : 14;
                 float width = textX + Ui.Width(it.text);
                 bool bump = bumpUntil.TryGetValue(it, out float until) && Time.unscaledTime < until;
                 Ui.Place(it.rt, Ui.TopLeft, Ui.TopLeft, new Vector2(x, bump ? -2 : -3), new Vector2(width, 12));
                 x += width + 6;
             }
-            bar.sizeDelta = new Vector2(x - 2, 18);
+            float topWidth = x - 6 + Pad;
 
             var r = game.Rhythm;
             string icon = r.FatigueLevel > 0 ? "fatigue" : (r.Refreshed ? "break" : "focus");
@@ -176,6 +201,30 @@ namespace Wyspa.UI
             clockText.text = game.Clock.Now.ToString("HH:mm");
             float tempo = game.Activity.TempoMultiplier;
             tempoText.text = tempo > 1.05f ? Loc.Get("ui.rhythm.tempo", tempo) : "";
+
+            // dolny wiersz: ikona, opis, pasek serii, tempo, zegar
+            float y2 = -3f - RowH;
+            float bx = Pad;
+            Ui.Place(rhythmIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2), new Vector2(12, 12));
+            bx += 14;
+            float tw = Ui.Width(rhythmText);
+            Ui.Place(rhythmText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 2), new Vector2(tw, 10));
+            bx += tw + 4;
+            var frame = (RectTransform)rhythmFill.parent;
+            Ui.Place(frame, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 3), frame.sizeDelta);
+            bx += frame.sizeDelta.x + 4;
+            if (tempoText.text.Length > 0)
+            {
+                float w2 = Ui.Width(tempoText);
+                Ui.Place(tempoText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 2), new Vector2(w2, 10));
+                bx += w2 + 4;
+            }
+            float cw = Ui.Width(clockText);
+            float bottomWidth = bx + cw + Pad;
+            float width2 = Mathf.Ceil(Mathf.Max(topWidth, bottomWidth));
+            // zegar przy prawej krawędzi paska
+            Ui.Place(clockText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(width2 - Pad - cw, y2 - 2), new Vector2(cw, 10));
+            bar.sizeDelta = new Vector2(width2, 2 * RowH + Pad + 2);
         }
             // ------------------------------------------------------------ monety lecą łukiem do licznika (GDD §5.5)
 

@@ -9,10 +9,10 @@ using Wyspa.Localization;
 namespace Wyspa.Automation
 {
     /// <summary>
-    /// Duszek-handlarz (Etap 6b, zastępuje skrzynię kupca): co N sekund gry leci do najpełniejszej skrzyni na wyspie
-    /// i sprzedaje jej zawartość po 90% ceny. Każdy duszek opróżnia jedną skrzynię, więc więcej duszków = więcej skrzyń naraz.
+    /// Duszek-handlarz (Etap 6b; od 6d na prośbę gracza przypięty do skrzyni): unosi się obok swojej skrzyni i gdy tylko
+    /// skrzynia się zapełni, sprzedaje całą zawartość po 90% ceny. Nie ma własnego kafelka - idzie razem ze skrzynią.
     /// </summary>
-    public class MerchantSpirit : MonoBehaviour, IContextActions
+    public class MerchantSpirit : MonoBehaviour
     {
         public const float PriceMultiplier = 0.9f;
         public static readonly List<MerchantSpirit> All = new List<MerchantSpirit>();
@@ -23,11 +23,19 @@ namespace Wyspa.Automation
         [SerializeField] Sprite[] glowFrames = new Sprite[4];
         Vector3 home;
         float seed;
-        float timer;
-        float lastInterval = 3600f;
         Coroutine flight;
+        HarvestCrate crate;
 
-        public float SecondsToNext(float interval) => Mathf.Max(0f, interval - timer);
+        /// <summary>Skrzynia, przy której stoi duszek.</summary>
+        public HarvestCrate Crate => crate;
+
+        public static MerchantSpirit Of(HarvestCrate c)
+        {
+            foreach (var m in All)
+                if (m.crate == c)
+                    return m;
+            return null;
+        }
 
         public void Setup(SpriteRenderer bodyRenderer, SpriteRenderer glowRenderer, Sprite[] bodyFrames, Sprite[] glowSprites)
         {
@@ -45,9 +53,12 @@ namespace Wyspa.Automation
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
 
+        /// <summary>Island postawił duszka przy skrzyni (albo przeniósł skrzynię razem z nim).</summary>
         void OnPlaced()
         {
             home = transform.position;
+            var obj = GetComponent<World.TileObject>();
+            crate = obj != null && obj.Anchor != null ? obj.Anchor.GetComponent<HarvestCrate>() : null;
             if (flight != null)
             {
                 StopCoroutine(flight);
@@ -55,21 +66,11 @@ namespace Wyspa.Automation
             }
         }
 
-        /// <summary>Sprzedaż, gdy minął odstęp. skip = skrzynie już opróżniane w tym ticku przez inne duszki. Zwraca monety.</summary>
-        public int Tick(float dt, float interval, Wallet wallet, CropDatabase crops, ICollection<HarvestCrate> skip)
+        /// <summary>Pełna skrzynia = sprzedaż od razu (bez czekania). Zwraca monety.</summary>
+        public int Tick(Wallet wallet, CropDatabase crops)
         {
-            lastInterval = interval;
-            timer += dt;
-            if (timer < interval)
+            if (crate == null || !crate.IsFull)
                 return 0;
-            var crate = HarvestCrate.Fullest(skip);
-            if (crate == null)
-            {
-                timer = interval;   // pusto - sprzeda, gdy tylko coś trafi do skrzyni
-                return 0;
-            }
-            timer = 0f;
-            skip?.Add(crate);
             int coins = crate.SellAll(wallet, crops, PriceMultiplier);
             if (coins > 0)
             {
@@ -78,25 +79,19 @@ namespace Wyspa.Automation
                 if (isActiveAndEnabled)
                 {
                     if (flight != null) StopCoroutine(flight);
-                    flight = StartCoroutine(Visit(crate.transform.position + new Vector3(0f, 0.7f, 0f)));
+                    flight = StartCoroutine(Visit(crate.transform.position + new Vector3(0f, 0.75f, 0f)));
                 }
             }
             return coins;
         }
 
-        public void FillContext(ContextInfo info)
-        {
-            info.lines.Add(Loc.Get("ui.merchant_spirit.next", Mathf.CeilToInt(SecondsToNext(lastInterval) / 60f)));
-            info.lines.Add(Loc.Get("ui.merchant_spirit.crates", HarvestCrate.All.Count, HarvestCrate.TotalCount()));
-        }
-
-        /// <summary>Płynny lot do skrzyni i z powrotem (sprzedaż dzieje się od razu, lot jest efektem).</summary>
+        /// <summary>Krótki przelot nad skrzynię i z powrotem (sprzedaż dzieje się od razu, lot jest efektem).</summary>
         IEnumerator Visit(Vector3 target)
         {
             var from = transform.position;
-            yield return Flight.Arc(transform, from, target, 2.5f, 0.5f);
-            yield return new WaitForSecondsRealtime(0.4f);   // chwila przy skrzyni
-            yield return Flight.Arc(transform, target, home, 2.5f, 0.5f);
+            yield return Flight.Arc(transform, from, target, 2f, 0.15f);   // nad skrzynię obok, krótki skok
+            yield return new WaitForSecondsRealtime(0.5f);
+            yield return Flight.Arc(transform, target, home, 2f, 0.15f);
             flight = null;
         }
 

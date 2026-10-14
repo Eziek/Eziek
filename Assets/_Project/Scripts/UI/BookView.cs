@@ -594,6 +594,29 @@ namespace Wyspa.UI
         {
             if (UiRoot.Instance == null)
                 return;
+            if (kind == Automation.AutomationSystem.Merchant)
+            {
+                // duszek-handlarz staje przy skrzyni bez duszka (klik w skrzynię)
+                if (island.CrateWithoutMerchant(Vector3.zero) == null)
+                {
+                    GameEvents.RaiseToast("toast.merchant.need_crate");
+                    return;
+                }
+                UiRoot.Instance.StartPlacement(new PlacementMode.Request
+                {
+                    nameKey = nameKey, sprite = sprite, cost = cost, area = 0,
+                    valid = t => island.FreeCrateAt(t) != null,
+                    ghostAt = t => (Island.MerchantSpot(t), false),
+                    confirm = t =>
+                    {
+                        if (island.SpawnMerchant(island.FreeCrateAt(t)) == null)
+                            return false;
+                        GameEvents.RaiseToast("ui.toast.placed", Loc.Get(nameKey));
+                        return true;
+                    },
+                });
+                return;
+            }
             UiRoot.Instance.StartPlacement(new PlacementMode.Request
             {
                 nameKey = nameKey, sprite = sprite, cost = cost, area = area,

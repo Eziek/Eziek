@@ -97,6 +97,8 @@ namespace Wyspa.Farming
         bool chopArmed;
         bool glowing;
         Coroutine bounce;
+        /// <summary>Owoce strącone przez ognika, leżące pod drzewem (czekają, aż ognik albo gracz je zbierze).</summary>
+        readonly List<SpriteRenderer> fallen = new List<SpriteRenderer>();
 
         public TreeSpecies Species => species;
         public float Growth => growth;
@@ -104,6 +106,9 @@ namespace Wyspa.Farming
         public bool Adult => species != null && growth >= species.growSeconds;
         public bool Fruiting => Adult && fruit >= species.fruitSeconds;
         public bool IsGlowing => glowing;
+        public int FallenCount => fallen.Count;
+        /// <summary>Jest co zbierać dla ognika: owoce na drzewie albo na ziemi.</summary>
+        public bool HasFruitForWisp => !chopping && (Fruiting || fallen.Count > 0);
 
         public void Setup(TreeSpecies treeSpecies, TreeArt treeArt, SpriteRenderer bodyRenderer, SpriteRenderer glowRenderer,
                           float savedGrowth = 0f, float savedFruit = 0f)
@@ -135,6 +140,127 @@ namespace Wyspa.Farming
 
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
+
+        void OnDestroy()
+        {
+            foreach (var f in fallen)
+                if (f != null) Destroy(f.gameObject);
+            fallen.Clear();
+        }
+
+        // ------------------------------------------------------------ owoce na ziemi (ognik strąca, potem zbiera)
+
+        /// <summary>Uderzenie ognika: drzewo się otrząsa, wszystkie owoce spadają pod drzewo i tam leżą.</summary>
+        public bool KnockDown()
+        {
+            if (!Fruiting || chopping)
+                return false;
+            int n = species.fruitCount;
+            var canopy = transform.position + new Vector3(0f, 1.2f, 0f);
+            for (int i = 0; i < n; i++)
+                StartCoroutine(Fall(AddFallen(), canopy + new Vector3(Random.Range(-6, 7) / 16f, Random.Range(-2, 4) / 16f, 0f), i * 0.07f));
+            IslandFx.LeafBurst(canopy, 3, body != null ? body.sortingOrder : 0);
+            Bounce(0.08f, 0.5f);
+            Lore.Chronicle.Note("tree:" + species.id);
+            Lore.Chronicle.Count("harvest", n);
+            fruit = 0f;
+            glowing = false;
+            RefreshVisual();
+            return true;
+        }
+
+        /// <summary>Owoc na ziemi przy pniu (po lewej albo prawej, 4-9 px od środka).</summary>
+        SpriteRenderer AddFallen()
+        {
+            var go = new GameObject("FallenFruit");
+            go.transform.SetParent(transform.parent, false);   // nie w drzewie: nie kołysze się i nie skaluje z nim
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = art != null ? art.fruit : null;
+            sr.sortingOrder = (body != null ? body.sortingOrder : 0) + 2;
+            go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+            float side = Random.value < 0.5f ? -1f : 1f;
+            go.transform.position = transform.position + new Vector3(side * Random.Range(4, 10) / 16f, Random.Range(-3, 2) / 16f, 0f);
+            fallen.Add(sr);
+            return sr;
+        }
+
+        /// <summary>Spadanie z korony na miejsce przy pniu: przyspiesza, na końcu mały podskok.</summary>
+        IEnumerator Fall(SpriteRenderer sr, Vector3 from, float delay)
+        {
+            if (sr == null)
+                yield break;
+            var to = sr.transform.position;
+            sr.transform.position = from;
+            yield return new WaitForSecondsRealtime(delay);
+            const float duration = 0.45f;
+            for (float t = 0f; t < duration && sr != null; t += Time.unscaledDeltaTime)
+            {
+                float u = t / duration;
+                sr.transform.position = new Vector3(Mathf.Lerp(from.x, to.x, u), Mathf.Lerp(from.y, to.y, u * u), 0f);
+                yield return null;
+            }
+            for (float t = 0f; t < 0.2f && sr != null; t += Time.unscaledDeltaTime)
+            {
+                sr.transform.position = to + new Vector3(0f, Mathf.Round(Mathf.Sin(t / 0.2f * Mathf.PI) * 2f) / 16f, 0f);
+                yield return null;
+            }
+            if (sr != null)
+                sr.transform.position = to;
+        }
+
+        /// <summary>Drzewo przeniesione: leżące owoce idą razem z nim (Island woła po postawieniu).</summary>
+        void OnPlaced()
+        {
+            int n = fallen.Count;
+            foreach (var f in fallen)
+                if (f != null) Destroy(f.gameObject);
+            fallen.Clear();
+            RestoreFallen(n);
+        }
+
+        /// <summary>Gdzie leży owoc nr i (do lotu ognika).</summary>
+        public Vector3 FallenPosition(int i) => fallen[i] != null ? fallen[i].transform.position : transform.position;
+
+        /// <summary>Ognik podnosi najbliższy owoc z ziemi. Zwraca jego sprite (do niesienia) albo null.</summary>
+        public Sprite PickFallen(Vector3 near)
+        {
+            int best = -1;
+            for (int i = 0; i < fallen.Count; i++)
+                if (best < 0 || (FallenPosition(i) - near).sqrMagnitude < (FallenPosition(best) - near).sqrMagnitude)
+                    best = i;
+            if (best < 0)
+                return null;
+            var sr = fallen[best];
+            fallen.RemoveAt(best);
+            var sprite = sr != null ? sr.sprite : null;
+            if (sr != null)
+                Destroy(sr.gameObject);
+            return sprite;
+        }
+
+        /// <summary>Zapis: owoce leżące na ziemi wracają od razu na miejsce.</summary>
+        public void RestoreFallen(int count)
+        {
+            for (int i = 0; i < count && species != null; i++)
+                AddFallen();
+        }
+
+        /// <summary>Gracz klika drzewo z owocami na ziemi: zbiera je od razu (monety).</summary>
+        void PickAllFallen()
+        {
+            var game = GameLoop.Instance;
+            if (game == null || fallen.Count == 0)
+                return;
+            int n = fallen.Count;
+            int coins = n * species.fruitPrice;
+            var at = transform.position + new Vector3(0f, 0.3f, 0f);
+            foreach (var f in fallen)
+                if (f != null) Destroy(f.gameObject);
+            fallen.Clear();
+            game.Wallet.Add(coins);
+            GameEvents.RaiseCurrencyGained(at, CurrencyType.Coins, coins);
+            GameEvents.RaiseToast("toast.fruit", n, Loc.Get(species.FruitKey), coins);
+        }
 
         int Stage => !Adult ? (growth < species.growSeconds * 0.25f ? 0 : 1) : (Fruiting ? 3 : 2);
 
@@ -205,9 +331,11 @@ namespace Wyspa.Farming
 
         public bool TryClick()
         {
-            if (!Fruiting || chopping)
+            if (chopping || (!Fruiting && fallen.Count == 0))
                 return false;
-            HarvestFruit();
+            PickAllFallen();
+            if (Fruiting)
+                HarvestFruit();
             return true;
         }
 
@@ -271,6 +399,8 @@ namespace Wyspa.Farming
                             : species.fruitsAtNight ? Loc.Get("ui.tree.when_night") : Loc.Get("ui.tree.when_work");
                 info.lines.Add(Loc.Get("ui.tree.fruit_progress", pct) + " " + when);
             }
+            if (fallen.Count > 0)
+                info.Button(Loc.Get("ui.tree.pick", fallen.Count, fallen.Count * species.fruitPrice), PickAllFallen);
             if (Fruiting)
                 info.Button(Loc.Get("ui.tree.harvest", species.fruitCount * species.fruitPrice), HarvestFruit);
             if (chopArmed)
@@ -328,6 +458,7 @@ namespace Wyspa.Farming
                 IslandFx.LeafBurst(basePos + new Vector3(1.2f, 0.4f, 0f), 7, order);
             }
             IslandFx.Planted(basePos, order);
+            PickAllFallen();
             var game = GameLoop.Instance;
             int wood = Wood;
             if (game != null && wood > 0)

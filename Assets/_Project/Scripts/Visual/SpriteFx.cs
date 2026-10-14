@@ -10,6 +10,7 @@ namespace Wyspa.Visual
     {
         static readonly int PhaseId = Shader.PropertyToID("_SwayPhase");
         static readonly int OutlineId = Shader.PropertyToID("_OutlineColor");
+        static readonly int SwayXId = Shader.PropertyToID("_SwayX");
 
         [Tooltip("Pierwszy dostaje kontur, wszystkie kołyszą się w tej samej fazie (np. roślina i jej piksele emisyjne).")]
         [SerializeField] SpriteRenderer[] renderers;
@@ -35,6 +36,9 @@ namespace Wyspa.Visual
             Apply();
         }
 
+        /// <summary>Island przestawił obiekt (np. przeniesione drzewo): nowa faza i miejsce dla podmuchów wiatru.</summary>
+        void OnPlaced() => OnEnable();
+
         /// <summary>Kolor konturu; alfa 0 = bez konturu.</summary>
         public void SetOutline(Color c)
         {
@@ -57,6 +61,7 @@ namespace Wyspa.Visual
                     continue;
                 r.GetPropertyBlock(block);
                 block.SetFloat(PhaseId, phase);
+                block.SetFloat(SwayXId, transform.position.x * 16f);
                 block.SetColor(OutlineId, i == 0 ? outline : Color.clear);
                 r.SetPropertyBlock(block);
             }

@@ -20,7 +20,6 @@ namespace Wyspa.Automation
 
         /// <summary>Rodzaje, których darmowa pierwsza sztuka już była (w zapisie, żeby po przeniesieniu/usunięciu nie wracała).</summary>
         readonly HashSet<string> granted = new HashSet<string>();
-        readonly List<HarvestCrate> soldThisTick = new List<HarvestCrate>();
 
         public static string NameKey(string kind)
         {
@@ -104,13 +103,9 @@ namespace Wyspa.Automation
                 for (int i = WispGardener.All.Count - 1; i >= 0; i--)
                     WispGardener.All[i].Tick(dt, interval);
             }
-            if (upgrades.Has(UpgradeIds.MerchantChest))
-            {
-                float interval = upgrades.Value(UpgradeIds.MerchantChest, 3600f);
-                soldThisTick.Clear();
-                for (int i = MerchantSpirit.All.Count - 1; i >= 0; i--)
-                    MerchantSpirit.All[i].Tick(dt, interval, game.Wallet, game.Crops, soldThisTick);
-            }
+            // duszki-handlarze sprzedają swoją skrzynię, gdy tylko się zapełni
+            for (int i = MerchantSpirit.All.Count - 1; i >= 0; i--)
+                MerchantSpirit.All[i].Tick(game.Wallet, game.Crops);
             for (int i = SeedRune.All.Count - 1; i >= 0; i--)
                 SeedRune.All[i].Tick(dt, game);
         }

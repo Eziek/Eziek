@@ -23,6 +23,8 @@ namespace Wyspa.World
         public string seed;                        // v6: tryb runy siewu ("" pamięć, "-" nic, id rośliny)
         public string tree;                        // v7: gatunek drzewa owocowego
         public float growth, fruit;                // v7: wzrost drzewa i odrastanie owoców (sekundy)
+        public int fallen;                         // v8: owoce strącone przez ognika, leżące pod drzewem
+        public string merchant;                    // v8: id duszka-handlarza przy tej skrzyni
     }
 
     [Serializable]
@@ -248,9 +250,10 @@ namespace Wyspa.World
             Clear();
             map.NewWorld(seed);
             var plan = map.Plan;
-            AddDecoration(plan.startDecoTile, plan.startDeco);
             Rebuild();
             SyncPlots();
+            // nowa gra (Etap 6d): na czwartym kafelku startu zamiast dekoracji stoi tablica z karteczkami wprowadzenia
+            SpawnBoard(plan.startDecoTile);
             // lampa startowa na wolnym kafelku startu (GDD §13.1: 2 grządki, obiekt, latarnia)
             var lantern = art != null ? art.Lamp(StarterLamp) : null;
             if (lantern != null && NearestFree(out var lampTile))
@@ -262,6 +265,7 @@ namespace Wyspa.World
         public void Restore(IslandSave save)
         {
             Clear();
+            var legacyMerchants = new List<(TilePos tile, string id)>();
             var tiles = new List<(TilePos, TileKind)>();
             foreach (var t in save.tiles)
                 tiles.Add((new TilePos(t.c, t.r), t.kind));
@@ -306,8 +310,12 @@ namespace Wyspa.World
                     SpawnLamp(def, tile, o.id);
                 else if (o.building == "altar" && IsFree(tile))
                     SpawnAltar(tile, o.id);
+                else if (o.building == BoardBuilding && IsFree(tile))
+                    SpawnBoard(tile, o.id);
                 else if (o.building == TreeBuilding && IsFree(tile))
-                    SpawnTree(Farming.TreeSpecies.Find(o.tree), tile, o.id, o.growth, o.fruit);
+                    SpawnTree(Farming.TreeSpecies.Find(o.tree), tile, o.id, o.growth, o.fruit, o.fallen);
+                else if (LegacyBuilding(o) == Automation.AutomationSystem.Merchant)
+                    legacyMerchants.Add((tile, o.id));   // zapis sprzed v8: duszek stał na własnym kafelku
                 else if (LegacyBuilding(o) is string kind && IsFree(tile))
                 {
                     // budowle automatyki (Etap 6b); zapisy sprzed 6b miały jedną skrzynię, skrzynię kupca i kamień runiczny ze sceny
@@ -316,7 +324,18 @@ namespace Wyspa.World
                         crate.Restore(o.crate);
                     if (b != null && o.seed != null && b.TryGetComponent(out Automation.SeedRune rune))
                         rune.Seed = o.seed;
+                    if (b != null && !string.IsNullOrEmpty(o.merchant))
+                        SpawnMerchant(b, o.merchant);
                 }
+            }
+            // duszki ze starych zapisów: do skrzyni bez duszka, a gdy takiej nie ma - skrzynia na ich dawnym kafelku
+            foreach (var (tile, id) in legacyMerchants)
+            {
+                var crate = CrateWithoutMerchant(TileCenter(tile));
+                if (crate == null && IsFree(tile))
+                    crate = SpawnBuilding(Automation.AutomationSystem.Crate, tile);
+                if (crate != null)
+                    SpawnMerchant(crate, id);
             }
             PlacePending();   // obiekty chciane wcześniej (np. skrzynia po wczytaniu ulepszeń)
             Changed?.Invoke();
@@ -349,7 +368,12 @@ namespace Wyspa.World
                     continue;
                 var os = new ObjectSave { id = o.Id, c = o.Tile.c, r = o.Tile.r, lamp = o.LampId, building = o.BuildingId };
                 if (o.TryGetComponent(out Automation.HarvestCrate crate))
+                {
                     os.crate = crate.Snapshot();
+                    var m = MerchantOf(o);
+                    if (m != null)
+                        os.merchant = m.Id;
+                }
                 if (o.TryGetComponent(out Automation.SeedRune rune))
                     os.seed = rune.Seed;
                 if (o.TryGetComponent(out Farming.FruitTree tree) && tree.Species != null)
@@ -357,6 +381,7 @@ namespace Wyspa.World
                     os.tree = tree.Species.id;
                     os.growth = tree.Growth;
                     os.fruit = tree.FruitProgress;
+                    os.fallen = tree.FallenCount;
                 }
                 s.objects.Add(os);
             }
@@ -637,6 +662,19 @@ namespace Wyspa.World
             }
             else if (obj.BuildingId == "altar")
                 refund = 250;
+            else if (obj.BuildingId == BoardBuilding && wallet != null)
+            {
+                wallet.Add(CurrencyType.Wood, BoardWood);   // tablica rozebrana na deski
+                GameEvents.RaiseCurrencyGained(obj.transform.position, CurrencyType.Wood, BoardWood);
+            }
+            var attached = MerchantOf(obj);
+            if (attached != null)
+            {
+                // duszek-handlarz odchodzi razem ze skrzynią (zwrot połowy jego ceny)
+                var mc = Automation.AutomationSystem.Cost(Automation.AutomationSystem.Merchant, Mathf.Max(0, CountBuilding(Automation.AutomationSystem.Merchant) - 1));
+                refund += mc[0].amount / 2;
+                RemoveObject(attached);
+            }
             if (obj.TryGetComponent(out Automation.HarvestCrate crate) && wallet != null)
             {
                 int sold = crate.SellAll(wallet, crops, 1f);
@@ -675,7 +713,8 @@ namespace Wyspa.World
         public const string TreeBuilding = "tree";
 
         /// <summary>Drzewo owocowe na kafelku (sklep, tryb stawiania, zapis): sprite fazy, świecenie owoców, kołysanie.</summary>
-        public TileObject SpawnTree(Farming.TreeSpecies species, TilePos tile, string id = null, float growth = 0f, float fruit = 0f)
+        public TileObject SpawnTree(Farming.TreeSpecies species, TilePos tile, string id = null, float growth = 0f, float fruit = 0f,
+                                    int fallen = 0)
         {
             if (species == null || art == null || !IsFree(tile))
                 return null;
@@ -705,6 +744,7 @@ namespace Wyspa.World
             spawned.Add(obj);
             PutOnTile(obj, tile);
             tree.Setup(species, treeArt, body, glow, growth, fruit);
+            tree.RestoreFallen(fallen);
             Changed?.Invoke();
             return obj;
         }
@@ -1101,6 +1141,51 @@ namespace Wyspa.World
             return obj;
         }
 
+        // ================================================================ tablica wprowadzenia (Etap 6d, GDD §12.8)
+
+        public const string BoardBuilding = "board";
+        const int BoardWood = 3;
+
+        /// <summary>Tablica z karteczkami (jest tylko na nowej wyspie, aż gracz ją rozbierze).</summary>
+        public TileObject Board
+        {
+            get
+            {
+                foreach (var o in spawned)
+                    if (o != null && o.BuildingId == BoardBuilding)
+                        return o;
+                return null;
+            }
+        }
+
+        /// <summary>Lampy na wyspie (kupione i startowa), np. dla kroku wprowadzenia „kup lampę”.</summary>
+        public int CountLamps()
+        {
+            int n = 0;
+            foreach (var o in AllObjects())
+                if (o != null && o.Placed && !string.IsNullOrEmpty(o.LampId))
+                    n++;
+            return n;
+        }
+
+        public TileObject SpawnBoard(TilePos tile, string id = null)
+        {
+            if (art == null || art.noticeBoard == null || !IsFree(tile) || Board != null)
+                return null;
+            var sr = NewSprite("NoticeBoard", decoRoot, Vector3.zero, 0);
+            sr.sprite = art.noticeBoard;
+            sr.gameObject.AddComponent<UI.NoticeBoard>().Setup(sr, art.noticeBoard, art.noticeBoardEmpty);
+            AddTileCollider(sr.gameObject);
+            var obj = sr.gameObject.AddComponent<TileObject>();
+            obj.Setup(string.IsNullOrEmpty(id) ? BoardBuilding : id, "bld.board");
+            obj.BuildingId = BoardBuilding;
+            obj.Wanted = true;
+            spawned.Add(obj);
+            PutOnTile(obj, tile);
+            Changed?.Invoke();
+            return obj;
+        }
+
         // ================================================================ budowle automatyki (Etap 6b)
 
         static string LegacyBuilding(ObjectSave o)
@@ -1128,6 +1213,16 @@ namespace Wyspa.World
         /// <summary>Pierwsza (darmowa) sztuka po zakupie ulepszenia: na wolnym kafelku najbliżej startu.</summary>
         public TileObject SpawnBuildingNear(string kind)
         {
+            if (kind == Automation.AutomationSystem.Merchant)
+            {
+                var crate = CrateWithoutMerchant(TileCenter(new TilePos(15, 15)));
+                if (crate == null)
+                {
+                    GameEvents.RaiseToast("toast.merchant.need_crate");
+                    return null;
+                }
+                return SpawnMerchant(crate);
+            }
             if (!NearestFree(out var tile))
             {
                 GameEvents.RaiseToast("toast.no_space", Localization.Loc.Get(Automation.AutomationSystem.NameKey(kind)));
@@ -1164,11 +1259,6 @@ namespace Wyspa.World
                     go.AddComponent<Automation.WispGardener>().Setup(body, Glow(First(art.wispGlow)), art.wispFrames, art.wispGlow);
                     NightGlow.Add(go, new Vector2(0f, 0.6f), new Color(0.37f, 0.81f, 0.72f), 1.6f, 0.7f);
                     break;
-                case Automation.AutomationSystem.Merchant:
-                    body.sprite = First(art.merchantFrames);
-                    go.AddComponent<Automation.MerchantSpirit>().Setup(body, Glow(First(art.merchantGlow)), art.merchantFrames, art.merchantGlow);
-                    NightGlow.Add(go, new Vector2(0f, 0.7f), new Color(0.95f, 0.75f, 0.4f), 1.6f, 0.7f);
-                    break;
                 case Automation.AutomationSystem.Rune:
                     body.sprite = art.rune;
                     if (art.runeGlow != null)
@@ -1189,6 +1279,70 @@ namespace Wyspa.World
             obj.Wanted = true;
             spawned.Add(obj);
             PutOnTile(obj, tile);
+            Changed?.Invoke();
+            return obj;
+        }
+
+        // ---------------------------------------------------------------- duszek-handlarz przy skrzyni (prośba gracza)
+
+        static readonly Vector2Int MerchantOffset = new Vector2Int(9, 5);   // piksele od podstawy skrzyni: obok, lekko wyżej
+
+        /// <summary>Duszek-handlarz przypięty do skrzyni (null = skrzynia bez duszka).</summary>
+        public TileObject MerchantOf(TileObject crate)
+        {
+            if (crate == null)
+                return null;
+            foreach (var o in spawned)
+                if (o != null && o.BuildingId == Automation.AutomationSystem.Merchant && o.Anchor == crate)
+                    return o;
+            return null;
+        }
+
+        /// <summary>Skrzynia na kafelku, przy której nie ma jeszcze duszka (tryb stawiania duszka).</summary>
+        public TileObject FreeCrateAt(TilePos t) =>
+            occupied.TryGetValue(t, out var o) && o != null && o.BuildingId == Automation.AutomationSystem.Crate && MerchantOf(o) == null ? o : null;
+
+        /// <summary>Najbliższa skrzynia bez duszka.</summary>
+        public TileObject CrateWithoutMerchant(Vector3 near)
+        {
+            TileObject best = null;
+            foreach (var o in spawned)
+                if (o != null && o.Placed && o.BuildingId == Automation.AutomationSystem.Crate && MerchantOf(o) == null
+                    && (best == null || (o.transform.position - near).sqrMagnitude < (best.transform.position - near).sqrMagnitude))
+                    best = o;
+            return best;
+        }
+
+        /// <summary>Gdzie unosi się duszek przy skrzyni na kafelku t (podgląd w trybie stawiania).</summary>
+        public static Vector3 MerchantSpot(TilePos t) => TileAnchor(t, 13, out _) + new Vector3(MerchantOffset.x / Ppu, MerchantOffset.y / Ppu, 0f);
+
+        /// <summary>
+        /// Duszek-handlarz bez własnego kafelka: unosi się obok skrzyni i sprzedaje ją, gdy tylko się zapełni.
+        /// Przenoszenie skrzyni zabiera duszka ze sobą, rozbiórka skrzyni - też.
+        /// </summary>
+        public TileObject SpawnMerchant(TileObject crate, string id = null)
+        {
+            if (art == null || crate == null || crate.BuildingId != Automation.AutomationSystem.Crate || MerchantOf(crate) != null)
+                return null;
+            var go = new GameObject("Building_merchant");
+            go.transform.SetParent(decoRoot, false);
+            var body = go.AddComponent<SpriteRenderer>();
+            body.sprite = First(art.merchantFrames);
+            var g = NewSprite("Glow", go.transform, Vector3.zero, 1);
+            g.transform.localPosition = Vector3.zero;
+            g.sprite = First(art.merchantGlow);
+            if (art.glow != null)
+                g.sharedMaterial = art.glow;
+            go.AddComponent<Automation.MerchantSpirit>().Setup(body, g, art.merchantFrames, art.merchantGlow);
+            NightGlow.Add(go, new Vector2(0f, 0.7f), new Color(0.95f, 0.75f, 0.4f), 1.6f, 0.7f);
+            var obj = go.AddComponent<TileObject>();
+            if (string.IsNullOrEmpty(id) || BuildingIdTaken(id))
+                id = NewBuildingId(Automation.AutomationSystem.Merchant);
+            obj.Setup(id, Automation.AutomationSystem.NameKey(Automation.AutomationSystem.Merchant), crate, MerchantOffset);
+            obj.BuildingId = Automation.AutomationSystem.Merchant;
+            obj.Wanted = true;
+            spawned.Add(obj);
+            TryPlace(obj, false);
             Changed?.Invoke();
             return obj;
         }

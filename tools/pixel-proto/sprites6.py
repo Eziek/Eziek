@@ -199,3 +199,38 @@ def bird(kind, pose):
 
 
 BIRD_POSES = ('sit0', 'sit1', 'fly0', 'fly1')
+
+
+# ---------- wprowadzenie (Etap 6d): tablica z karteczkami i strzałka celu ----------
+def notice_board(note=True):
+    """Krzywa tablica ogłoszeń na dwóch słupkach, 16 px szerokości z obrysem (jak kafelek). note: przybita karteczka."""
+    s = Sprite(16, 22, 8, 20)
+    for x in (3, 12):                                   # słupki
+        s.rect(x, 9, x, 19, 'e1')
+        s.set(x, 19, 'e0')
+    for y in range(4, 12):                              # deski tablicy
+        for x in range(1, 15):
+            k = 'e3' if y in (4, 8) else ('e1' if y in (7, 11) else 'e2')
+            if x in (1, 14): k = 'e1'
+            s.set(x, y, k)
+    s.set(1, 4, 'e2'); s.set(14, 11, 'e0')              # nierówne rogi
+    s.rect(2, 3, 13, 3, 'e1')                           # daszek
+    s.set(1, 3, 'e0'); s.set(14, 3, 'e0')
+    # stara, wyblakła karteczka zawsze w rogu
+    s.rect(10, 6, 12, 9, 'fo'); s.set(12, 9, 'e2'); s.set(11, 7, 'b3')
+    if note:
+        s.rect(4, 5, 8, 10, 'cr')                       # karteczka z pergaminu
+        s.set(8, 10, 'go'); s.set(4, 10, 'go')          # podwinięte rogi
+        for y in (7, 9):
+            s.rect(5, y, 7, y, 'e3')                    # „pismo”
+        s.set(6, 5, 'co')                               # gwóźdź
+    return s.outline()
+
+
+def intro_arrow():
+    """Mała złota strzałka nad celem wprowadzenia (unosi się w kodzie)."""
+    s = Sprite(7, 7, 3, 6)
+    for y, half in ((0, 1), (1, 1), (2, 1), (3, 3), (4, 2), (5, 1), (6, 0)):
+        for x in range(3 - half, 4 + half):
+            s.set(x, y, 'go' if x > 3 - half else 'cr')
+    return s.outline()

@@ -148,6 +148,7 @@ namespace Wyspa.Core
                     Lore.Chronicle.Count("night");
             }
             TryMutate(plot, crop);
+            GameEvents.RaiseHarvested();
         }
 
         /// <summary>

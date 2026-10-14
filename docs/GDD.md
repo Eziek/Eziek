@@ -254,7 +254,10 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
-- [ ] Liczby balansu (przychód Esencji, zużycie lamp, czasy wzrostu, ceny).
+- [x] Liczby balansu, tempo **szybkie** (wybór gracza, Etap 6d): symulacja `tools/balance/sim.py` (8 h pracy dziennie).
+  Wyniki: lampa w kilka minut (wprowadzenie), pierwszy ognik po ok. 1-3 h, wszystkie nasiona po ok. 40 h (tydzień),
+  25 kafelków ok. 23 h, 100 kafelków ok. 100 h (2 tygodnie), 150 kafelków ok. 175 h (miesiąc). Zmiany: kafelki droższe (§13.2),
+  ognik 100 monet bez plonów nocy, odblokowanie nasion x1.3. Czasy wzrostu i ceny roślin bez zmian.
 - [ ] Zasady stawiania lamp (dowolnie czy na slotach) i jak liczyć oświetlenie pól.
 - [ ] Noc: stałe godziny, ustawiane w opcjach czy wschód i zachód z lokalizacji.
 - [x] Rozbudowa wyspy: pojedyncze kafelki 16×16 (§13).
@@ -267,7 +270,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Sklep lamp: płaci się dopiero przy postawieniu (PPM w trybie stawiania = nic nie kosztuje). Lamp można mieć dowolnie dużo.
 - [x] Obiekty klika się w kafelek pod nimi (podstawa); klik otwiera panel kontekstowy (Usuń / Sprzedaj / Przenieś).
 - [ ] Pasma światła lamp z ditheringiem Bayera (§4.4): przesunięte na później (wymaga własnego światła 2D albo post-processu).
-- [ ] Krzywa cen kafelków do balansu (obecnie kwadratowa, §13.2).
+- [x] Krzywa cen kafelków: kwadratowa, mocniejsza od 6d (§13.2).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
 - [ ] Progi rytmu pracy (seria 25 min, przerwa 5 min, zmęczenie 8 h/10 h) do sprawdzenia w praktyce.
 - [ ] Mutacje: które pary roślin dają które hybrydy. Na razie jedna para: dynia + upiorna dynia = dynia-upiór (dane w `CropDefinition.parentA/B`).
@@ -294,8 +297,10 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Reset zapisu: dwa kliknięcia w 4 s, opcje gracza (PlayerPrefs) zostają.
 - [x] Automatyka w wielu egzemplarzach (Etap 6b, wybór gracza): ogniki z zasięgiem 5x5 wokół siebie, duszek-handlarz na całą
   wyspę (jedna skrzynia na duszka), runa siewu 3x3 z wyborem nasion, kupno w Sklep → Budowle z ceną rosnącą x1.6 (§11.3 E).
+  **Zmiana w 6d:** duszek-handlarz stoi przy swojej skrzyni i sprzedaje ją, gdy jest pełna.
 - [x] Nowe nasiona (Etap 6b): odblokowanie w Sklep → Nasiona; koło nasion pokazuje tylko odblokowane (i to, co jest w worku).
-  Dzień: czosnek (80), mak (200), piołun (450); noc: wilcza jagoda (250), mandragora (600), cmentarny bluszcz (1200). Do balansu.
+  Dzień: czosnek (100), mak (260), piołun (600); noc: wilcza jagoda (320), mandragora (800), cmentarny bluszcz (1600)
+  (ceny z balansu 6d, wcześniej 80/200/450/250/600/1200).
 - [x] Przezroczyste okno: mgła zostaje pierścieniem wokół pasa wody (zaczyna się ok. 8 px od brzegu, kończy ok. 30 px,
   dalej rozpływa się ditheringiem Bayera).
 - [x] Tempo pracy (§4.1): mnożnik tylko dla roślin dnia (Esencja bez zmian). Do balansu: wagi i maks. x1.5.
@@ -308,6 +313,15 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   wyglądał jak szum).
 - [x] UI na pulpicie (§12.10): gracz wybrał **wariant C**, pierścień akcji pod PPM zamiast przycisków w rogu okna. Pasek walut
   i rytm pracy zostają na razie w rogach (do decyzji przy dalszym dopracowaniu UI w 6d).
+- [x] HUD (Etap 6d, wybór gracza): **jeden pasek nad wyspą** (waluty i Esencja u góry, rytm, tempo i zegar pod spodem),
+  idzie za lądem, chowa się po 5 s bez ruchu myszy, w mini-trybie go nie ma. Toasty w prawym górnym rogu okna.
+- [x] Wprowadzenie (Etap 6d, wybór gracza): **tablica ogłoszeń** na czwartym kafelku nowej wyspy (zamiast dekoracji startowej),
+  5 zadań (posadź, pracuj, zbierz, kup lampę, dokup kafelek) i karteczka „gotowe”. Karteczka z zadaniem wisi pod wyspą,
+  złota strzałka unosi się nad celem. Rozbiórka tablicy kończy wprowadzenie (3 drewna). Stare zapisy: bez wprowadzenia.
+- [x] Mgła w przezroczystym oknie (po teście 6d): **gęsty wał przyklejony do wody** (zachodzi 3 px na pas wody, 14-30 px
+  szerokości, postrzępiona krawędź z dryfującymi kłębami), zamiast osobnych kłębów dalej od wyspy.
+- [x] Wiatr (po teście 6d): podmuch to **fala przechodząca przez wyspę** z lewej na prawą (rośliny pochylają się po kolei),
+  łodyga gnie się od czubka (podstawa sztywna), po podmuchu sprężysty powrót z małym odbiciem i drżeniem liści.
 - [x] Cząsteczki: **własny system pikselowy** (pula sprite'ów, 12 kl./s) zamiast ParticleSystem, dla ostrych pikseli.
 - [x] Woda i mgła: **liczone w shaderze z mapy danych** (port prototypu), ryby i potwór w shaderze, nie jako osobne sprite'y.
 - [ ] Rozmiar fontu tekstu: 10 px czy 12 px. Sprawdzimy później w Unity (§16.3).
@@ -334,6 +348,8 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `ui_kit.py` | font 3×5 (+ generator TTF), ikony, elementy 9-slice |
 | `mockups.py` | makiety UI (`out/ui_*.png`) i plik `WyspaPixel.ttf` |
 | `export_unity_ui.py` | eksport nowych sprite'ów, UI (z granicami 9-slice) i fontu do Unity (uruchamiać po `export_unity.py`) |
+| `export_unity_auto.py` | Etapy 6b-6d: nowe rośliny, duszki, ptaki, skrzynia 16 px, tablica ogłoszeń i strzałka wprowadzenia |
+| `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
 
 Shadery sprawdzamy poza Unity: `tools/shadercheck/check.py` kompiluje bloki HLSL kompilatorem DXC na prawdziwych plikach
@@ -452,6 +468,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     albo ptaszek przylatuje co 25-70 s, siada na drzewie lub wolnym kafelku, dziobie, podskakuje, odlatuje; kursor je płoszy.
 45. Po teście: **skrzynia na plony ma dokładnie 16 px szerokości** razem z obrysem (wcześniej 20 px na kafelku 16 px),
     więc sąsiednie skrzynie stykają się bokami zamiast na siebie nachodzić. Trzy stany zapełnienia bez zmian.
+46. **Etap 6d** (wybory gracza): HUD jako jeden pasek nad wyspą, wprowadzenie z tablicą ogłoszeń i karteczkami (5 zadań,
+    strzałka nad celem), balans w tempie „szybkim” z symulacji (`tools/balance/sim.py`: kafelki droższe, ognik 100 monet,
+    nasiona do odblokowania x1.3). Prośby gracza w trakcie: ogniki strącają owoce z drzew i zbierają je z ziemi,
+    duszek-handlarz stoi przy skrzyni i sprzedaje ją, gdy jest pełna, mgła w przezroczystym oknie gęstsza i przyklejona
+    do wody, wiatr jako fala przez wyspę z giętkimi łodygami i sprężystym powrotem. Zapis v8.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -589,12 +610,18 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 **E. Automatyzacja (kamienie milowe, bez niej gra przeszkadza w pracy)**
 **Stan (Etap 6b):** ulepszenie odblokowuje rodzaj budowli i daje pierwszą sztukę za darmo; kolejne w Sklep → Budowle
 (monety x1.6 za każdą posiadaną sztukę + stały materiał). Budowle stawia się i przenosi jak lampy.
-1. **Ognik-ogrodnik** (300 monet + 5 plonów nocy): co 30 s wylatuje na kurs: zbiera **do 3** dojrzałych plonów z pól
+1. **Ognik-ogrodnik** (100 monet od Etapu 6d, wcześniej 300 + 5 plonów nocy): co 30 s wylatuje na kurs: zbiera **do 3** dojrzałych plonów z pól
    **5x5 wokół siebie** (po kolei najbliższe), niesie je do najbliższej skrzyni z miejscem i wraca. Lot płynny, po łuku. Kolejne: 250 monet + 5 plonów nocy. **Skrzynia na plony** (20 miejsc): 60 monet + 4 drewna.
+   Gdy nie ma dojrzałych plonów, leci do **owocującego drzewa** w zasięgu: dwa razy uderza w koronę, owoce spadają i leżą
+   pod drzewem, ognik zbiera je z ziemi (do 3 na kurs) i niesie do skrzyni (sprzedaż po cenie owocu). Resztę zbierze następnym
+   kursem albo gracz (klik w drzewo). Leżące owoce są w zapisie.
 2. **Runa siewu** (dawna pamięć ziemi, 500 monet): sadzi na pustych grządkach **3x3 wokół siebie** (co 2 s). Klik w runę →
    „Nasiona”: pamięć ziemi (to samo, co rosło), wybrana roślina albo nic. Nasiono z worka, inaczej za monety. Kolejne: 150 monet + 5 kamienia.
-3. **Duszek-handlarz** (dawna skrzynia kupca, 800 monet): raz na godzinę leci do najpełniejszej skrzyni na wyspie i sprzedaje
-   ją po 90%. Każdy duszek opróżnia jedną skrzynię, więc więcej duszków = więcej skrzyń naraz. Kolejne: 500 monet + 8 kamienia.
+3. **Duszek-handlarz** (dawna skrzynia kupca, 800 monet): **od Etapu 6d (prośba gracza) stoi przy jednej skrzyni** (bez
+   własnego kafelka, unosi się obok niej) i sprzedaje ją po 90% **od razu, gdy się zapełni** (20/20), zamiast raz na godzinę.
+   Kupiony w sklepie: klik w skrzynię bez duszka. Przeniesienie skrzyni zabiera duszka, rozbiórka skrzyni też (zwrot połowy).
+   Duszki ze starych zapisów stają przy skrzyni bez duszka (a gdy jej nie ma, na ich kafelku pojawia się skrzynia).
+   Kolejne: 500 monet + 8 kamienia.
 4. **Sieci rybackie** (wymagają pomostu): bierny połów co godzinę.
 
 **F. Morze**
@@ -669,7 +696,8 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Etap 6b (gotowy, do testu w Unity):** 6 nowych nasion do odblokowania, automatyka w wielu egzemplarzach (ogniki 5x5, runy
   siewu 3x3 z wyborem nasion, duszki-handlarze, skrzynie), Sklep: Nasiona / Lampy / Budowle / Morze, mgła w przezroczystym oknie.
 - **Etap 6c:** dźwięk (ambient, efekty, głośność), ikona w zasobniku i powiadomienia (plony dojrzały, kupiec, potwór).
-- **Etap 6d:** nowe UI (§12.10), wprowadzenie (karteczki, §12.8), balans.
+- **Etap 6d (gotowy, do testu w Unity):** HUD jako pasek nad wyspą (§12.2), wprowadzenie z tablicą ogłoszeń (§12.8), balans
+  (symulacja `tools/balance/sim.py`, tempo szybkie), ogniki zbierają owoce, duszek-handlarz przy skrzyni, gęstsza mgła, wiatr falą. Zapis v8.
 
 ---
 
@@ -688,10 +716,10 @@ Makiety: `docs/img/ui_hud.png`, `ui_ksiega_sklep.png`, `ui_ksiega_ulepszenia.png
    **szary/zablokowane** z kłódką.
 
 ### 12.2 HUD
-- **Górny pasek:** monety, Esencja (ikona + pasek + liczby), plony nocy, odłamki gwiazd.
-  Waluty pojawiają się dopiero po odblokowaniu.
+- **Pasek nad wyspą (Etap 6d):** górny wiersz: monety, Esencja (ikona + pasek + liczby), plony nocy, odłamki gwiazd, drewno, kamień
+  (waluty pojawiają się dopiero po zdobyciu); dolny wiersz: rytm pracy, pasek serii, tempo, zegar. Pasek idzie za lądem.
 - **Menu:** pierścień akcji pod prawym klikiem na wyspie (Księga, Sklep, Opcje, Rozbudowa), §12.10. Przycisków w rogu okna już nie ma.
-- **Lewy dolny róg:** rytm pracy: ikona stanu (seria / odświeżony / zmęczenie), opis („SERIA 32 MIN +25%”), pasek, zegar.
+- Rytm pracy (dolny wiersz paska): ikona stanu (seria / odświeżony / zmęczenie), opis („SERIA 32 MIN +25%”), pasek, zegar.
 - **Mini-tryb:** HUD całkiem ukryty, zostaje tylko wyspa.
 
 ### 12.3 Interakcje na wyspie
@@ -734,6 +762,13 @@ półprzezroczysty (alfa, nie dithering), okrąg zasięgu i licznik grządek jak
 Karteczki przybite do skrzyni i tablicy na wyspie, 3–4 kroki: posadź, pracuj (patrz jak rośnie), zbierz, kup lampę.
 Cel jest podświetlony pulsem.
 
+**Stan (Etap 6d):** `UI/IntroNotes.cs` + `UI/NoticeBoard.cs`. Tablica stoi na nowej wyspie (Island.SpawnBoard), kroki:
+1. posadź (strzałka nad pustą grządką), 2. pracuj, aż urośnie (strzałka nad rośliną), 3. zbierz, 4. kup lampę
+(prawy klik → Sklep → Lampy; ten krok uczy też pierścienia akcji), 5. dokup kafelek (Rozbudowa), 6. „gotowe” (strzałka nad tablicą).
+Po wykonanym kroku karteczka odpada (iskierki) i przybija się nowa. Karteczka z treścią wisi pod wyspą (pasek HUD jest nad nią)
+i chowa się razem z HUD-em. Klik w tablicę: treść + „Rozbierz” (koniec wprowadzenia w każdej chwili, 3 drewna).
+Krok zapisany w `SaveData.intro` (v8); zapisy sprzed v8 kończą wprowadzenie od razu.
+
 ### 12.9 Technicznie (Unity)
 - **uGUI:** Canvas Screen Space - Overlay + Canvas Scaler **Constant Pixel Size**, `scaleFactor` = skala okna (całkowita),
   **Reference Pixels Per Unit = 16**. Obrazy typu **Sliced** ze sprite'ów `Art/Sprites/UI/Kit`
@@ -775,13 +810,13 @@ Skrypty: `tools/pixel-proto/tiles_proto.py`, `world_proto.py`.
 ### 13.2 Koszt
 - **Monety + Esencja.** Praca dosłownie „wyrywa ląd z mgły”.
   n = kafelki kupione od startu. Krzywa kwadratowa, bo wykładnicza nie pasuje do świata 32×32:
-  - Monety: `10 + 4n + 0.06n²`;
-  - Esencja: `3 + n/8`.
+  - Monety: `10 + 8n + 0.5n²` (Etap 6d, balans; wcześniej `10 + 4n + 0.06n²`);
+  - Esencja: `3 + n/4` (wcześniej `3 + n/8`).
 
   | n | 0 | 10 | 50 | 100 | 300 | 600 | 1020 |
   |---|---|---|---|---|---|---|---|
-  | monety | 10 | 56 | 360 | 1010 | 6610 | 24010 | 66514 |
-  | Esencja | 3 | 4 | 9 | 15 | 40 | 78 | 130 |
+  | monety | 10 | 140 | 1660 | 5810 | 47410 | 184810 | 528370 |
+  | Esencja | 3 | 5 | 15 | 28 | 78 | 153 | 258 |
 
   Wysoka cena w Esencji późno w grze wymusza ulepszanie słoja, co jest celowym powiązaniem systemów.
 - Ostatnie kafelki świata (krawędź mapy, wnętrza stref) mogą wymagać rzadkich surowców (odłamki gwiazd, dary z głębin).

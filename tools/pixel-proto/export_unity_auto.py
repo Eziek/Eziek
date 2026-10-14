@@ -57,6 +57,10 @@ for kind in ('crow', 'finch'):
 for fill in range(3):   # skrzynia na plony 16 px (sąsiednie nie nachodzą na siebie)
     save(S3.harvest_crate(fill), "Automation", f"harvest_crate_{fill}")
 
+for note in (True, False):   # wprowadzenie (Etap 6d)
+    save(S6.notice_board(note), "Objects", "notice_board" + ("" if note else "_empty"), glow=False)
+save(S6.intro_arrow(), "Fx", "intro_arrow", glow=False)
+
 for name, rows in S6.ICON_MAPS.items():
     save(K.from_map(rows), "UI/Icons", "icon_" + name, pivot=(0.5, 0.5), glow=False)
 

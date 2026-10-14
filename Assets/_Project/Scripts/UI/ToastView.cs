@@ -18,7 +18,7 @@ namespace Wyspa.UI
 
         public static ToastView Create(RectTransform canvasRoot)
         {
-            var rt = Ui.Place(Ui.Rect("Toasts", canvasRoot), Ui.TopRight, Ui.TopRight, new Vector2(-4, -26), new Vector2(160, 80));
+            var rt = Ui.Place(Ui.Rect("Toasts", canvasRoot), Ui.TopRight, Ui.TopRight, new Vector2(-4, -4), new Vector2(160, 80));
             var view = rt.gameObject.AddComponent<ToastView>();
             view.root = rt;
             return view;
