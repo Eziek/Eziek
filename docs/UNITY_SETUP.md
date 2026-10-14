@@ -356,6 +356,16 @@ Po pobraniu: Play (sam shader, bez Wyspa → 2).
 2. Grządki na brzegu wyspy kończą się 2 px przed brzegiem (pasek trawy), nic nie wystaje nad wodę.
    Jeśli grządki zniknęły całkiem: maska lądu (obiekt LandMask pod sprite'em wyspy) nie działa - napisz.
 
+## 4w. Zamówienia i wskaźnik pracy (test)
+Po pobraniu: **Wyspa → 2** (ikony klawiatury i myszy w motywie UI), potem Play.
+1. Pasek HUD, dolny wiersz: ikonki klawiatury i myszy. Pisz: zapala się klawiatura; rusz myszą: zapala się mysz.
+   Tempo („TEMPO X1.4”) rośnie i spada w ciągu ok. 15 s.
+2. Po wprowadzeniu (karteczka „gotowe”) tablica zostaje: zaraz pojawia się toast „Nowa karteczka na tablicy”.
+   Klik w tablicę: lista zamówień (kto, czego ile, ile cykli zostało, nagroda). Zbieraj plony z listy: postęp rośnie
+   (także przy zbiorze przez ognika). Po wykonaniu: toast, monety lecą od tablicy, karteczka odpada.
+3. Stary zapis bez tablicy: Sklep → Budowle → Tablica ogłoszeń (40 monet + 3 drewna), potem pojawiają się zamówienia.
+4. F1 → czas x60 przyspiesza cykle: nowe karteczki co 2 cykle, stare po terminie znikają („Karteczka zbutwiała”).
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

@@ -143,3 +143,10 @@ bld.board,Tablica ogłoszeń,Notice Board,Anschlagbrett,掲示板,告示板,wpro
 term.note,Karteczka,Note,Zettel,張り紙,便条,zadanie przybite do tablicy ogłoszeń
 term.save_slot,Zapis,Save,Spielstand,セーブ,存档,slot zapisu w menu głównym (3 sloty)
 menu.main,Menu główne,Main menu,Hauptmenü,メインメニュー,主菜单,pierścień akcji: powrót do menu (gra się zapisuje)
+term.order,Zamówienie,Order,Auftrag,依頼,委托,karteczka z prośbą na tablicy ogłoszeń
+npc.herbalist,Zielarka z mgły,Fog Herbalist,Nebelkräuterin,霧の薬草師,雾中草药师,zamawiająca (bez postaci na ekranie)
+npc.gravedigger,Grabarz,Gravedigger,Totengräber,墓守,掘墓人,zamawiający
+npc.keeper,Latarnik,Lighthouse Keeper,Leuchtturmwärter,灯台守,守塔人,zamawiający
+npc.witch,Wiedźma z bagien,Bog Witch,Moorhexe,沼の魔女,沼泽女巫,zamawiająca
+npc.monk,Mnich z ruin,Ruin Monk,Ruinenmönch,廃墟の修道士,废墟修士,zamawiający
+npc.fisher,Ślepy rybak,Blind Fisher,Blinder Fischer,盲目の漁師,盲眼渔夫,zamawiający

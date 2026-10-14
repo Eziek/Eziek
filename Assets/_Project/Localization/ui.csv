@@ -220,3 +220,13 @@ ui.menu.start,Start,Start,Start,開始,开始,nowa gra: potwierdzenie nazwy
 ui.menu.name,Nazwa wyspy (do 10 znaków),Island name (up to 10),Inselname (bis 10),島の名前（10文字まで）,岛屿名称（最多10字）,pole nazwy zapisu
 ui.menu.delete,Usuń,Delete,Löschen,削除,删除,usuwa zapis (drugi klik potwierdza)
 ui.menu.delete_confirm,Na pewno?,Sure?,Sicher?,本当に？,确定？,potwierdzenie usunięcia
+ui.order.line,{0}: {1} ({2} {2:plural:cykl|cykle|cykli}),{0}: {1} ({2} {2:plural:cycle|cycles}),{0}: {1} ({2} {2:plural:Zyklus|Zyklen}),{0}：{1}（あと{2}サイクル）,{0}：{1}（剩{2}个周期）,"{0} = zamawiający, {1} = lista, {2} = cykle do końca"
+ui.order.item,{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},postęp: zebrane / potrzebne
+ui.order.reward,Nagroda: {0},Reward: {0},Belohnung: {0},報酬：{0},报酬：{0},
+ui.order.none,Tablica pusta. Karteczka za {0} {0:plural:cykl|cykle|cykli}.,The board is empty. A note in {0} {0:plural:cycle|cycles}.,Das Brett ist leer. Ein Zettel in {0} {0:plural:Zyklus|Zyklen}.,掲示板は空。次の依頼まで{0}サイクル。,告示板是空的。{0}个周期后有新委托。,
+ui.order.bonus.fertilizer,nawóz x{0},fertilizer x{0},Dünger x{0},肥料 x{0},肥料 x{0},
+ui.order.bonus.seeds,{1} x{0},{1} x{0},{1} x{0},{1} x{0},{1} x{0},nasiona nocy do worka
+ui.order.bonus.shard,odłamek gwiazdy x{0},star shard x{0},Sternsplitter x{0},星のかけら x{0},星之碎片 x{0},
+ui.order.bonus.wood,drewno x{0},wood x{0},Holz x{0},木材 x{0},木材 x{0},
+ui.order.bonus.stone,kamień x{0},stone x{0},Stein x{0},石 x{0},石头 x{0},
+ui.shop.board.desc,Zamówienia od mieszkańców mgły,Orders from the folk of the fog,Aufträge der Nebelbewohner,霧の住人からの依頼,雾中居民的委托,"sklep: tablica, gdy jej nie ma"

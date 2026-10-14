@@ -267,6 +267,7 @@ namespace Wyspa.Automation
                 if (sprite == null && tree.FallenCount == 0)
                     break;
                 carried.Add(new Carried { fruit = tree.Species, sprite = sprite });
+                GameEvents.RaiseHarvested("fruit:" + tree.Species.id, 1);
                 ShowCarried();
             }
             fruitToPick = 0;

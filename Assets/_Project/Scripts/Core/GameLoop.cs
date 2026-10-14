@@ -126,6 +126,7 @@ namespace Wyspa.Core
             if (rhythm == null) rhythm = gameObject.AddComponent<WorkRhythm>();
             if (upgrades == null) upgrades = GetComponent<UpgradeState>();
             if (upgrades == null) upgrades = gameObject.AddComponent<UpgradeState>();
+            if (GetComponent<Orders.OrderBook>() == null) gameObject.AddComponent<Orders.OrderBook>();   // zamówienia z tablicy
             upgrades.Changed += ApplyUpgrades;
         }
 
@@ -151,7 +152,8 @@ namespace Wyspa.Core
                     Lore.Chronicle.Count("night");
             }
             TryMutate(plot, crop);
-            GameEvents.RaiseHarvested();
+            if (crop != null)
+                GameEvents.RaiseHarvested("crop:" + crop.id, 1);
         }
 
         /// <summary>

@@ -261,6 +261,7 @@ namespace Wyspa.Farming
             game.Wallet.Add(coins);
             GameEvents.RaiseCurrencyGained(at, CurrencyType.Coins, coins);
             GameEvents.RaiseToast("toast.fruit", n, Loc.Get(species.FruitKey), coins);
+            GameEvents.RaiseHarvested("fruit:" + species.id, n);
         }
 
         int Stage => !Adult ? (growth < species.growSeconds * 0.25f ? 0 : 1) : (Fruiting ? 3 : 2);
@@ -350,6 +351,7 @@ namespace Wyspa.Farming
             var at = transform.position + new Vector3(0f, 1.2f, 0f);
             GameEvents.RaiseCurrencyGained(at, CurrencyType.Coins, coins);
             GameEvents.RaiseToast("toast.fruit", species.fruitCount, Loc.Get(species.FruitKey), coins);
+            GameEvents.RaiseHarvested("fruit:" + species.id, species.fruitCount);
             // owoce spadają z korony, drzewo lekko się otrząsa (bez podskakiwania całego drzewa)
             IslandFx.FruitDrop(at, 18f, art != null ? art.fruit : null, Mathf.Min(species.fruitCount, 5), body != null ? body.sortingOrder : 0);
             Bounce(0.06f, 0.5f);

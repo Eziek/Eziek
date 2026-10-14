@@ -615,6 +615,27 @@ namespace Wyspa.UI
                     buy = i => StartBuilding(i, k, nameKey, pic, cost, area),
                 });
             }
+            // tablica ogłoszeń (zamówienia): tylko gdy na wyspie jej nie ma (rozebrana albo stary zapis)
+            if (island.Board == null)
+            {
+                var boardCost = Cost(40, 3);
+                seaItems.Add(new ShopItem
+                {
+                    nameKey = "bld.board", descKey = "ui.shop.board.desc", sprite = art != null ? art.noticeBoard : null, cost = boardCost,
+                    buy = i =>
+                    {
+                        if (UiRoot.Instance == null)
+                            return;
+                        UiRoot.Instance.StartPlacement(new PlacementMode.Request
+                        {
+                            nameKey = "bld.board", sprite = art != null ? art.noticeBoard : null, cost = boardCost,
+                            valid = i.IsFree,
+                            ghostAt = t => (Island.TileAnchor(t, 13, out _), false),
+                            confirm = t => i.SpawnBoard(t) != null,
+                        });
+                    },
+                });
+            }
         }
 
         void StartBuilding(Island island, string kind, string nameKey, Sprite sprite, List<CurrencyAmount> cost, int area)

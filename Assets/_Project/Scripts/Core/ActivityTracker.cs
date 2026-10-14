@@ -16,7 +16,7 @@ namespace Wyspa.Core
 
         // ---- tempo pracy (prośba gracza): pisanie i ruch myszy przyspieszają rośliny dnia
         const float SampleSeconds = 0.2f;
-        const int Samples = 300;                    // okno 60 s
+        const int Samples = 75;                     // okno 15 s (prośba gracza: tempo reaguje szybciej niż przy minucie)
         const float KeyboardWeight = 1f, MouseWeight = 0.35f;
         /// <summary>Średnia waga próbek, przy której tempo = 1 (ciągłe pisanie trafia w ok. połowę próbek).</summary>
         const float FullTempo = 0.5f;
@@ -30,11 +30,15 @@ namespace Wyspa.Core
         uint lastStamp;
         int lastCursorX, lastCursorY;
 
+        /// <summary>Kiedy (Time.unscaledTime) ostatnio wykryto pisanie / ruch myszy - wskaźnik w pasku HUD.</summary>
+        public float LastKeyboardTime { get; private set; } = -10f;
+        public float LastMouseTime { get; private set; } = -10f;
+
         /// <summary>Do testów (HUD debugowy): stałe tempo 0..1, ujemne = mierzone naprawdę.</summary>
         public float DebugTempo { get; set; } = -1f;
 
         /// <summary>
-        /// Tempo pracy 0..1 z ostatniej minuty: jak często był input (pisanie liczy się w pełni, sam ruch myszy w ok. 1/3).
+        /// Tempo pracy 0..1 z ostatnich 15 s: jak często był input (pisanie liczy się w pełni, sam ruch myszy w ok. 1/3).
         /// Bez globalnych hooków: co 0.2 s porównujemy znacznik ostatniego inputu i pozycję kursora (GDD §4.1).
         /// </summary>
         public float Tempo => DebugTempo >= 0f ? Mathf.Clamp01(DebugTempo) : Mathf.Clamp01(sampleSum / Samples / FullTempo);
@@ -60,7 +64,12 @@ namespace Wyspa.Core
             SystemIdle.CursorPosition(out int cx, out int cy);
             float w = 0f;
             if (stamp != lastStamp && lastStamp != 0u)
-                w = cx != lastCursorX || cy != lastCursorY ? MouseWeight : KeyboardWeight;   // input bez ruchu kursora = klawiatura
+            {
+                bool mouse = cx != lastCursorX || cy != lastCursorY;   // input bez ruchu kursora = klawiatura
+                w = mouse ? MouseWeight : KeyboardWeight;
+                if (mouse) LastMouseTime = Time.unscaledTime;
+                else LastKeyboardTime = Time.unscaledTime;
+            }
             lastStamp = stamp;
             lastCursorX = cx;
             lastCursorY = cy;

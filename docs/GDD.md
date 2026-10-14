@@ -81,7 +81,7 @@ Nazwa robocza: „Esencja” (alternatywy: Żar, Dusza).
 - **+1 Esencji za każdą aktywną minutę.** Ta sama aktywność napędza też wzrost roślin dnia.
 - **Tempo pracy** (prośba gracza): im więcej piszesz i ruszasz myszą, tym szybciej rosną rośliny dnia, do **x1.5**.
   Bez globalnych hooków: co 0.2 s porównujemy znacznik ostatniego inputu (`GetLastInputInfo`) i pozycję kursora; input bez
-  ruchu kursora liczy się jako pisanie (waga 1), sam ruch myszy waga 0.35. Średnia z ostatniej minuty, pełne tempo przy
+  ruchu kursora liczy się jako pisanie (waga 1), sam ruch myszy waga 0.35. Średnia z ostatnich 15 s, pełne tempo przy
   połowie próbek z inputem. Mnożnik widać w HUD („Tempo x1.3”) i w dymku grządki.
 - **Zbiornik („słój”):** pojemność na start ok. **60**. Nadmiar przepada. Ulepszenie słoja zwiększa pojemność.
 - UI: pasek w prawym górnym rogu (w prototypie jeszcze z ikoną zegara, docelowo słój z płomieniem).
@@ -258,6 +258,14 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
+- [x] **Zamówienia na tablicy ogłoszeń** (wybór gracza): po wprowadzeniu tablica zostaje; co 2 cykle gry nowa karteczka
+  (maks. 3) od kogoś z mgły (Zielarka z mgły, Grabarz, Latarnik, Wiedźma z bagien, Mnich z ruin, Ślepy rybak, bez postaci
+  na ekranie): zebrać 1-2 rodzaje plonów lub owoców w terminie 4-7 cykli. Postęp liczy się sam ze zbiorów (ręcznych i ogników),
+  zbiór dalej daje monety. Nagroda: monety (1.8x wartości) + bonus (odłamek 15%, nawóz, nasiona nocy, drewno, kamień).
+  Przeterminowana karteczka znika bez kary. Bez tablicy zamówienia czekają; tablicę można postawić w Sklep → Budowle
+  (40 monet + 3 drewna). `Orders/OrderBook.cs`, zapis v9.
+- [x] **Wskaźnik pracy** (prośba gracza): w pasku HUD ikonki klawiatury i myszy zapalają się, gdy gra widzi input.
+  Tempo pracy liczone z ostatnich **15 s** (wcześniej 60 s), więc reaguje szybciej.
 - [x] **Mgła „chibi”** (prośba gracza): bulwiaste kłęby jak z kreskówki zamiast miękkiego rozmycia: koła na siatce 11 px
   (promień 4.5-8.5 px, dryfują i „oddychają”), płaskie kolory (jasny brzeg u góry, podstawa, cień od dołu), ciemny obrys
   1 px, prawie nieprzezroczyste. Przezroczyste okno: wał przyklejony do wody (zachodzi 3 px na wodę, bez obrysu od strony
@@ -502,6 +510,8 @@ Obrazki referencyjne (kopie): `docs/img/`
 50. Po teście: we wprowadzeniu kafelek przed lampą (na starcie nie było miejsca na lampę), karteczka z większym marginesem
     i szersza (mniej linii). **Grządki przycięte do lądu** (SpriteMask z maski lądu, 2 px trawy od brzegu), więc na skrajnych
     kafelkach nie wystają poza zaokrąglony, nierówny brzeg.
+51. Tańsze pierwsze 20 kafelków (prośba gracza). Wybór dalszej zabawy: zamówienia, kocioł alchemiczny, chowańce i pogoda,
+    dźwięk i zasobnik. Zrobione zamówienia na tablicy; wskaźnik pisania i myszy w HUD, tempo z 15 s.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

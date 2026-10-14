@@ -72,7 +72,11 @@ namespace Wyspa.UI
                 Destroy(arrow.gameObject);
         }
 
-        void OnHarvest() => harvests++;
+        void OnHarvest(string id, int count)
+        {
+            if (id != null && id.StartsWith("crop:"))
+                harvests++;
+        }
 
         void Update()
         {

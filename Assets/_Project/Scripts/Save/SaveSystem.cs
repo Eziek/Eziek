@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 8;   // v8: krok wprowadzenia (tablica z karteczkami)
+        public int version = 9;   // v9: zamówienia z tablicy (v8: krok wprowadzenia)
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
@@ -35,6 +35,7 @@ namespace Wyspa.Save
         public List<string> automationGranted = new List<string>();  // v6: darmowa pierwsza sztuka budowli już była
         public int intro;                       // v8: krok wprowadzenia (starsze zapisy: wprowadzenie skończone)
         public string slotName;                 // v8: nazwa zapisu w menu głównym (do 10 znaków)
+        public Orders.OrderSave orders;         // v9: zamówienia z tablicy ogłoszeń
     }
 
     [Serializable]
@@ -259,6 +260,7 @@ namespace Wyspa.Save
                 chronicle = Lore.Chronicle.Instance != null ? Lore.Chronicle.Instance.Snapshot() : null,
                 intro = UI.IntroNotes.Instance != null ? UI.IntroNotes.Instance.Step : UI.IntroNotes.Done,
                 slotName = CurrentName,
+                orders = Orders.OrderBook.Instance != null ? Orders.OrderBook.Instance.Snapshot() : null,
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
@@ -329,6 +331,8 @@ namespace Wyspa.Save
                 Sea.NightEvents.Instance.MonsterNight = data.monsterNight;
             if (Lore.Chronicle.Instance != null)
                 Lore.Chronicle.Instance.Restore(data.chronicle);
+            if (Orders.OrderBook.Instance != null)
+                Orders.OrderBook.Instance.Restore(data.orders);
             if (UI.IntroNotes.Instance != null)
                 UI.IntroNotes.Instance.Step = data.version >= 8 ? Mathf.Clamp(data.intro, 0, UI.IntroNotes.Done) : UI.IntroNotes.Done;
 

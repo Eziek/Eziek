@@ -14,10 +14,13 @@ namespace Wyspa.Core
         /// <summary>Klik w obiekt na wyspie (dekoracja, lampa, skrzynia): UI pokazuje panel kontekstowy z akcjami.</summary>
         public static event Action<IContextActions> ContextRequested;
 
-        /// <summary>Zbiór plonu z grządki (ręczny albo przez ognika), np. dla kroków wprowadzenia.</summary>
-        public static event Action Harvested;
+        /// <summary>
+        /// Zbiór (ręczny albo przez ognika): id „crop:marchew” albo „fruit:apple” i liczba sztuk.
+        /// Słuchają go kroki wprowadzenia i zamówienia z tablicy.
+        /// </summary>
+        public static event Action<string, int> Harvested;
 
-        public static void RaiseHarvested() => Harvested?.Invoke();
+        public static void RaiseHarvested(string itemId, int count) => Harvested?.Invoke(itemId, count);
 
         public static void RequestContext(IContextActions target) => ContextRequested?.Invoke(target);
 

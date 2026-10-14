@@ -36,6 +36,7 @@ namespace Wyspa.UI
         RectTransform essenceFill;
         Image rhythmIcon;
         TextMeshProUGUI rhythmText, clockText, tempoText;
+        Image keysIcon, mouseIcon;   // wskaźnik: gra widzi pisanie / ruch myszy (zapala się na chwilę)
         RectTransform rhythmFill;
         Vector2 lastMouse;
         float lastMove;
@@ -44,6 +45,8 @@ namespace Wyspa.UI
         readonly Dictionary<CurrencyType, int> pending = new Dictionary<CurrencyType, int>();
         readonly Dictionary<Item, float> bumpUntil = new Dictionary<Item, float>();
         int flying;
+
+        static readonly Color InputDim = new Color(0.45f, 0.45f, 0.5f, 0.55f);
 
         public bool ForceVisible { get; set; }
         /// <summary>Widoczność paska (0..1): karteczka wprowadzenia pokazuje się i chowa razem z nim.</summary>
@@ -90,6 +93,8 @@ namespace Wyspa.UI
             rhythmText = Ui.Txt(bar, "Rhythm", t.textLight);
             rhythmFill = Ui.Bar(bar, "RhythmBar", t.barFillRhythm, Ui.TopLeft, Ui.TopLeft, Vector2.zero, new Vector2(30, 7));
             tempoText = Ui.Txt(bar, "Tempo", t.textGold);
+            keysIcon = Ui.Img(bar, "Keys", t.Icon("keys"), false);
+            mouseIcon = Ui.Img(bar, "Mouse", t.Icon("mouse"), false);
             clockText = Ui.Txt(bar, "Clock", t.textMuted);
         }
 
@@ -121,7 +126,7 @@ namespace Wyspa.UI
             refresh -= Time.unscaledDeltaTime;
             if (refresh <= 0f)
             {
-                refresh = 0.25f;
+                refresh = 0.15f;   // wskaźnik pisania / myszy ma mrugać na bieżąco
                 Refresh();
             }
             Follow();
@@ -219,6 +224,15 @@ namespace Wyspa.UI
                 Ui.Place(tempoText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 2), new Vector2(w2, 10));
                 bx += w2 + 4;
             }
+            // wskaźnik pracy: klawiatura i mysz jasne przez chwilę po wykrytym inpucie, inaczej przygaszone
+            var act = game.Activity;
+            float now = Time.unscaledTime;
+            keysIcon.color = now - act.LastKeyboardTime < 0.75f ? Color.white : InputDim;
+            mouseIcon.color = now - act.LastMouseTime < 0.75f ? Color.white : InputDim;
+            Ui.Place(keysIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2), new Vector2(12, 12));
+            bx += 12;
+            Ui.Place(mouseIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2), new Vector2(12, 12));
+            bx += 14;
             float cw = Ui.Width(clockText);
             float bottomWidth = bx + cw + Pad;
             float width2 = Mathf.Ceil(Mathf.Max(topWidth, bottomWidth));
