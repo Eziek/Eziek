@@ -648,7 +648,7 @@ namespace Wyspa.EditorTools
             if (data == null)
                 Debug.LogWarning("[Wyspa] Brak Ground/water_data.png - uruchom tools/pixel-proto/export_unity_fx.py.");
             FxMaterialAsset("Water", "Water", m => m.SetTexture("_DataTex", data));
-            FxMaterialAsset("Fog", "Fog", null);
+            FxMaterialAsset("Fog", "Fog", m => m.SetColor("_ColLine", new Color(0.094f, 0.110f, 0.157f)));   // ciemniejsza obwódka mgły (prośba gracza)
         }
 
         /// <summary>Klikalny obszar = kafelek pod obiektem (podstawa 6 px pod środkiem kafelka), jak w Island.</summary>

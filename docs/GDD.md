@@ -597,6 +597,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     i rozbijające się w pianę z rozbryzgiem i cofką, kręgi na wodzie. Ryby, potwór, połyski i odbicia lamp zostają.
 70. Księga (po teście gracza): treść każdej zakładki w przewijanym oknie (ScrollRect, przycięcie RectMask2D):
     kółko myszy przewija, przeciąganie przesuwa (drzewko ulepszeń także w poziomie), okno kończy się nad podpowiedzią.
+71. Etap 7, część 3b: mgła liczona w 32 px (gładkie kłęby, obrys 1 px), ciemniejsza obwódka (prośba gracza);
+    w przezroczystym oknie twardy limit zasięgu 18 px za pasem wody, więc obrys zamyka się przed krawędzią okna.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
