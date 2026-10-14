@@ -113,6 +113,10 @@ ui.shop.boat.desc,Wyprawy w mgłę,Expeditions into the fog,Fahrten in den Nebel
 ui.shop.built,Zbudowano,Built,Gebaut,建設済み,已建造,
 ui.shop.needs_pier,Wymaga pomostu,Needs a pier,Benötigt einen Steg,桟橋が必要,需要栈桥,
 ui.boat.docked,Czeka przy pomoście,Waiting at the pier,Wartet am Steg,桟橋で待機中,在栈桥边等待,
+ui.pier.info,Łowisko wokół końca pomostu: klik w rybę,Fishing spot around the end of the pier: click a fish,Fischgrund rund um das Stegende: klicke einen Fisch an,桟橋の先が釣り場：魚をクリック,栈桥尽头周围是渔场：点击鱼,
+ui.pier.moves_all,Sieci i łódź popłyną razem z pomostem.,The nets and the boat move along with the pier.,Netze und Boot ziehen mit dem Steg um.,漁網と小舟も桟橋と一緒に移動する。,渔网和小船会随栈桥一起移动。,
+ui.nets.next,Następny połów za {0} min,Next catch in {0} min,Nächster Fang in {0} Min.,次の漁獲まで{0}分,{0}分钟后下一次捕获,
+ui.nets.moves_with_pier,Sieci stoją przy pomoście: przenosi się je razem z nim.,The nets belong to the pier: they move together with it.,Die Netze gehören zum Steg: sie ziehen mit ihm um.,漁網は桟橋に付属：桟橋と一緒に移動する。,渔网属于栈桥：随栈桥一起移动。,
 ui.boat.away,W mgle: jeszcze {0:0.0} h pracy,In the fog: {0:0.0} h of work left,Im Nebel: noch {0:0.0} Std. Arbeit,霧の中：残り作業{0:0.0}時間,迷雾中：还需工作{0:0.0}小时,
 ui.boat.returned,Wróciła z łupem!,Back with loot!,Mit Beute zurück!,戦利品を持って帰ってきた！,满载而归！,
 ui.boat.unload,Rozładuj,Unload,Entladen,荷下ろし,卸货,
@@ -264,6 +268,7 @@ ui.options.sound,Dźwięk,Sound,Ton,サウンド,声音,sekcja opcji
 ui.options.vol_ambient,"Tło (fale, noc, deszcz)","Ambience (waves, night, rain)","Atmosphäre (Wellen, Nacht, Regen)",環境音（波・夜・雨）,环境音（海浪、夜晚、雨）,
 ui.options.vol_sfx,Efekty,Effects,Effekte,効果音,音效,
 ui.options.mute_bg,"Cisza, gdy okno nieaktywne",Mute when window inactive,"Stumm, wenn Fenster inaktiv",非アクティブ時は無音,窗口未激活时静音,
+ui.options.wisp_voices,Głosy ogników,Wisp voices,Irrlicht-Stimmen,鬼火の声,鬼火的声音,opcje dźwięku: szczebiot przy pogaduszkach ogników
 ui.options.sound_hint,"Dźwięki są tymczasowe (generowane), docelowe przyjdą później.",The sounds are temporary (generated); final ones will come later.,"Die Töne sind vorläufig (generiert), endgültige kommen später.",音は仮のもの（自動生成）。本番の音は後で入る。,声音为临时生成，正式音效稍后加入。,pasek opisu w opcjach dźwięku
 ui.tray.show,Pokaż wyspę,Show the island,Insel zeigen,島を表示,显示岛屿,menu ikony w zasobniku
 ui.tray.hide,Schowaj wyspę,Hide the island,Insel verbergen,島を隠す,隐藏岛屿,

@@ -14,6 +14,11 @@ namespace Wyspa.Core
 
         public static void PlaySound(string id, float volume = 1f) => Sound?.Invoke(id, volume);
 
+        /// <summary>Głos (sylaba ogników): efekt z własną wysokością, bez losowania i bez limitu powtórek.</summary>
+        public static event Action<string, float, float> Voice;
+
+        public static void PlayVoice(string id, float volume, float pitch) => Voice?.Invoke(id, volume, pitch);
+
         public static void RaiseToast(string key, params object[] args) => Toast?.Invoke(key, args);
 
         /// <summary>Klik w obiekt na wyspie (dekoracja, lampa, skrzynia): UI pokazuje panel kontekstowy z akcjami.</summary>

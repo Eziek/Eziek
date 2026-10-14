@@ -56,7 +56,9 @@ namespace Wyspa.Automation
     /// Ognik z gniazda. Każdy ma zawód:
     /// ogrodnik zbiera plony i owoce do skrzyń, siewca sadzi, drwal rozbiera dzikie drzewa i kamienie, alchemik obsługuje kocioł,
     /// latarnik nocą „dolewa światła” lampom, zbieracz łapie spadające gwiazdy, owoce z ziemi i błyskotki w trawie.
-    /// Bez pracy krąży wokół gniazda, drzew i lamp. Za pracę zdobywa doświadczenie: wyższy poziom = szybszy lot, więcej niesie,
+    /// Bez pracy krąży wokół gniazda, drzew i lamp, a czasem zlatuje się z innym wolnym ognikiem na pogaduszki
+    /// (dymki z runami i szczebiot, GDD §11.3 E1). Ogniki nie wchodzą w siebie: przy mijaniu sprite'y delikatnie się odsuwają.
+    /// Za pracę zdobywa doświadczenie: wyższy poziom = szybszy lot, więcej niesie,
     /// jaśniejszy blask. Ma imię (dymek gniazda). Ogrodnik, siewca, drwal i alchemik pracują w polu 7x7 wokół gniazda,
     /// latarnik i zbieracz na całej wyspie.
     /// </summary>
@@ -64,6 +66,13 @@ namespace Wyspa.Automation
     {
         public const int Radius = 3;
         public const int NameCount = 12;
+        const float Personal = 0.6f;       // bliżej niż tyle ogniki się rozpychają (ognik ma ok. 10 px szerokości)
+        const float MaxNudge = 0.3f;       // najdalej o tyle sprite odsuwa się od toru lotu
+        const float ChatRange = 3.5f;      // jak daleko szuka rozmówcy
+        const float ChatGap = 0.38f;       // pół odstępu między rozmówcami
+        const float HeadHeight = 1.05f;    // dymek nad głową (od punktu zaczepienia sprite'a)
+        const int MaxChats = 2;            // tyle rozmów naraz na całej wyspie
+        static int activeChats;
         static readonly int[] LevelXp = { 0, 10, 30, 70, 150, 300 };   // poziomy 1..6
 
         public static readonly List<Wisp> All = new List<Wisp>();
@@ -89,6 +98,14 @@ namespace Wyspa.Automation
         float trailTimer;
         float shinyTimer;
         bool warnedFull;
+        Transform visual;           // sprite'y ognika (odsuwane od sąsiadów)
+        Vector3 nudge;
+        WispBubble bubble;
+        float chatCooldown;
+        bool idling;                // krąży bez pracy: można go zagadać
+        bool chatReady;             // rozmówca doleciał na miejsce
+        bool chatHost;              // ten ognik zaczął rozmowę (liczy się do MaxChats)
+        Wisp chatWith;
         readonly List<object> myReservations = new List<object>();
         readonly List<Carried> carried = new List<Carried>();
         readonly List<SpriteRenderer> carriedSprites = new List<SpriteRenderer>();
@@ -149,6 +166,10 @@ namespace Wyspa.Automation
             glowFrames = glowSprites;
             seed = Random.value * 10f;
             shinyTimer = Random.Range(120f, 300f);
+            chatCooldown = Random.Range(10f, 45f);
+            visual = body != null && body.transform != transform ? body.transform : null;
+            if (bubble == null)
+                bubble = WispBubble.Create(transform, visual, HeadHeight);
             transform.position = Home;
             ApplyLevelLook();
         }
@@ -159,6 +180,7 @@ namespace Wyspa.Automation
         {
             All.Remove(this);
             Release();
+            LeaveChat();
             if (nest != null)
                 nest.Forget(this);
             if (carried.Count > 0)
@@ -184,6 +206,7 @@ namespace Wyspa.Automation
         {
             StopAllCoroutines();
             Release();
+            LeaveChat();
             flying = false;
             if (carried.Count > 0)
                 Deliver(HarvestCrate.NearestWithSpace(transform.position));
@@ -220,6 +243,7 @@ namespace Wyspa.Automation
             if (glow != null) glow.sortingOrder = 4401;
             foreach (var c in carriedSprites)
                 if (c != null) c.sortingOrder = 4399;
+            chatCooldown -= Time.unscaledDeltaTime;
             if (flying)
             {
                 trailTimer -= Time.unscaledDeltaTime;
@@ -229,6 +253,36 @@ namespace Wyspa.Automation
                     IslandFx.WispTrail(transform.position + new Vector3(0f, 0.55f, 0f));
                 }
             }
+        }
+
+        /// <summary>
+        /// Ogniki nie wchodzą w siebie: gdy tory lotu się zbliżą, sprite'y odsuwają się od siebie (każdy o połowę zachodzenia,
+        /// w pionie słabiej), płynnie i najwyżej o MaxNudge. Tor lotu (transform) zostaje bez zmian, więc praca idzie dalej.
+        /// </summary>
+        void LateUpdate()
+        {
+            if (visual == null)
+                return;
+            var me = transform.position;
+            var push = Vector3.zero;
+            foreach (var o in All)
+            {
+                if (o == this || o == null)
+                    continue;
+                var d = me - o.transform.position;
+                d.z = 0f;
+                float dist = d.magnitude;
+                if (dist >= Personal)
+                    continue;
+                // w tym samym punkcie: stały kierunek dla pary (po ziarnie), żeby nie migotały
+                var dir = dist > 0.001f ? d / dist : new Vector3(seed > o.seed ? 1f : -1f, 0f, 0f);
+                push += dir * ((Personal - dist) * 0.5f);
+            }
+            push.y *= 0.6f;
+            push = Vector3.ClampMagnitude(push, MaxNudge);
+            nudge = Vector3.Lerp(nudge, push, 1f - Mathf.Exp(-Time.unscaledDeltaTime * 6f));
+            float s = Mathf.Max(0.01f, transform.localScale.x);
+            visual.localPosition = nudge / s;
         }
 
         // ------------------------------------------------------------ doświadczenie
@@ -307,6 +361,7 @@ namespace Wyspa.Automation
             yield return new WaitForSecondsRealtime(Random.Range(0.3f, 1.5f));
             while (true)
             {
+                idling = false;
                 if (nest == null)
                     yield break;
                 var job = Island.Instance != null && Island.Instance.Ready && !Save.SaveSystem.InMenu ? FindJob() : null;
@@ -337,6 +392,18 @@ namespace Wyspa.Automation
         /// <summary>Bez pracy: krąży wokół gniazda, zagląda do drzew i lamp albo odpoczywa nad pniem.</summary>
         IEnumerator Idle()
         {
+            idling = true;
+            if (chatCooldown <= 0f && !Save.SaveSystem.InMenu)
+            {
+                chatCooldown = Random.Range(8f, 20f);   // nie wyszło: następna próba za chwilę
+                var partner = activeChats < MaxChats && Random.value < 0.6f ? FindChatPartner() : null;
+                if (partner != null)
+                {
+                    idling = false;
+                    yield return Chat(partner);
+                    yield break;
+                }
+            }
             float r = Random.value;
             if (r < 0.35f)
             {
@@ -364,6 +431,153 @@ namespace Wyspa.Automation
             }
             flying = false;
             yield return HoverFor(Random.Range(0.8f, 2f));
+            idling = false;
+        }
+
+        // ------------------------------------------------------------ pogaduszki
+
+        bool CanChat => idling && chatWith == null && carried.Count == 0 && loadAmount == 0 && isActiveAndEnabled;
+
+        Wisp FindChatPartner()
+        {
+            Wisp best = null;
+            float bestD = ChatRange * ChatRange;
+            foreach (var w in All)
+            {
+                if (w == this || w == null || !w.CanChat)
+                    continue;
+                float d = (w.transform.position - transform.position).sqrMagnitude;
+                if (d < bestD)
+                {
+                    bestD = d;
+                    best = w;
+                }
+            }
+            return best;
+        }
+
+        bool TalkingWith(Wisp other) =>
+            other != null && other.isActiveAndEnabled && chatWith == other && other.chatWith == this;
+
+        /// <summary>Głos ognika: stały dla imienia i zawodu (0.85-1.25), więc każdy brzmi trochę inaczej.</summary>
+        float VoicePitch => 0.85f + ((nameIndex * 7 + (int)kind * 3) % 9) * 0.05f;
+
+        Color RuneColor => Color.Lerp(WispNest.KindColor(kind), Color.white, 0.35f);
+
+        /// <summary>
+        /// Rozmowa: ognik zaprasza wolnego sąsiada, oba zlatują się w pół drogi, patrzą na siebie i na zmianę „mówią” runami
+        /// (3-5 kwestii, na koniec reakcja: „!”, „?”, wielokropek albo nucenie). Robota czeka te kilka sekund.
+        /// </summary>
+        IEnumerator Chat(Wisp partner)
+        {
+            activeChats++;
+            chatHost = true;
+            chatWith = partner;
+            var a = transform.position;
+            var b = partner.transform.position;
+            var mid = (a + b) * 0.5f;
+            float side = a.x <= b.x ? -1f : 1f;
+            var mine = mid + new Vector3(side * ChatGap, 0f, 0f);
+            partner.JoinChat(this, mid - new Vector3(side * ChatGap, 0f, 0f));
+            flying = true;
+            if (body != null) body.flipX = mine.x < a.x;
+            yield return Flight.Arc(transform, a, mine, Speed * 0.6f, 0.15f);
+            flying = false;
+            if (body != null) body.flipX = side > 0f;   // twarzą do rozmówcy
+            var at = transform.position;
+            for (float t = 0f; t < 3f && TalkingWith(partner) && !partner.chatReady; t += Time.unscaledDeltaTime)
+            {
+                transform.position = Flight.Hover(at, seed);
+                yield return null;
+            }
+            int lines = Random.Range(3, 6);
+            for (int i = 0; i < lines && TalkingWith(partner); i++)
+            {
+                var speaker = i % 2 == 0 ? this : partner;
+                float duration = speaker.Speak(i == lines - 1);
+                for (float t = 0f; t < duration + 0.2f && TalkingWith(partner); t += Time.unscaledDeltaTime)
+                {
+                    transform.position = Flight.Hover(at, seed);
+                    yield return null;
+                }
+            }
+            transform.position = at;
+            LeaveChat();
+            yield return HoverFor(Random.Range(0.4f, 1f));
+        }
+
+        /// <summary>Zaproszenie od innego ognika: przerywa krążenie, leci na miejsce i słucha, dopóki gospodarz mówi.</summary>
+        void JoinChat(Wisp host, Vector3 spot)
+        {
+            StopAllCoroutines();
+            idling = false;
+            flying = false;
+            chatWith = host;
+            chatReady = false;
+            StartCoroutine(Listen(host, spot));
+        }
+
+        IEnumerator Listen(Wisp host, Vector3 spot)
+        {
+            flying = true;
+            if (body != null) body.flipX = spot.x < transform.position.x;
+            yield return Flight.Arc(transform, transform.position, spot, Speed * 0.6f, 0.15f);
+            flying = false;
+            if (body != null && host != null) body.flipX = host.transform.position.x < transform.position.x;
+            chatReady = true;
+            var at = transform.position;
+            for (float t = 0f; t < 30f && TalkingWith(host); t += Time.unscaledDeltaTime)
+            {
+                transform.position = Flight.Hover(at, seed);
+                yield return null;
+            }
+            transform.position = at;
+            LeaveChat();
+            yield return HoverFor(Random.Range(0.4f, 1.2f));
+            yield return Brain();
+        }
+
+        /// <summary>Koniec rozmowy (także przerwanej): dymek znika, następna dopiero za jakiś czas.</summary>
+        void LeaveChat()
+        {
+            if (chatHost)
+                activeChats = Mathf.Max(0, activeChats - 1);
+            chatHost = false;
+            chatWith = null;
+            chatReady = false;
+            chatCooldown = Random.Range(45f, 120f);
+            if (bubble != null)
+                bubble.Hide();
+        }
+
+        /// <summary>Jedna kwestia w dymku. last = reakcja na koniec. Zwraca czas trwania.</summary>
+        float Speak(bool last)
+        {
+            if (bubble == null)
+                return 0f;
+            var glyphs = new List<int>();
+            float r = Random.value;
+            if (last && r < 0.7f)
+                glyphs.Add(r < 0.2f ? RuneGlyphs.Exclaim : r < 0.35f ? RuneGlyphs.Question : r < 0.5f ? RuneGlyphs.Dots : RuneGlyphs.Note);
+            else
+            {
+                int n = r < 0.15f ? 1 : r < 0.5f ? 2 : r < 0.85f ? 3 : 4;
+                for (int i = 0; i < n; i++)
+                    glyphs.Add(Random.Range(0, RuneGlyphs.RuneCount));
+                if (Random.value < 0.25f)
+                    glyphs.Add(Random.value < 0.5f ? RuneGlyphs.Question : RuneGlyphs.Exclaim);
+            }
+            float volume = OnScreen() ? 0.35f : 0f;   // szczebiot tylko z tego, co widać
+            return bubble.Say(glyphs, RuneColor, VoicePitch, volume);
+        }
+
+        bool OnScreen()
+        {
+            var cam = Camera.main;
+            if (cam == null)
+                return false;
+            var v = cam.WorldToViewportPoint(transform.position);
+            return v.x > -0.05f && v.x < 1.05f && v.y > -0.05f && v.y < 1.05f;
         }
 
         // ------------------------------------------------------------ ogrodnik
@@ -532,7 +746,7 @@ namespace Wyspa.Automation
             while (carriedSprites.Count < count)
             {
                 var go = new GameObject("Carried");
-                go.transform.SetParent(transform, false);
+                go.transform.SetParent(visual != null ? visual : transform, false);
                 go.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
                 carriedSprites.Add(go.AddComponent<SpriteRenderer>());
             }

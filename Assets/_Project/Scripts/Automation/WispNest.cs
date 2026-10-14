@@ -129,9 +129,11 @@ namespace Wyspa.Automation
                 slot++;
             var go = new GameObject("Wisp_" + kind);
             go.transform.SetParent(transform, false);
-            var b = go.AddComponent<SpriteRenderer>();
+            // sprite'y na osobnym obiekcie: ognik może się delikatnie odsunąć od sąsiada, nie zmieniając trasy lotu
+            var b = new GameObject("Body").AddComponent<SpriteRenderer>();
+            b.transform.SetParent(go.transform, false);
             var g = new GameObject("Glow").AddComponent<SpriteRenderer>();
-            g.transform.SetParent(go.transform, false);
+            g.transform.SetParent(b.transform, false);
             if (art != null && art.glow != null)
                 g.sharedMaterial = art.glow;
             var frames = FramesFor(art, kind, false);

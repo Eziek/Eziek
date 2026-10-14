@@ -1284,6 +1284,9 @@ namespace Wyspa.UI
             y += OptRow;
             OptLabel("ui.options.mute_bg", y);
             Toggle(OptCol, y, Audio.AudioManager.MuteInBackground, true, v => Audio.AudioManager.MuteInBackground = v);
+            y += OptRow;
+            OptLabel("ui.options.wisp_voices", y);
+            Toggle(OptCol, y, Audio.AudioManager.WispVoices, true, v => Audio.AudioManager.WispVoices = v);
             info.text = Loc.Get("ui.options.sound_hint");
         }
 

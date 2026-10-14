@@ -35,10 +35,19 @@ namespace Wyspa.Audio
             set => PlayerPrefs.SetInt("muteBg", value ? 1 : 0);
         }
 
+        /// <summary>Szczebiot ogników przy pogaduszkach (dymki z runami są zawsze).</summary>
+        public static bool WispVoices
+        {
+            get => PlayerPrefs.GetInt("wispVoices", 1) == 1;
+            set => PlayerPrefs.SetInt("wispVoices", value ? 1 : 0);
+        }
+
         readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
         readonly Dictionary<string, float> lastPlayed = new Dictionary<string, float>();
         readonly List<AudioSource> voices = new List<AudioSource>();
         AudioSource ambA, ambB, rain;
+        readonly AudioSource[] voiceSources = new AudioSource[3];
+        int nextVoiceSource;
         bool aActive = true;
         string currentAmbient;
         float ambA_level, ambB_level, rainLevel;
@@ -59,8 +68,17 @@ namespace Wyspa.Audio
             }
         }
 
-        void OnEnable() => GameEvents.Sound += Play;
-        void OnDisable() => GameEvents.Sound -= Play;
+        void OnEnable()
+        {
+            GameEvents.Sound += Play;
+            GameEvents.Voice += PlayVoice;
+        }
+
+        void OnDisable()
+        {
+            GameEvents.Sound -= Play;
+            GameEvents.Voice -= PlayVoice;
+        }
         void OnDestroy() { if (Instance == this) Instance = null; }
 
         AudioSource NewSource(string name, bool loop)
@@ -98,6 +116,23 @@ namespace Wyspa.Audio
             nextVoice = (nextVoice + 1) % voices.Count;
             v.pitch = Random.Range(0.95f, 1.05f);   // drobna zmiana, żeby powtórki nie brzmiały identycznie
             v.PlayOneShot(clip, Mathf.Clamp01(volume) * SfxVolume);
+        }
+
+        /// <summary>Głos: osobne źródło z wysokością ognika (każdy ognik mówi trochę innym głosem).</summary>
+        void PlayVoice(string id, float volume, float pitch)
+        {
+            if (!WispVoices)
+                return;
+            var clip = Clip("sfx_" + id);
+            if (clip == null)
+                return;
+            // kilka źródeł na zmianę: zmiana wysokości nie przestraja sylaby, która jeszcze brzmi
+            nextVoiceSource = (nextVoiceSource + 1) % voiceSources.Length;
+            var voice = voiceSources[nextVoiceSource];
+            if (voice == null)
+                voice = voiceSources[nextVoiceSource] = NewSource("Voice" + nextVoiceSource, false);
+            voice.pitch = Mathf.Clamp(pitch, 0.5f, 2f);
+            voice.PlayOneShot(clip, Mathf.Clamp01(volume) * SfxVolume);
         }
 
         void Update()

@@ -179,3 +179,17 @@ Najpierw **Wyspa → 2** (nowe ulepszenia, ikony kostki i perły).
 9. Łódź przy pomoście, łódź kupca i boja: dół w wodzie, piana przy burtach, kręgi co kilka sekund.
 10. Przezroczyste okno: między wodą a chmurami nie widać pulpitu. Zwykłe okno: woda między wyspą a mgłą.
 11. Scena: Wyspa → 3 buduje `MainLevel.unity` i ustawia ją w Build Settings.
+
+## 11. Pogaduszki ogników, ocieranie, przenoszenie pomostu
+1. Gniazdo z 2-3 ognikami, mało pracy (np. wszystko zebrane): po ok. 10-45 s dwa wolne ogniki zlatują się, patrzą na siebie
+   i na zmianę pokazują dymki z runami (runy pojawiają się po kolei, z rozbłyskiem), na koniec czasem „!”, „?”, „...” albo nutka.
+2. Szczebiot: każda runa daje sylabę, każdy ognik mówi trochę innym głosem. Opcje → Dźwięk → „Głosy ogników” wyłącza dźwięk
+   (dymki zostają). Ognik poza ekranem nie słychać.
+3. W nocy dymek i runy są czytelne (bez przyciemnienia). Dymek nad ognikiem na wyższym poziomie ma równe piksele.
+4. Rozmowa się przerywa bez błędów, gdy gniazdo przeniesiesz albo rozbierzesz w trakcie (dymek znika).
+5. Ogniki przy gnieździe i przy mijaniu się w locie nie wchodzą w siebie: odsuwają się płynnie, nie migoczą; niesione plony
+   lecą razem ze sprite'em; po rozminięciu wracają na tor.
+6. Klik w deski pomostu (nie w rybę): panel „Pomost” z „Przenieś”. Duch pomostu na wodzie przy brzegu, czerwony w złym miejscu.
+   Po postawieniu: sieci i łódź przy nowym końcu pomostu, ryby wokół nowego końca, zapis i wczytanie trzymają nowe miejsce.
+7. Łódź na wyprawie w trakcie przenoszenia: po przeniesieniu nadal na wyprawie (postęp bez zmian), wraca do nowego pomostu.
+8. Klik w boję sieci: panel z czasem do połowu i „Przenieś” (to samo przenoszenie pomostu). Dymek nad boją: „Sieci rybackie”.

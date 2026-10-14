@@ -408,6 +408,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Skala UI (po teście: przy powiększonym oknie i małej wyspie pasek zajmował pół okna): **zależy od rozdzielczości
   monitora, nie od powiększenia okna** (1080p x2, 1440p x3, 4K x4), najwyżej o 1 mniej niż skala świata. Opcje → Okno →
   „Rozmiar interfejsu”: auto albo x1-x4.
+- [x] Pogaduszki ogników (prośba gracza): pary wolnych ogników „rozmawiają” runami w dymkach, z szczebiotem bez znaczenia;
+  ogniki nie przenikają się, tylko ocierają. Pomost (z sieciami i łodzią) można przenieść. §11.3 E1 i F, §9 p. 80.
 - [x] Rój ogników (prośba gracza): **gniazdo na 3 ogniki**, 6 zawodów (ogrodnik, siewca, drwal, alchemik, latarnik,
   zbieracz), **poziomy** z imionami, krążenie bez pracy. Siewca zastępuje runę siewu, a runa staje się **runą dziczy**
   (wokół wyrastają drzewa i kamienie). Szczegóły w §11.3 E. Zapis v12 (stary ognik → gniazdo z ogrodnikiem).
@@ -652,6 +654,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     - Mgła: ciemny pas od krawędzi wody w przezroczystym oknie, chmury w zwykłym oknie dalej od wyspy.
     - Scena gry nazywa się **MainLevel** (`Assets/_Project/Scenes/MainLevel.unity`, Wyspa → 3).
     - Komentarze w kodzie bez historii rozmów (same opisy techniczne).
+80. Ogniki i morze (prośby gracza):
+    - **Pogaduszki ogników** (§11.3 E1): wolne ogniki zlatują się parami, nad głowami dymki z runami, szczebiot bez
+      znaczenia („simlish”) z syntezowanych sylab, każdy ognik innym głosem. Przełącznik w opcjach dźwięku.
+    - Ogniki **nie przenikają się**, tylko delikatnie ocierają (odsuwanie sprite'ów, trasa bez zmian).
+    - **Przenoszenie pomostu i sieci** (§11.3 F): klik w deski albo w boję → „Przenieś”; sieci i łódź płyną z pomostem.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -837,6 +844,13 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
    **Poziomy 1-6** (doświadczenie za każdą pracę: 10/30/70/150/300): szybszy lot (+8% na poziom), większy udźwig, drwal
    uderza mniej razy, ognik jest trochę większy i jaśniejszy, awans ogłasza toast. Bez pracy ogniki krążą wokół gniazda
    i lamp albo odpoczywają nad pniem. Każdy zawód ma inny kolor płomienia. **Skrzynia na plony** (20 miejsc): 60 monet + 4 drewna.
+   **Pogaduszki:** wolny ognik co jakiś czas (pierwsza po 10-45 s, potem co 45-120 s) zaprasza wolnego sąsiada
+   (do 3,5 kafelka), oba zlatują się w pół drogi, patrzą na siebie i na zmianę „mówią” 3-5 kwestii w dymkach z runami
+   (17 znaków futharku 3x5 px, na koniec reakcja: „!”, „?”, wielokropek albo nutka). Każda runa ma swoją sylabę
+   „mowy ogników” (12 sylab i 4 reakcje, `tools/audio/gen_babble.py`), wysokość głosu zależy od imienia i zawodu.
+   Szczebiot słychać tylko z ogników na ekranie; Opcje → Dźwięk → „Głosy ogników”. Najwyżej 2 rozmowy naraz.
+   Ogniki **nie wchodzą w siebie**: gdy tory lotu zbliżą się na mniej niż 0,6 kafelka, sprite'y delikatnie się odsuwają
+   (najwyżej o 0,3), trasa i praca zostają bez zmian. Kod: `Automation/Wisp.cs`, dymek `Automation/WispBubble.cs`.
 2. **Skład** (prośba gracza: nadmiar drewna i kamienia z drwala i run): sprzedaje nadwyżkę ponad rezerwę na budowy
    (drewno 3, kamień 5 monet, porcja co 10 s; rezerwa domyślnie 30, ustawiana w panelu; przycisk „Sprzedaj nadwyżkę teraz”).
 2. **Runa dziczy** (prośba gracza, zastępuje runę siewu; pierwsza za darmo z „Ognik-siewca”, kolejne 150 monet + 5 kamienia):
@@ -847,10 +861,11 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
    Kupiony w sklepie: klik w skrzynię bez duszka. Przeniesienie skrzyni zabiera duszka, rozbiórka skrzyni też (zwrot połowy).
    Duszki ze starych zapisów stają przy skrzyni bez duszka (a gdy jej nie ma, na ich kafelku pojawia się skrzynia).
    Kolejne: 500 monet + 8 kamienia.
-4. **Sieci rybackie** (wymagają pomostu): bierny połów co godzinę.
+4. **Sieci rybackie** (wymagają pomostu): bierny połów co godzinę. Klik w boję: czas do połowu i „Przenieś” (z pomostem).
 
 **F. Morze**
-- **Pomost** (400 monet): łowienie (klik w rybę przy brzegu).
+- **Pomost** (400 monet): łowienie (klik w rybę przy brzegu). Klik w deski (bez ryby): panel z „Przenieś” (za darmo,
+  te same warunki co przy budowie); sieci i łódź płyną razem z nim, łódź zachowuje wyprawę, sieci odliczanie połowu.
 - **Łódź i wyprawy** (800 monet): łódź płynie w mgłę na N godzin **aktywnej pracy** i wraca z łupem. Jedna wyprawa naraz.
   **Cele wypraw** (wybór gracza; dane w `Sea/Destinations.cs`): każda wyprawa daje kolejny zapisek z tego miejsca i 2-6 losowań
   z tabeli celu (wagi), dalekie cele jeszcze jedno rzadkie (odłamek albo hybryda).

@@ -446,6 +446,11 @@ namespace Wyspa.UI
                 else Tooltip.Hide(plotHoverOwner);
                 return;
             }
+            if (hit != null && hit.TryGetComponent(out Wyspa.Sea.FishingNets _))
+            {
+                Tooltip.Show(plotHoverOwner, Loc.Get("bld.nets") + "\n" + Loc.Get("ui.object.hint"));
+                return;
+            }
             if (hit != null && hit.TryGetComponent(out Decoration deco) && !deco.Removing)
             {
                 Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + "\n" + Loc.Get("ui.deco.hint"));

@@ -1140,9 +1140,14 @@ namespace Wyspa.World
             : pier != null && pier.Tile == p ? pier.Dir : (map.Owns(new TilePos(p.c - 1, p.r)) ? 1 : -1);
 
         /// <summary>Pomost: kafelek wody z lądem z lewej albo z prawej; dwa kafelki desek muszą leżeć na wodzie.</summary>
-        public bool PierValid(TilePos p)
+        public bool PierValid(TilePos p) => pier == null && PierSpot(p);
+
+        /// <summary>Przeniesienie pomostu: to samo miejsce albo nowe, które spełnia warunki budowy.</summary>
+        public bool PierMoveValid(TilePos p) => pier != null && (p == pier.Tile || PierSpot(p));
+
+        bool PierSpot(TilePos p)
         {
-            if (pier != null || !WorldGenerator.InWorld(p) || map.Owns(p))
+            if (!WorldGenerator.InWorld(p) || map.Owns(p))
                 return false;
             bool left = map.Owns(new TilePos(p.c - 1, p.r)), right = map.Owns(new TilePos(p.c + 1, p.r));
             if (!left && !right)
@@ -1210,6 +1215,32 @@ namespace Wyspa.World
             Changed?.Invoke();
         }
 
+        /// <summary>
+        /// Pomost w nowe miejsce: sieci i łódź płyną razem z nim (łódź zachowuje wyprawę, sieci odliczanie połowu).
+        /// </summary>
+        public bool MovePier(TilePos p)
+        {
+            if (!PierMoveValid(p))
+                return false;
+            if (p == pier.Tile)
+                return true;
+            bool hadNets = nets != null, hadBoat = boat != null;
+            float netsTimer = hadNets && nets.TryGetComponent(out Sea.FishingNets n) ? n.Elapsed : 0f;
+            var expedition = hadBoat ? boat.Snapshot() : null;
+            pier.gameObject.SetActive(false); Destroy(pier.gameObject);
+            pier = null;
+            if (nets != null) { nets.SetActive(false); Destroy(nets); }
+            nets = null;
+            if (boat != null) { boat.gameObject.SetActive(false); Destroy(boat.gameObject); }
+            boat = null;
+            CreatePier(p);
+            if (hadNets && BuildNets() && nets.TryGetComponent(out Sea.FishingNets moved))
+                moved.Elapsed = netsTimer;
+            if (hadBoat && BuildBoat())
+                boat.Restore(expedition);
+            return true;
+        }
+
         public bool BuildNets()
         {
             if (pier == null || nets != null)
@@ -1219,7 +1250,10 @@ namespace Wyspa.World
             var sr = NewSprite("FishingNets", decoRoot, at, 2000);
             sr.sprite = art != null ? art.netBuoy : null;
             sr.sortingOrder = pier.GetComponent<SpriteRenderer>().sortingOrder + 1;
-            sr.gameObject.AddComponent<Sea.FishingNets>();
+            var area = sr.gameObject.AddComponent<BoxCollider2D>();   // klik w boję: panel sieci
+            area.size = new Vector2(12f / Ppu, 14f / Ppu);
+            area.offset = new Vector2(0f, 7f / Ppu);
+            sr.gameObject.AddComponent<Sea.FishingNets>().Init(this);
             Visual.Floating.Attach(sr, 5f, art != null ? art.floatMat : null);   // boja w wodzie, kręgi
             nets = sr.gameObject;
             Changed?.Invoke();
