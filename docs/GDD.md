@@ -258,6 +258,11 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
+- [x] **Mgła „chibi”** (prośba gracza): bulwiaste kłęby jak z kreskówki zamiast miękkiego rozmycia: koła na siatce 11 px
+  (promień 4.5-8.5 px, dryfują i „oddychają”), płaskie kolory (jasny brzeg u góry, podstawa, cień od dołu), ciemny obrys
+  1 px, prawie nieprzezroczyste. Przezroczyste okno: wał przyklejony do wody (zachodzi 3 px na wodę, bez obrysu od strony
+  wody). Zwykłe okno: jednolita mgła dalej od wyspy z bulwiastym brzegiem od strony lądu (w nocy podchodzi bliżej).
+  Podgląd: `docs/img/mgla_chibi_*.png`, `tools/pixel-proto/fog_chibi_preview.py`.
 - [x] **Menu główne i 3 sloty zapisu** (prośba gracza): nazwa do 10 znaków, data i godzina zapisu, usuwanie z potwierdzeniem,
   powrót do menu z pierścienia akcji (§12.11).
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
@@ -493,6 +498,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     W sklepie i rytuałach za długi opis skraca się z „...” (koszt zostaje cały, pełny tekst w dymku).
 48. Prośba gracza: **menu główne** z 3 slotami zapisu (nazwa do 10 znaków, data i godzina zapisu, usuwanie), wyspa w tle,
     język i wyjście w menu, „Menu główne” w pierścieniu akcji. Stary `save.json` → slot 1.
+49. Prośba gracza: **mgła w stylu „chibi”** - bulwiaste kłęby z obrysem, płaskie kolory, w obu trybach okna.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

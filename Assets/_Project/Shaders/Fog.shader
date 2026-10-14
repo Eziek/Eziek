@@ -1,4 +1,4 @@
-// Mgła (GDD §4.6, §13): tylko nad morzem, gęstnieje z odległością od lądu, pasma dryfują, dithering Bayera.
+// Mgła (GDD §4.6, §13): tylko nad morzem, w stylu „chibi” (bulwiaste kłęby z obrysem i płaskimi kolorami, prośba gracza).
 // Rozbudowa wyspy odsuwa ją sama (mapa odległości liczona od nowego brzegu). Port tools/pixel-proto/tiles_proto.py (render).
 // Sprite = mapa danych wody malowana przez Island (R = odległość x4, G > 0 = woda). Gęstość ustawia FogController.
 Shader "Wyspa/Fog"
@@ -8,6 +8,8 @@ Shader "Wyspa/Fog"
         _MainTex("Water data", 2D) = "black" {}
         _ColB3("b3", Color) = (0.337, 0.412, 0.478, 1)
         _ColFo("fo", Color) = (0.518, 0.557, 0.608, 1)
+        _ColLight("Light rim", Color) = (0.769, 0.792, 0.831, 1)
+        _ColLine("Outline", Color) = (0.157, 0.204, 0.275, 1)
         _Density("Density (set by FogController)", Range(0, 2)) = 1
         _FogFrom("Fog starts (px from shore)", Float) = 22
         _FogSpan("Fog thickens over (px)", Float) = 40
@@ -59,7 +61,7 @@ Shader "Wyspa/Fog"
             CBUFFER_START(UnityPerMaterial)
                 half4 _Color;
                 float4 _MainTex_TexelSize;
-                half4 _ColB3, _ColFo;
+                half4 _ColB3, _ColFo, _ColLight, _ColLine;
                 float _Density;
                 float _FogFrom;
                 float _FogSpan;
@@ -79,51 +81,81 @@ Shader "Wyspa/Fog"
                 return o;
             }
 
+            // Mgła „chibi” (prośba gracza): bulwiaste kłęby jak z kreskówki - koła rozsiane po komórkach siatki, płaskie kolory
+            // (jasna góra, podstawa, cień od dołu) i ciemny obrys, ostre piksele. Kształt to pole odległości (SDF):
+            // < 0 wewnątrz mgły. Pasmo bazowe + koła, których środki leżą w zadanym przedziale odległości od brzegu.
+            #define FOG_CELL 11.0
+
+            float FogDist(float2 p, float2 size)
+            {
+                half4 data = SAMPLE_TEXTURE2D_LOD(_MainTex, sampler_MainTex, (floor(p) + 0.5) / size, 0);
+                return data.r * 255.0 / 4.0;
+            }
+
+            // band = przezroczyste okno (wał przy wodzie), inaczej mgła zakrywa morze dalej od wyspy
+            float FogSdf(float2 p, float2 size, bool band, float edge, float T)
+            {
+                float d = FogDist(p, size);
+                float s = band ? d - (edge + 5.0) : (edge + 14.0) - d;
+                float lo = band ? edge + 2.0 : edge + 4.0;
+                float hi = band ? edge + 13.0 : edge + 14.0;
+                float2 g = floor(p / FOG_CELL);
+                [unroll] for (int i = -1; i <= 1; i++)
+                [unroll] for (int j = -1; j <= 1; j++)
+                {
+                    float2 cell = g + float2(i, j);
+                    float4 h = WyspaHash(cell + 17.0);
+                    float2 c = (cell + 0.2 + 0.6 * h.xy) * FOG_CELL;
+                    c.x += round(sin(T + h.z * 6.2831853) * 1.5);              // kłęby dryfują o piksel, dwa
+                    float r = 4.5 + 4.0 * h.z + 0.7 * sin(T * 1.7 + h.w * 6.2831853);   // i lekko „oddychają”
+                    float dc = FogDist(c, size);
+                    if (dc >= lo && dc <= hi)
+                        s = min(s, length(p - c) - r);
+                }
+                return s;
+            }
+
             half4 FogFragment(Varyings input) : SV_Target
             {
                 float2 size = _MainTex_TexelSize.zw;
                 float2 pix = floor(input.uv * size);
                 half4 data = SAMPLE_TEXTURE2D_LOD(_MainTex, sampler_MainTex, (pix + 0.5) * _MainTex_TexelSize.xy, 0);
                 bool water = data.g > 0.06;
-                int x = (int)pix.x;
-                int y = (int)(size.y - 1.0 - pix.y);
                 float d = data.r * 255.0 / 4.0;      // odległość od brzegu w pikselach (do ok. 64)
-                float T = 6.2831853 * frac(_Time.y / _FogPeriod);   // płynny dryf pasm mgły
-                // gęstsza mgła (noc, zgaszone lampy) zaczyna się bliżej brzegu
-                float from = _FogFrom / max(0.3, _Density);
-                float v = (d - from) / max(1.0, _FogSpan)
-                        + 0.18 * sin(x / 9.0 + T) * sin(y / 7.0)
-                        + 0.08 * sin(6.2831853 * (x / 45.0 + y / 90.0) - 2.0 * T);
-                float th = WyspaBayer(x, y);
-
-                half3 col = _ColB3.rgb;
-                half a = 0;
-                if (v > 0.85) { col = _ColFo.rgb; a = 1; }
-                else if (v > 0.55) { col = th < (v - 0.55) / 0.3 ? _ColFo.rgb : _ColB3.rgb; a = 1; }
-                else if (v > 0.25 && th < (v - 0.25) / 0.3) { col = _ColB3.rgb; a = 1; }
-                // przezroczyste okno: gęsty wał mgły przyklejony do pasa wody (prośba gracza: bez przerwy między wodą a mgłą).
-                // Zaczyna się na krawędzi wody (zachodzi na nią o 3 px), przy wodzie jest prawie nieprzezroczysty, a zewnętrzna
-                // krawędź jest postrzępiona kłębami, które dryfują (14-30 px za wodą). Nad pulpitem dalej już nic.
+                float T = 6.2831853 * frac(_Time.y / _FogPeriod);   // płynny dryf kłębów
                 bool band = _FogOuter > 0.0;
+                // gęstsza mgła (noc, zgaszone lampy) podchodzi bliżej brzegu; w przezroczystym oknie zaczyna się przy wodzie
+                float edge = band ? _FogOuter : _FogFrom / max(0.3, _Density);
+
+                float s = FogSdf(pix, size, band, edge, T);
+                float sShadow = FogSdf(pix + float2(2.0, -2.0), size, band, edge, T);   // przy dolno-prawej krawędzi: cień
+                float sLight = FogSdf(pix + float2(-1.0, 2.0), size, band, edge, T);    // przy górnej-lewej: jasny brzeg
+                bool inside = s < 0.0;
+                bool outline = s >= 0.0 && s < 1.2;
                 if (band)
                 {
-                    float drift = 0.25 * sin(x / 9.0 + T) * sin(y / 7.0) + 0.15 * sin(6.2831853 * (x / 45.0 + y / 90.0) - 2.0 * T);
-                    float n1 = sin(x / 19.0 + T) * sin(y / 13.0 - T * 0.7);
-                    float n2 = sin((x + y) / 11.0 - T * 1.3) * 0.5;
-                    float puff = saturate(0.5 + 0.35 * n1 + 0.2 * n2 + drift);     // 0..1: wybrzuszenia krawędzi
-                    float thick = (14.0 + 16.0 * puff) * clamp(_Density, 0.8, 1.3);
-                    float inner = saturate((d - (_FogOuter - 3.0)) / 3.0);        // zachodzi na krawędź wody
-                    float outer = saturate((_FogOuter + thick - d) / 7.0);        // miękko rozpływa się na zewnątrz
-                    float c = inner * outer * (0.82 + 0.18 * puff);
-                    a = floor(c * 8.0) / 8.0 * 0.92;   // 8 stopni przezroczystości: gęsto, ale dalej pikselowo
-                    col = lerp(_ColB3.rgb, _ColFo.rgb, saturate(0.35 + 0.5 * puff + 0.15 * sin(x / 5.0 - T) * sin(y / 4.0)));
+                    inside = inside && d > _FogOuter - 3.0;     // zachodzi 3 px na pas wody, bez przerwy i bez obrysu od wody
+                    outline = outline && d > _FogOuter - 1.0;
+                }
+
+                half3 col = _ColFo.rgb;
+                half a = 0;
+                if (inside)
+                {
+                    a = 0.94;
+                    if (sShadow >= 0.0) col = _ColB3.rgb;
+                    else if (sLight >= 0.0) col = _ColLight.rgb;
+                }
+                else if (outline)
+                {
+                    a = 0.94;
+                    col = _ColLine.rgb;
                 }
                 if (!water) a = 0;
 
                 // światło liczymy zawsze z alfą 1 (CombinedShapeLightShared odrzuca alfę 0), alfę ustawiamy na końcu
                 half4 lit = WyspaLight(col, 1, input.uv, input.lightingUV);
-                if (band)
-                    lit.rgb = max(lit.rgb, col * 0.45);   // w nocy mgła zostaje bladą poświatą, nie znika w ciemności
+                lit.rgb = max(lit.rgb, col * 0.45);   // w nocy mgła zostaje bladą poświatą, nie znika w ciemności
                 return half4(lit.rgb, a * input.color.a);
             }
             ENDHLSL

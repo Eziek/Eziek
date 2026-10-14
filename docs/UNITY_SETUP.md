@@ -343,6 +343,13 @@ Po pobraniu: **Wyspa → 2** (ikona „menu” w motywie UI), potem Play.
 4. „Usuń”: pierwszy klik zmienia napis na „Na pewno?”, drugi (w ciągu 4 s) usuwa zapis.
 5. Język w menu: klik przełącza na kolejny (sprawdź też pole nazwy z japońskimi znakami przez IME).
 
+## 4u. Mgła „chibi” (test)
+Po pobraniu: Play (sam shader, bez Wyspa → 2).
+1. Przezroczyste okno: wokół pasa wody bulwiaste chmurki z ciemnym obrysem, jasną górą i cieniem od dołu; przylegają do wody.
+   Kłęby lekko dryfują i „oddychają”. Porównaj z `docs/img/mgla_chibi_okno_przezroczyste.png`.
+2. Zwykłe okno: dalej od wyspy jednolita mgła z bulwiastym brzegiem (`docs/img/mgla_chibi_okno.png`); w nocy podchodzi bliżej.
+3. Jeśli mgła wygląda na zbyt jasną/ciemną: kolory są w materiale Fog (Light rim, Outline, b3, fo).
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 
