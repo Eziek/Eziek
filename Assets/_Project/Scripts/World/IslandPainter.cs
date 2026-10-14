@@ -1,0 +1,399 @@
+using System;
+using System.Collections.Generic;
+
+namespace Wyspa.World
+{
+    /// <summary>Ścieżka ryby (ósemka) w pikselach tekstury, y w dół - jak w Water.shader.</summary>
+    public struct FishPath
+    {
+        public float cx, cy, rx, ry, phase;
+        public bool glow;
+    }
+
+    /// <summary>Gotowe obrazy wyspy (RGBA, wiersz 0 = DÓŁ, jak Texture2D w Unity) i dane dla wody, mgły i kamery.</summary>
+    public class IslandPicture
+    {
+        public int width, height;
+        public byte[] island;      // ląd: kontur, klif, trawa
+        public byte[] waterBase;   // statyczna woda (gdy shader nie działa)
+        public byte[] data;        // R = odległość od brzegu x4, G = klasa x32 (opis w Water.shader)
+        public readonly List<FishPath> fish = new List<FishPath>();
+        public bool hasBeast;
+        public int beastX, beastY;
+        /// <summary>Prostokąt lądu z klifem i konturem (piksele tekstury, y w dół, włącznie).</summary>
+        public int minX, minY, maxX, maxY;
+    }
+
+    /// <summary>
+    /// Maluje wyspę z kafelków jak prototyp (tools/pixel-proto/tiles_proto.py, build): maska z kafelków, zaokrąglenie
+    /// (otwarcie i domknięcie), nieregularny brzeg ze stałego szumu, klif, kontur, cień, piana i mapa odległości dla wody i mgły.
+    /// Morfologia przez dokładną transformatę odległości (Felzenszwalb), więc koszt nie zależy od promienia.
+    /// </summary>
+    public static class IslandPainter
+    {
+        public const int Tile = 16;
+        public const int Margin = 64;
+        public const int Size = WorldGenerator.Size * Tile + 2 * Margin;   // 640
+
+        // paleta mroczna (GDD §5.3)
+        static readonly byte[] O = Hex("0f0a10"), G1 = Hex("21342c"), G2 = Hex("344a3b"), E0 = Hex("20171c"),
+            E1 = Hex("352629"), E2 = Hex("523b35"), P0 = Hex("1c1520"), P1 = Hex("33263a"),
+            B0 = Hex("121c27"), B1 = Hex("1f3044"), B2 = Hex("30485f"), FO = Hex("848e9b");
+        static readonly byte[][] Cliff = { G1, E2, E2, E2, E1, E1, P1, P1, P0 };
+        static readonly int[] Bayer = { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5 };
+
+        static byte[] Hex(string h) => new[] { Convert.ToByte(h.Substring(0, 2), 16), Convert.ToByte(h.Substring(2, 2), 16), Convert.ToByte(h.Substring(4, 2), 16) };
+
+        /// <summary>Lewy górny róg kafelka w pikselach tekstury (y w dół).</summary>
+        public static (int x, int y) TileOrigin(TilePos p) => (Margin + p.c * Tile, Margin + p.r * Tile);
+
+        public static IslandPicture Paint(IslandMap map)
+        {
+            int W = Size, H = Size, seed = map.Seed;
+            var pic = new IslandPicture { width = W, height = H };
+
+            // --- region pracy: kafelki + zapas na zaokrąglenie, klif, kontur i pianę ---
+            int rx0 = int.MaxValue, ry0 = int.MaxValue, rx1 = int.MinValue, ry1 = int.MinValue;
+            foreach (var p in map.Tiles.Keys)
+            {
+                var (x, y) = TileOrigin(p);
+                rx0 = Math.Min(rx0, x); ry0 = Math.Min(ry0, y);
+                rx1 = Math.Max(rx1, x + Tile - 1); ry1 = Math.Max(ry1, y + Tile - 1);
+            }
+            if (rx0 == int.MaxValue) { rx0 = ry0 = W / 2; rx1 = ry1 = W / 2; }
+            rx0 = Math.Max(0, rx0 - 24); ry0 = Math.Max(0, ry0 - 24);
+            rx1 = Math.Min(W - 1, rx1 + 24); ry1 = Math.Min(H - 1, ry1 + 24);
+            var R = new Region(rx0, ry0, rx1 - rx0 + 1, ry1 - ry0 + 1);
+
+            // --- maska z kafelków ---
+            var m = new bool[R.w * R.h];
+            foreach (var p in map.Tiles.Keys)
+            {
+                var (x0, y0) = TileOrigin(p);
+                for (int y = y0; y < y0 + Tile; y++)
+                    for (int x = x0; x < x0 + Tile; x++)
+                        m[R.I(x, y)] = true;
+            }
+            m = Dilate(Erode(m, R, 6), R, 6);   // zaokrąglenie wypukłych narożników
+            m = Erode(Dilate(m, R, 5), R, 5);   // wypełnienie wklęsłych
+
+            // --- nieregularny brzeg: gładki szum przypięty do miejsca w świecie ---
+            var outer = Dilate(m, R, 3);
+            var inner = Erode(m, R, 3);
+            var m2 = new bool[m.Length];
+            for (int y = R.y; y < R.y + R.h; y++)
+                for (int x = R.x; x < R.x + R.w; x++)
+                {
+                    int i = R.I(x, y);
+                    double n = Noise(x, y, seed);
+                    bool edgeOut = outer[i] && !m[i];
+                    bool edgeIn = m[i] && !inner[i];
+                    m2[i] = (m[i] || (edgeOut && n > 0.62)) && !(edgeIn && n < 0.3);
+                }
+            var land = Erode(Dilate(m2, R, 1), R, 1);
+            bool Land(int x, int y) => R.Contains(x, y) && land[R.I(x, y)];
+
+            var island = new byte[W * H * 4];
+            void Put(byte[] img, int x, int y, byte[] c)
+            {
+                int i = ((H - 1 - y) * W + x) * 4;
+                img[i] = c[0]; img[i + 1] = c[1]; img[i + 2] = c[2]; img[i + 3] = 255;
+            }
+
+            // --- klif pod dolnymi krawędziami lądu ---
+            var solid = new bool[R.w * R.h];
+            var cliffCol = new byte[R.w * R.h][];
+            for (int y = R.y; y < R.y + R.h; y++)
+                for (int x = R.x; x < R.x + R.w; x++)
+                {
+                    if (!Land(x, y))
+                        continue;
+                    solid[R.I(x, y)] = true;
+                    if (Land(x, y + 1))
+                        continue;
+                    for (int d = 1; d <= Cliff.Length; d++)
+                    {
+                        if (!R.Contains(x, y + d) || Land(x, y + d))
+                            break;
+                        var k = Cliff[d - 1];
+                        if (d == 2 && WHash.Value(x, y + d, seed * 13 + 5) < 0.3) k = G1;
+                        if (d >= 3 && d <= 7 && WHash.Value(x, y + d, seed * 13 + 6) < 0.08) k = E0;
+                        int ci = R.I(x, y + d);
+                        if (cliffCol[ci] == null)
+                            cliffCol[ci] = k;
+                        solid[ci] = true;
+                    }
+                }
+
+            // --- kontur, cień klifu, dwa pierścienie piany ---
+            bool Solid(int x, int y) => R.Contains(x, y) && solid[R.I(x, y)];
+            var outline = new bool[R.w * R.h];
+            for (int y = R.y; y < R.y + R.h; y++)
+                for (int x = R.x; x < R.x + R.w; x++)
+                    if (!Solid(x, y) && (Solid(x + 1, y) || Solid(x - 1, y) || Solid(x, y + 1) || Solid(x, y - 1)))
+                        outline[R.I(x, y)] = true;
+            bool Outline(int x, int y) => R.Contains(x, y) && outline[R.I(x, y)];
+            bool Blocked(int x, int y) => Solid(x, y) || Outline(x, y);
+            var cls = new byte[W * H];          // klasa wody, 0 = ląd / zablokowane
+            var blocked = new bool[W * H];
+            for (int y = R.y; y < R.y + R.h; y++)
+                for (int x = R.x; x < R.x + R.w; x++)
+                    if (Blocked(x, y))
+                        blocked[y * W + x] = true;
+            var ring1 = new bool[R.w * R.h];
+            for (int y = R.y; y < R.y + R.h; y++)
+                for (int x = R.x; x < R.x + R.w; x++)
+                    if (!Blocked(x, y) && (Outline(x + 1, y) || Outline(x - 1, y) || Outline(x, y + 1) || Outline(x, y - 1)))
+                        ring1[R.I(x, y)] = true;
+            bool Ring1(int x, int y) => R.Contains(x, y) && ring1[R.I(x, y)];
+
+            // --- odległość od brzegu (chamfer 3-4, jak water.py) ---
+            var dist = Chamfer(blocked, W, H);
+
+            int minX = int.MaxValue, minY = int.MaxValue, maxX = int.MinValue, maxY = int.MinValue;
+            var waterBase = new byte[W * H * 4];
+            var data = new byte[W * H * 4];
+            for (int y = 0; y < H; y++)
+                for (int x = 0; x < W; x++)
+                {
+                    int i = y * W + x;
+                    float d = dist[i];
+                    int di = ((H - 1 - y) * W + x) * 4;
+                    data[di + 3] = 255;
+                    if (blocked[i])
+                    {
+                        minX = Math.Min(minX, x); minY = Math.Min(minY, y);
+                        maxX = Math.Max(maxX, x); maxY = Math.Max(maxY, y);
+                        continue;
+                    }
+                    // głębia z ditheringiem Bayera
+                    double th = Bayer[(y & 3) * 4 + (x & 3)] / 16.0;
+                    byte c;
+                    if (d < 7) c = 1;
+                    else if (d < 10) c = th < (10 - d) / 3.0 ? (byte)1 : (byte)2;
+                    else if (d < 22) c = 2;
+                    else if (d < 32) c = th < (32 - d) / 10.0 ? (byte)2 : (byte)3;
+                    else if (d < 42) c = 3;
+                    else c = th < Math.Max(0.35, (52 - d) / 10.0) ? (byte)3 : (byte)4;
+                    bool inR = R.Contains(x, y);
+                    bool isRing1 = inR && ring1[R.I(x, y)];
+                    bool isRing2 = inR && !isRing1 && (Ring1(x + 1, y) || Ring1(x - 1, y) || Ring1(x, y + 1) || Ring1(x, y - 1));
+                    bool isShadow = inR && (Outline(x, y - 1) || Outline(x, y - 2) || Outline(x, y - 3));
+                    byte k = c;
+                    if (isShadow) k = 5;
+                    if (isRing1) k = 6;
+                    if (isRing2) k = 7;
+                    cls[i] = k;
+                    data[di] = (byte)Math.Min(255, (int)Math.Round(d * 4));
+                    data[di + 1] = (byte)(k * 32);
+                    var col = k == 1 ? B2 : k == 2 ? B1 : k == 3 ? B0 : k == 4 ? P0 : k == 5 ? B0 : k == 6 ? FO : B2;
+                    Put(waterBase, x, y, col);
+                }
+
+            // --- ląd: kontur, klif, trawa z kępkami ---
+            for (int y = R.y; y < R.y + R.h; y++)
+                for (int x = R.x; x < R.x + R.w; x++)
+                {
+                    int i = R.I(x, y);
+                    if (outline[i]) Put(island, x, y, O);
+                    else if (cliffCol[i] != null && !land[i]) Put(island, x, y, cliffCol[i]);
+                    else if (land[i]) Put(island, x, y, Land(x, y + 1) ? G2 : G1);
+                }
+            for (int y = R.y; y < R.y + R.h; y++)
+                for (int x = R.x; x < R.x + R.w; x++)
+                {
+                    if (!Land(x, y) || WHash.Value(x, y, seed * 17 + 3) >= 1.0 / 60.0)
+                        continue;
+                    var pts = new[] { (x, y), (x + 1, y - 1), (x + 2, y), (x + 3, y - 1), (x + 4, y) };
+                    bool ok = true;
+                    foreach (var (px, py) in pts)
+                        if (!Land(px, py + 3) || !Land(px, py)) ok = false;
+                    if (ok)
+                        foreach (var (px, py) in pts)
+                            Put(island, px, py, G1);
+                }
+
+            pic.island = island;
+            pic.waterBase = waterBase;
+            pic.data = data;
+            pic.minX = minX; pic.minY = minY; pic.maxX = maxX; pic.maxY = maxY;
+            PlaceFish(pic, dist, seed);
+            PlaceBeast(pic, dist);
+            return pic;
+        }
+
+        // ------------------------------------------------------------ ryby i potwór (jak water.py, w pobliżu wyspy)
+
+        static void PlaceFish(IslandPicture pic, float[] dist, int seed)
+        {
+            int W = pic.width, H = pic.height;
+            int x0 = Math.Max(10, pic.minX - 80), x1 = Math.Min(W - 10, pic.maxX + 80);
+            int y0 = Math.Max(10, pic.minY - 60), y1 = Math.Min(H - 6, pic.maxY + 60);
+            var rnd = new WRandom(seed * 101L + 3);
+            float D(double x, double y) => dist[Math.Min(H - 1, Math.Max(0, (int)y)) * W + Math.Min(W - 1, Math.Max(0, (int)x))];
+            for (int tries = 0; tries < 2000 && pic.fish.Count < 12; tries++)
+            {
+                int cx = rnd.Range(x0, x1), cy = rnd.Range(y0, y1);
+                double frx = rnd.Range(8.0, 16.0), fry = rnd.Range(2.0, 5.0), ph = rnd.Range(0.0, 2 * Math.PI);
+                if (D(cx, cy) < 7)
+                    continue;
+                bool ok = true;
+                for (int k = 0; k < 16 && ok; k++)
+                {
+                    double a = k * Math.PI / 8;
+                    if (D(cx + frx * Math.Sin(a), cy + fry * Math.Sin(2 * a)) < 5) ok = false;
+                }
+                if (!ok)
+                    continue;
+                int n = pic.fish.Count;
+                pic.fish.Add(new FishPath { cx = cx, cy = cy, rx = (float)frx, ry = (float)fry, phase = (float)ph, glow = n == 1 || n == 4 || n == 7 });
+            }
+        }
+
+        static void PlaceBeast(IslandPicture pic, float[] dist)
+        {
+            int W = pic.width, H = pic.height;
+            int x0 = Math.Max(24, pic.minX - 20), x1 = Math.Min(W - 24, pic.maxX + 20);
+            int y0 = Math.Min(H - 9, pic.maxY + 12), y1 = Math.Min(H - 8, pic.maxY + 80);
+            float best = 0;
+            for (int y = y0; y < y1; y++)
+                for (int x = x0; x < x1; x++)
+                    if (dist[y * W + x] > best)
+                    {
+                        best = dist[y * W + x];
+                        pic.beastX = x;
+                        pic.beastY = y;
+                    }
+            pic.hasBeast = best >= 24;
+        }
+
+        // ------------------------------------------------------------ narzędzia
+
+        static double Noise(int x, int y, int seed)
+        {
+            double gx = x / 8.0, gy = y / 8.0;
+            int ix = (int)Math.Floor(gx), iy = (int)Math.Floor(gy);
+            double fx = gx - ix, fy = gy - iy;
+            int s = seed * 7 + 1;
+            return WHash.Value(ix, iy, s) * (1 - fx) * (1 - fy) + WHash.Value(ix + 1, iy, s) * fx * (1 - fy)
+                 + WHash.Value(ix, iy + 1, s) * (1 - fx) * fy + WHash.Value(ix + 1, iy + 1, s) * fx * fy;
+        }
+
+        readonly struct Region
+        {
+            public readonly int x, y, w, h;
+            public Region(int x, int y, int w, int h) { this.x = x; this.y = y; this.w = w; this.h = h; }
+            public bool Contains(int px, int py) => px >= x && py >= y && px < x + w && py < y + h;
+            public int I(int px, int py) => (py - y) * w + (px - x);
+        }
+
+        // dysk jak w prototypie: dx² + dy² <= r² + r
+        static bool[] Dilate(bool[] m, Region R, int r)
+        {
+            var d2 = Edt(m, R.w, R.h, true);
+            var o = new bool[m.Length];
+            float lim = r * r + r;
+            for (int i = 0; i < m.Length; i++) o[i] = d2[i] <= lim;
+            return o;
+        }
+
+        static bool[] Erode(bool[] m, Region R, int r)
+        {
+            var d2 = Edt(m, R.w, R.h, false);
+            var o = new bool[m.Length];
+            float lim = r * r + r;
+            for (int i = 0; i < m.Length; i++) o[i] = d2[i] > lim;
+            return o;
+        }
+
+        /// <summary>Kwadrat odległości euklidesowej do najbliższego piksela o wartości target (Felzenszwalb i Huttenlocher).</summary>
+        static float[] Edt(bool[] m, int w, int h, bool target)
+        {
+            const float Inf = 1e20f;
+            var g = new float[w * h];
+            for (int i = 0; i < g.Length; i++) g[i] = m[i] == target ? 0 : Inf;
+            int n = Math.Max(w, h);
+            var f = new float[n];
+            var d = new float[n];
+            var v = new int[n];
+            var z = new float[n + 1];
+            for (int x = 0; x < w; x++)
+            {
+                for (int y = 0; y < h; y++) f[y] = g[y * w + x];
+                Edt1D(f, h, d, v, z);
+                for (int y = 0; y < h; y++) g[y * w + x] = d[y];
+            }
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++) f[x] = g[y * w + x];
+                Edt1D(f, w, d, v, z);
+                for (int x = 0; x < w; x++) g[y * w + x] = d[x];
+            }
+            return g;
+        }
+
+        static void Edt1D(float[] f, int n, float[] d, int[] v, float[] z)
+        {
+            int k = 0;
+            v[0] = 0;
+            z[0] = float.NegativeInfinity;
+            z[1] = float.PositiveInfinity;
+            for (int q = 1; q < n; q++)
+            {
+                float s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2f * q - 2f * v[k]);
+                while (s <= z[k])
+                {
+                    k--;
+                    s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2f * q - 2f * v[k]);
+                }
+                k++;
+                v[k] = q;
+                z[k] = s;
+                z[k + 1] = float.PositiveInfinity;
+            }
+            k = 0;
+            for (int q = 0; q < n; q++)
+            {
+                while (z[k + 1] < q) k++;
+                d[q] = (q - v[k]) * (q - v[k]) + f[v[k]];
+            }
+        }
+
+        /// <summary>Odległość chamfer 3-4 od zablokowanych pikseli, podzielona przez 3 (jak distance_field w water.py).</summary>
+        static float[] Chamfer(bool[] blocked, int W, int H)
+        {
+            const int Inf = 1 << 28;
+            var d = new int[W * H];
+            for (int i = 0; i < d.Length; i++) d[i] = blocked[i] ? 0 : Inf;
+            for (int y = 0; y < H; y++)
+                for (int x = 0; x < W; x++)
+                {
+                    int i = y * W + x, v = d[i];
+                    if (x > 0) v = Math.Min(v, d[i - 1] + 3);
+                    if (y > 0)
+                    {
+                        v = Math.Min(v, d[i - W] + 3);
+                        if (x > 0) v = Math.Min(v, d[i - W - 1] + 4);
+                        if (x < W - 1) v = Math.Min(v, d[i - W + 1] + 4);
+                    }
+                    d[i] = v;
+                }
+            for (int y = H - 1; y >= 0; y--)
+                for (int x = W - 1; x >= 0; x--)
+                {
+                    int i = y * W + x, v = d[i];
+                    if (x < W - 1) v = Math.Min(v, d[i + 1] + 3);
+                    if (y < H - 1)
+                    {
+                        v = Math.Min(v, d[i + W] + 3);
+                        if (x < W - 1) v = Math.Min(v, d[i + W + 1] + 4);
+                        if (x > 0) v = Math.Min(v, d[i + W - 1] + 4);
+                    }
+                    d[i] = v;
+                }
+            var o = new float[d.Length];
+            for (int i = 0; i < d.Length; i++) o[i] = d[i] / 3f;
+            return o;
+        }
+    }
+}

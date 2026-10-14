@@ -65,3 +65,10 @@ act.remove,Usuń,Remove,Entfernen,撤去,移除,
 act.place,Postaw,Place,Platzieren,設置,放置,
 act.cancel,Anuluj,Cancel,Abbrechen,キャンセル,取消,
 act.claim_tile,Wyrwij z mgły,Claim from the fog,Dem Nebel entreißen,霧から取り戻す,从迷雾中夺回,kupno kafelka
+obj.find,Znalezisko,Find,Fund,発見物,发现物,pod kafelkiem
+place.spring,Źródło,Spring,Quelle,泉,泉眼,dziwny kafelek
+place.monolith,Pradawny kamień,Ancient Stone,Uralter Stein,古の石,远古之石,dziwny kafelek
+act.dig,Przekop,Dig,Umgraben,耕す,开垦,kafelek na grządkę
+mode.expand,Rozbudowa,Expansion,Ausbau,拡張,扩建,tryb rozbudowy
+menu.expand,Rozbudowa wyspy,Expand the island,Insel erweitern,島を広げる,扩建岛屿,przycisk w HUD
+bld.harvest_crate,Skrzynia na plony,Harvest Crate,Erntekiste,収穫箱,收获箱,

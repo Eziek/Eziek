@@ -1,5 +1,6 @@
-// Mgła (GDD §4.6): tylko nad morzem, gęstnieje ku krawędziom okna, pasma dryfują, dithering Bayera.
-// Port prototypu (tools/pixel-proto/anim.py). Sprite = Ground/water_data.png (G > 0 = woda). Gęstość ustawia FogController.
+// Mgła (GDD §4.6, §13): tylko nad morzem, gęstnieje z odległością od lądu, pasma dryfują, dithering Bayera.
+// Rozbudowa wyspy odsuwa ją sama (mapa odległości liczona od nowego brzegu). Port tools/pixel-proto/tiles_proto.py (render).
+// Sprite = mapa danych wody malowana przez Island (R = odległość x4, G > 0 = woda). Gęstość ustawia FogController.
 Shader "Wyspa/Fog"
 {
     Properties
@@ -8,7 +9,8 @@ Shader "Wyspa/Fog"
         _ColB3("b3", Color) = (0.337, 0.412, 0.478, 1)
         _ColFo("fo", Color) = (0.518, 0.557, 0.608, 1)
         _Density("Density (set by FogController)", Range(0, 2)) = 1
-        _Reach("Reach from window edge (px)", Float) = 30
+        _FogFrom("Fog starts (px from shore)", Float) = 22
+        _FogSpan("Fog thickens over (px)", Float) = 40
         _FogPeriod("Drift loop (s)", Float) = 30
 
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
@@ -58,7 +60,8 @@ Shader "Wyspa/Fog"
                 float4 _MainTex_TexelSize;
                 half4 _ColB3, _ColFo;
                 float _Density;
-                float _Reach;
+                float _FogFrom;
+                float _FogSpan;
                 float _FogPeriod;
             CBUFFER_END
 
@@ -82,20 +85,21 @@ Shader "Wyspa/Fog"
                 bool water = data.g > 0.06;
                 int x = (int)pix.x;
                 int y = (int)(size.y - 1.0 - pix.y);
-                float e = min(min(pix.x, size.x - 1.0 - pix.x), min((float)y, size.y - 1.0 - y));
-                float edge = max(0.0, 1.0 - e / max(1.0, _Reach));
+                float d = data.r * 255.0 / 4.0;      // odległość od brzegu w pikselach (do ok. 64)
                 float T = 6.2831853 * frac(WyspaFrame() / 10.0 / _FogPeriod);
-                float n = 0.5 + 0.28 * sin(6.2831853 * x / 68.0 + T) * sin(6.2831853 * y / 29.0 + 0.7)
-                        + 0.22 * sin(6.2831853 * (x / 45.0 + y / 90.0) - 2.0 * T);
-                float v = edge * (0.45 + 0.7 * n) * _Density;
+                // gęstsza mgła (noc, zgaszone lampy) zaczyna się bliżej brzegu
+                float from = _FogFrom / max(0.3, _Density);
+                float v = (d - from) / max(1.0, _FogSpan)
+                        + 0.18 * sin(x / 9.0 + T) * sin(y / 7.0)
+                        + 0.08 * sin(6.2831853 * (x / 45.0 + y / 90.0) - 2.0 * T);
                 float th = WyspaBayer(x, y);
 
                 half3 col = _ColB3.rgb;
                 half a = 0;
                 if (v > 0.85) { col = _ColFo.rgb; a = 1; }
-                else if (v > 0.62) { col = th < (v - 0.62) / 0.23 ? _ColFo.rgb : _ColB3.rgb; a = 1; }
-                else if (v > 0.35 && th < (v - 0.35) / 0.27) { col = _ColB3.rgb; a = 1; }
-                if (!water || edge <= 0.0) a = 0;
+                else if (v > 0.55) { col = th < (v - 0.55) / 0.3 ? _ColFo.rgb : _ColB3.rgb; a = 1; }
+                else if (v > 0.25 && th < (v - 0.25) / 0.3) { col = _ColB3.rgb; a = 1; }
+                if (!water) a = 0;
 
                 // światło liczymy zawsze z alfą 1 (CombinedShapeLightShared odrzuca alfę 0), alfę ustawiamy na końcu
                 half4 lit = WyspaLight(col, 1, input.uv, input.lightingUV);

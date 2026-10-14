@@ -7,13 +7,14 @@ using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Upgrades;
 using Wyspa.Farming;
+using Wyspa.World;
 
 namespace Wyspa.Save
 {
     [Serializable]
     class SaveData
     {
-        public int version = 2;
+        public int version = 3;
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
@@ -24,6 +25,7 @@ namespace Wyspa.Save
         public long rhythmDayTicks;
         public float rhythmDailySeconds;
         public List<CrateEntry> crate = new List<CrateEntry>();
+        public IslandSave island;               // v3: wyspa z kafelków (ziarno, kafelki, dekoracje, obiekty)
     }
 
     [Serializable]
@@ -87,6 +89,7 @@ namespace Wyspa.Save
                 rhythmDailySeconds = game.Rhythm.SaveDailySeconds,
                 crate = game.Automation != null && game.Automation.Crate != null
                     ? game.Automation.Crate.Snapshot() : new List<CrateEntry>(),
+                island = game.Island != null && game.Island.Ready ? game.Island.Snapshot() : null,
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth });
@@ -119,6 +122,16 @@ namespace Wyspa.Save
             }
             if (data == null)
                 return;
+
+            // najpierw wyspa: grządki (do wczytania niżej) i miejsca na obiekty powstają razem z kafelkami.
+            // Zapis sprzed Etapu 3b nie ma wyspy - dostaje nowy świat (waluty i ulepszenia zostają).
+            if (game.Island != null)
+            {
+                if (data.island != null && data.island.tiles != null && data.island.tiles.Count > 0)
+                    game.Island.Restore(data.island);
+                else
+                    game.Island.NewWorld(GameLoop.NewSeed());
+            }
 
             if (data.version >= 2 && data.currencies != null && data.currencies.Count > 0)
                 game.Wallet.Restore(data.currencies);

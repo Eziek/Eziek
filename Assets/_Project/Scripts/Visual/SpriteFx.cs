@@ -24,6 +24,9 @@ namespace Wyspa.Visual
         {
             phasePerPixel = perPixel;
             renderers = targets;
+            // dodany w trakcie gry (np. grządka na nowym kafelku): OnEnable było przed Setup, więc liczymy fazę teraz
+            if (isActiveAndEnabled)
+                OnEnable();
         }
 
         void OnEnable()

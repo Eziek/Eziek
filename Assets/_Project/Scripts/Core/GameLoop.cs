@@ -6,6 +6,7 @@ using Wyspa.Farming;
 using Wyspa.Lighting;
 using Wyspa.Save;
 using Wyspa.Upgrades;
+using Wyspa.World;
 
 namespace Wyspa.Core
 {
@@ -27,6 +28,7 @@ namespace Wyspa.Core
         [SerializeField] WorkRhythm rhythm;
         [SerializeField] UpgradeState upgrades;
         [SerializeField] AutomationSystem automation;
+        [SerializeField] Island island;
 
         [SerializeField] float tickInterval = 1f;
 
@@ -44,6 +46,10 @@ namespace Wyspa.Core
         public WorkRhythm Rhythm => rhythm;
         public UpgradeState Upgrades => upgrades;
         public AutomationSystem Automation => automation;
+        public Island Island => island;
+
+        /// <summary>Ziarno nowego świata (każda gra inna, GDD §13.4).</summary>
+        public static int NewSeed() => new System.Random().Next(1, int.MaxValue);
 
         public float DebugTimeScale
         {
@@ -87,6 +93,8 @@ namespace Wyspa.Core
             ApplyUpgrades();
             if (saveSystem != null)
                 saveSystem.Load(this);
+            if (island != null && !island.Ready)
+                island.NewWorld(NewSeed());   // pierwszy start: wyspa 2x2 z losowego ziarna
             foreach (var plot in FarmPlot.All)
                 plot.RefreshVisual();
         }

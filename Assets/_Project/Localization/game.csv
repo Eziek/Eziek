@@ -17,3 +17,16 @@ toast.crate_sold,Sprzedano plony: +{0} monet,Crops sold: +{0} coins,Ernte verkau
 toast.merchant_sold,Skrzynia kupca sprzedała plony: +{0} monet,The Merchant's Chest sold crops: +{0} coins,Die Händlertruhe hat die Ernte verkauft: +{0} Münzen,商人の箱が作物を売った：+{0}コイン,商人宝箱出售了作物：+{0}金币,
 toast.crate_full,Skrzynia pełna - ognik czeka,The crate is full - the wisp is waiting,Die Kiste ist voll - das Irrlicht wartet,箱がいっぱい - 鬼火は待機中,箱子满了 - 鬼火在等待,
 crate.contents,Skrzynia: {0}/{1},Crate: {0}/{1},Kiste: {0}/{1},箱：{0}/{1},箱子：{0}/{1},
+toast.find.coins,Skrzynka w mule: +{0} {0:plural:moneta|monety|monet},A chest in the silt: +{0} {0:plural:coin|coins},Eine Truhe im Schlick: +{0} {0:plural:Münze|Münzen},泥の中の小箱：+{0}コイン,淤泥中的宝箱：+{0}金币,znalezisko
+toast.find.nightseed,Garść nocnych nasion: +{0} {0:plural:plon nocy|plony nocy|plonów nocy},A handful of night seeds: +{0} night {0:plural:harvest|harvests},Eine Handvoll Nachtsamen: +{0} Nachternte,夜の種ひとつかみ：夜の作物 +{0},一把夜之种子：夜间作物 +{0},znalezisko
+toast.find.shard,Odłamek gwiazdy we mgle!,A star shard in the fog!,Ein Sternensplitter im Nebel!,霧の中に星のかけら！,迷雾中的星之碎片！,znalezisko
+toast.find.lore,{0},{0},{0},{0},{0},fragment lore (klucze lore.*)
+toast.find.spring,Źródło. Ziemia tu oddycha.,A spring. The earth breathes here.,Eine Quelle. Hier atmet die Erde.,泉。ここでは大地が息をしている。,泉眼。这里的大地在呼吸。,dziwny kafelek
+toast.find.monolith,Pradawny kamień. Czeka na rytuał.,An ancient stone. It awaits a ritual.,Ein uralter Stein. Er wartet auf ein Ritual.,古の石。儀式を待っている。,远古之石。它在等待仪式。,dziwny kafelek
+toast.no_space,{0}: brak wolnego kafelka,{0}: no free tile,{0}: kein freies Landstück,{0}：空きマスがない,{0}：没有空闲土地格,obiekt czeka na miejsce
+lore.1,Pod mgłą śpi coś starszego niż wyspa.,Beneath the fog sleeps something older than the island.,"Unter dem Nebel schläft etwas, das älter ist als die Insel.",霧の下には、島より古い何かが眠っている。,迷雾之下沉睡着比岛屿更古老的东西。,lore wstępne
+lore.2,"Latarnie gasną, gdy nikt nie pracuje.",The lanterns die when no one works.,"Die Laternen erlöschen, wenn niemand arbeitet.",誰も働かないと、灯りは消える。,无人劳作时，灯火便会熄灭。,lore wstępne
+lore.3,"Rybacy mówili, że morze tu liczy kroki.",The fishermen said the sea here counts footsteps.,"Die Fischer sagten, das Meer hier zähle die Schritte.",漁師たちは、この海は足音を数えると言った。,渔夫们说，这里的海会数人的脚步。,lore wstępne
+lore.4,Każdy kawałek lądu trzeba wyrwać mgle.,Every scrap of land must be torn from the fog.,Jedes Stück Land muss dem Nebel entrissen werden.,土地はひとかけらずつ霧から奪い取るしかない。,每一寸土地都必须从迷雾中夺回。,lore wstępne
+lore.5,"Księżyc pamięta, kto sadził nocą.",The moon remembers who planted at night.,"Der Mond erinnert sich, wer nachts gepflanzt hat.",月は、夜に種をまいた者を覚えている。,月亮记得谁在夜里播种。,lore wstępne
+lore.6,W głębinie coś otwiera oko.,"In the deep, something opens an eye.",In der Tiefe öffnet etwas ein Auge.,深みで何かが目を開く。,深渊中，有什么睁开了眼睛。,lore wstępne

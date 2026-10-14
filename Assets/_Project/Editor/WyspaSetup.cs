@@ -16,6 +16,7 @@ using Wyspa.Save;
 using Wyspa.UI;
 using Wyspa.Upgrades;
 using Wyspa.Visual;
+using Wyspa.World;
 
 namespace Wyspa.EditorTools
 {
@@ -97,6 +98,9 @@ namespace Wyspa.EditorTools
             int h = layout != null ? layout.height : 200;
 
             PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            // okno startowe = kadr wyspy 2x2 (144x112) x3; potem rośnie razem z wyspą (ViewController)
+            w = StartView.x;
+            h = StartView.y;
             PlayerSettings.defaultScreenWidth = w * WindowScale;
             PlayerSettings.defaultScreenHeight = h * WindowScale;
             PlayerSettings.resizableWindow = true;
@@ -186,6 +190,7 @@ namespace Wyspa.EditorTools
             CreateUiTheme();
             GlowMaterial();
             CreateFxMaterials();
+            CreateIslandArt();
             AssetDatabase.SaveAssets();
             Debug.Log("[Wyspa] Dane utworzone w " + DataDir);
         }
@@ -225,6 +230,34 @@ namespace Wyspa.EditorTools
 
         // =====================================================================
         const string ThemePath = DataDir + "/UiTheme.asset";
+        const string IslandArtPath = DataDir + "/IslandArt.asset";
+        // startowy kadr wyspy 2x2 (GDD §13.6): 144x112, okno x3 = 432x336
+        static readonly Vector2Int StartView = new Vector2Int(144, 112);
+
+        /// <summary>Grafika wyspy z kafelków: grządka, dekoracje, ramki trybu rozbudowy, materiały efektów.</summary>
+        static IslandArt CreateIslandArt()
+        {
+            var art = LoadOrCreate<IslandArt>(IslandArtPath);
+            art.plotTile = LoadSprite("Ground/plot_tile");
+            art.decorations = new List<DecoArt>
+            {
+                new DecoArt { kind = DecoKind.TreeRound, sprite = LoadSprite("Objects/tree_round"), sway = true },
+                new DecoArt { kind = DecoKind.Rock, sprite = LoadSprite("Objects/rock"), sway = false },
+                new DecoArt { kind = DecoKind.Bush, sprite = LoadSprite("Objects/bush"), sway = true },
+                new DecoArt { kind = DecoKind.DeadTree, sprite = LoadSprite("Zones/dead_tree"), sway = false },
+            };
+            art.frameBuy = LoadSprite("UI/Frames/frame_buy");
+            art.frameBuyHover = LoadSprite("UI/Frames/frame_buy_hover");
+            art.frameDig = LoadSprite("UI/Frames/frame_dig");
+            art.frameDigHover = LoadSprite("UI/Frames/frame_dig_hover");
+            art.foam = new[] { LoadSprite("Fx/fx_foam_0"), LoadSprite("Fx/fx_foam_1") };
+            art.swayCrop = LoadMat("SwayCrop");
+            art.swayCropGlow = LoadMat("SwayCropGlow");
+            art.swayTree = LoadMat("SwayTree");
+            art.glow = GlowMaterial();
+            EditorUtility.SetDirty(art);
+            return art;
+        }
         const string LocDir = Root + "/Localization";
         const string FontPath = Root + "/Art/Fonts/WyspaPixel.ttf";
         static readonly string[] LocTables = { "glossary", "game", "ui" };
@@ -281,7 +314,6 @@ namespace Wyspa.EditorTools
         // ----------------------------------------------------------------- Etap 3a: materiały efektów
         const string MatDir = DataDir + "/Materials";
         const string ShaderDir = Root + "/Shaders";
-        const string WaterLayoutPath = Root + "/Art/water_layout.json";
         // prototyp (anim.py): rośliny 2 cykle na 48 klatek (10 kl./s), drzewa 1 cykl
         const float CropSwaySpeed = 2f / 4.8f, TreeSwaySpeed = 1f / 4.8f;
 
@@ -367,13 +399,13 @@ namespace Wyspa.EditorTools
             camGo.transform.position = new Vector3(0f, 0f, -10f);
             var cam = camGo.AddComponent<Camera>();
             cam.orthographic = true;
-            cam.orthographicSize = H / 2f / Ppu;
+            cam.orthographicSize = StartView.y / 2f / Ppu;
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = OutlineColor;
             var ppc = camGo.AddComponent<PixelPerfectCamera>();
             ppc.assetsPPU = Ppu;
-            ppc.refResolutionX = layout.width;
-            ppc.refResolutionY = layout.height;
+            ppc.refResolutionX = StartView.x;   // kadr rośnie z wyspą (ViewController)
+            ppc.refResolutionY = StartView.y;
             ppc.gridSnapping = PixelPerfectCamera.GridSnapping.UpscaleRenderTexture;
 
             // --- światło globalne (pora dnia) ---
@@ -383,44 +415,38 @@ namespace Wyspa.EditorTools
             global.intensity = 1f;
             global.color = Color.white;
 
-            // --- teren ---
+            // --- wyspa z kafelków (Etap 3b): ląd, woda i mgła malowane w locie przez Island ---
             var world = new GameObject("World").transform;
-            // woda liczona w shaderze (ryby, fale, przybój); bez shadera widać statyczną water_base
+            // woda liczona w shaderze (ryby, fale, przybój); bez shadera widać statyczną wodę z Island
             var water = MakeSprite("Water", world, LoadSprite("Ground/water_base"), Vector3.zero, -2000);
             UseFx(water, waterMat);
-            MakeSprite("Island", world, LoadSprite("Ground/island"), Vector3.zero, -1900);
-            // mgła nad morzem przy krawędziach okna (sprite = mapa danych wody, rysuje tylko shader)
+            var islandSr = MakeSprite("Land", world, null, Vector3.zero, -1900);
+            // mgła nad morzem, gęstnieje z odległością od brzegu (sprite = mapa danych wody, rysuje tylko shader)
             var fog = MakeSprite("Fog", world, LoadSprite("Ground/water_data"), Vector3.zero, 5000);
             UseFx(fog, fogMat, true);
-            var trees = new List<Transform>();
 
-            HarvestCrate crate = null;
-            foreach (var o in layout.objects)
+            // --- obiekty stawiane na kafelkach (do Etapu 3c samoczynnie, na wolnej trawie) ---
+            var objectsRoot = new GameObject("TileObjects").transform;
+            var tileObjects = new List<TileObject>();
+            TileObject AsTileObject(Component c, string id, string nameKey, TileObject anchor = null, Vector2Int offset = default)
             {
-                if (o.sprite == "crate")
-                {
-                    // skrzynia z prototypu staje się skrzynią na plony (automatyka, Etap 2b)
-                    var fill = new[] { LoadSprite("Automation/harvest_crate_0"), LoadSprite("Automation/harvest_crate_1"),
-                                       LoadSprite("Automation/harvest_crate_2") };
-                    var sr = MakeSprite("HarvestCrate", world, fill[0], Anchor(o.x, o.y), o.y);
-                    crate = sr.gameObject.AddComponent<HarvestCrate>();
-                    if (fill[0] != null)
-                        sr.GetComponent<BoxCollider2D>().size = fill[0].bounds.size;
-                    crate.Setup(fill, sr);
-                    continue;
-                }
-                var obj = MakeSprite(o.sprite, world, LoadSprite("Objects/" + o.sprite), Anchor(o.x, o.y), o.y);
-                if (o.sprite.StartsWith("tree", StringComparison.Ordinal) || o.sprite == "bush")
-                {
-                    UseFx(obj, swayTree);
-                    obj.gameObject.AddComponent<SpriteFx>().Setup(0.05f, obj);
-                    if (o.sprite.StartsWith("tree", StringComparison.Ordinal))
-                        trees.Add(obj.transform);
-                }
+                var t = c.gameObject.AddComponent<TileObject>();
+                t.Setup(id, nameKey, anchor, offset);
+                c.gameObject.SetActive(false);
+                tileObjects.Add(t);
+                return t;
             }
 
-            // --- automatyka: obiekty pojawiają się po zakupie ulepszeń (GDD §11.3 E) ---
-            var autoRoot = new GameObject("Automation").transform;
+            // skrzynia na plony: pojawia się z ognikiem albo skrzynią kupca
+            var fill = new[] { LoadSprite("Automation/harvest_crate_0"), LoadSprite("Automation/harvest_crate_1"),
+                               LoadSprite("Automation/harvest_crate_2") };
+            var crateSr = MakeSprite("HarvestCrate", objectsRoot, fill[0], Vector3.zero, 0);
+            var crate = crateSr.gameObject.AddComponent<HarvestCrate>();
+            if (fill[0] != null)
+                crateSr.GetComponent<BoxCollider2D>().size = fill[0].bounds.size;
+            crate.Setup(fill, crateSr);
+            var crateTile = AsTileObject(crate, "crate", "bld.harvest_crate");
+
             var wispFrames = new Sprite[4];
             var wispGlow = new Sprite[4];
             for (int i = 0; i < 4; i++)
@@ -428,54 +454,36 @@ namespace Wyspa.EditorTools
                 wispFrames[i] = LoadSprite($"Automation/wisp_gardener_{i}");
                 wispGlow[i] = LoadSprite($"Automation/wisp_gardener_{i}_glow");
             }
-            var wispBody = MakeSprite("WispGardener", autoRoot, wispFrames[0], Anchor(196, 88), 88);
-            var wispGlowSr = MakeGlow(wispBody, wispGlow[0], 89, glowMat);
+            var wispBody = MakeSprite("WispGardener", objectsRoot, wispFrames[0], Vector3.zero, 0);
+            var wispGlowSr = MakeGlow(wispBody, wispGlow[0], 1, glowMat);
             var wisp = wispBody.gameObject.AddComponent<WispGardener>();
             wisp.Setup(wispBody, wispGlowSr, wispFrames, wispGlow);
-            wispBody.gameObject.SetActive(false);
+            AsTileObject(wisp, "wisp", "bld.wisp_gardener", crateTile, new Vector2Int(14, 8));   // unosi się przy skrzyni
 
-            var chestBody = MakeSprite("MerchantChest", autoRoot, LoadSprite("Automation/merchant_chest"), Anchor(198, 132), 132);
-            var chestGlow = MakeGlow(chestBody, LoadSprite("Automation/merchant_chest_glow"), 133, glowMat);
+            var chestBody = MakeSprite("MerchantChest", objectsRoot, LoadSprite("Automation/merchant_chest"), Vector3.zero, 0);
+            var chestGlow = MakeGlow(chestBody, LoadSprite("Automation/merchant_chest_glow"), 1, glowMat);
             var chest = chestBody.gameObject.AddComponent<MerchantChest>();
             chest.Setup(chestBody, LoadSprite("Automation/merchant_chest"), LoadSprite("Automation/merchant_chest_open"),
                 chestGlow, LoadSprite("Automation/merchant_chest_glow"), LoadSprite("Automation/merchant_chest_open_glow"));
-            chestBody.gameObject.SetActive(false);
+            AsTileObject(chest, "merchant_chest", "bld.merchant_chest");
 
-            var rune = MakeSprite("RuneStone", autoRoot, LoadSprite("Automation/rune_stone"), Anchor(126, 142), 142);
-            MakeGlow(rune, LoadSprite("Automation/rune_stone_glow"), 143, glowMat);
-            rune.gameObject.SetActive(false);
+            var rune = MakeSprite("RuneStone", objectsRoot, LoadSprite("Automation/rune_stone"), Vector3.zero, 0);
+            MakeGlow(rune, LoadSprite("Automation/rune_stone_glow"), 1, glowMat);
+            AsTileObject(rune, "rune", "bld.soil_memory");
 
-            // --- grządki ---
-            var plotSprite = LoadSprite("Ground/plot");
-            var plotsRoot = new GameObject("Plots").transform;
-            foreach (var p in layout.plots)
-            {
-                var sr = MakeSprite($"Plot_r{p.row}_c{p.col}", plotsRoot, plotSprite, Center(p.x, p.y), -1000);
-                var plot = sr.gameObject.AddComponent<FarmPlot>();
-                var col = sr.GetComponent<BoxCollider2D>();
-                if (plotSprite != null)
-                    col.size = plotSprite.bounds.size;
-                var crop = MakeSprite("Crop", sr.transform, null, Vector3.zero, p.cropY);
-                crop.transform.position = Anchor(p.cropX, p.cropY);
-                var cropGlow = MakeGlow(crop, null, p.cropY + 1, glowMat);
-                UseFx(crop, swayCrop);
-                UseFx(cropGlow, swayCropGlow);
-                var cropFx = crop.gameObject.AddComponent<SpriteFx>();
-                cropFx.Setup(0.15f, crop, cropGlow);
-                plot.Setup($"plot_{p.row}_{p.col}", crop, cropGlow, cropFx);
-            }
-
-            // --- lampy ---
-            var lampsRoot = new GameObject("Lamps").transform;
+            // lampa startowa: krzywa latarnia (pozostałe lampy kupuje się w Etapie 3c, tryb stawiania)
             foreach (var l in layout.lamps)
             {
+                if (l.id != "lantern")
+                    continue;
                 var def = AssetDatabase.LoadAssetAtPath<LampDefinition>($"{DataDir}/Lamps/Lamp_{l.id}.asset");
-                var body = MakeSprite("Lamp_" + l.id, lampsRoot, LoadSprite("Lamps/" + l.sprite), Anchor(l.x, l.y), l.y);
-                var glow = MakeSprite("Glow", body.transform, LoadSprite("Lamps/" + l.sprite + "_glow"), Vector3.zero, l.y + 1);
+                var body = MakeSprite("Lamp_" + l.id, objectsRoot, LoadSprite("Lamps/" + l.sprite), Anchor(l.x, l.y), 0);
+                var glow = MakeSprite("Glow", body.transform, LoadSprite("Lamps/" + l.sprite + "_glow"), Vector3.zero, 1);
                 glow.transform.localPosition = Vector3.zero;
                 if (glowMat != null)
                     glow.sharedMaterial = glowMat;
 
+                // światło względem podstawy lampy (jak w układzie prototypu), lampa przesuwa się razem z nim
                 var lightGo = new GameObject("Light");
                 lightGo.transform.SetParent(body.transform, false);
                 lightGo.transform.position = Center(l.lightX, l.lightY);
@@ -492,7 +500,13 @@ namespace Wyspa.EditorTools
 
                 var lamp = body.gameObject.AddComponent<Lamp>();
                 lamp.Setup(def, light, glow);
+                AsTileObject(lamp, "lamp_lantern", "lamp." + l.id);
             }
+
+            var islandArt = AssetDatabase.LoadAssetAtPath<IslandArt>(IslandArtPath);
+            var waterAnim = water.gameObject.AddComponent<WaterAnimator>();
+            var island = world.gameObject.AddComponent<Island>();
+            island.Setup(islandArt, islandSr, water, fog, waterAnim, tileObjects);
 
             // --- logika gry ---
             var game = new GameObject("Game");
@@ -507,30 +521,29 @@ namespace Wyspa.EditorTools
             game.AddComponent<AppPerformance>();
             var automation = game.AddComponent<AutomationSystem>();
             automation.Setup(crate, wisp, chest, rune.gameObject);
+            camGo.AddComponent<ViewController>().Setup(ppc);
             var dayNight = game.AddComponent<DayNightLighting>();
             var click = game.AddComponent<ClickRouter>();
             game.AddComponent<DebugHud>();
 
             SetRefs(loop, ("activity", activity), ("clock", clock), ("essence", essence), ("wallet", wallet),
-                ("crops", db), ("saveSystem", save), ("rhythm", rhythm), ("upgrades", upgradeState), ("automation", automation));
+                ("crops", db), ("saveSystem", save), ("rhythm", rhythm), ("upgrades", upgradeState), ("automation", automation), ("island", island));
             SetRefs(upgradeState, ("database", upgradeDb));
             SetRefs(dayNight, ("clock", clock), ("globalLight", global));
             SetRefs(click, ("targetCamera", cam));
 
             // --- efekty: woda, mgła, cząsteczki (Etap 3a) ---
-            water.gameObject.AddComponent<WaterAnimator>().Setup(water,
-                AssetDatabase.LoadAssetAtPath<TextAsset>(WaterLayoutPath), clock);
+            waterAnim.Setup(water, clock);
             fog.gameObject.AddComponent<FogController>().Setup(fog, clock);
             var fxGo = new GameObject("Fx");
             var particles = fxGo.AddComponent<PixelParticles>();
             particles.Setup(glowMat);
             Sprite Fx(string n) => LoadSprite("Fx/" + n);
-            // świetliki nad wyspą (obszar jak w prototypie: x 30..190, y 30..120 + przesunięcie świata 24, 22)
-            Vector3 a0 = Center(54, 142), a1 = Center(214, 52);
+            // świetliki i spadające liście biorą obszar lądu i drzewa z Island
             fxGo.AddComponent<IslandFx>().Setup(particles, clock, glowMat,
                 new[] { Fx("fx_soil_0"), Fx("fx_soil_1") }, new[] { Fx("fx_leaf_0"), Fx("fx_leaf_1") }, Fx("fx_leaf_fall"),
                 new[] { Fx("fx_sparkle_0"), Fx("fx_sparkle_1"), Fx("fx_sparkle_2") }, new[] { Fx("fx_firefly_0"), Fx("fx_firefly_1") },
-                trees.ToArray(), new Rect(a0.x, a0.y, a1.x - a0.x, a1.y - a0.y));
+                new Transform[0], new Rect(-2f, -2f, 4f, 4f));
 
             // --- UI (płótno budowane w kodzie przy starcie, GDD §12) ---
             var ui = new GameObject("UI");

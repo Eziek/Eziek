@@ -42,13 +42,17 @@ namespace Wyspa.UI
         int flying;
 
         public bool ForceVisible { get; set; }
+        public Button ExpandButton { get; private set; }
 
-        public static HudView Create(RectTransform canvasRoot, System.Action openBook, System.Action openOptions)
+        public static HudView Create(RectTransform canvasRoot, System.Action openBook, System.Action openOptions, System.Action toggleExpand)
         {
             var root = Ui.Stretch(Ui.Rect("HUD", canvasRoot));
             var view = root.gameObject.AddComponent<HudView>();
             view.group = root.gameObject.AddComponent<CanvasGroup>();
             view.Build(root, openBook, openOptions);
+            var expand = Ui.IconBtn(root, "ExpandButton", "plus", new Vector2(18, 18), toggleExpand);
+            Ui.Place((RectTransform)expand.transform, Ui.TopRight, Ui.TopRight, new Vector2(-44, -4), new Vector2(18, 18));
+            view.ExpandButton = expand;
             return view;
         }
 
@@ -200,7 +204,7 @@ namespace Wyspa.UI
             int n = Mathf.Clamp(Mathf.CeilToInt(amount / 10f), 1, 5);
             pending.TryGetValue(type, out int p);
             pending[type] = p + amount;
-            string icon = type == CurrencyType.NightHarvest ? "nightcrop" : "coin";
+            string icon = type == CurrencyType.NightHarvest ? "nightcrop" : type == CurrencyType.StarShard ? "starshard" : "coin";
             for (int i = 0; i < n; i++)
             {
                 int share = i < n - 1 ? amount / n : amount - (amount / n) * (n - 1);

@@ -37,3 +37,13 @@ ui.stats.essence,Esencja: {0:0}/{1:0},Essence: {0:0}/{1:0},Essenz: {0:0}/{1:0},�
 ui.stats.multiplier,Mnożnik Esencji: ×{0:0.00},Essence multiplier: ×{0:0.00},Essenz-Multiplikator: ×{0:0.00},エッセンス倍率：×{0:0.00},精华倍率：×{0:0.00},
 ui.rhythm.normal,Praca: {0:0} min,Working: {0:0} min,Arbeit: {0:0} Min.,作業：{0:0}分,工作：{0:0}分钟,HUD
 ui.rhythm.idle,Przerwa,On a break,Pause,休憩中,休息中,HUD
+ui.expand.title,Nowy kafelek,New land tile,Neues Landstück,新しい土地マス,新的土地格,
+ui.expand.cost,{0} {0:plural:moneta|monety|monet} i {1} Esencji,{0} {0:plural:coin|coins} and {1} Essence,{0} {0:plural:Münze|Münzen} und {1} Essenz,{0}コインと{1}エッセンス,{0}金币和{1}精华,
+ui.expand.find,Coś błyszczy we mgle...,Something glimmers in the fog...,Etwas schimmert im Nebel ...,霧の中で何かが光っている…,迷雾中有东西在闪烁……,znalezisko
+ui.expand.click,LPM: wyrwij z mgły,Left click: claim from the fog,Linksklick: dem Nebel entreißen,左クリック：霧から取り戻す,左键：从迷雾中夺回,
+ui.expand.panel,Rozbudowa: {0} {0:plural:kafelek|kafelki|kafelków} - PPM: wyjdź,Expanding: {0} {0:plural:tile|tiles} - right click: exit,Ausbau: {0} {0:plural:Landstück|Landstücke} - Rechtsklick: beenden,拡張：{0}マス - 右クリックで終了,扩建：{0}格 - 右键退出,
+ui.expand.need,Potrzeba {0} {0:plural:monety|monet|monet} i {1} Esencji,You need {0} {0:plural:coin|coins} and {1} Essence,Benötigt: {0} {0:plural:Münze|Münzen} und {1} Essenz,{0}コインと{1}エッセンスが必要,需要{0}金币和{1}精华,toast
+ui.dig.title,Przekop na grządkę,Dig a plot,Beet anlegen,畑を耕す,开垦田地,
+ui.dig.cost,{0} {0:plural:moneta|monety|monet},{0} {0:plural:coin|coins},{0} {0:plural:Münze|Münzen},{0}コイン,{0}金币,
+ui.dig.click,LPM: przekop,Left click: dig,Linksklick: umgraben,左クリック：耕す,左键：开垦,
+ui.dig.need,Potrzeba {0} {0:plural:monety|monet|monet},You need {0} {0:plural:coin|coins},Benötigt: {0} {0:plural:Münze|Münzen},{0}コインが必要,需要{0}金币,toast

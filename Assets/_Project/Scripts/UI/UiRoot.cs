@@ -8,6 +8,7 @@ using Wyspa.Core;
 using Wyspa.Farming;
 using Wyspa.Lighting;
 using Wyspa.Localization;
+using Wyspa.World;
 
 namespace Wyspa.UI
 {
@@ -29,6 +30,7 @@ namespace Wyspa.UI
         public SeedWheel Wheel { get; private set; }
         public BookView Book { get; private set; }
         public ToastView Toasts { get; private set; }
+        public ExpansionMode Expansion { get; private set; }
         public TooltipView Tooltip { get; private set; }
 
         public void Setup(UiTheme uiTheme) => theme = uiTheme;
@@ -97,7 +99,10 @@ namespace Wyspa.UI
             }
 
             Tooltip = TooltipView.Create(canvasRect);
-            Hud = HudView.Create(canvasRect, () => Book.Open(BookView.Tab.Upgrades), () => Book.Open(BookView.Tab.Options));
+            Hud = HudView.Create(canvasRect, () => OpenBook(BookView.Tab.Upgrades), () => OpenBook(BookView.Tab.Options),
+                () => { Wheel.Close(); Expansion.Toggle(); });
+            Expansion = ExpansionMode.Create(canvasRect, Tooltip);
+            Hud.ExpandButton.gameObject.AddComponent<HoverTip>().Init(Tooltip, () => Loc.Get("menu.expand"));
             Toasts = ToastView.Create(canvasRect);
             Wheel = SeedWheel.Create(canvasRect, Tooltip);
             Book = BookView.Create(canvasRect, Tooltip);
@@ -114,19 +119,36 @@ namespace Wyspa.UI
                 game.Rhythm.RhythmEnabled = PlayerPrefs.GetInt("rhythm") == 1;
         }
 
-        /// <summary>Skala UI: o 1 mniejsza od skali świata (świat 272x200 w całkowitej skali).</summary>
+        /// <summary>Skala UI: o 1 mniejsza od skali świata (piksele ekranu na piksel gry), co najmniej 1.</summary>
         public static int UiScale()
         {
-            int world = Mathf.Max(1, Mathf.Min(Screen.width / 272, Screen.height / 200));
+            var view = ViewController.Instance;
+            int world = view != null
+                ? view.PixelRatio
+                : Mathf.Max(1, Mathf.Min(Screen.width / 272, Screen.height / 200));
             return Mathf.Max(1, world - 1);
+        }
+
+        /// <summary>Skala na czas Księgi: zwykła, chyba że okno jest za małe (np. okno Game w edytorze) - wtedy mniejsza.</summary>
+        static int BookScale()
+        {
+            int fit = Mathf.Min(Mathf.FloorToInt(Screen.width / (BookView.Width + 16f)), Mathf.FloorToInt(Screen.height / (BookView.Height + 16f)));
+            return Mathf.Max(1, Mathf.Min(UiScale(), fit));
+        }
+
+        void OpenBook(BookView.Tab tab)
+        {
+            Expansion.Close();
+            Wheel.Close();
+            Book.Open(tab);
         }
 
         public bool PointerOverUi => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
 
         void Update()
         {
-            scaler.scaleFactor = UiScale();
-            Hud.ForceVisible = Book.IsOpen || Wheel.IsOpen;
+            scaler.scaleFactor = Book.IsOpen ? BookScale() : UiScale();
+            Hud.ForceVisible = Book.IsOpen || Wheel.IsOpen || Expansion.IsActive;
             UpdatePlotTooltip();
         }
 
@@ -136,7 +158,7 @@ namespace Wyspa.UI
             var game = GameLoop.Instance;
             var cam = Camera.main;
             FarmPlot.Hovered = null;
-            if (game == null || cam == null || PointerOverUi || Book.IsOpen || Wheel.IsOpen)
+            if (game == null || cam == null || PointerOverUi || Book.IsOpen || Wheel.IsOpen || Expansion.IsActive)
             {
                 Tooltip.Hide(plotHoverOwner);
                 return;

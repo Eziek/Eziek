@@ -10,11 +10,15 @@ namespace Wyspa.UI
         static UnityEngine.InputSystem.Keyboard K => UnityEngine.InputSystem.Keyboard.current;
         public static Vector2 MousePosition => M != null ? M.position.ReadValue() : Vector2.zero;
         public static bool RightPressed => M != null && M.rightButton.wasPressedThisFrame;
+        public static bool RightHeld => M != null && M.rightButton.isPressed;
+        public static bool RightReleased => M != null && M.rightButton.wasReleasedThisFrame;
         public static bool EscapePressed => K != null && K.escapeKey.wasPressedThisFrame;
         public static bool F1Pressed => K != null && K.f1Key.wasPressedThisFrame;
 #else
         public static Vector2 MousePosition => UnityEngine.Input.mousePosition;
         public static bool RightPressed => UnityEngine.Input.GetMouseButtonDown(1);
+        public static bool RightHeld => UnityEngine.Input.GetMouseButton(1);
+        public static bool RightReleased => UnityEngine.Input.GetMouseButtonUp(1);
         public static bool EscapePressed => UnityEngine.Input.GetKeyDown(KeyCode.Escape);
         public static bool F1Pressed => UnityEngine.Input.GetKeyDown(KeyCode.F1);
 #endif

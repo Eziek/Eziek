@@ -256,7 +256,11 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Rozbudowa wyspy: pojedyncze kafelki 16×16 (§13).
 - [x] Start: **wyspa 2×2 o losowym kształcie**, świat **32×32 generowany z ziarna** (§13.1, §13.4).
 - [x] Esencja w koszcie kafelka: tak.
-- [ ] Rozmiar okna i jak rośnie przy rozbudowie (propozycja w §13.6: start 144×112 natywnie, krokami po 16 px do limitu z opcji, potem przewijanie).
+- [x] Okno rośnie z wyspą (§13.6): start 144×112 natywnie (×3 = 432×336), krokami po 16 px do limitu 60% × 70% ekranu,
+  potem przewijanie PPM. Limit i skala do ustawienia w opcjach później.
+- [x] Do Etapu 3c lampa startowa, skrzynia i automatyka **stają same** na wolnym kafelku trawy (najbliżej startu);
+  bez wolnego kafelka czekają (toast). Tryb stawiania przyjdzie w 3c.
+- [ ] Pasma światła lamp z ditheringiem Bayera (§4.4): przesunięte na później (wymaga własnego światła 2D albo post-processu).
 - [ ] Krzywa cen kafelków do balansu (obecnie kwadratowa, §13.2).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
 - [ ] Progi rytmu pracy (seria 25 min, przerwa 5 min, zmęczenie 8 h/10 h) do sprawdzenia w praktyce.
@@ -357,6 +361,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     Shadery piszemy na bazie źródeł URP 17.6 i kompilujemy w kontenerze kompilatorem DXC (`tools/shadercheck`).
     Woda, ryby, potwór i mgła są portem prototypu z Pythona (te same reguły, 10 kl./s), a pętle ruchu są wolniejsze niż w GIF-ie
     (ryby 30 s, mgła 30 s), bo w grze patrzy się na nie godzinami.
+28. Etap 3a przetestowany. **Etap 3b: wyspa z kafelków według GDD** (decyzja gracza: pełny GDD w dwóch krokach, okno rośnie z wyspą).
+    Start 2×2 z 2 grządkami, dekoracją i latarnią; świat 32×32 z ziarna; kupowanie kafelków (monety + Esencja), znaleziska,
+    przekopywanie trawy na grządkę, mgła liczona od brzegu, więc cofa się sama. 3c: tryb stawiania i usuwanie dekoracji.
+    Zapis v3 (wyspa); stary zapis zachowuje waluty i ulepszenia, a wyspę dostaje nową.
 
 ---
 
@@ -399,6 +407,10 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Visual/WaterAnimator.cs`, `FogController.cs` | ryby i potwór do shadera wody, noc; gęstość mgły (dzień / noc / zgaszone lampy) |
 | `Scripts/Visual/PixelParticles.cs`, `IslandFx.cs` | własne cząsteczki pikselowe (pula sprite'ów, 12 kl./s, siatka pikseli); efekty zbioru, sadzenia, wzrostu, iskierki, świetliki, liście |
 | `Scripts/Visual/FxMaterial.cs` | przełącznik shaderów efektów (F1): powrót do zwykłego materiału |
+| `Scripts/World/WorldTypes.cs`, `WorldGenerator.cs`, `IslandMap.cs`, `IslandPainter.cs` | czyste C# (testowalne poza Unity): kafelki, ziarno, generator świata (port `world_proto.py`), mapa i ceny (§13.2), malowanie lądu, wody i mapy danych (port `tiles_proto.py`, morfologia przez transformatę odległości) |
+| `Scripts/World/Island.cs`, `IslandArt.cs`, `TileObject.cs` | wyspa w scenie: tekstury w locie, grządki i dekoracje na kafelkach, zakup, przekopywanie, znaleziska, samoczynne stawianie obiektów, zapis |
+| `Scripts/World/ViewController.cs` | kadr i okno rosną z wyspą (Pixel Perfect Camera, `Screen.SetResolution` w buildzie), przewijanie PPM |
+| `Scripts/UI/ExpansionMode.cs`, `TileFrame.cs` | tryb rozbudowy: ramki z ceną lub „?”, dymek z kosztem, kupno, przekopywanie |
 | `Editor/PixelArtImporter.cs` | automatyczne ustawienia importu sprite'ów + pivoty z `pivots.json` |
 | `Editor/WyspaSetup.cs` | menu „Wyspa”: ustawienia projektu, dane (SO, także `Data/UiTheme.asset`), budowa sceny z `prototype_layout.json` (z obiektem UI) |
 
@@ -517,7 +529,12 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
   kontur przy najechaniu i puls „gotowe”, woda liczona w shaderze (ryby, potwór, połyski, grzbiety fal, przybój, piana), mgła
   przy krawędziach (gęstsza w nocy, bliżej przy zgaszonych lampach). Cząsteczki: zbiór, sadzenie, wzrost, iskierki, świetliki,
   spadające liście, monety lecące do licznika. Przełącznik shaderów w HUD debugowym (F1).
-- **Etap 3b:** powiększanie wyspy kafelkami z cofaniem mgły (§13). Do zrobienia przy okazji: pasma światła lamp z Bayerem (§4.4).
+- **Etap 3b (gotowy, do testu w Unity): wyspa z kafelków.** Start 2×2 z ziarna, świat 32×32 (strefy i znaleziska w danych),
+  tryb rozbudowy (ramki, ceny, „?”), mgła cofa się od nowego brzegu, okno i kadr rosną z wyspą, przekopywanie trawy na grządkę,
+  znaleziska (monety, nasiona nocy, odłamek, lore, źródło, pradawny kamień), zapis v3.
+  Strefy mają na razie zwykłą trawę (wygląd stref: Etap 5).
+- **Etap 3c:** tryb stawiania (lampy ze sklepu, skrzynia, automatyka, przenoszenie), usuwanie dekoracji (§14),
+  dekoracje na nowo odkrytych kafelkach (ok. 25%), animacja wynurzania lądu. Pasma światła Bayera (§4.4) później.
 - **Etap 4:** rośliny nocy (grafiki), kupiec-widmo, pomost i łowienie, łódź i wyprawy, mutacje i jakość.
 - **Etap 5:** strefy, latarnia morska, Księga rytuałów i cykle księżyca, bestiariusz, lore, potwór.
 - **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
@@ -660,6 +677,9 @@ Skrypty: `tools/pixel-proto/tiles_proto.py`, `world_proto.py`.
 - Mini-tryb pokazuje tylko wycinek z grządkami.
 
 ### 13.7 Technicznie
+**Stan (Etap 3b):** jak niżej, z dwiema zmianami: brzeg liczony dokładną transformatą odległości (Felzenszwalb), a nie przesuwaniem
+masek, a mgła to shader czytający mapę odległości od brzegu (`Fog.shader`, od 22 px, gęstnieje przez 40 px). Tekstury mają 640×640
+(świat 512 px + 64 px zapasu), środek świata w (0,0). Malowanie po zakupie trwa ok. 20–150 ms.
 - `IslandMap`: `HashSet<Vector2Int>` kafelków + `Dictionary<Vector2Int, TileType>`, ziarno świata, granice mapy **32×32**.
 - `WorldGenerator`: z ziarna wylicza kształt startu, strefy, znaleziska i dziwne kafelki (algorytm jak w `world_proto.py`).
 - `ExpansionShop`: lista przyległych kafelków, koszt, znaleziska z `WorldGenerator`.

@@ -131,6 +131,23 @@ Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (krok 2 tworzy mater
 7. **F1 → „Shadery efektów”** wyłącza shadery (zwykłe sprite'y). Jeśli coś jest różowe albo dziwne, sprawdź z wyłączonymi
    i wklej mi błędy z konsoli.
 
+## 4d. Etap 3b: wyspa z kafelków (test)
+Po pobraniu zmian: **Wyspa → 1** (okno startowe 432×336), **Wyspa → 3**, potem Play.
+W edytorze ustaw okno Game na **432×336** (lista rozdzielczości u góry okna Game, „+” = własna), żeby widzieć to, co w buildzie.
+Okno samo rośnie tylko w buildzie, w edytorze rośnie kadr.
+1. **Start:** mała wyspa 2×2 o losowym kształcie: 2 grządki, drzewo/kamień/krzak/martwe drzewo i latarnia. Każdy nowy świat jest inny.
+2. **Rozbudowa:** przycisk **„+”** w prawym górnym rogu. Kafelki przy lądzie mają przerywane ramki z ceną, a niektóre **„?”**
+   (znalezisko). Najedź: dymek z kosztem (monety + Esencja). **LPM** kupuje, **PPM** albo **Esc** wychodzi.
+3. Po zakupie ląd się zmienia, mgła odsuwa się od nowego brzegu, kadr rośnie krokami po 16 px. Znalezisko daje toast
+   (monety, plony nocy, odłamek gwiazdy, fragment lore, źródło albo pradawny kamień).
+4. **Grządka:** w trybie rozbudowy wolna trawa ma złote przerywane ramki: LPM przekopuje ją na grządkę (10 monet, potem drożej).
+5. **Automatyka:** po kupnie ognika skrzynia staje sama na wolnym kafelku (ognik obok). Bez wolnego kafelka zobaczysz toast
+   „brak wolnego kafelka”: dokup kafelek, a skrzynia pojawi się sama.
+6. **Duża wyspa:** gdy przerośnie limit okna, przeciągnij **PPM**, żeby przesunąć widok.
+7. **F1** (HUD debugowy): ziarno, liczba kafelków, cena, kadr; przyciski **+1 / +10 kafelków** i **Nowy świat**,
+   cheat **+30 Esencji**.
+8. Zapis: wyspa zapisuje się z resztą gry. Stary zapis (sprzed 3b) zachowuje monety i ulepszenia, a wyspę dostaje nową.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 
@@ -146,6 +163,8 @@ Unity 6: **File → Build Profiles → Windows → Build**.
 | Różowa woda, mgła albo rośliny | Shader się nie skompilował. Kliknij plik w `Assets/_Project/Shaders` i wklej mi błędy z Inspectora. F1 → „Shadery efektów” wyłącza efekty |
 | Woda bez ryb i fal, w kolorach „tęczy” | Brak `water_data.png` jako tekstury bez sRGB. **Wyspa → Narzędzia → Reimportuj sprite'y**, potem Wyspa → 3 |
 | Brak UI, w konsoli „UiRoot: brak motywu UI” | **Wyspa → 3** (tworzy `Data/UiTheme.asset` i podpina go do obiektu `UI`) |
+| Księga nie mieści się w oknie | W buildzie okno samo rośnie na czas Księgi; w edytorze UI się zmniejsza. Ustaw większe okno Game |
+| Brak wyspy, w konsoli NullReference w `Island` | Scena sprzed 3b: uruchom **Wyspa → 3** (tworzy `Data/IslandArt.asset` i nową scenę) |
 | W konsoli „[Loc] Brak klucza …” | Klucz nie istnieje w żadnym CSV w `Assets/_Project/Localization/`. Zgłoś mi nazwę klucza |
 
 ## Co już jest, a czego jeszcze nie ma

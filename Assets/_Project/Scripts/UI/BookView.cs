@@ -7,6 +7,7 @@ using Wyspa.Economy;
 using Wyspa.Lighting;
 using Wyspa.Localization;
 using Wyspa.Upgrades;
+using Wyspa.World;
 
 namespace Wyspa.UI
 {
@@ -25,6 +26,7 @@ namespace Wyspa.UI
         };
 
         const float W = 360, H = 232;
+        public const float Width = W, Height = H;
 
         GameObject blocker;
         RectTransform content;
@@ -99,6 +101,10 @@ namespace Wyspa.UI
 
         public void Open(Tab tab)
         {
+            // mały kadr (start 144x112) nie mieści Księgi: okno na chwilę rośnie (tylko w buildzie)
+            if (ViewController.Instance != null)
+                ViewController.Instance.RequireWindow(new Vector2Int(
+                    Mathf.CeilToInt((W + 16) * UiRoot.UiScale()), Mathf.CeilToInt((H + 16) * UiRoot.UiScale())));
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();
             Show(tab);
@@ -106,6 +112,8 @@ namespace Wyspa.UI
 
         public void Close()
         {
+            if (ViewController.Instance != null)
+                ViewController.Instance.RequireWindow(Vector2Int.zero);
             blocker.SetActive(false);
             tooltip.Hide(this);
         }

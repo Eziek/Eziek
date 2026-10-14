@@ -1,3 +1,4 @@
+using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
 using Wyspa.Core;
@@ -10,6 +11,7 @@ namespace Wyspa.UI
     {
         const float Lifetime = 4f;
         const int MaxVisible = 3;
+        const float MaxWidth = 150f;
 
         readonly List<(RectTransform rt, float until)> items = new List<(RectTransform, float)>();
         RectTransform root;
@@ -31,8 +33,17 @@ namespace Wyspa.UI
             var text = Ui.Txt(img.transform, "Text", Ui.Theme.textLight);
             text.text = Loc.Get(key, args);
             float w = Ui.Width(text);
-            Ui.Place(text.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(8, -4), new Vector2(w, 10));
-            Ui.Place(img.rectTransform, Ui.TopRight, Ui.TopRight, Vector2.zero, new Vector2(w + 13, 16));
+            float h = 10f;
+            // długie teksty (np. fragmenty lore) łamiemy, żeby toast zmieścił się w małym oknie
+            float maxW = Mathf.Max(60f, Mathf.Min(MaxWidth, root.rect.width - 13f));
+            if (w > maxW)
+            {
+                text.textWrappingMode = TextWrappingModes.Normal;
+                w = maxW;
+                h = Mathf.Ceil(text.GetPreferredValues(text.text, w, 0f).y);
+            }
+            Ui.Place(text.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(8, -4), new Vector2(w, h));
+            Ui.Place(img.rectTransform, Ui.TopRight, Ui.TopRight, Vector2.zero, new Vector2(w + 13, h + 6));
             items.Add((img.rectTransform, Time.unscaledTime + Lifetime));
             while (items.Count > MaxVisible)
             {

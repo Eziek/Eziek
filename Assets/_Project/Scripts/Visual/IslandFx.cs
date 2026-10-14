@@ -1,6 +1,7 @@
 using UnityEngine;
 using Wyspa.Core;
 using Wyspa.Farming;
+using Wyspa.World;
 
 namespace Wyspa.Visual
 {
@@ -54,6 +55,8 @@ namespace Wyspa.Visual
 
         void OnDestroy()
         {
+            if (Island.Instance != null)
+                Island.Instance.Rebuilt -= PlaceFireflies;
             if (Instance == this)
                 Instance = null;
         }
@@ -62,6 +65,9 @@ namespace Wyspa.Visual
         {
             if (firefly == null || firefly.Length == 0)
                 return;
+            var island = Island.Instance;
+            if (island != null)
+                island.Rebuilt += PlaceFireflies;
             var rnd = new System.Random(5);
             flies = new SpriteRenderer[fireflyCount];
             flyBase = new Vector2[fireflyCount];
@@ -82,6 +88,21 @@ namespace Wyspa.Visual
                     Mathf.Round((fireflyArea.yMin + (float)rnd.NextDouble() * fireflyArea.height) * Ppu));
                 flyPhase[i] = rnd.Next(48);
             }
+            PlaceFireflies();
+        }
+
+        /// <summary>Świetliki krążą nad lądem: po każdej rozbudowie dostają nowe miejsca w prostokącie wyspy.</summary>
+        void PlaceFireflies()
+        {
+            if (flies == null)
+                return;
+            var island = Island.Instance;
+            var area = island != null && island.Ready ? island.LandRect : fireflyArea;
+            var rnd = new System.Random(5);
+            for (int i = 0; i < flyBase.Length; i++)
+                flyBase[i] = new Vector2(
+                    Mathf.Round((area.xMin + (float)rnd.NextDouble() * area.width) * Ppu),
+                    Mathf.Round((area.yMin + 0.3f + (float)rnd.NextDouble() * Mathf.Max(0f, area.height - 0.3f)) * Ppu));
         }
 
         // ------------------------------------------------------------ wywołania z gry
@@ -101,6 +122,32 @@ namespace Wyspa.Visual
             var fx = Instance;
             if (fx != null && fx.particles != null)
                 fx.particles.Burst(cropPos, fx.soil, 3, 26f, 150f, 0.35f, order + 1);
+        }
+
+        /// <summary>Kupiony kafelek: piana i woda tryskają wokół, ląd wynurza się z morza.</summary>
+        public static void TileClaimed(Vector3 tileCenter, Sprite[] foam)
+        {
+            var fx = Instance;
+            if (fx == null || fx.particles == null)
+                return;
+            var sprites = foam != null && foam.Length > 0 ? foam : fx.soil;
+            for (int i = 0; i < 4; i++)
+            {
+                var corner = tileCenter + new Vector3((i % 2 == 0 ? -6 : 6) / Ppu, (i < 2 ? -6 : 6) / Ppu, 0f);
+                fx.particles.Burst(corner, sprites, 3, 34f, 150f, 0.5f, 1000);
+            }
+        }
+
+        /// <summary>Znalezisko wyskakuje z kafelka jak plon przy zbiorze (iskierki).</summary>
+        public static void FindPopped(Vector3 at)
+        {
+            var fx = Instance;
+            if (fx == null || fx.particles == null || fx.sparkle == null || fx.sparkle.Length < 3)
+                return;
+            var frames = new[] { fx.sparkle[0], fx.sparkle[1], fx.sparkle[2], fx.sparkle[1], fx.sparkle[0] };
+            for (int i = 0; i < 3; i++)
+                fx.particles.Spawn(at + new Vector3((i - 1) * 5 / Ppu, (4 + i % 2 * 4) / Ppu, 0f), frames,
+                    new Vector2(0f, 20f), 0f, 0.6f, 2000, true);
         }
 
         public static void Grew(Vector3 cropPos, int order)
@@ -183,9 +230,14 @@ namespace Wyspa.Visual
 
         void DropLeaf()
         {
-            if (particles == null || leafFall == null || trees == null || trees.Length == 0)
+            var list = new System.Collections.Generic.List<Transform>();
+            if (Island.Instance != null)
+                list.AddRange(Island.Instance.Trees);
+            else if (trees != null)
+                list.AddRange(trees);
+            if (particles == null || leafFall == null || list.Count == 0)
                 return;
-            var tree = trees[Random.Range(0, trees.Length)];
+            var tree = list[Random.Range(0, list.Count)];
             if (tree == null)
                 return;
             float startUp = Random.Range(18, 29);

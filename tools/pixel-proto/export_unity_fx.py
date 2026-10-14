@@ -7,7 +7,8 @@ Uruchom z tools/pixel-proto:  python3 export_unity_fx.py   (po export_unity.py; 
     R = odległość od brzegu w pikselach x4 (0..255), G = klasa piksela x32
     (0 ląd, 1 płycizna b2, 2 środek b1, 3 głębia b0, 4 najgłębsza p0, 5 cień klifu, 6 piana 1, 7 piana 2).
 - Art/water_layout.json: ścieżki ryb (ósemki) i miejsce potwora w głębinie, liczone tak jak w prototypie (water.py).
-- Fx/*: drobne sprite'y cząsteczek (iskierki, świetliki, ziemia, listki).
+- Fx/*: drobne sprite'y cząsteczek (iskierki, świetliki, ziemia, listki, piana).
+- Etap 3b: Ground/plot_tile.png (grządka 16x16 na kafelek), UI/Frames/frame_* (ramki trybu rozbudowy).
 """
 import os, json
 import daynight            # paleta mroczna (jak export_unity.py)
@@ -70,6 +71,27 @@ fx = {
 for name, spr in fx.items():
     E.save(spr, "Fx", name, pivot=(0.5, 0.5), glow=False)
 
+# --- Etap 3b: wyspa z kafelków ---
+import tiles_proto as TP
+E.save(TP.plot16(), "Ground", "plot_tile", pivot=(0.5, 0.5), glow=False)
+
+
+def frame(k, dashed):
+    # przerywana ramka 16x16 jak w prototypie trybu rozbudowy (tiles_proto.py); najechana = ciągła
+    s = Sprite(16, 16, 8, 8)
+    for t in range(16):
+        if not dashed or t % 3 != 2:
+            for x, y in ((t, 0), (t, 15), (0, t), (15, t)):
+                s.set(x, y, k)
+    return s
+
+
+for name, spr in {"frame_buy": frame('wl', True), "frame_buy_hover": frame('fl', False),
+                  "frame_dig": frame('go', True), "frame_dig_hover": frame('fl', False)}.items():
+    E.save(spr, "UI/Frames", name, pivot=(0.5, 0.5), glow=False)
+E.save(px(1, 1, [(0, 0, 'fo')]), "Fx", "fx_foam_0", pivot=(0.5, 0.5), glow=False)
+E.save(px(2, 1, [(0, 0, 'b3'), (1, 0, 'fo')]), "Fx", "fx_foam_1", pivot=(0.5, 0.5), glow=False)
+
 with open(E.PIVOTS, "w") as f:
     json.dump({"items": sorted(E.items.values(), key=lambda i: i["name"])}, f, indent=2)
-print(f"ok: woda + {len(fx)} cząsteczek, {len(layout['fish'])} ryb; {len(E.items)} wpisów w pivots.json")
+print(f"ok: woda + {len(fx) + 2} cząsteczek, grządka, ramki, {len(layout['fish'])} ryb; {len(E.items)} wpisów w pivots.json")

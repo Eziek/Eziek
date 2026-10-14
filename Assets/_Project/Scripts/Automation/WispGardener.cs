@@ -34,6 +34,17 @@ namespace Wyspa.Automation
 
         void Awake() => home = transform.position;
 
+        /// <summary>Island postawił ognika obok skrzyni (SendMessage) - nowy punkt powrotu.</summary>
+        void OnPlaced()
+        {
+            home = transform.position;
+            if (flight != null)
+            {
+                StopCoroutine(flight);
+                flight = null;
+            }
+        }
+
         /// <summary>Zwraca zebraną grządkę (albo null), gdy minął odstęp i jest co zbierać.</summary>
         public FarmPlot Tick(float dt, float interval, HarvestCrate crate)
         {

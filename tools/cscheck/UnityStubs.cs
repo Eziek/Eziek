@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace UnityEngine
 {
     public class Object { public string name; public static implicit operator bool(Object o) => o != null; public static void Destroy(Object o) { } public static T FindAnyObjectByType<T>() where T : Object => default; }
-    public class Component : Object { public Transform transform; public GameObject gameObject; public T GetComponent<T>() => default; public bool TryGetComponent<T>(out T c) { c = default; return false; } public string tag; }
+    public class Component : Object { public Transform transform; public GameObject gameObject; public T GetComponent<T>() => default; public T[] GetComponentsInChildren<T>(bool inactive) => null; public void SendMessage(string m, SendMessageOptions o) { } public bool TryGetComponent<T>(out T c) { c = default; return false; } public string tag; }
     public class Behaviour : Component { public bool enabled; public bool isActiveAndEnabled; }
     public class MonoBehaviour : Behaviour { public Coroutine StartCoroutine(IEnumerator e) => null; public void StopCoroutine(Coroutine c) { } }
     public class ScriptableObject : Object { public static T CreateInstance<T>() where T : ScriptableObject => default; }
@@ -18,39 +18,41 @@ namespace UnityEngine
     public class Canvas : Behaviour { public RenderMode renderMode; public bool pixelPerfect; public int sortingOrder; }
     public class CanvasGroup : Behaviour { public float alpha; public bool blocksRaycasts, interactable; }
     public class Font : Object { }
-    public static class PlayerPrefs { public static bool HasKey(string k) => false; public static float GetFloat(string k) => 0; public static void SetFloat(string k, float v) { } public static int GetInt(string k) => 0; public static void SetInt(string k, int v) { } public static string GetString(string k, string d = "") => d; public static void SetString(string k, string v) { } public static void Save() { } }
+    public static class PlayerPrefs { public static bool HasKey(string k) => false; public static float GetFloat(string k) => 0; public static void SetFloat(string k, float v) { } public static int GetInt(string k) => 0; public static int GetInt(string k, int d) => d; public static void SetInt(string k, int v) { } public static string GetString(string k, string d = "") => d; public static void SetString(string k, string v) { } public static void Save() { } }
     public enum SystemLanguage { Chinese, German, Japanese, Polish, English, ChineseSimplified, ChineseTraditional, Unknown }
     public enum KeyCode { Escape, F1 }
     public class Renderer : Component { public int sortingOrder; public Material sharedMaterial; public Material material; public bool enabled; public void GetPropertyBlock(MaterialPropertyBlock b) { } public void SetPropertyBlock(MaterialPropertyBlock b) { } }
     public class MaterialPropertyBlock { public void SetFloat(int id, float v) { } public void SetColor(int id, Color c) { } }
     public class SpriteRenderer : Renderer { public Sprite sprite; }
-    public class Sprite : Object { public Bounds bounds; public Vector2 pivot; public Texture2D texture; }
+    public class Sprite : Object { public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu, uint extrude, SpriteMeshType mesh) => null; public Bounds bounds; public Vector2 pivot; public Texture2D texture; }
     public struct Bounds { public Vector3 size; }
-    public class Material : Object { public Material(Shader s) { } public Material(Material m) { } public Shader shader; public void SetFloat(int id, float v) { } public void SetFloat(string n, float v) { } public void SetColor(string n, Color c) { } public void SetTexture(string n, Texture t) { } public void SetVector(int id, Vector4 v) { } public void SetVectorArray(int id, Vector4[] v) { } }
+    public class Material : Object { public Material(Shader s) { } public Material(Material m) { } public Shader shader; public void SetFloat(int id, float v) { } public void SetFloat(string n, float v) { } public void SetColor(string n, Color c) { } public void SetTexture(string n, Texture t) { } public void SetTexture(int id, Texture t) { } public void SetVector(int id, Vector4 v) { } public void SetVectorArray(int id, Vector4[] v) { } }
     public class Shader : Object { public static Shader Find(string n) => null; public static int PropertyToID(string n) => 0; public bool isSupported; }
     public class TextAsset : Object { public string text; }
-    public class Texture : Object { public FilterMode filterMode; }
-    public class Texture2D : Texture { public static Texture2D whiteTexture; }
+    public class Texture : Object { public FilterMode filterMode; public TextureWrapMode wrapMode; }
+    public enum TextureFormat { RGBA32 = 4 }
+    public class Texture2D : Texture { public static Texture2D whiteTexture; public Texture2D(int w, int h, TextureFormat f, bool mip, bool linear) { } public void LoadRawTextureData(byte[] d) { } public void Apply(bool mips) { } }
     public class Camera : Behaviour { public static Camera main; public bool orthographic; public float orthographicSize; public CameraClearFlags clearFlags; public Color backgroundColor; public Vector3 ScreenToWorldPoint(Vector3 p) => p; public Vector3 WorldToScreenPoint(Vector3 p) => p; }
     public enum CameraClearFlags { Skybox, SolidColor }
     public class Collider2D : Behaviour { }
     public class BoxCollider2D : Collider2D { public Vector2 size; }
-    public static class Input { public static Vector3 mousePosition; public static bool GetMouseButtonDown(int b) => false; public static bool GetKeyDown(KeyCode k) => false; }
+    public static class Input { public static Vector3 mousePosition; public static bool GetMouseButtonDown(int b) => false; public static bool GetMouseButton(int b) => false; public static bool GetMouseButtonUp(int b) => false; public static bool GetKeyDown(KeyCode k) => false; }
     public static class Physics2D { public static Collider2D OverlapPoint(Vector2 p) => null; }
     public class Coroutine { }
     public class WaitForSecondsRealtime { public WaitForSecondsRealtime(float s) { } }
-    public struct Vector2 { public float x, y; public Vector2(float x, float y) { this.x = x; this.y = y; } public float sqrMagnitude => 0; public static Vector2 zero, one; public static Vector2 operator -(Vector2 a, Vector2 b) => a; public static Vector2 operator +(Vector2 a, Vector2 b) => a; public static Vector2 operator *(Vector2 a, float f) => a; public static Vector2 operator *(float f, Vector2 a) => a; public static implicit operator Vector2(Vector3 v) => default; public static implicit operator Vector3(Vector2 v) => default; }
+    public struct Vector2 { public float x, y; public Vector2(float x, float y) { this.x = x; this.y = y; } public float sqrMagnitude => 0; public float magnitude => 0; public static Vector2 operator /(Vector2 a, float f) => a; public static Vector2 zero, one; public static Vector2 operator -(Vector2 a, Vector2 b) => a; public static Vector2 operator +(Vector2 a, Vector2 b) => a; public static Vector2 operator *(Vector2 a, float f) => a; public static Vector2 operator *(float f, Vector2 a) => a; public static implicit operator Vector2(Vector3 v) => default; public static implicit operator Vector3(Vector2 v) => default; }
+    public struct Vector2Int { public int x, y; public Vector2Int(int x, int y) { this.x = x; this.y = y; } public static Vector2Int zero; public static bool operator ==(Vector2Int a, Vector2Int b) => a.x == b.x && a.y == b.y; public static bool operator !=(Vector2Int a, Vector2Int b) => !(a == b); public override bool Equals(object o) => o is Vector2Int v && v == this; public override int GetHashCode() => x ^ y; }
     public struct Vector3 { public float x, y, z; public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; } public static Vector3 zero, one; public static Vector3 operator -(Vector3 a, Vector3 b) => a; public static Vector3 operator +(Vector3 a, Vector3 b) => a; public static Vector3 Lerp(Vector3 a, Vector3 b, float t) => a; }
     public struct Vector4 { public float x, y, z, w; public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; } public static Vector4 zero; }
     public struct Color { public float r, g, b, a; public Color(float r, float g, float b, float a = 1) { this.r = r; this.g = g; this.b = b; this.a = a; } public static Color white, clear; public static bool operator ==(Color a, Color b) => true; public static bool operator !=(Color a, Color b) => false; public override bool Equals(object o) => false; public override int GetHashCode() => 0; public static implicit operator Color(Color32 c) => default; }
     public struct Color32 { public Color32(byte r, byte g, byte b, byte a) { } }
-    public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; public float xMin => x; public float yMin => y; public Vector2 size => default; }
+    public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; public float xMin => x; public float yMin => y; public Vector2 size => default; public Vector2 center => default; public static Rect MinMaxRect(float a, float b, float c, float d) => default; }
     public static class Mathf { public static float Lerp(float a, float b, float t) => a; public const float PI = 3.14159265f; public static float Ceil(float f) => f; public static int CeilToInt(float f) => 0; public static float Round(float f) => f; public static float Cos(float f) => f; public static float MoveTowards(float c, float t, float d) => c; public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
     public static class Random { public static float value; public static float Range(float a, float b) => a; public static int Range(int a, int b) => a; }
     public static class Application { public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath; public static event Action<bool> focusChanged; }
     public static class QualitySettings { public static int vSyncCount; }
     public static class Time { public static float unscaledDeltaTime, unscaledTime; }
-    public static class Screen { public static int width, height; }
+    public static class Screen { public static int width, height; public static FullScreenMode fullScreenMode; public static Resolution currentResolution; public static void SetResolution(int w, int h, FullScreenMode m) { } }
     public static class Debug { public static void Log(object o) { } public static void LogWarning(object o) { } public static void LogError(object o) { } }
     public static class JsonUtility { public static string ToJson(object o, bool p) => ""; public static T FromJson<T>(string s) => default; }
     public class Gradient { public void SetKeys(GradientColorKey[] c, GradientAlphaKey[] a) { } public Color Evaluate(float t) => default; }
@@ -58,7 +60,9 @@ namespace UnityEngine
     public struct GradientAlphaKey { public GradientAlphaKey(float a, float t) { } }
     public class AnimationCurve { public AnimationCurve(params Keyframe[] k) { } public float Evaluate(float t) => 0; }
     public struct Keyframe { public Keyframe(float t, float v) { } }
-    public enum FullScreenMode { Windowed }
+    public enum FullScreenMode { ExclusiveFullScreen, FullScreenWindow, MaximizedWindow, Windowed }
+    public enum SendMessageOptions { RequireReceiver, DontRequireReceiver }
+    public struct Resolution { public int width, height; }
     public enum FilterMode { Point }
     public enum TextureWrapMode { Clamp }
     public enum SpriteAlignment { Center, Custom = 9 }
@@ -90,7 +94,7 @@ namespace UnityEngine.Rendering.Universal
 }
 namespace UnityEngine.InputSystem
 {
-    public class ButtonControl { public bool wasPressedThisFrame; }
+    public class ButtonControl { public bool wasPressedThisFrame, wasReleasedThisFrame, isPressed; }
     public class KeyControl : ButtonControl { }
     public class Vector2Control { public UnityEngine.Vector2 ReadValue() => default; }
     public class Mouse { public static Mouse current; public ButtonControl leftButton, rightButton; public Vector2Control position; }
@@ -168,7 +172,7 @@ namespace TMPro
     {
         public string text; public TMP_FontAsset font; public float fontSize; public TextAlignmentOptions alignment;
         public TextWrappingModes textWrappingMode; public TextOverflowModes overflowMode; public bool richText;
-        public Vector2 GetPreferredValues(string text) => default;
+        public Vector2 GetPreferredValues(string text) => default; public Vector2 GetPreferredValues(string text, float width, float height) => default;
     }
     public class TextMeshProUGUI : TMP_Text { }
 }

@@ -5,6 +5,7 @@ using Wyspa.Farming;
 using Wyspa.Lighting;
 using Wyspa.Upgrades;
 using Wyspa.Visual;
+using Wyspa.World;
 
 namespace Wyspa.UI
 {
@@ -160,6 +161,25 @@ namespace Wyspa.UI
             {
                 wallet.Add(CurrencyType.Coins, 500);
                 wallet.Add(CurrencyType.NightHarvest, 5);
+            }
+            if (GUILayout.Button("Cheat: +30 Esencji"))
+                game.Essence.Set(game.Essence.Amount + 30f);
+
+            var island = game.Island;
+            if (island != null && island.Ready)
+            {
+                GUILayout.Space(6);
+                var view = ViewController.Instance;
+                GUILayout.Label($"Wyspa: ziarno {island.Map.Seed}, {island.Map.Count} kafelków (kupione {island.Map.Purchased})");
+                GUILayout.Label($"Następny kafelek: {island.NextTileCoins} monet + {island.NextTileEssence} Esencji, grządka {island.DigCoins}");
+                if (view != null)
+                    GUILayout.Label($"Kadr {view.View.x}x{view.View.y}, skala x{view.PixelRatio}, UI x{UiRoot.UiScale()}");
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("+1 kafelek")) island.DebugBuyRandom(1);
+                if (GUILayout.Button("+10 kafelków")) island.DebugBuyRandom(10);
+                GUILayout.EndHorizontal();
+                if (GUILayout.Button("Nowy świat (nowe ziarno)"))
+                    island.NewWorld(GameLoop.NewSeed());
             }
 
             GUILayout.EndScrollView();

@@ -2,6 +2,7 @@ using UnityEngine;
 using Wyspa.Economy;
 using Wyspa.Farming;
 using Wyspa.Upgrades;
+using Wyspa.World;
 
 namespace Wyspa.Automation
 {
@@ -30,14 +31,27 @@ namespace Wyspa.Automation
 
         public void ApplyUpgrades(UpgradeState upgrades)
         {
-            SetActive(wisp != null ? wisp.gameObject : null, upgrades.Has(UpgradeIds.WispGardener));
-            SetActive(merchantChest != null ? merchantChest.gameObject : null, upgrades.Has(UpgradeIds.MerchantChest));
-            SetActive(runeStone, upgrades.Has(UpgradeIds.SoilMemory));
+            bool wispOn = upgrades.Has(UpgradeIds.WispGardener);
+            bool chestOn = upgrades.Has(UpgradeIds.MerchantChest);
+            // skrzynia na plony potrzebna ognikowi i skrzyni kupca; obiekty stawia wyspa na wolnych kafelkach
+            Show(crate != null ? crate.gameObject : null, wispOn || chestOn);
+            Show(wisp != null ? wisp.gameObject : null, wispOn);
+            Show(merchantChest != null ? merchantChest.gameObject : null, chestOn);
+            Show(runeStone, upgrades.Has(UpgradeIds.SoilMemory));
         }
 
-        static void SetActive(GameObject go, bool on)
+        static void Show(GameObject go, bool on)
         {
-            if (go != null && go.activeSelf != on)
+            if (go == null)
+                return;
+            var tile = go.GetComponent<TileObject>();
+            if (tile != null && Island.Instance != null)
+            {
+                if (tile.Wanted != on)
+                    Island.Instance.Want(tile, on);
+                return;
+            }
+            if (go.activeSelf != on)
                 go.SetActive(on);
         }
 
@@ -48,14 +62,14 @@ namespace Wyspa.Automation
             harvestedCrop = null;
             if (wisp != null && upgrades.Has(UpgradeIds.WispGardener))
             {
-                var plot = wisp.Tick(dt, upgrades.Value(UpgradeIds.WispGardener, 30f), crate);
+                var plot = wisp.isActiveAndEnabled ? wisp.Tick(dt, upgrades.Value(UpgradeIds.WispGardener, 30f), crate) : null;
                 if (plot != null && crate.TryAdd(plot.State.crop))
                 {
                     harvestedCrop = plot.HarvestSilently();
                     harvested = plot;
                 }
             }
-            if (merchantChest != null && upgrades.Has(UpgradeIds.MerchantChest))
+            if (merchantChest != null && merchantChest.isActiveAndEnabled && upgrades.Has(UpgradeIds.MerchantChest))
                 merchantChest.Tick(dt, upgrades.Value(UpgradeIds.MerchantChest, 3600f), crate, wallet, crops);
             return harvested;
         }
