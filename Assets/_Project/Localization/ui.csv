@@ -33,28 +33,28 @@ ui.on,Wł.,On,An,オン,开,
 ui.off,Wył.,Off,Aus,オフ,关,
 ui.stats.today,Dziś: {0:0.0} h pracy,Today: {0:0.0} h of work,Heute: {0:0.0} Std. Arbeit,今日の作業：{0:0.0}時間,今日工作：{0:0.0}小时,
 ui.stats.streak,Obecna seria: {0:0} min,Current streak: {0:0} min,Aktuelle Serie: {0:0} Min.,現在の連続：{0:0}分,当前连续：{0:0}分钟,
-ui.stats.essence,Esencja: {0:0}/{1:0},Essence: {0:0}/{1:0},Essenz: {0:0}/{1:0},エッセンス：{0:0}/{1:0},精华：{0:0}/{1:0},
-ui.stats.multiplier,Mnożnik Esencji: ×{0:0.00},Essence multiplier: ×{0:0.00},Essenz-Multiplikator: ×{0:0.00},エッセンス倍率：×{0:0.00},精华倍率：×{0:0.00},
+ui.stats.essence,Żar: {0:0}/{1:0},Ember: {0:0}/{1:0},Glut: {0:0}/{1:0},熾火：{0:0}/{1:0},余火：{0:0}/{1:0},
+ui.stats.multiplier,Mnożnik Żaru: ×{0:0.00},Ember multiplier: ×{0:0.00},Glut-Multiplikator: ×{0:0.00},熾火倍率：×{0:0.00},余火倍率：×{0:0.00},
 ui.rhythm.normal,Praca: {0:0} min,Working: {0:0} min,Arbeit: {0:0} Min.,作業：{0:0}分,工作：{0:0}分钟,HUD
 ui.rhythm.idle,Przerwa,On a break,Pause,休憩中,休息中,HUD
 ui.expand.title,Nowy kafelek,New land tile,Neues Landstück,新しい土地マス,新的土地格,
-ui.expand.cost,{0} {0:plural:moneta|monety|monet} i {1} Esencji,{0} {0:plural:coin|coins} and {1} Essence,{0} {0:plural:Münze|Münzen} und {1} Essenz,{0}コインと{1}エッセンス,{0}金币和{1}精华,
+ui.expand.cost,{0} {0:plural:moneta|monety|monet} i {1} Żaru,{0} {0:plural:coin|coins} and {1} Ember,{0} {0:plural:Münze|Münzen} und {1} Glut,{0}コインと{1}熾火,{0}金币和{1}余火,
 ui.expand.find,Coś błyszczy we mgle...,Something glimmers in the fog...,Etwas schimmert im Nebel ...,霧の中で何かが光っている…,迷雾中有东西在闪烁……,znalezisko
 ui.expand.click,LPM: wyrwij z mgły,Left click: claim from the fog,Linksklick: dem Nebel entreißen,左クリック：霧から取り戻す,左键：从迷雾中夺回,
 ui.expand.panel,Rozbudowa: {0} {0:plural:kafelek|kafelki|kafelków} - PPM: wyjdź,Expanding: {0} {0:plural:tile|tiles} - right click: exit,Ausbau: {0} {0:plural:Landstück|Landstücke} - Rechtsklick: beenden,拡張：{0}マス - 右クリックで終了,扩建：{0}格 - 右键退出,
-ui.expand.need,Potrzeba {0} {0:plural:monety|monet|monet} i {1} Esencji,You need {0} {0:plural:coin|coins} and {1} Essence,Benötigt: {0} {0:plural:Münze|Münzen} und {1} Essenz,{0}コインと{1}エッセンスが必要,需要{0}金币和{1}精华,toast
+ui.expand.need,Potrzeba {0} {0:plural:monety|monet|monet} i {1} Żaru,You need {0} {0:plural:coin|coins} and {1} Ember,Benötigt: {0} {0:plural:Münze|Münzen} und {1} Glut,{0}コインと{1}熾火が必要,需要{0}金币和{1}余火,toast
 ui.dig.title,Przekop na grządkę,Dig a plot,Beet anlegen,畑を耕す,开垦田地,
 ui.dig.cost,{0} {0:plural:moneta|monety|monet},{0} {0:plural:coin|coins},{0} {0:plural:Münze|Münzen},{0}コイン,{0}金币,
 ui.dig.click,LPM: przekop,Left click: dig,Linksklick: umgraben,左クリック：耕す,左键：开垦,
 ui.dig.need,Potrzeba {0} {0:plural:monety|monet|monet},You need {0} {0:plural:coin|coins},Benötigt: {0} {0:plural:Münze|Münzen},{0}コインが必要,需要{0}金币,toast
-ui.deco.cost,Koszt: {0} Esencji,Cost: {0} Essence,Kosten: {0} Essenz,コスト：エッセンス{0},消耗：{0}精华,
+ui.deco.cost,Koszt: {0} Żaru,Cost: {0} Ember,Kosten: {0} Glut,コスト：熾火{0},消耗：{0}余火,
 ui.deco.reward.wood,Nagroda: drewno x{0},Reward: wood x{0},Belohnung: Holz x{0},報酬：木材 x{0},奖励：木材 x{0},
 ui.deco.reward.stone,Nagroda: kamień x{0},Reward: stone x{0},Belohnung: Stein x{0},報酬：石材 x{0},奖励：石料 x{0},
-ui.deco.need,Potrzeba {0} Esencji,You need {0} Essence,Benötigt: {0} Essenz,エッセンスが{0}必要,需要{0}精华,toast
+ui.deco.need,Potrzeba {0} Żaru,You need {0} Ember,Benötigt: {0} Glut,熾火が{0}必要,需要{0}余火,toast
 ui.deco.hint,LPM: usuń...,Left click: remove...,Linksklick: entfernen ...,左クリック：撤去…,左键：移除……,
 ui.object.hint,LPM: opcje,Left click: options,Linksklick: Optionen,左クリック：オプション,左键：选项,
 ui.crate.sell,Sprzedaj,Sell,Verkaufen,売る,出售,
-ui.lamp.info,Zasięg {0:0.0} - {1:0.0} Esencji/h,Range {0:0.0} - {1:0.0} Essence/h,Reichweite {0:0.0} - {1:0.0} Essenz/h,範囲 {0:0.0} - エッセンス {1:0.0}/時,范围 {0:0.0} - 精华 {1:0.0}/小时,zasięg w kafelkach
+ui.lamp.info,Zasięg {0:0.0} - {1:0.0} Żaru/h,Range {0:0.0} - {1:0.0} Ember/h,Reichweite {0:0.0} - {1:0.0} Glut/h,範囲 {0:0.0} - 熾火 {1:0.0}/時,范围 {0:0.0} - 余火 {1:0.0}/小时,zasięg w kafelkach
 ui.lamp.on,Świeci,Lit,Brennt,点灯中,亮着,
 ui.lamp.off,Zgaszona,Out,Erloschen,消灯,熄灭,
 ui.place.cost,Koszt: {0} {0:plural:moneta|monety|monet},Cost: {0} {0:plural:coin|coins},Kosten: {0} {0:plural:Münze|Münzen},コスト：{0}コイン,花费：{0}金币,

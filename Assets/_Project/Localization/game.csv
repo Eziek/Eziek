@@ -1,6 +1,6 @@
 ﻿key,pl,en,de,ja,zh-Hans,uwagi
-upgrade.essence_jar.name,Słój Esencji,Essence Jar,Essenzglas,エッセンスの瓶,精华罐,
-upgrade.essence_jar.desc,Mieści więcej Esencji: {0}.,Holds more Essence: {0}.,Fasst mehr Essenz: {0}.,エッセンスの容量：{0},精华容量：{0},{0} = pojemność
+upgrade.essence_jar.name,Słój Żaru,Ember Jar,Glutglas,熾火の瓶,余火罐,
+upgrade.essence_jar.desc,Mieści więcej Żaru: {0}.,Holds more Ember: {0}.,Fasst mehr Glut: {0}.,熾火の容量：{0},余火容量：{0},{0} = pojemność
 upgrade.wisp_gardener.name,Ognik-ogrodnik,Wisp Gardener,Irrlichtgärtner,鬼火の庭師,鬼火园丁,
 upgrade.wisp_gardener.desc,"Gniazdo ogników z darmowym ogrodnikiem i skrzynia. W gnieździe przywołasz drwala, latarnika i zbieracza.","A wisp nest with a free gardener, plus a crate. Summon woodcutters, lamplighters and gatherers in the nest.","Ein Irrlichtnest mit kostenlosem Gärtner und eine Kiste. Im Nest rufst du Holzfäller, Laternenanzünder und Sammler.",無料の庭師つき鬼火の巣と収穫箱。巣できこり、点灯夫、拾い屋を呼べる。,附带免费园丁的鬼火巢和收获箱。可在巢中召唤樵夫、点灯人和采集者。,
 upgrade.soil_memory.name,Ognik-siewca,Wisp Sower,Irrlicht-Säer,鬼火の種まき,鬼火播种者,
@@ -10,7 +10,7 @@ upgrade.merchant_chest.desc,"Duszek stoi przy skrzyni i sprzedaje ją, gdy tylko
 rhythm.streak.status,Seria {0} min,Streak {0} min,Serie {0} Min.,連続{0}分,连续{0}分钟,
 rhythm.streak.bonus,Seria skupienia +{0}%,Focus streak +{0}%,Fokusserie +{0} %,集中の連続 +{0}%,专注连续 +{0}%,
 rhythm.refreshed.status,Odświeżony +{0}% ({1} min),Refreshed +{0}% ({1} min),Erfrischt +{0} % ({1} Min.),リフレッシュ +{0}%（{1}分）,精神焕发 +{0}%（{1}分钟）,
-rhythm.fatigue.status,Zmęczenie: Esencja ×{0},Fatigue: Essence ×{0},Erschöpfung: Essenz ×{0},疲労：エッセンス×{0},疲劳：精华×{0},
+rhythm.fatigue.status,Zmęczenie: Żar ×{0},Fatigue: Ember ×{0},Erschöpfung: Glut ×{0},疲労：熾火×{0},疲劳：余火×{0},
 rhythm.today,Dziś: {0} h pracy,Today: {0} h of work,Heute: {0} Std. Arbeit,今日の作業：{0}時間,今日工作：{0}小时,
 cur.night_harvest.gain,+{0} {0:plural:plon nocy|plony nocy|plonów nocy},+{0} night {0:plural:harvest|harvests},+{0} Nachternte,夜の作物 +{0},夜间作物 +{0},
 toast.crate_sold,Sprzedano plony: +{0} monet,Crops sold: +{0} coins,Ernte verkauft: +{0} Münzen,作物を売却：+{0}コイン,已出售作物：+{0}金币,
@@ -50,7 +50,7 @@ lore.crypt,"Na drzwiach krypty ktoś wydrapał: ""Nie gaś latarni"".","Someone 
 lore.statue,Posąg patrzy w mgłę. Jego oczy są wilgotne od soli.,The statue gazes into the fog. Its eyes are damp with salt.,Die Statue blickt in den Nebel. Ihre Augen sind feucht vom Salz.,石像は霧を見つめている。その目は塩で湿っている。,雕像凝视着迷雾，眼中带着盐的湿意。,zabytek
 lore.stairs,"Schody prowadzą w dół, pod wodę. Ktoś nimi kiedyś wracał.","The stairs lead down, under the water. Someone once came back up them.","Die Treppe führt hinab, unter das Wasser. Einst kam jemand sie herauf.",石段は水の下へと続く。かつて誰かがそこから戻ってきた。,石阶通向水下。曾有人从那里走回来。,zabytek
 toast.pier.refund,"Ląd zasypał pomost: rozebrany, koszt zwrócony","The land buried the pier: dismantled, cost refunded","Das Land hat den Steg verschüttet: abgebaut, Kosten erstattet",陸が桟橋を埋めた：解体し、費用を返却,陆地掩埋了栈桥：已拆除，费用已退还,zapis sprzed poprawki
-toast.wisp.caught,Błędny ognik: +{0} Esencji,Will-o'-the-wisp: +{0} Essence,Irrlicht: +{0} Essenz,鬼火：エッセンス +{0},鬼火：精华 +{0},
+toast.wisp.caught,Błędny ognik: +{0} Żaru,Will-o'-the-wisp: +{0} Ember,Irrlicht: +{0} Glut,鬼火：熾火 +{0},鬼火：余火 +{0},
 toast.star.fell,Gwiazda spadła na wyspę!,A star fell on the island!,Ein Stern ist auf die Insel gefallen!,星が島に落ちた！,一颗星星落在了岛上！,
 toast.star.found,Odłamek gwiazdy!,A star shard!,Ein Sternensplitter!,星のかけら！,星之碎片！,
 toast.monster.rises,Coś ogromnego wynurza się z głębin...,Something enormous rises from the deep...,Etwas Gewaltiges steigt aus der Tiefe ...,深みから巨大な何かが現れる…,有什么巨大的东西从深渊中浮起……,
@@ -62,7 +62,7 @@ toast.bestiary.reward,+{0} pkt księżyca,+{0} moon points,+{0} Mondpunkte,月�
 ritual.dusk,Zmierzchowe ziarno,Dusk Seed,Dämmerkorn,黄昏の種,黄昏之种,
 ritual.dusk.desc,Rośliny nocy rosną też o zmierzchu,Night crops also grow at dusk,Nachtpflanzen wachsen auch in der Dämmerung,夜の作物が黄昏にも育つ,夜间作物在黄昏时也会生长,
 ritual.quiet_lamps,Ciche lampy,Quiet Lamps,Stille Lampen,静かな灯,静谧之灯,
-ritual.quiet_lamps.desc,Lampy palą o 25% mniej Esencji,Lamps burn 25% less Essence,Lampen verbrauchen 25% weniger Essenz,ランプのエッセンス消費が25%減る,灯消耗的精华减少25%,
+ritual.quiet_lamps.desc,Lampy palą o 25% mniej Żaru,Lamps burn 25% less Ember,Lampen verbrauchen 25% weniger Glut,ランプの熾火消費が25%減る,灯消耗的余火减少25%,
 ritual.moon_dew,Księżycowa rosa,Moon Dew,Mondtau,月の露,月露,
 ritual.moon_dew.desc,Pełnia trwa dwa razy dłużej,The full moon lasts twice as long,Der Vollmond dauert doppelt so lange,満月が2倍長く続く,满月持续时间翻倍,
 ritual.deep_roots,Głębokie korzenie,Deep Roots,Tiefe Wurzeln,深い根,深根,
@@ -91,9 +91,9 @@ potion.growth.effect,rośliny dnia rosną o 30% szybciej (2 cykle),day crops gro
 potion.night,Eliksir nocy,Night Elixir,Nachtelixier,夜の霊薬,夜之灵药,mikstura
 potion.night.effect,rośliny nocy rosną o 50% szybciej (2 cykle),night crops grow 50% faster (2 cycles),Nachtpflanzen wachsen 50 % schneller (2 Zyklen),夜の作物が50%速く育つ（2サイクル）,夜间作物生长加快50%（2个周期）,
 potion.focus,Napar skupienia,Focus Tea,Fokustee,集中の茶,专注药茶,mikstura
-potion.focus.effect,praca daje o 50% więcej Esencji (2 cykle),work gives 50% more Essence (2 cycles),Arbeit gibt 50 % mehr Essenz (2 Zyklen),作業で得るエッセンスが50%増える（2サイクル）,工作获得的精华增加50%（2个周期）,
+potion.focus.effect,praca daje o 50% więcej Żaru (2 cykle),work gives 50% more Ember (2 cycles),Arbeit gibt 50 % mehr Glut (2 Zyklen),作業で得る熾火が50%増える（2サイクル）,工作获得的余火增加50%（2个周期）,
 potion.light,Płynne światło,Liquid Light,Flüssiges Licht,液体の光,液态之光,mikstura
-potion.light.effect,lampy świecą bez Esencji (2 cykle),lamps burn no Essence (2 cycles),Lampen brauchen keine Essenz (2 Zyklen),ランプがエッセンスを使わない（2サイクル）,灯不消耗精华（2个周期）,
+potion.light.effect,lampy świecą bez Żaru (2 cykle),lamps burn no Ember (2 cycles),Lampen brauchen keine Glut (2 Zyklen),ランプが熾火を使わない（2サイクル）,灯不消耗余火（2个周期）,
 potion.lure,Wabik na widmo,Wraith Lure,Geisterköder,亡霊の誘い香,诱灵香,mikstura
 potion.lure.effect,kupiec-widmo przypłynie najbliższej nocy,the Ghost Merchant comes the next night,der Geisterhändler kommt in der nächsten Nacht,次の夜、幽霊商人が必ず来る,幽灵商人会在下一个夜晚到来,
 potion.fog,Mgła w butelce,Bottled Fog,Nebel in der Flasche,瓶詰めの霧,瓶中之雾,mikstura
@@ -104,14 +104,14 @@ toast.potion.drunk,{0}: {1},{0}: {1},{0}: {1},{0}：{1},{0}：{1},"{0} = mikstur
 toast.potion.ended,Mikstura przestała działać: {0},Potion wore off: {0},Trank wirkt nicht mehr: {0},薬の効果が切れた：{0},药效结束：{0},
 potion.growth.short,dzień +30%,day +30%,Tag +30 %,昼+30%,白天+30%,krótko na przycisku
 potion.night.short,noc +50%,night +50%,Nacht +50 %,夜+50%,夜间+50%,
-potion.focus.short,Esencja +50%,Essence +50%,Essenz +50 %,エッセンス+50%,精华+50%,
+potion.focus.short,Żar +50%,Ember +50%,Glut +50 %,熾火+50%,余火+50%,
 potion.light.short,lampy za darmo,free lamps,Lampen gratis,ランプ無料,灯免费,
 potion.lure.short,kupiec-widmo,Ghost Merchant,Geisterhändler,幽霊商人,幽灵商人,
 potion.fog.short,zdarzenia x2,events x2,Ereignisse x2,出来事x2,事件x2,
 familiar.cat.bonus,"Mutacje dwa razy częściej, czasem przynosi monety","Mutations twice as often, sometimes brings coins","Mutationen doppelt so oft, bringt manchmal Münzen",突然変異が2倍、時々コインを持ってくる,变异几率翻倍，有时会叼来金币,bonus chowańca
 familiar.raven.bonus,Drzewa rosną i owocują o 25% szybciej,Trees grow and fruit 25% faster,Bäume wachsen und tragen 25 % schneller,木の成長と実りが25%速い,树木生长和结果加快25%,
 familiar.toad.bonus,Rośliny nocy rosną o 15% szybciej,Night crops grow 15% faster,Nachtpflanzen wachsen 15 % schneller,夜の作物が15%速く育つ,夜间作物生长加快15%,
-familiar.bat.bonus,Lampy palą o 20% mniej Esencji,Lamps burn 20% less Essence,Lampen verbrauchen 20 % weniger Essenz,ランプのエッセンス消費が20%減る,灯消耗的精华减少20%,
+familiar.bat.bonus,Lampy palą o 20% mniej Żaru,Lamps burn 20% less Ember,Lampen verbrauchen 20 % weniger Glut,ランプの熾火消費が20%減る,灯消耗的余火减少20%,
 toast.familiar.arrived,Na wyspę przybył chowaniec - {0}! {1},A familiar has come to the island - {0}! {1},Ein Vertrauter ist auf die Insel gekommen - {0}! {1},使い魔が島に来た：{0}！{1},一只使魔来到了岛上：{0}！{1},"{0} = chowaniec, {1} = bonus"
 toast.familiar.gift,Kot przyniósł coś błyszczącego: +{0} {0:plural:moneta|monety|monet},The cat brought something shiny: +{0} {0:plural:coin|coins},Die Katze hat etwas Glänzendes gebracht: +{0} {0:plural:Münze|Münzen},猫が光る物を持ってきた：+{0}コイン,猫叼来了闪亮的东西：+{0}金币,raz na cykl
 toast.weather.rain,Zaczyna padać. Rośliny dnia rosną szybciej.,It starts to rain. Day crops grow faster.,Es beginnt zu regnen. Tagpflanzen wachsen schneller.,雨が降り始めた。昼の作物が速く育つ。,开始下雨了。白天作物长得更快。,pogoda

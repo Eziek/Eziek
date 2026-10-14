@@ -208,7 +208,7 @@ Gracz odrzucił wersję „cukierkową”.
 Wcześniejsza jasna paleta („cukierkowa”) została odrzucona. Jest w `tools/pixel-proto/sprites.py` (`PAL`) jako baza
 kluczy, a wersję mroczną nakłada `run_dark_palette.py`.
 
-### 5.4 Rozdzielczość: decyzja OTWARTA
+### 5.4 Rozdzielczość: 32 px (decyzja gracza, przesiadka jako osobny etap)
 - Prototyp: **siatka 16 px** (rośliny ok. 18×24, drzewa ok. 32×40), kadr 272×200 (×3 = 816×600).
 - Test **32 px** (rośliny ok. 32–40, drzewo ok. 64–80): poziom detalu jak gołąb z referencji. Patrz `docs/img/porownanie_16_vs_32.png`.
 - Rekomendacja Claude: **32 px**. Obiekty 128 px odradzane (okno byłoby ogromne, a 4× więcej pracy na asset).
@@ -254,9 +254,11 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   w miarę projektowania, animacje wynurzenia potwora w pełnej sekwencji.
 
 ## 7. Otwarte decyzje
-- [ ] Siatka 16 px czy 32 px (rekomendacja: 32).
+- [x] Siatka **32 px** (wybór gracza). Docelowe assety rysowane ręcznie w 32 px; placeholdery zostają 16 px do przesiadki
+  (PPU 32, kafelki, okno, generator), którą robimy jako osobny etap razem z fontem 12 px.
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
-- [ ] Nazwa energii (Esencja / Żar / Dusza).
+- [x] Nazwa energii: **Żar** (wybór gracza; EN Ember, DE Glut, JA 熾火, ZH 余火). W kodzie i starszych częściach GDD
+  nadal „Essence/Esencja”. Imię ognika „Żarek” zmienione na „Węgielek” (EN Cinder), żeby nie myliło się z walutą.
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
 - [x] **Ikona w zasobniku Windows** (Etap 6c, tylko build): lewy klik pokazuje / chowa okno, prawy klik: menu (pokaż/schowaj,
   zawsze na wierzchu, mini-tryb, wyjście). Powiadomienia Windows, gdy okno schowane albo nieaktywne (najwyżej co minutę):
@@ -384,7 +386,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   łodyga gnie się od czubka (podstawa sztywna), po podmuchu sprężysty powrót z małym odbiciem i drżeniem liści.
 - [x] Cząsteczki: **własny system pikselowy** (pula sprite'ów, 12 kl./s) zamiast ParticleSystem, dla ostrych pikseli.
 - [x] Woda i mgła: **liczone w shaderze z mapy danych** (port prototypu), ryby i potwór w shaderze, nie jako osobne sprite'y.
-- [ ] Rozmiar fontu tekstu: 10 px czy 12 px. Sprawdzimy później w Unity (§16.3).
+- [x] Font tekstu: **12 px** (wybór gracza, §16.3). Obecny `WyspaPixel` (8 px, wielkie litery 3×5) zostaje do przesiadki
+  na 32 px; wtedy nowy font 12 px (małe i wielkie litery, PL/DE i CJK) i przebudowa układów UI (~1,5× więcej miejsca na tekst).
 - [x] Lokalizacja w kodzie: **własna warstwa CSV** (`LocCore`/`Loc`) zamiast paczki Unity Localization (§16.4).
 - [ ] Przejście na Unity Localization: później albo wcale (klucze są zgodne, więc migracja jest możliwa).
 - [x] Drewno i kamień jako materiały do budowli (§14.3). Odnawialne drewno i owoce: drzewa do sadzenia, na później (§15).
@@ -568,6 +571,8 @@ Obrazki referencyjne (kopie): `docs/img/`
 60. Treść: 5 nowych hybryd (wilcza marchew, popielne zboże, księżycowy mak, wrzeszczący czosnek, krwawy piołun), cele wypraw
     z tabelami łupów (wrak, rafa, zatopiona latarnia, cmentarzysko statków, Serce mgły), historia „Ostatnia latarnia”
     (33 zapiski po kolei). Zapis v13 (cel wyprawy, liczba wypraw).
+61. Decyzje gracza: siatka 32 px, font 12 px (oba przy osobnej przesiadce), energia nazywa się **Żar** (teksty w 5 językach;
+    ognik „Żarek” → „Węgielek”).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

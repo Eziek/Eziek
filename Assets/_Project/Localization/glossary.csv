@@ -1,6 +1,6 @@
 ﻿key,pl,en,de,ja,zh-Hans,uwagi
 game.title,Pockland,Pockland,Pockland,Pockland,Pockland,"marka, nie tłumaczyć; JA czytanie: ポックランド"
-term.essence,Esencja,Essence,Essenz,エッセンス,精华,energia z pracy; nazwa robocza
+term.essence,Żar,Ember,Glut,熾火,余火,energia z pracy (wybór gracza: Żar; w kodzie nadal Essence)
 term.grimoire,Księga,Grimoire,Grimoire,魔導書,魔典,główne menu
 menu.shop,Sklep,Shop,Laden,ショップ,商店,
 menu.upgrades,Ulepszenia,Upgrades,Verbesserungen,強化,升级,
@@ -23,7 +23,7 @@ lamp.lantern,Krzywa latarnia,Crooked Lantern,Krumme Laterne,歪んだランタ�
 lamp.skull,Czaszka ze świecą,Skull Candle,Schädelkerze,髑髏の蝋燭,骷髅蜡烛,
 lamp.wisp,Klatka z ognikiem,Wisp Cage,Irrlichtkäfig,鬼火の籠,鬼火笼,
 lamp.mushrooms,Świecące grzyby,Glowcaps,Leuchtpilze,光る茸,荧光蘑菇,
-bld.essence_jar,Słój Esencji,Essence Jar,Essenzglas,エッセンスの瓶,精华罐,
+bld.essence_jar,Słój Żaru,Ember Jar,Glutglas,熾火の瓶,余火罐,
 bld.wisp_gardener,Ognik-ogrodnik,Wisp Gardener,Irrlichtgärtner,鬼火の庭師,鬼火园丁,automatyczny zbiór
 bld.soil_memory,Runa siewu,Sowing Rune,Saatrune,種まきのルーン,播种符文,stary klucz (sprzed 6b)
 bld.merchant_chest,Duszek-handlarz,Merchant Spirit,Händlergeist,商いの精霊,商贩精灵,stary klucz (sprzed 6b)
@@ -166,7 +166,7 @@ wisp.kind.lamplighter,Latarnik,Lamplighter,Laternenanzünder,点灯夫,点灯人
 wisp.kind.gatherer,Zbieracz,Gatherer,Sammler,拾い屋,采集者,"zawód ognika: gwiazdy, owoce, błyskotki"
 wisp.name.0,Iskra,Spark,Funke,ヒバナ,火花,imię ognika
 wisp.name.1,Płomyk,Flicker,Flacker,ユラギ,摇光,imię ognika
-wisp.name.2,Żarek,Ember,Glut,オキビ,余烬,imię ognika
+wisp.name.2,Węgielek,Cinder,Zunder,スミ,小炭,imię ognika
 wisp.name.3,Świecik,Glimmer,Schimmer,キラリ,微光,imię ognika
 wisp.name.4,Blask,Gleam,Glanz,ヒカリ,闪辉,imię ognika
 wisp.name.5,Jarka,Glow,Glimm,ホノカ,明明,imię ognika
