@@ -17,8 +17,8 @@ namespace Wyspa.Automation
     }
 
     /// <summary>
-    /// Skrzynia na plony (GDD §11.3 E). Ognik-ogrodnik zbiera do niej dojrzałe plony.
-    /// Klik = panel z przyciskiem „Sprzedaj” (pełna cena) i „Przenieś”; skrzynia kupca sprzedaje sama (90%).
+    /// Skrzynia na plony (GDD §11.3 E). Ogniki-ogrodnicy niosą do najbliższej skrzyni z miejscem (Etap 6b: może ich być wiele).
+    /// Klik = panel z przyciskiem „Sprzedaj” (pełna cena) i „Przenieś”; duszki-handlarze sprzedają same (90%).
     /// </summary>
     [RequireComponent(typeof(BoxCollider2D))]
     public class HarvestCrate : MonoBehaviour, IContextActions
@@ -31,7 +31,44 @@ namespace Wyspa.Automation
         readonly Dictionary<string, int> contents = new Dictionary<string, int>();
         int count;
 
+        public static readonly List<HarvestCrate> All = new List<HarvestCrate>();
+
         public event Action Changed;
+
+        void OnEnable() => All.Add(this);
+        void OnDisable() => All.Remove(this);
+
+        /// <summary>Najbliższa skrzynia z wolnym miejscem (null = wszystkie pełne albo brak skrzyń).</summary>
+        public static HarvestCrate NearestWithSpace(Vector3 from)
+        {
+            HarvestCrate best = null;
+            float bestD = float.MaxValue;
+            foreach (var c in All)
+            {
+                if (c.IsFull)
+                    continue;
+                float d = (c.transform.position - from).sqrMagnitude;
+                if (d < bestD) { bestD = d; best = c; }
+            }
+            return best;
+        }
+
+        /// <summary>Najpełniejsza niepusta skrzynia z pominięciem już wybranych (duszki-handlarze w tym samym ticku).</summary>
+        public static HarvestCrate Fullest(ICollection<HarvestCrate> skip = null)
+        {
+            HarvestCrate best = null;
+            foreach (var c in All)
+                if (c.count > 0 && (skip == null || !skip.Contains(c)) && (best == null || c.count > best.count))
+                    best = c;
+            return best;
+        }
+
+        public static int TotalCount()
+        {
+            int n = 0;
+            foreach (var c in All) n += c.count;
+            return n;
+        }
 
         public int Count => count;
         public int Capacity => capacity;

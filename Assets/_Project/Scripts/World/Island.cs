@@ -13,7 +13,15 @@ namespace Wyspa.World
 {
     [Serializable] public class TileSave { public int c, r; public TileKind kind; }
     [Serializable] public class DecoSave { public int c, r; public DecoKind kind; }
-    [Serializable] public class ObjectSave { public string id; public int c, r; public string lamp; public string building; }
+    [Serializable] public class ObjectSave
+    {
+        public string id;
+        public int c, r;
+        public string lamp;
+        public string building;
+        public List<Automation.CrateEntry> crate;   // v6: zawartość skrzyni na plony
+        public string seed;                        // v6: tryb runy siewu ("" pamięć, "-" nic, id rośliny)
+    }
 
     [Serializable]
     public class IslandSave
@@ -269,6 +277,15 @@ namespace Wyspa.World
                     SpawnLamp(def, tile, o.id);
                 else if (o.building == "altar" && IsFree(tile))
                     SpawnAltar(tile, o.id);
+                else if (LegacyBuilding(o) is string kind && IsFree(tile))
+                {
+                    // budowle automatyki (Etap 6b); zapisy sprzed 6b miały jedną skrzynię, skrzynię kupca i kamień runiczny ze sceny
+                    var b = SpawnBuilding(kind, tile, o.id);
+                    if (b != null && o.crate != null && b.TryGetComponent(out Automation.HarvestCrate crate))
+                        crate.Restore(o.crate);
+                    if (b != null && o.seed != null && b.TryGetComponent(out Automation.SeedRune rune))
+                        rune.Seed = o.seed;
+                }
             }
             PlacePending();   // obiekty chciane wcześniej (np. skrzynia po wczytaniu ulepszeń)
             Changed?.Invoke();
@@ -296,8 +313,16 @@ namespace Wyspa.World
                 if (kv.Value != null)
                     s.decorations.Add(new DecoSave { c = kv.Key.c, r = kv.Key.r, kind = kv.Value.Kind });
             foreach (var o in AllObjects())
-                if (o.Placed && o.NeedsTile)
-                    s.objects.Add(new ObjectSave { id = o.Id, c = o.Tile.c, r = o.Tile.r, lamp = o.LampId, building = o.BuildingId });
+            {
+                if (!o.Placed || !o.NeedsTile)
+                    continue;
+                var os = new ObjectSave { id = o.Id, c = o.Tile.c, r = o.Tile.r, lamp = o.LampId, building = o.BuildingId };
+                if (o.TryGetComponent(out Automation.HarvestCrate crate))
+                    os.crate = crate.Snapshot();
+                if (o.TryGetComponent(out Automation.SeedRune rune))
+                    os.seed = rune.Seed;
+                s.objects.Add(os);
+            }
             return s;
         }
 
@@ -921,6 +946,112 @@ namespace Wyspa.World
             PutOnTile(obj, tile);
             Changed?.Invoke();
             return obj;
+        }
+
+        // ================================================================ budowle automatyki (Etap 6b)
+
+        static string LegacyBuilding(ObjectSave o)
+        {
+            if (!string.IsNullOrEmpty(o.building))
+                return Array.IndexOf(Automation.AutomationSystem.Kinds, o.building) >= 0 ? o.building : null;
+            switch (o.id)
+            {
+                case "crate": return Automation.AutomationSystem.Crate;
+                case "merchant_chest": return Automation.AutomationSystem.Merchant;
+                case "rune": return Automation.AutomationSystem.Rune;
+                default: return null;
+            }
+        }
+
+        public int CountBuilding(string kind)
+        {
+            int n = 0;
+            foreach (var o in spawned)
+                if (o != null && o.BuildingId == kind)
+                    n++;
+            return n;
+        }
+
+        /// <summary>Pierwsza (darmowa) sztuka po zakupie ulepszenia: na wolnym kafelku najbliżej startu.</summary>
+        public TileObject SpawnBuildingNear(string kind)
+        {
+            if (!NearestFree(out var tile))
+            {
+                GameEvents.RaiseToast("toast.no_space", Localization.Loc.Get(Automation.AutomationSystem.NameKey(kind)));
+                return null;
+            }
+            return SpawnBuilding(kind, tile);
+        }
+
+        /// <summary>Skrzynia, ognik, duszek-handlarz albo runa na kafelku (sklep, tryb stawiania, zapis).</summary>
+        public TileObject SpawnBuilding(string kind, TilePos tile, string id = null)
+        {
+            if (art == null || !IsFree(tile))
+                return null;
+            var go = new GameObject("Building_" + kind);
+            go.transform.SetParent(decoRoot, false);
+            var body = go.AddComponent<SpriteRenderer>();
+            SpriteRenderer Glow(Sprite sprite)
+            {
+                var g = NewSprite("Glow", go.transform, Vector3.zero, 1);
+                g.transform.localPosition = Vector3.zero;
+                g.sprite = sprite;
+                if (art.glow != null)
+                    g.sharedMaterial = art.glow;
+                return g;
+            }
+            switch (kind)
+            {
+                case Automation.AutomationSystem.Crate:
+                    body.sprite = art.crateFill != null && art.crateFill.Length > 0 ? art.crateFill[0] : null;
+                    go.AddComponent<Automation.HarvestCrate>().Setup(art.crateFill, body);
+                    break;
+                case Automation.AutomationSystem.Wisp:
+                    body.sprite = First(art.wispFrames);
+                    go.AddComponent<Automation.WispGardener>().Setup(body, Glow(First(art.wispGlow)), art.wispFrames, art.wispGlow);
+                    break;
+                case Automation.AutomationSystem.Merchant:
+                    body.sprite = First(art.merchantFrames);
+                    go.AddComponent<Automation.MerchantSpirit>().Setup(body, Glow(First(art.merchantGlow)), art.merchantFrames, art.merchantGlow);
+                    break;
+                case Automation.AutomationSystem.Rune:
+                    body.sprite = art.rune;
+                    if (art.runeGlow != null)
+                        Glow(art.runeGlow);
+                    go.AddComponent<Automation.SeedRune>();
+                    break;
+                default:
+                    Destroy(go);
+                    return null;
+            }
+            AddTileCollider(go);
+            var obj = go.AddComponent<TileObject>();
+            if (string.IsNullOrEmpty(id) || BuildingIdTaken(id))
+                id = NewBuildingId(kind);
+            obj.Setup(id, Automation.AutomationSystem.NameKey(kind));
+            obj.BuildingId = kind;
+            obj.Wanted = true;
+            spawned.Add(obj);
+            PutOnTile(obj, tile);
+            Changed?.Invoke();
+            return obj;
+        }
+
+        static Sprite First(Sprite[] sprites) => sprites != null && sprites.Length > 0 ? sprites[0] : null;
+
+        bool BuildingIdTaken(string id)
+        {
+            foreach (var o in AllObjects())
+                if (o.Id == id)
+                    return true;
+            return false;
+        }
+
+        string NewBuildingId(string kind)
+        {
+            for (int i = 1; ; i++)
+                if (!BuildingIdTaken($"{kind}_{i}"))
+                    return $"{kind}_{i}";
         }
 
         // ================================================================ lampy (sklep, tryb stawiania)

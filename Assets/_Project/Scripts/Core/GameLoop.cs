@@ -36,6 +36,8 @@ namespace Wyspa.Core
         [SerializeField] float debugTimeScale = 1f;
 
         readonly List<Lamp> lampOrder = new List<Lamp>();
+        readonly List<(FarmPlot plot, CropDefinition crop)> autoHarvested = new List<(FarmPlot, CropDefinition)>();
+        readonly HashSet<string> unlockedSeeds = new HashSet<string>();
         readonly SeedBag seeds = new SeedBag();
         bool fullMoonAnnounced;
 
@@ -74,6 +76,38 @@ namespace Wyspa.Core
             return true;
         }
 
+        // ---- nasiona do odblokowania (Etap 6b, Sklep → Nasiona)
+
+        /// <summary>Czy roślinę da się kupić w kole nasion (unlockPrice 0 = od początku).</summary>
+        public bool IsUnlocked(CropDefinition crop) => crop != null && !crop.hybrid && (crop.unlockPrice <= 0 || unlockedSeeds.Contains(crop.id));
+
+        public bool TryUnlock(CropDefinition crop)
+        {
+            if (crop == null || IsUnlocked(crop) || crop.hybrid || !wallet.TrySpend(crop.unlockPrice))
+                return false;
+            unlockedSeeds.Add(crop.id);
+            GameEvents.RaiseToast("toast.seed_unlocked", Localization.Loc.Get("crop." + crop.id));
+            return true;
+        }
+
+        /// <summary>Do testów (HUD debugowy): wszystkie nasiona odblokowane.</summary>
+        public void DebugUnlockAll()
+        {
+            if (crops != null)
+                foreach (var c in crops.crops)
+                    if (c != null && !c.hybrid) unlockedSeeds.Add(c.id);
+        }
+
+        public List<string> SnapshotUnlocks() => new List<string>(unlockedSeeds);
+
+        public void RestoreUnlocks(IEnumerable<string> ids)
+        {
+            unlockedSeeds.Clear();
+            if (ids != null)
+                foreach (var id in ids)
+                    if (!string.IsNullOrEmpty(id)) unlockedSeeds.Add(id);
+        }
+
         /// <summary>Ziarno nowego świata (każda gra inna, GDD §13.4).</summary>
         public static int NewSeed() => new System.Random().Next(1, int.MaxValue);
 
@@ -103,7 +137,7 @@ namespace Wyspa.Core
                 automation.ApplyUpgrades(upgrades);
         }
 
-        /// <summary>Po każdym zbiorze (ręcznym i przez ognika): pamięć ziemi sadzi to samo, jeśli stać gracza na nasiono.</summary>
+        /// <summary>Po każdym zbiorze (ręcznym i przez ognika): bestiariusz, liczniki cyklu, mutacje. Ponowne sadzenie robią runy siewu.</summary>
         public void AfterHarvest(FarmPlot plot, CropDefinition crop)
         {
             if (crop != null)
@@ -114,10 +148,6 @@ namespace Wyspa.Core
                     Lore.Chronicle.Count("night");
             }
             TryMutate(plot, crop);
-            if (crop == null || plot == null || !plot.State.IsEmpty || !upgrades.Has(UpgradeIds.SoilMemory))
-                return;
-            if (wallet.TrySpend(crop.seedPrice))
-                plot.Replant(crop);
         }
 
         /// <summary>
@@ -210,9 +240,10 @@ namespace Wyspa.Core
 
             if (automation != null)
             {
-                var harvested = automation.Tick(dt, upgrades, wallet, crops, out var crop);
-                if (harvested != null)
-                    AfterHarvest(harvested, crop);
+                autoHarvested.Clear();
+                automation.Tick(dt, this, autoHarvested);
+                foreach (var (plot, crop) in autoHarvested)
+                    AfterHarvest(plot, crop);
             }
         }
 

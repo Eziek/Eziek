@@ -42,6 +42,10 @@ namespace Wyspa.Farming
         [Tooltip("Ikona nasiona w UI (bez przedrostka icon_), puste = seed_<id>.")]
         public string seedIcon;
 
+        [Header("Etap 6b")]
+        [Tooltip("Cena odblokowania w Sklep → Nasiona (monety). 0 = dostępna od początku.")]
+        public int unlockPrice;
+
         public string SeedIcon => string.IsNullOrEmpty(seedIcon) ? "seed_" + id : seedIcon;
 
         /// <summary>Jakość 1-3 gwiazdki: cena x1 / x1.5 / x2.5 (GDD §11.3 D).</summary>

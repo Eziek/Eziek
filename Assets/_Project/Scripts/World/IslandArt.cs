@@ -74,6 +74,16 @@ namespace Wyspa.World
         [Tooltip("Latarnia morska (Etap 5b): lampa spoza sklepu lamp, stawiana z Morza.")]
         public LampDefinition lighthouse;
 
+        [Header("Automatyka (Etap 6b): budowle w wielu egzemplarzach")]
+        [Tooltip("Skrzynia na plony: pusta, do połowy, pełna.")]
+        public Sprite[] crateFill;
+        public Sprite[] wispFrames;
+        public Sprite[] wispGlow;
+        public Sprite[] merchantFrames;
+        public Sprite[] merchantGlow;
+        public Sprite rune;
+        public Sprite runeGlow;
+
         [Header("Tryb rozbudowy")]
         public Sprite frameBuy;
         public Sprite frameBuyHover;

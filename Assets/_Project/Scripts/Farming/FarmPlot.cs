@@ -35,6 +35,8 @@ namespace Wyspa.Farming
         public Vector3 CropPosition => cropRenderer != null ? cropRenderer.transform.position : transform.position;
         int CropOrder => cropRenderer != null ? cropRenderer.sortingOrder : 0;
         public PlotState State => state;
+        /// <summary>Ostatnio zebrana roślina (runa siewu w trybie „pamięć ziemi” sadzi ją ponownie). Bez zapisu.</summary>
+        public CropDefinition LastCrop { get; private set; }
 
         /// <summary>Punkt, w którym sprawdzamy, czy grządka jest oświetlona.</summary>
         public Vector2 LightProbe => cropRenderer != null ? (Vector2)cropRenderer.transform.position : (Vector2)transform.position;
@@ -90,6 +92,7 @@ namespace Wyspa.Farming
                     GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.NightHarvest, crop.nightHarvestYield);
                 }
                 IslandFx.Harvest(CropPosition, crop.StageSprite(3), CropOrder);
+                LastCrop = crop;
                 state.Clear();
                 RefreshVisual();
                 game.AfterHarvest(this, crop);
@@ -112,14 +115,17 @@ namespace Wyspa.Farming
         {
             var crop = state.crop;
             if (crop != null)
+            {
                 IslandFx.Harvest(CropPosition, crop.StageSprite(3), CropOrder);
+                LastCrop = crop;
+            }
             state.Clear();
             RefreshVisual();
             Pop();
             return crop;
         }
 
-        /// <summary>Ponowne sadzenie (pamięć ziemi) - koszt nasiona płaci wywołujący.</summary>
+        /// <summary>Sadzenie (koło nasion, runa siewu) - koszt nasiona płaci wywołujący.</summary>
         public void Replant(CropDefinition crop)
         {
             state.Plant(crop);

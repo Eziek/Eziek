@@ -25,8 +25,8 @@ lamp.wisp,Klatka z ognikiem,Wisp Cage,Irrlichtkäfig,鬼火の籠,鬼火笼,
 lamp.mushrooms,Świecące grzyby,Glowcaps,Leuchtpilze,光る茸,荧光蘑菇,
 bld.essence_jar,Słój Esencji,Essence Jar,Essenzglas,エッセンスの瓶,精华罐,
 bld.wisp_gardener,Ognik-ogrodnik,Wisp Gardener,Irrlichtgärtner,鬼火の庭師,鬼火园丁,automatyczny zbiór
-bld.soil_memory,Pamięć ziemi,Soil Memory,Erdgedächtnis,大地の記憶,大地之忆,auto-sadzenie
-bld.merchant_chest,Skrzynia kupca,Merchant's Chest,Händlertruhe,商人の箱,商人宝箱,auto-sprzedaż
+bld.soil_memory,Runa siewu,Sowing Rune,Saatrune,種まきのルーン,播种符文,stary klucz (sprzed 6b)
+bld.merchant_chest,Duszek-handlarz,Merchant Spirit,Händlergeist,商いの精霊,商贩精灵,stary klucz (sprzed 6b)
 bld.compost,Kompostownik,Compost Bin,Komposter,堆肥箱,堆肥箱,
 bld.pier,Pomost,Pier,Steg,桟橋,栈桥,
 bld.boat,Łódź,Boat,Boot,小舟,小船,
@@ -121,3 +121,11 @@ term.new_moon,Nów,New moon,Neumond,新月,新月,koniec cyklu księżycowego
 term.bestiary,Bestiariusz,Bestiary,Bestiarium,図鑑,图鉴,kolekcja odkryć i lore
 term.lore,Zapiski,Lore,Überlieferung,伝承,传说,fragmenty opowieści wyspy
 term.mini_mode,Mini-tryb,Mini mode,Minimodus,ミニモード,迷你模式,małe okno w rogu ekranu
+bld.seed_rune,Runa siewu,Sowing Rune,Saatrune,種まきのルーン,播种符文,sadzi na 3x3 wokół
+bld.merchant_spirit,Duszek-handlarz,Merchant Spirit,Händlergeist,商いの精霊,商贩精灵,sprzedaje ze skrzyń
+crop.garlic,Czosnek,Garlic,Knoblauch,ニンニク,大蒜,dzień
+crop.poppy,Mak,Poppy,Mohn,ケシ,罂粟,dzień
+crop.wormwood,Piołun,Wormwood,Wermut,ニガヨモギ,苦艾,dzień
+crop.belladonna,Wilcza jagoda,Belladonna,Tollkirsche,ベラドンナ,颠茄,noc
+crop.mandrake,Mandragora,Mandrake,Alraune,マンドラゴラ,曼德拉草,noc
+crop.graveivy,Cmentarny bluszcz,Grave Ivy,Grabefeu,墓場のツタ,墓地常春藤,noc

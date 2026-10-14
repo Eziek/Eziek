@@ -12,6 +12,8 @@ Shader "Wyspa/Fog"
         _FogFrom("Fog starts (px from shore)", Float) = 22
         _FogSpan("Fog thickens over (px)", Float) = 40
         _FogPeriod("Drift loop (s)", Float) = 30
+        _FogOuter("Fog fades out beyond (px, 0 = never)", Float) = 0
+        _FogFade("Fade-out width (px)", Float) = 12
 
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
         [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
@@ -63,6 +65,8 @@ Shader "Wyspa/Fog"
                 float _FogFrom;
                 float _FogSpan;
                 float _FogPeriod;
+                float _FogOuter;
+                float _FogFade;
             CBUFFER_END
 
             Varyings FogVertex(Attributes input)
@@ -100,6 +104,13 @@ Shader "Wyspa/Fog"
                 else if (v > 0.55) { col = th < (v - 0.55) / 0.3 ? _ColFo.rgb : _ColB3.rgb; a = 1; }
                 else if (v > 0.25 && th < (v - 0.25) / 0.3) { col = _ColB3.rgb; a = 1; }
                 if (!water) a = 0;
+                // przezroczyste okno (Etap 6a): mgła tylko pierścieniem wokół wyspy, dalej rozpływa się w szachownicę Bayera
+                if (_FogOuter > 0.0)
+                {
+                    float wobble = 3.0 * sin(x / 11.0 + T) * sin(y / 8.0 - T);
+                    float fade = (d + wobble - _FogOuter) / max(1.0, _FogFade);
+                    if (fade >= 1.0 || (fade > 0.0 && th < fade)) a = 0;
+                }
 
                 // światło liczymy zawsze z alfą 1 (CombinedShapeLightShared odrzuca alfę 0), alfę ustawiamy na końcu
                 half4 lit = WyspaLight(col, 1, input.uv, input.lightingUV);

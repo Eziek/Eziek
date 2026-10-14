@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 5;
+        public int version = 6;
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
@@ -24,13 +24,15 @@ namespace Wyspa.Save
         public List<UpgradeSave> upgrades = new List<UpgradeSave>();
         public long rhythmDayTicks;
         public float rhythmDailySeconds;
-        public List<CrateEntry> crate = new List<CrateEntry>();
+        public List<CrateEntry> crate = new List<CrateEntry>();   // do v5: jedyna skrzynia (v6: zawartość przy obiekcie)
         public IslandSave island;               // v3: wyspa z kafelków (ziarno, kafelki, dekoracje, obiekty)
         public List<SeedSave> seeds = new List<SeedSave>();   // v4: worek nasion (hybrydy, kupiec, wyprawy)
         public int fertilizer;                  // v4: nawóz od kupca-widma
         public string merchantNight;            // v4: noc, w której kupiec-widmo już był
         public string monsterNight;             // v5: noc, w której potwór już się wynurzył
         public Lore.ChronicleSave chronicle;    // v5: cykl księżyca, punkty, rytuały, bestiariusz
+        public List<string> unlockedSeeds = new List<string>();      // v6: nasiona odblokowane w sklepie
+        public List<string> automationGranted = new List<string>();  // v6: darmowa pierwsza sztuka budowli już była
     }
 
     [Serializable]
@@ -112,8 +114,8 @@ namespace Wyspa.Save
                 upgrades = game.Upgrades.Snapshot(),
                 rhythmDayTicks = game.Rhythm.SaveDayTicks,
                 rhythmDailySeconds = game.Rhythm.SaveDailySeconds,
-                crate = game.Automation != null && game.Automation.Crate != null
-                    ? game.Automation.Crate.Snapshot() : new List<CrateEntry>(),
+                unlockedSeeds = game.SnapshotUnlocks(),
+                automationGranted = game.Automation != null ? game.Automation.SnapshotGranted() : new List<string>(),
                 island = game.Island != null && game.Island.Ready ? game.Island.Snapshot() : null,
                 seeds = game.Seeds.Snapshot(),
                 fertilizer = game.Fertilizer,
@@ -164,6 +166,9 @@ namespace Wyspa.Save
                     game.Island.NewWorld(GameLoop.NewSeed());
             }
 
+            game.RestoreUnlocks(data.unlockedSeeds);
+            if (game.Automation != null)
+                game.Automation.RestoreGranted(data.automationGranted);   // przed ApplyUpgrades: darmowa sztuka tylko raz
             if (data.version >= 2 && data.currencies != null && data.currencies.Count > 0)
                 game.Wallet.Restore(data.currencies);
             else
@@ -172,8 +177,8 @@ namespace Wyspa.Save
             game.ApplyUpgrades();                // pojemność słoja przed ustawieniem Esencji
             game.Essence.Set(data.essence);
             game.Rhythm.Restore(data.rhythmDayTicks, data.rhythmDailySeconds, DateTime.Now);
-            if (game.Automation != null && game.Automation.Crate != null)
-                game.Automation.Crate.Restore(data.crate);
+            if (data.version < 6 && data.crate != null && data.crate.Count > 0 && HarvestCrate.All.Count > 0)
+                HarvestCrate.All[0].Restore(data.crate);   // zapis sprzed 6b: zawartość jedynej skrzyni
             game.Seeds.Restore(data.seeds);
             game.Fertilizer = data.fertilizer;
             if (Sea.GhostMerchant.Instance != null)

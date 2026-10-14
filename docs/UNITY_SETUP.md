@@ -228,6 +228,20 @@ Po pobraniu zmian: **Wyspa → 1** (wyłącza „DXGI flip model”, potrzebne d
    Resolution and Presentation → „Use DXGI flip model swapchain for D3D11” odznaczone) i czy kamera nie ma HDR w URP Asset.
 7. Start z Windows: wpis „Pockland” w Menedżerze zadań → Aplikacje autostartu. Wył. usuwa wpis.
 
+## 4k. Etap 6b: nowe nasiona i automatyka (test)
+Po pobraniu zmian: **Wyspa → 2** (nowe rośliny, sprite'y budowli w `IslandArt`), potem **Wyspa → 3** (scena bez starej skrzyni,
+ognika i skrzyni kupca: teraz stawia je wyspa). Stary zapis: skrzynia, skrzynia kupca i kamień runiczny wracają jako budowle,
+ognik pojawia się sam przy wolnym kafelku.
+1. **Księga → Sklep → Nasiona:** 6 roślin z ceną odblokowania. „Odblokuj” → toast, roślina pojawia się w kole nasion.
+   F1 → „Odblokuj wszystkie nasiona” do testu. Koło nasion rośnie, gdy nasion jest więcej.
+2. **Sklep → Budowle:** skrzynia, ognik, duszek-handlarz, runa. Bez ulepszenia: „Wymaga: …”. Po kupnie tryb stawiania jak lampa;
+   ognik i runa pokazują przerywany kwadrat zasięgu i „Obejmie: N grządek”. Każda kolejna sztuka jest droższa („Masz: N”).
+3. **Ognik:** zbiera tylko w kwadracie 5x5 wokół siebie i leci z plonem do najbliższej skrzyni. Klik: zasięg i czas do zbioru.
+4. **Runa:** klik → „Nasiona” → koło: pamięć ziemi (ikona rytuału), rośliny, „nic” (kłódka). Puste grządki 3x3 wokół
+   obsiewają się co 2 s (nasiono z worka albo za monety).
+5. **Duszek-handlarz:** co godzinę (F1 → czas x60) leci do najpełniejszej skrzyni i ją sprzedaje. Dwa duszki = dwie skrzynie.
+6. **Przezroczyste tło:** wokół pasa wody wraca mgła (pierścień, który rozpływa się w pikselach).
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

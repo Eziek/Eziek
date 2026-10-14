@@ -2,11 +2,11 @@
 upgrade.essence_jar.name,Słój Esencji,Essence Jar,Essenzglas,エッセンスの瓶,精华罐,
 upgrade.essence_jar.desc,Mieści więcej Esencji: {0}.,Holds more Essence: {0}.,Fasst mehr Essenz: {0}.,エッセンスの容量：{0},精华容量：{0},{0} = pojemność
 upgrade.wisp_gardener.name,Ognik-ogrodnik,Wisp Gardener,Irrlichtgärtner,鬼火の庭師,鬼火园丁,
-upgrade.wisp_gardener.desc,Co {0} s zbiera dojrzałe plony do skrzyni.,Harvests ripe crops into the crate every {0} s.,Erntet alle {0} s reife Pflanzen in die Kiste.,{0}秒ごとに実った作物を箱に収穫する。,每{0}秒将成熟作物收进箱子。,
-upgrade.soil_memory.name,Pamięć ziemi,Soil Memory,Erdgedächtnis,大地の記憶,大地之忆,
-upgrade.soil_memory.desc,Po zbiorze grządka sama sadzi to samo.,"After harvest, the plot replants the same seed.",Nach der Ernte pflanzt das Beet dasselbe erneut.,収穫後、同じ種を自動で植える。,收获后自动种下相同的种子。,
-upgrade.merchant_chest.name,Skrzynia kupca,Merchant's Chest,Händlertruhe,商人の箱,商人宝箱,
-upgrade.merchant_chest.desc,Raz na godzinę sprzedaje zawartość skrzyni (90% ceny).,Sells the crate's contents once an hour (90% price).,Verkauft stündlich den Kisteninhalt (90 % des Preises).,1時間ごとに箱の中身を売る（価格の90%）。,每小时出售箱中物品（90%价格）。,DE: spacja przed %
+upgrade.wisp_gardener.desc,Ogniki zbierają co {0} s plon z pól 5x5 wokół siebie. Pierwszy ognik i skrzynia za darmo.,Wisps harvest a crop from the 5x5 area around them every {0} s. First wisp and crate are free.,Irrlichter ernten alle {0} s im 5x5-Feld um sich herum. Erstes Irrlicht und Kiste gratis.,鬼火は{0}秒ごとに周囲5x5の作物を収穫。最初の鬼火と箱は無料。,鬼火每{0}秒收获周围5x5的作物。第一个鬼火和箱子免费。,{0} = sekundy
+upgrade.soil_memory.name,Runa siewu,Sowing Rune,Saatrune,種まきのルーン,播种符文,
+upgrade.soil_memory.desc,Runy sieją wybrane nasiona na 8 polach wokół siebie. Pierwsza runa za darmo.,Runes sow chosen seeds on the 8 plots around them. First rune is free.,Runen säen gewählte Samen auf den 8 Beeten um sich herum. Erste Rune gratis.,ルーンが周囲8マスに選んだ種をまく。最初のルーンは無料。,符文在周围8块地播下所选种子。第一个符文免费。,
+upgrade.merchant_chest.name,Duszek-handlarz,Merchant Spirit,Händlergeist,商いの精霊,商贩精灵,
+upgrade.merchant_chest.desc,Duszki raz na godzinę opróżniają po jednej skrzyni (90% ceny). Pierwszy za darmo.,Spirits empty one crate each once an hour (90% price). First one is free.,Geister leeren stündlich je eine Kiste (90 % des Preises). Erster gratis.,精霊は1時間ごとに箱を1つずつ売る（90%）。最初の1体は無料。,精灵每小时各清空一个箱子（90%价格）。第一个免费。,
 rhythm.streak.status,Seria {0} min,Streak {0} min,Serie {0} Min.,連続{0}分,连续{0}分钟,
 rhythm.streak.bonus,Seria skupienia +{0}%,Focus streak +{0}%,Fokusserie +{0} %,集中の連続 +{0}%,专注连续 +{0}%,
 rhythm.refreshed.status,Odświeżony +{0}% ({1} min),Refreshed +{0}% ({1} min),Erfrischt +{0} % ({1} Min.),リフレッシュ +{0}%（{1}分）,精神焕发 +{0}%（{1}分钟）,
@@ -14,8 +14,8 @@ rhythm.fatigue.status,Zmęczenie: Esencja ×{0},Fatigue: Essence ×{0},Erschöpf
 rhythm.today,Dziś: {0} h pracy,Today: {0} h of work,Heute: {0} Std. Arbeit,今日の作業：{0}時間,今日工作：{0}小时,
 cur.night_harvest.gain,+{0} {0:plural:plon nocy|plony nocy|plonów nocy},+{0} night {0:plural:harvest|harvests},+{0} Nachternte,夜の作物 +{0},夜间作物 +{0},
 toast.crate_sold,Sprzedano plony: +{0} monet,Crops sold: +{0} coins,Ernte verkauft: +{0} Münzen,作物を売却：+{0}コイン,已出售作物：+{0}金币,
-toast.merchant_sold,Skrzynia kupca sprzedała plony: +{0} monet,The Merchant's Chest sold crops: +{0} coins,Die Händlertruhe hat die Ernte verkauft: +{0} Münzen,商人の箱が作物を売った：+{0}コイン,商人宝箱出售了作物：+{0}金币,
-toast.crate_full,Skrzynia pełna - ognik czeka,The crate is full - the wisp is waiting,Die Kiste ist voll - das Irrlicht wartet,箱がいっぱい - 鬼火は待機中,箱子满了 - 鬼火在等待,
+toast.merchant_sold,Duszek-handlarz sprzedał plony: +{0} monet,The merchant spirit sold crops: +{0} coins,Der Händlergeist hat die Ernte verkauft: +{0} Münzen,商いの精霊が作物を売った：+{0}コイン,商贩精灵卖出了作物：+{0}金币,{0} = monety
+toast.crate_full,Skrzynie pełne - ognik czeka,The crates are full - the wisp is waiting,Die Kisten sind voll - das Irrlicht wartet,箱がいっぱい - 鬼火は待機中,箱子都满了 - 鬼火在等待,
 crate.contents,Skrzynia: {0}/{1},Crate: {0}/{1},Kiste: {0}/{1},箱：{0}/{1},箱子：{0}/{1},
 toast.find.coins,Skrzynka w mule: +{0} {0:plural:moneta|monety|monet},A chest in the silt: +{0} {0:plural:coin|coins},Eine Truhe im Schlick: +{0} {0:plural:Münze|Münzen},泥の中の小箱：+{0}コイン,淤泥中的宝箱：+{0}金币,znalezisko
 toast.find.nightseed,Garść nocnych nasion: +{0} {0:plural:plon nocy|plony nocy|plonów nocy},A handful of night seeds: +{0} night {0:plural:harvest|harvests},Eine Handvoll Nachtsamen: +{0} Nachternte,夜の種ひとつかみ：夜の作物 +{0},一把夜之种子：夜间作物 +{0},znalezisko
@@ -71,3 +71,6 @@ ritual.fog_whisper,Szept mgły,Fog Whisper,Nebelflüstern,霧のささやき,雾
 ritual.fog_whisper.desc,Kupiec-widmo zostaje dwa razy dłużej,The Ghost Merchant stays twice as long,Der Geisterhändler bleibt doppelt so lange,幽霊商人が2倍長く滞在する,幽灵商人停留时间翻倍,
 ritual.tide_memory,Pamięć przypływu,Tide Memory,Gezeitengedächtnis,潮の記憶,潮汐之忆,
 ritual.tide_memory.desc,Wyprawy łodzią trwają o 25% krócej,Boat expeditions take 25% less time,Bootsexpeditionen dauern 25% kürzer,舟の遠征が25%短くなる,船只远征时间缩短25%,
+toast.wisp.no_crate,Ognik nie ma skrzyni - postaw skrzynię na plony,The wisp has no crate - place a harvest crate,Das Irrlicht hat keine Kiste - stell eine Erntekiste auf,鬼火に箱がない - 収穫箱を置こう,鬼火没有箱子 - 放一个收获箱,
+toast.rune.no_seeds,Runa: brak monet na nasiona ({0}),Rune: not enough coins for seeds ({0}),Rune: zu wenig Münzen für Samen ({0}),ルーン：種のコインが足りない（{0}）,符文：金币不够买种子（{0}）,{0} = roślina
+toast.seed_unlocked,Nowe nasiona: {0},New seeds: {0},Neue Samen: {0},新しい種：{0},新种子：{0},{0} = roślina

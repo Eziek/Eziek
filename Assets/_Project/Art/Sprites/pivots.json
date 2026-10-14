@@ -121,6 +121,31 @@
       "y": 0.05556
     },
     {
+      "name": "crop_belladonna_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_belladonna_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_belladonna_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_belladonna_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_belladonna_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
       "name": "crop_bloodrose_0",
       "x": 0.52273,
       "y": 0.11538
@@ -181,6 +206,26 @@
       "y": 0.11538
     },
     {
+      "name": "crop_garlic_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_garlic_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_garlic_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_garlic_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
       "name": "crop_ghostpumpkin_0",
       "x": 0.52273,
       "y": 0.11538
@@ -202,6 +247,31 @@
     },
     {
       "name": "crop_ghostpumpkin_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_graveivy_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_graveivy_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_graveivy_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_graveivy_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_graveivy_3_glow",
       "x": 0.52273,
       "y": 0.11538
     },
@@ -231,6 +301,31 @@
       "y": 0.11538
     },
     {
+      "name": "crop_mandrake_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_mandrake_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_mandrake_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_mandrake_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_mandrake_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
       "name": "crop_moonflower_0",
       "x": 0.52273,
       "y": 0.11538
@@ -252,6 +347,26 @@
     },
     {
       "name": "crop_moonflower_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_poppy_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_poppy_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_poppy_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_poppy_3",
       "x": 0.52273,
       "y": 0.11538
     },
@@ -292,6 +407,26 @@
     },
     {
       "name": "crop_wheat_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wormwood_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wormwood_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wormwood_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wormwood_3",
       "x": 0.52273,
       "y": 0.11538
     },
@@ -671,6 +806,11 @@
       "y": 0.5
     },
     {
+      "name": "icon_seed_belladonna",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_seed_bloodrose",
       "x": 0.5,
       "y": 0.5
@@ -686,7 +826,17 @@
       "y": 0.5
     },
     {
+      "name": "icon_seed_garlic",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_seed_ghostpumpkin",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_graveivy",
       "x": 0.5,
       "y": 0.5
     },
@@ -696,7 +846,17 @@
       "y": 0.5
     },
     {
+      "name": "icon_seed_mandrake",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_seed_moonflower",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_poppy",
       "x": 0.5,
       "y": 0.5
     },
@@ -707,6 +867,11 @@
     },
     {
       "name": "icon_seed_wheat",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_wormwood",
       "x": 0.5,
       "y": 0.5
     },
@@ -839,6 +1004,46 @@
       "name": "merchant_chest_open_glow",
       "x": 0.52273,
       "y": 0.05
+    },
+    {
+      "name": "merchant_spirit_0",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "merchant_spirit_0_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "merchant_spirit_1",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "merchant_spirit_1_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "merchant_spirit_2",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "merchant_spirit_2_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "merchant_spirit_3",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "merchant_spirit_3_glow",
+      "x": 0.53125,
+      "y": 0.0
     },
     {
       "name": "monster_eye_0",

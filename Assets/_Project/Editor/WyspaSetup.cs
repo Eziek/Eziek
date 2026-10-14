@@ -50,6 +50,7 @@ namespace Wyspa.EditorTools
             public int seed, sell;
             public bool fullMoon, hybrid;
             public string parentA, parentB, seedIcon;
+            public int unlock;   // Etap 6b: cena odblokowania w Sklep → Nasiona (0 = od początku)
         }
         struct LampSpec { public string name; public int price; public float perMinute, growth; public bool flicker; }
 
@@ -58,11 +59,18 @@ namespace Wyspa.EditorTools
             new CropSpec { id = "carrot", name = "Marchew", sprite = "crop_carrot", kind = CropKind.Day, seconds = 600, seed = 5, sell = 12 },
             new CropSpec { id = "wheat", name = "Zboże", sprite = "crop_wheat", kind = CropKind.Day, seconds = 900, seed = 8, sell = 18 },
             new CropSpec { id = "pumpkin", name = "Dynia", sprite = "crop_pumpkin", kind = CropKind.Day, seconds = 1500, seed = 15, sell = 40 },
+            // Etap 6b: do odblokowania w Sklep → Nasiona (unlock = monety, jednorazowo)
+            new CropSpec { id = "garlic", name = "Czosnek", sprite = "crop_garlic", kind = CropKind.Day, seconds = 720, seed = 6, sell = 15, unlock = 80 },
+            new CropSpec { id = "poppy", name = "Mak", sprite = "crop_poppy", kind = CropKind.Day, seconds = 1200, seed = 12, sell = 30, unlock = 200 },
+            new CropSpec { id = "wormwood", name = "Piołun", sprite = "crop_wormwood", kind = CropKind.Day, seconds = 2400, seed = 25, sell = 70, unlock = 450 },
             // rośliny nocy: czas = sekundy ciemności (rosną też offline)
             new CropSpec { id = "corpseshroom", name = "Trupi grzyb", sprite = "crop_corpseshroom", kind = CropKind.Night, seconds = 3 * 3600, seed = 15, sell = 45 },
             new CropSpec { id = "moonflower", name = "Księżycowy kwiat", sprite = "crop_moonflower", kind = CropKind.Night, seconds = 4 * 3600, seed = 20, sell = 60 },
             new CropSpec { id = "ghostpumpkin", name = "Upiorna dynia", sprite = "crop_ghostpumpkin", kind = CropKind.Night, seconds = 6 * 3600, seed = 30, sell = 90 },
             new CropSpec { id = "bloodrose", name = "Krwawa róża", sprite = "crop_bloodrose", kind = CropKind.Night, seconds = 8 * 3600, seed = 50, sell = 200, fullMoon = true },
+            new CropSpec { id = "belladonna", name = "Wilcza jagoda", sprite = "crop_belladonna", kind = CropKind.Night, seconds = 2 * 3600, seed = 12, sell = 35, unlock = 250 },
+            new CropSpec { id = "mandrake", name = "Mandragora", sprite = "crop_mandrake", kind = CropKind.Night, seconds = 5 * 3600, seed = 35, sell = 120, unlock = 600 },
+            new CropSpec { id = "graveivy", name = "Cmentarny bluszcz", sprite = "crop_graveivy", kind = CropKind.Night, seconds = 10 * 3600, seed = 60, sell = 260, unlock = 1200 },
             // hybryda (Etap 4a): nasiona tylko z mutacji dyni i upiornej dyni na sąsiednich grządkach
             new CropSpec { id = "hybridpumpkin", name = "Dynia-upiór", sprite = "crop_hybridpumpkin", kind = CropKind.Night, seconds = 5 * 3600, seed = 0, sell = 150,
                            hybrid = true, parentA = "pumpkin", parentB = "ghostpumpkin", seedIcon = "seed_hybrid" },
@@ -86,9 +94,9 @@ namespace Wyspa.EditorTools
                 levels = new[] { (120f, new[] { Coins(100) }), (240f, new[] { Coins(400) }), (480f, new[] { Coins(1500) }) } },
             new UpgradeSpec { id = UpgradeIds.WispGardener, name = "Ognik-ogrodnik", category = UpgradeCategory.Automation,
                 levels = new[] { (30f, new[] { Coins(300), Night(5) }) } },
-            new UpgradeSpec { id = UpgradeIds.SoilMemory, name = "Pamięć ziemi", category = UpgradeCategory.Automation,
+            new UpgradeSpec { id = UpgradeIds.SoilMemory, name = "Runa siewu", category = UpgradeCategory.Automation,
                 levels = new[] { (1f, new[] { Coins(500) }) }, requires = new[] { UpgradeIds.WispGardener } },
-            new UpgradeSpec { id = UpgradeIds.MerchantChest, name = "Skrzynia kupca", category = UpgradeCategory.Automation,
+            new UpgradeSpec { id = UpgradeIds.MerchantChest, name = "Duszek-handlarz", category = UpgradeCategory.Automation,
                 levels = new[] { (3600f, new[] { Coins(800) }) }, requires = new[] { UpgradeIds.WispGardener } },
         };
 
@@ -198,6 +206,7 @@ namespace Wyspa.EditorTools
                 crop.parentA = spec.parentA;
                 crop.parentB = spec.parentB;
                 crop.seedIcon = spec.seedIcon;
+                crop.unlockPrice = spec.unlock;
                 crop.stages = new Sprite[4];
                 crop.glowStages = new Sprite[4];
                 for (int i = 0; i < 4; i++)
@@ -401,6 +410,22 @@ namespace Wyspa.EditorTools
             art.altar = LoadSprite("Sea/altar");
             art.altarGlow = LoadSprite("Sea/altar_glow");
             art.lighthouse = AssetDatabase.LoadAssetAtPath<LampDefinition>($"{DataDir}/Lamps/Lamp_lighthouse.asset");
+            // automatyka (Etap 6b)
+            Sprite[] Frames(string name, string suffix = "")
+            {
+                var frames = new Sprite[4];
+                for (int i = 0; i < 4; i++)
+                    frames[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Automation/{name}_{i}{suffix}.png");
+                return frames;
+            }
+            art.crateFill = new[] { LoadSprite("Automation/harvest_crate_0"), LoadSprite("Automation/harvest_crate_1"),
+                                    LoadSprite("Automation/harvest_crate_2") };
+            art.wispFrames = Frames("wisp_gardener");
+            art.wispGlow = Frames("wisp_gardener", "_glow");
+            art.merchantFrames = Frames("merchant_spirit");
+            art.merchantGlow = Frames("merchant_spirit", "_glow");
+            art.rune = LoadSprite("Automation/rune_stone");
+            art.runeGlow = LoadSprite("Automation/rune_stone_glow");
             art.lamps = new List<LampDefinition>();
             foreach (var id in new[] { "lantern", "skull", "wisp", "mushrooms" })
             {
@@ -609,40 +634,7 @@ namespace Wyspa.EditorTools
                 return t;
             }
 
-            // skrzynia na plony: pojawia się z ognikiem albo skrzynią kupca
-            var fill = new[] { LoadSprite("Automation/harvest_crate_0"), LoadSprite("Automation/harvest_crate_1"),
-                               LoadSprite("Automation/harvest_crate_2") };
-            var crateSr = MakeSprite("HarvestCrate", objectsRoot, fill[0], Vector3.zero, 0);
-            var crate = crateSr.gameObject.AddComponent<HarvestCrate>();
-            TileCollider(crate.gameObject);
-            crate.Setup(fill, crateSr);
-            var crateTile = AsTileObject(crate, "crate", "bld.harvest_crate");
-
-            var wispFrames = new Sprite[4];
-            var wispGlow = new Sprite[4];
-            for (int i = 0; i < 4; i++)
-            {
-                wispFrames[i] = LoadSprite($"Automation/wisp_gardener_{i}");
-                wispGlow[i] = LoadSprite($"Automation/wisp_gardener_{i}_glow");
-            }
-            var wispBody = MakeSprite("WispGardener", objectsRoot, wispFrames[0], Vector3.zero, 0);
-            var wispGlowSr = MakeGlow(wispBody, wispGlow[0], 1, glowMat);
-            var wisp = wispBody.gameObject.AddComponent<WispGardener>();
-            wisp.Setup(wispBody, wispGlowSr, wispFrames, wispGlow);
-            AsTileObject(wisp, "wisp", "bld.wisp_gardener", crateTile, new Vector2Int(14, 8));   // unosi się przy skrzyni
-
-            var chestBody = MakeSprite("MerchantChest", objectsRoot, LoadSprite("Automation/merchant_chest"), Vector3.zero, 0);
-            var chestGlow = MakeGlow(chestBody, LoadSprite("Automation/merchant_chest_glow"), 1, glowMat);
-            var chest = chestBody.gameObject.AddComponent<MerchantChest>();
-            chest.Setup(chestBody, LoadSprite("Automation/merchant_chest"), LoadSprite("Automation/merchant_chest_open"),
-                chestGlow, LoadSprite("Automation/merchant_chest_glow"), LoadSprite("Automation/merchant_chest_open_glow"));
-            TileCollider(chest.gameObject);
-            AsTileObject(chest, "merchant_chest", "bld.merchant_chest");
-
-            var rune = MakeSprite("RuneStone", objectsRoot, LoadSprite("Automation/rune_stone"), Vector3.zero, 0);
-            MakeGlow(rune, LoadSprite("Automation/rune_stone_glow"), 1, glowMat);
-            TileCollider(rune.gameObject);
-            AsTileObject(rune, "rune", "bld.soil_memory");
+            // automatyka (Etap 6b): skrzynie, ogniki, duszki-handlarze i runy stawia Island w trakcie gry (IslandArt, Sklep → Budowle)
 
             // lampy (także startową latarnię) stawia Island w trakcie gry: IslandArt.lamps, sklep, tryb stawiania
 
@@ -689,7 +681,6 @@ namespace Wyspa.EditorTools
             var loop = game.AddComponent<GameLoop>();
             game.AddComponent<AppPerformance>();
             var automation = game.AddComponent<AutomationSystem>();
-            automation.Setup(crate, wisp, chest, rune.gameObject);
             camGo.AddComponent<ViewController>().Setup(ppc);
             var dayNight = game.AddComponent<DayNightLighting>();
             var click = game.AddComponent<ClickRouter>();

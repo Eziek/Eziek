@@ -159,3 +159,27 @@ ui.options.reset,Reset zapisu,Reset save,Spielstand löschen,セーブをリセ�
 ui.options.reset_button,Resetuj,Reset,Löschen,リセット,重置,
 ui.options.reset_confirm,Na pewno?,Sure?,Sicher?,本当に？,确定？,drugi klik w ciągu 4 s
 ui.options.reset_hint,Reset usuwa wyspę i cały postęp (opcje zostają). Kliknij dwa razy.,Reset deletes the island and all progress (options stay). Click twice.,Löscht die Insel und den Fortschritt (Optionen bleiben). Zweimal klicken.,島と進行状況をすべて消す（設定は残る）。2回クリック。,重置会删除岛屿和全部进度（设置保留）。点击两次。,
+ui.wisp.range,Zbiera z pól {0}x{0} wokół,Harvests the {0}x{0} area around,Erntet im {0}x{0}-Feld ringsum,周囲{0}x{0}を収穫,收获周围{0}x{0},{0} = 5
+ui.wisp.next,Następny zbiór: {0} s,Next harvest: {0} s,Nächste Ernte: {0} s,次の収穫：{0}秒,下次收获：{0}秒,
+ui.merchant_spirit.next,Sprzedaż za {0} min,Sells in {0} min,Verkauf in {0} Min.,{0}分後に販売,{0}分钟后出售,
+ui.merchant_spirit.crates,"Skrzynie: {0}, plonów: {1}","Crates: {0}, crops: {1}","Kisten: {0}, Ernte: {1}",箱：{0}、作物：{1},箱子：{0}，作物：{1},
+ui.rune.sows,Sieje: {0},Sows: {0},Sät: {0},まく種：{0},播种：{0},
+ui.rune.memory,pamięć ziemi,soil memory,Erdgedächtnis,大地の記憶,大地之忆,"to samo, co rosło"
+ui.rune.off,nic,nothing,nichts,なし,无,
+ui.rune.range,Sadzi na 8 polach wokół siebie,Plants on the 8 plots around it,Pflanzt auf den 8 Beeten ringsum,周囲8マスに植える,在周围8块地种植,
+ui.rune.choose,Nasiona,Seeds,Samen,種,种子,
+ui.rune.memory_tip,"Pamięć ziemi: sadzi to samo, co rosło na grządce",Soil memory: replants whatever grew on the plot,"Erdgedächtnis: pflanzt, was auf dem Beet wuchs",大地の記憶：前と同じ作物を植える,大地之忆：重新种下原来的作物,
+ui.rune.off_tip,Nic nie sadź,Don't plant anything,Nichts pflanzen,何も植えない,不种植,
+ui.place.covers,Obejmie: {0} {0:plural:grządkę|grządki|grządek},Covers: {0} {0:plural:plot|plots},Umfasst: {0} {0:plural:Beet|Beete},範囲内の畑：{0},覆盖：{0}块地,
+ui.shop.seeds,Nasiona,Seeds,Samen,種,种子,
+ui.shop.buildings,Budowle,Buildings,Bauwerke,建物,建筑,
+ui.shop.seeds_hint,Odblokowane nasiona pojawią się w kole nasion (klik w pustą grządkę).,Unlocked seeds appear in the seed wheel (click an empty plot).,Freigeschaltete Samen erscheinen im Samenrad (leeres Beet anklicken).,解放した種は種の輪に出る（空いた畑をクリック）。,解锁的种子会出现在种子轮盘中（点击空地）。,
+ui.shop.buildings_hint,Każda kolejna sztuka jest droższa. Ulepszenia w Księdze odblokowują rodzaje budowli.,Each extra one costs more. Upgrades in the Grimoire unlock building types.,Jedes weitere kostet mehr. Verbesserungen im Grimoire schalten Bauwerke frei.,追加するたびに高くなる。魔導書の強化で建物が解放される。,每多建一个就更贵。魔典中的升级可解锁建筑类型。,
+ui.shop.unlock,Odblokuj,Unlock,Freischalten,解放,解锁,
+ui.shop.unlocked,Odblokowane,Unlocked,Freigeschaltet,解放済み,已解锁,
+ui.shop.needs_upgrade,Wymaga: {0},Needs: {0},Benötigt: {0},必要：{0},需要：{0},{0} = ulepszenie
+ui.shop.owned,Masz: {0},Owned: {0},Besitz: {0},所持：{0},拥有：{0},
+ui.shop.crate.desc,20 plonów,20 crops,20 Ernten,作物20個,20份作物,
+ui.shop.wisp.desc,Zbiera z pól 5x5,Harvests a 5x5 area,Erntet 5x5,5x5を収穫,收获5x5,
+ui.shop.merchant.desc,Sprzedaje skrzynie,Sells crates,Verkauft Kisten,箱を売る,出售箱子,
+ui.shop.rune.desc,Sieje na 3x3,Sows a 3x3 area,Sät 3x3,3x3に種まき,播种3x3,

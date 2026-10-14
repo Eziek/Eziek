@@ -37,13 +37,16 @@ namespace Wyspa.UI
             public Func<TilePos, bool> valid;
             public Func<TilePos, (Vector3 pos, bool flip)> ghostAt;
             public Func<TilePos, bool> confirm;                // true = postawione
+            public int area;                                   // zasięg w kafelkach (runa 1 = 3x3, ognik 2 = 5x5), 0 = brak
         }
 
         TooltipView tooltip;
         SpriteRenderer ghost;
         SpriteRenderer ring;
+        SpriteRenderer square;
         Request request;
         readonly Dictionary<int, Sprite> rings = new Dictionary<int, Sprite>();
+        readonly Dictionary<int, Sprite> squares = new Dictionary<int, Sprite>();
         bool hasTile;
         TilePos tile;
         bool startedThisFrame;
@@ -55,6 +58,7 @@ namespace Wyspa.UI
             var root = new GameObject("PlacementGhost").transform;
             view.ghost = NewRenderer("Ghost", root, GhostOrder);
             view.ring = NewRenderer("LightRange", root, GhostOrder - 1);
+            view.square = NewRenderer("AreaRange", root, GhostOrder - 1);
             root.gameObject.SetActive(false);
             return view;
         }
@@ -98,9 +102,11 @@ namespace Wyspa.UI
                 return;
             var sr = obj.GetComponent<SpriteRenderer>();
             var lamp = obj.GetComponent<Lamp>();
+            var areaEffect = obj.GetComponent<Automation.IAreaEffect>();
             Begin(new Request
             {
                 nameKey = obj.NameKey, sprite = sr != null ? sr.sprite : null, light = lamp != null ? lamp.Definition : null,
+                area = areaEffect != null ? areaEffect.AreaRadius : 0,
                 valid = t => island.IsFree(t) || (obj.Placed && obj.Tile == t),
                 ghostAt = OnLand,
                 confirm = t => island.MoveObject(obj, t),
@@ -117,10 +123,13 @@ namespace Wyspa.UI
             {
                 ghost.sharedMaterial = art.glow;   // duch i okrąg widać także w nocy
                 ring.sharedMaterial = art.glow;
+                square.sharedMaterial = art.glow;
             }
             ghost.sprite = r.sprite;
             ring.sprite = r.light != null ? Ring(Mathf.RoundToInt(r.light.radius * Ppu)) : null;
             ring.color = RingColor;
+            square.sprite = r.area > 0 ? Square(r.area) : null;
+            square.color = RingColor;
             ghost.transform.parent.gameObject.SetActive(true);
             Active = true;
             startedThisFrame = true;
@@ -176,7 +185,17 @@ namespace Wyspa.UI
                         lit++;
             }
             ring.enabled = def != null;
-            tooltip.Show(this, Describe(def, lit, valid));
+
+            int covered = 0;
+            if (request.area > 0)
+            {
+                square.transform.position = Island.TileCenter(tile);
+                foreach (var p in FarmPlot.All)
+                    if (Mathf.Abs(p.Cell.x - tile.c) <= request.area && Mathf.Abs(p.Cell.y - tile.r) <= request.area)
+                        covered++;
+            }
+            square.enabled = request.area > 0;
+            tooltip.Show(this, Describe(def, lit, valid) + (request.area > 0 ? "\n" + Loc.Get("ui.place.covers", covered) : ""));
 
             var ui = UiRoot.Instance;
             if (!startedThisFrame && UiInput.LeftPressed && (ui == null || !ui.PointerOverUi))
@@ -226,6 +245,34 @@ namespace Wyspa.UI
                 return;
             }
             Cancel();
+        }
+
+        /// <summary>Przerywany kwadrat zasięgu budowli (kafelki wokół: promień 1 = 3x3), tworzony raz na promień.</summary>
+        Sprite Square(int tiles)
+        {
+            if (squares.TryGetValue(tiles, out var cached))
+                return cached;
+            int size = (2 * tiles + 1) * (int)Ppu;
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false, false)
+            {
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp,
+            };
+            var px = new byte[size * size * 4];
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                {
+                    bool edge = x == 0 || y == 0 || x == size - 1 || y == size - 1;
+                    if (!edge || ((x + y) / 2) % 3 == 2)
+                        continue;   // obwód co 3 piksele: dwa pełne, jeden pusty
+                    int i = (y * size + x) * 4;
+                    px[i] = px[i + 1] = px[i + 2] = px[i + 3] = 255;
+                }
+            tex.LoadRawTextureData(px);
+            tex.Apply(false);
+            var sprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), Ppu, 0, SpriteMeshType.FullRect);
+            squares[tiles] = sprite;
+            return sprite;
         }
 
         /// <summary>Przerywany okrąg zasięgu światła (piksele co 3: dwa pełne, jeden pusty), tworzony raz na promień.</summary>

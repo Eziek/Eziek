@@ -187,13 +187,13 @@ namespace Wyspa.Platform
                 cam.backgroundColor = transparent ? new Color(0f, 0f, 0f, 0f) : cameraColor;
                 cam.allowHDR = !transparent && cameraHdr;
             }
-            // morze zostaje tylko pasem przy brzegu (shader wody), mgła znika
+            // morze zostaje pasem przy brzegu (shader wody), a mgła pierścieniem wokół niego
             var water = FindAnyObjectByType<WaterAnimator>();
             if (water != null)
                 water.SetShoreOnly(transparent ? ShoreWaterPixels : 0f);
             var fog = FindAnyObjectByType<FogController>();
-            if (fog != null && fog.Renderer != null)
-                fog.Renderer.enabled = !transparent;
+            if (fog != null)
+                fog.SetShoreBand(transparent);
 
             if (!Supported || Hwnd == IntPtr.Zero)
                 return;

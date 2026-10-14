@@ -288,6 +288,14 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Mini-tryb = najmniejszy kadr (144×112) w skali ×2. Okno bez ramki przesuwa się LPM za puste miejsce; puszczone przy rogu
   ekranu przykleja się do niego (i rośnie od rogu).
 - [x] Reset zapisu: dwa kliknięcia w 4 s, opcje gracza (PlayerPrefs) zostają.
+- [x] Automatyka w wielu egzemplarzach (Etap 6b, wybór gracza): ogniki z zasięgiem 5x5 wokół siebie, duszek-handlarz na całą
+  wyspę (jedna skrzynia na duszka), runa siewu 3x3 z wyborem nasion, kupno w Sklep → Budowle z ceną rosnącą x1.6 (§11.3 E).
+- [x] Nowe nasiona (Etap 6b): odblokowanie w Sklep → Nasiona; koło nasion pokazuje tylko odblokowane (i to, co jest w worku).
+  Dzień: czosnek (80), mak (200), piołun (450); noc: wilcza jagoda (250), mandragora (600), cmentarny bluszcz (1200). Do balansu.
+- [x] Przezroczyste okno: mgła zostaje pierścieniem wokół pasa wody (zaczyna się ok. 8 px od brzegu, kończy ok. 30 px,
+  dalej rozpływa się ditheringiem Bayera).
+- [ ] UI do przemyślenia (prośba gracza): przyciski w prawym górnym rogu okna i pasek walut odklejone od wyspy, zwłaszcza
+  w przezroczystym oknie. Propozycje w §12.10, decyzja w Etapie 6d.
 - [x] Cząsteczki: **własny system pikselowy** (pula sprite'ów, 12 kl./s) zamiast ParticleSystem, dla ostrych pikseli.
 - [x] Woda i mgła: **liczone w shaderze z mapy danych** (port prototypu), ryby i potwór w shaderze, nie jako osobne sprite'y.
 - [ ] Rozmiar fontu tekstu: 10 px czy 12 px. Sprawdzimy później w Unity (§16.3).
@@ -414,6 +422,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     a bez niego UI startuje z domyślnym fontem TMP.
 36. Build startował na pełnym ekranie (Unity pamięta tryb z poprzednich uruchomień): gra przy starcie przełącza się w okno.
     Przezroczyste okno zostawia pas wody przy brzegu (shader wody, `_ShoreRange`).
+37. **Etap 6b** (prośba gracza: więcej nasion i automatyki): 6 nowych roślin do odblokowania (Sklep → Nasiona), budowle
+    automatyki w wielu egzemplarzach (Sklep → Budowle): ognik z zasięgiem 5x5, runa siewu 3x3 z wyborem nasion, duszek-handlarz
+    zamiast skrzyni kupca, wiele skrzyń. Zapis v6 (stare zapisy: skrzynia, skrzynia kupca i kamień runiczny stają się budowlami).
+    Mgła w przezroczystym oknie wraca jako pierścień wokół wyspy. Dźwięk i zasobnik przechodzą do 6c, wprowadzenie, UI i balans do 6d.
 
 ---
 
@@ -437,7 +449,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Economy/Currency.cs`, `Wallet.cs` | waluty (§11.2: monety, plony nocy, odłamki, łuski, dary, drewno, kamień), portfel na wszystkie, start 50 monet |
 | `Scripts/Upgrades/*` | `UpgradeDefinition` (poziomy z kosztem w wielu walutach + wartość efektu, wymagania), `UpgradeDatabase`, `UpgradeState` (posiadane poziomy, zakup), `UpgradeIds` |
 | `Scripts/Core/WorkRhythm.cs` | rytm pracy: seria skupienia, „odświeżony” po przerwie, zmęczenie; mnożnik Esencji |
-| `Scripts/Automation/*` | `HarvestCrate` (skrzynia na plony, 20 miejsc, klik = sprzedaż 100%), `WispGardener` (zbiór co 30 s gry), `MerchantChest` (sprzedaż co 1 h gry po 90%), `AutomationSystem` (włącza obiekty wg ulepszeń, ticki); pamięć ziemi w `GameLoop.AfterHarvest` |
+| `Scripts/Automation/*` | budowle w wielu egzemplarzach (Etap 6b): `HarvestCrate` (20 miejsc, klik = sprzedaż 100%), `WispGardener` (zasięg 5x5, do najbliższej skrzyni), `MerchantSpirit` (sprzedaje najpełniejszą skrzynię po 90%), `SeedRune` (sieje 3x3, wybór nasion w kole), `AutomationSystem` (darmowa pierwsza sztuka, ceny, ticki); stawia je `Island.SpawnBuilding` |
 | `Scripts/Save/SaveSystem.cs` | JSON w persistentDataPath, autosave co 60 s, offline: rośliny nocy rosną za godziny nocy |
 | `Scripts/Input/ClickRouter.cs` | klik, potem Collider2D, potem `IClickable` (Input System albo stary Input) |
 | `Scripts/UI/DebugHud.cs` | HUD debugowy IMGUI (F1): waluty, rytm, ulepszenia, przełączniki testowe, czas x60, cheat |
@@ -528,9 +540,14 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Jakość 1–3 gwiazdki:** baza 1, +1 za nawóz, +1 za wzrost w świetle ognika. Cena ×1 / ×1.5 / ×2.5. Kupiec składa zamówienia na jakość.
 
 **E. Automatyzacja (kamienie milowe, bez niej gra przeszkadza w pracy)**
-1. **Ognik-ogrodnik** (300 monet + 5 plonów nocy): co 30 s zbiera dojrzałe plony do skrzyni (pojemność 20).
-2. **Pamięć ziemi** (500 monet): po zbiorze grządka sama sadzi to samo (płaci za nasiono z portfela).
-3. **Skrzynia kupca** (800 monet): raz na godzinę sama sprzedaje zawartość skrzyni (90% ceny).
+**Stan (Etap 6b):** ulepszenie odblokowuje rodzaj budowli i daje pierwszą sztukę za darmo; kolejne w Sklep → Budowle
+(monety x1.6 za każdą posiadaną sztukę + stały materiał). Budowle stawia się i przenosi jak lampy.
+1. **Ognik-ogrodnik** (300 monet + 5 plonów nocy): co 30 s zbiera jeden dojrzały plon z pól **5x5 wokół siebie** i niesie
+   do najbliższej skrzyni z miejscem. Kolejne: 250 monet + 5 plonów nocy. **Skrzynia na plony** (20 miejsc): 60 monet + 4 drewna.
+2. **Runa siewu** (dawna pamięć ziemi, 500 monet): sadzi na pustych grządkach **3x3 wokół siebie** (co 2 s). Klik w runę →
+   „Nasiona”: pamięć ziemi (to samo, co rosło), wybrana roślina albo nic. Nasiono z worka, inaczej za monety. Kolejne: 150 monet + 5 kamienia.
+3. **Duszek-handlarz** (dawna skrzynia kupca, 800 monet): raz na godzinę leci do najpełniejszej skrzyni na wyspie i sprzedaje
+   ją po 90%. Każdy duszek opróżnia jedną skrzynię, więc więcej duszków = więcej skrzyń naraz. Kolejne: 500 monet + 8 kamienia.
 4. **Sieci rybackie** (wymagają pomostu): bierny połów co godzinę.
 
 **F. Morze**
@@ -602,8 +619,10 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Etap 5c (gotowy, do testu w Unity):** Księga rytuałów i cykl księżyca, bestiariusz, kolekcja lore.
 - **Etap 6a (gotowy, do testu w Unity i w buildzie):** opcje w sekcjach, tryby okna (ramka, na wierzchu, róg, mini, przezroczystość),
   start z Windows, godziny nocy, próg bezczynności, reset zapisu.
-- **Etap 6b:** dźwięk (ambient, efekty, głośność), ikona w zasobniku i powiadomienia (plony dojrzały, kupiec, potwór).
-- **Etap 6c:** wprowadzenie (karteczki, §12.8), dopracowanie UI, balans.
+- **Etap 6b (gotowy, do testu w Unity):** 6 nowych nasion do odblokowania, automatyka w wielu egzemplarzach (ogniki 5x5, runy
+  siewu 3x3 z wyborem nasion, duszki-handlarze, skrzynie), Sklep: Nasiona / Lampy / Budowle / Morze, mgła w przezroczystym oknie.
+- **Etap 6c:** dźwięk (ambient, efekty, głośność), ikona w zasobniku i powiadomienia (plony dojrzały, kupiec, potwór).
+- **Etap 6d:** nowe UI (§12.10), wprowadzenie (karteczki, §12.8), balans.
 
 ---
 
@@ -680,6 +699,14 @@ Cel jest podświetlony pulsem.
   - znaki: ASCII + `ĄĆĘŁŃÓŚŹŻąćęłńóśźż`;
   - rozmiar tekstu w UI = 8 × skala.
 - **Makiety do zrobienia:** Rytuały, Bestiariusz, Statystyki, Opcje, panel łodzi/wyprawy, handel z kupcem.
+
+### 12.10 Do przemyślenia: UI na pulpicie (prośba gracza po Etapie 6a)
+Problem: HUD (waluty u góry, trzy przyciski w prawym górnym rogu, rytm na dole) przykleja się do rogów okna, a nie do wyspy.
+W przezroczystym oknie wisi „w powietrzu” nad pulpitem. Propozycje do wyboru w Etapie 6d:
+- **A. HUD przy wyspie:** jeden mały pasek nad wyspą (waluty + Esencja), pokazuje się po najechaniu na wyspę.
+- **B. Menu z wyspy:** zamiast trzech przycisków jeden „kamień z Księgą” stojący na wyspie (klik = Księga, PPM = rozbudowa).
+- **C. Pierścień akcji:** PPM na pustym miejscu wyspy otwiera koło (Księga, Rozbudowa, Sklep, Opcje), jak koło nasion.
+- **D. Zostaje jak jest,** ale w przezroczystym oknie HUD ma półprzezroczyste tło i chowa się szybciej.
 
 ---
 

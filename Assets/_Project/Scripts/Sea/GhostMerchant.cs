@@ -241,9 +241,9 @@ namespace Wyspa.Sea
                 bool afford = game.Wallet.Coins >= offer.coins && game.Wallet.Get(CurrencyType.NightHarvest) >= offer.night;
                 info.Button(offer.label + " - " + price, () => Buy(offer), afford);
             }
-            var crate = game.Automation != null ? game.Automation.Crate : null;
-            if (crate != null && crate.Count > 0 && crate.isActiveAndEnabled)
-                info.Button(Loc.Get("ui.merchant.sell_crate", crate.Count), () => SellCrate(game, crate));
+            int inCrates = HarvestCrate.TotalCount();
+            if (inCrates > 0)
+                info.Button(Loc.Get("ui.merchant.sell_crate", inCrates), () => SellCrates(game));
         }
 
         void Buy(Offer o)
@@ -261,9 +261,12 @@ namespace Wyspa.Sea
             GameEvents.RaiseToast("ui.toast.upgrade_bought", o.label);
         }
 
-        void SellCrate(GameLoop game, HarvestCrate crate)
+        /// <summary>Kupiec skupuje zawartość wszystkich skrzyń na plony.</summary>
+        void SellCrates(GameLoop game)
         {
-            int coins = crate.SellAll(game.Wallet, game.Crops, SellMultiplier);
+            int coins = 0;
+            foreach (var crate in HarvestCrate.All.ToArray())
+                coins += crate.SellAll(game.Wallet, game.Crops, SellMultiplier);
             if (coins <= 0)
                 return;
             GameEvents.RaiseToast("toast.merchant.bought", coins);

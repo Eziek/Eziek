@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Wyspa.Automation;
 using Wyspa.Core;
 using Wyspa.Farming;
 using Wyspa.Localization;
 
 namespace Wyspa.UI
 {
-    /// <summary>Koło nasion (GDD §12.3): klik w pustą grządkę otwiera paczki nasion wokół niej.</summary>
+    /// <summary>Koło nasion (GDD §12.3): klik w pustą grządkę otwiera paczki nasion wokół niej; runa siewu wybiera w nim swoje nasiona.</summary>
     public class SeedWheel : MonoBehaviour
     {
         const float Radius = 26f;
@@ -19,7 +20,8 @@ namespace Wyspa.UI
         GameObject blocker;
         TooltipView tooltip;
         FarmPlot plot;
-        readonly List<(Button b, CropDefinition crop)> buttons = new List<(Button, CropDefinition)>();
+        SeedRune picker;
+        readonly List<(Button b, System.Func<bool> affordable)> buttons = new List<(Button, System.Func<bool>)>();
 
         public bool IsOpen => blocker != null && blocker.activeSelf;
 
@@ -43,38 +45,98 @@ namespace Wyspa.UI
             return view;
         }
 
+        /// <summary>Koło do sadzenia na pustej grządce: odblokowane nasiona (Sklep → Nasiona) i to, co jest w worku.</summary>
         public void Open(FarmPlot target)
         {
             var game = GameLoop.Instance;
-            var cam = Camera.main;
-            if (game == null || game.Crops == null || cam == null)
+            if (game == null || game.Crops == null)
                 return;
+            var slots = new List<Slot>();
+            foreach (var cd in game.Crops.crops)
+            {
+                if (cd == null || !(game.IsUnlocked(cd) || game.Seeds.Count(cd.id) > 0))
+                    continue;
+                var c = cd;
+                slots.Add(new Slot
+                {
+                    icon = c.SeedIcon, count = game.Seeds.Count(c.id), crop = c,
+                    tip = () => Describe(c), pick = () => Plant(c),
+                    affordable = () => game.Seeds.Count(c.id) > 0 || (!c.hybrid && game.Wallet.Coins >= c.seedPrice),
+                });
+            }
             plot = target;
+            picker = null;
+            Build(target.transform.position, slots);
+        }
+
+        /// <summary>Wybór nasion dla runy siewu (Etap 6b): pamięć ziemi, odblokowane rośliny, hybrydy z worka, nic.</summary>
+        public void OpenPicker(SeedRune rune)
+        {
+            var game = GameLoop.Instance;
+            if (game == null || game.Crops == null || rune == null)
+                return;
+            var slots = new List<Slot>
+            {
+                new Slot { icon = "ritual", selected = rune.Seed == SeedRune.Memory, tip = () => Loc.Get("ui.rune.memory_tip"),
+                           pick = () => rune.Seed = SeedRune.Memory },
+            };
+            foreach (var cd in game.Crops.crops)
+            {
+                if (cd == null || !(game.IsUnlocked(cd) || game.Seeds.Count(cd.id) > 0))
+                    continue;
+                var c = cd;
+                slots.Add(new Slot { icon = c.SeedIcon, count = game.Seeds.Count(c.id), selected = rune.Seed == c.id,
+                                     tip = () => Describe(c), pick = () => rune.Seed = c.id });
+            }
+            slots.Add(new Slot { icon = "lock", selected = rune.Seed == SeedRune.Off, tip = () => Loc.Get("ui.rune.off_tip"),
+                                 pick = () => rune.Seed = SeedRune.Off });
+            plot = null;
+            picker = rune;
+            Build(rune.transform.position, slots);
+        }
+
+        class Slot
+        {
+            public string icon;
+            public int count;
+            public bool selected;
+            public CropDefinition crop;
+            public System.Func<string> tip;
+            public System.Action pick;
+            public System.Func<bool> affordable;
+        }
+
+        /// <summary>Przyciski po okręgu wokół punktu na świecie; promień rośnie z liczbą nasion (Etap 6b: więcej roślin).</summary>
+        void Build(Vector3 worldPos, List<Slot> slots)
+        {
+            var cam = Camera.main;
+            if (cam == null)
+                return;
             foreach (Transform c in wheel)
                 if (c.name != "Ring")
                     Destroy(c.gameObject);
             buttons.Clear();
 
-            // pozycja grządki na ekranie -> współrzędne płótna (od lewego dolnego rogu)
-            Vector2 screen = cam.WorldToScreenPoint(target.transform.position);
+            float radius = Mathf.Max(Radius, Mathf.Ceil(slots.Count * 20f / (2f * Mathf.PI)));
+            float size = radius * 2f + 22f;
+            wheel.sizeDelta = new Vector2(size, size);
+            float margin = radius + 12f;
+
+            // pozycja obiektu na ekranie -> współrzędne płótna (od lewego dolnego rogu)
+            Vector2 screen = cam.WorldToScreenPoint(worldPos);
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screen, null, out var local);
-            var size = canvasRect.rect.size;
-            var p = local + size * 0.5f;
-            p.x = Mathf.Clamp(p.x, 34, size.x - 34);
-            p.y = Mathf.Clamp(p.y, 34, size.y - 34);
+            var area = canvasRect.rect.size;
+            var p = local + area * 0.5f;
+            p.x = Mathf.Clamp(p.x, margin, Mathf.Max(margin, area.x - margin));
+            p.y = Mathf.Clamp(p.y, margin, Mathf.Max(margin, area.y - margin));
             wheel.anchoredPosition = new Vector2(Mathf.Round(p.x), Mathf.Round(p.y));
 
-            // hybrydy tylko, gdy są w worku nasion (z mutacji)
-            var crops = new List<CropDefinition>();
-            foreach (var cd in game.Crops.crops)
-                if (cd != null && (!cd.hybrid || game.Seeds.Count(cd.id) > 0))
-                    crops.Add(cd);
-            for (int i = 0; i < crops.Count; i++)
+            for (int i = 0; i < slots.Count; i++)
             {
-                var crop = crops[i];
-                float a = Mathf.PI / 2f - i * 2f * Mathf.PI / crops.Count;
-                var pos = new Vector2(Mathf.Round(Mathf.Cos(a) * Radius), Mathf.Round(Mathf.Sin(a) * Radius));
-                var img = Ui.Img(wheel, "Seed_" + crop.id, Ui.Theme.slot, true, true);
+                var slot = slots[i];
+                float a = Mathf.PI / 2f - i * 2f * Mathf.PI / slots.Count;
+                var pos = new Vector2(Mathf.Round(Mathf.Cos(a) * radius), Mathf.Round(Mathf.Sin(a) * radius));
+                var img = Ui.Img(wheel, "Seed_" + slot.icon, slot.selected ? Ui.Theme.slotSelected : Ui.Theme.slot, true, true);
                 Ui.Place(img.rectTransform, Ui.Center, Ui.Center, pos, new Vector2(18, 18));
                 var b = img.gameObject.AddComponent<Button>();
                 b.targetGraphic = img;
@@ -82,20 +144,18 @@ namespace Wyspa.UI
                 b.spriteState = new SpriteState { highlightedSprite = Ui.Theme.slotSelected, pressedSprite = Ui.Theme.slotSelected,
                                                   selectedSprite = Ui.Theme.slot, disabledSprite = Ui.Theme.slotLocked };
                 b.navigation = new Navigation { mode = Navigation.Mode.None };
-                var icon = Ui.Img(img.transform, "Icon", Ui.Theme.Icon(crop.SeedIcon), false);
+                var icon = Ui.Img(img.transform, "Icon", Ui.Theme.Icon(slot.icon), false);
                 Ui.Place(icon.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(12, 12));
-                int inBag = game.Seeds.Count(crop.id);
-                if (inBag > 0)
+                if (slot.count > 0)
                 {
                     var badge = Ui.Txt(img.transform, "Count", Ui.Theme.textGold, TextAlignmentOptions.BottomRight);
-                    badge.text = inBag.ToString();
+                    badge.text = slot.count.ToString();
                     Ui.Place(badge.rectTransform, Ui.BottomRight, Ui.BottomRight, new Vector2(1, -1), new Vector2(14, 10));
                 }
-                var c = crop;
-                b.onClick.AddListener(() => Plant(c));
+                b.onClick.AddListener(() => { slot.pick(); Close(); });
                 var hover = img.gameObject.AddComponent<HoverTip>();
-                hover.Init(tooltip, () => Describe(c));
-                buttons.Add((b, crop));
+                hover.Init(tooltip, slot.tip);
+                buttons.Add((b, slot.affordable));
             }
             var close = Ui.IconBtn(wheel, "Close", "close", new Vector2(16, 16), Close);
             Ui.Place((RectTransform)close.transform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(16, 16));
@@ -111,13 +171,14 @@ namespace Wyspa.UI
                 blocker.SetActive(false);
             tooltip.Hide(this);
             plot = null;
+            picker = null;
         }
 
         void Update()
         {
             if (!IsOpen)
                 return;
-            if (UiInput.RightPressed || UiInput.EscapePressed || plot == null || !plot.State.IsEmpty)
+            if (UiInput.RightPressed || UiInput.EscapePressed || (picker == null && (plot == null || !plot.State.IsEmpty)))
                 Close();
             else
                 RefreshAffordable();
@@ -125,23 +186,22 @@ namespace Wyspa.UI
 
         void RefreshAffordable()
         {
-            var game = GameLoop.Instance;
-            foreach (var (b, crop) in buttons)
-                b.interactable = game != null && (game.Seeds.Count(crop.id) > 0 || (!crop.hybrid && game.Wallet.Coins >= crop.seedPrice));
+            foreach (var (b, affordable) in buttons)
+                b.interactable = affordable == null || affordable();
         }
 
         void Plant(CropDefinition crop)
         {
+            var target = plot;
             var game = GameLoop.Instance;
             // najpierw worek nasion (za darmo), potem zakup za monety (hybryd nie da się kupić)
-            if (game != null && plot != null && plot.State.IsEmpty
+            if (game != null && target != null && target.State.IsEmpty
                 && (game.Seeds.TryTake(crop.id) || (!crop.hybrid && game.Wallet.TrySpend(crop.seedPrice))))
             {
-                plot.Replant(crop);
+                target.Replant(crop);
                 if (game.TakeFertilizer())
-                    plot.State.fertilized = true;   // nawóz idzie od razu do ziemi (+1 jakości)
+                    target.State.fertilized = true;   // nawóz idzie od razu do ziemi (+1 jakości)
             }
-            Close();
         }
 
         static string Describe(CropDefinition c)

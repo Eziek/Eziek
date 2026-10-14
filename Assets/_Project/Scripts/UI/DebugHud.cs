@@ -1,4 +1,5 @@
 using UnityEngine;
+using Wyspa.Automation;
 using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Farming;
@@ -90,17 +91,19 @@ namespace Wyspa.UI
             }
 
             var auto = game.Automation;
-            if (auto != null && auto.Crate != null)
+            if (auto != null)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label($"Skrzynia: {auto.Crate.Count}/{auto.Crate.Capacity}");
+                GUILayout.Label($"Skrzynie: {HarvestCrate.All.Count}, plonów {HarvestCrate.TotalCount()}");
                 if (GUILayout.Button("Sprzedaj"))
-                    auto.Crate.SellAll(wallet, game.Crops, 1f);
+                    foreach (var c in HarvestCrate.All.ToArray())
+                        c.SellAll(wallet, game.Crops, 1f);
                 GUILayout.EndHorizontal();
-                if (ups.Has(UpgradeIds.WispGardener) && auto.Wisp != null)
-                    GUILayout.Label($"Ognik: następny zbiór za {auto.Wisp.SecondsToNext(ups.Value(UpgradeIds.WispGardener, 30f)):0} s");
-                if (ups.Has(UpgradeIds.MerchantChest) && auto.MerchantChest != null)
-                    GUILayout.Label($"Kupiec: sprzedaż za {auto.MerchantChest.SecondsToNext(ups.Value(UpgradeIds.MerchantChest, 3600f)) / 60f:0} min");
+                if (GUILayout.Button("Odblokuj wszystkie nasiona"))
+                    game.DebugUnlockAll();
+                GUILayout.Label($"Ogniki: {WispGardener.All.Count}, duszki: {MerchantSpirit.All.Count}, runy: {SeedRune.All.Count}");
+                if (ups.Has(UpgradeIds.MerchantChest) && MerchantSpirit.All.Count > 0)
+                    GUILayout.Label($"Duszek: sprzedaż za {MerchantSpirit.All[0].SecondsToNext(ups.Value(UpgradeIds.MerchantChest, 3600f)) / 60f:0} min");
             }
             else
                 GUILayout.Label("(brak automatyki w scenie: Wyspa > 3)");
