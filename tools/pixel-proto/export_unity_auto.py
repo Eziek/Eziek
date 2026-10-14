@@ -46,6 +46,11 @@ for cid, fn in S6.CROPS_NIGHT.items():
     for st in (1, 2, 3):
         save(fn(st), "Crops", f"crop_{cid}_{st}")
 
+for cid, (fn, kind) in S6.HYBRIDS.items():   # hybrydy z mutacji
+    save(S3.night_seed() if kind == 'night' else sprites.seed(), "Crops", f"crop_{cid}_0")
+    for st in (1, 2, 3):
+        save(fn(st), "Crops", f"crop_{cid}_{st}")
+
 for f in range(4):
     save(S6.merchant_spirit(f), "Automation", f"merchant_spirit_{f}")
     save(S3.wisp_gardener(f, bob=False), "Automation", f"wisp_gardener_{f}")   # bez podskoku: płynny lot w kodzie

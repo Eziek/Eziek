@@ -176,3 +176,15 @@ wisp.name.8,Żagiew,Torch,Fackel,タイマツ,火把,imię ognika
 wisp.name.9,Pyłek,Mote,Stäubchen,チリ,尘尘,imię ognika
 wisp.name.10,Tlenik,Smoulder,Glimmi,クスブリ,闷烧,imię ognika
 wisp.name.11,Zorza,Aurora,Aurora,オーロラ,极光,imię ognika
+crop.wolfcarrot,Wilcza marchew,Wolf Carrot,Wolfsmöhre,オオカミニンジン,狼胡萝卜,hybryda: marchew + wilcza jagoda
+crop.ashwheat,Popielne zboże,Ashen Wheat,Aschweizen,灰の麦,灰烬麦,hybryda: zboże + trupi grzyb
+crop.moonpoppy,Księżycowy mak,Moon Poppy,Mondmohn,月のケシ,月光罂粟,hybryda: mak + księżycowy kwiat
+crop.screamgarlic,Wrzeszczący czosnek,Screaming Garlic,Schreiknoblauch,叫ぶニンニク,尖叫大蒜,hybryda: czosnek + mandragora
+crop.bloodwormwood,Krwawy piołun,Blood Wormwood,Blutwermut,血のニガヨモギ,血苦艾,"hybryda: piołun + krwawa róża, tylko pełnia"
+exp.wreck,"Wrak ""Czapli""",Wreck of the Heron,Wrack der Reiher,アオサギ号の難破船,苍鹭号残骸,cel wyprawy; Czapla = statek zaopatrzenia Łańcucha
+exp.reef,Kościana rafa,Bone Reef,Knochenriff,骨の礁,白骨礁,cel wyprawy
+exp.tower,Zatopiona latarnia,Drowned Lighthouse,Versunkener Leuchtturm,沈んだ灯台,沉没灯塔,cel wyprawy
+exp.graveyard,Cmentarzysko statków,Ship Graveyard,Schiffsfriedhof,船の墓場,船只坟场,cel wyprawy
+exp.heart,Serce mgły,Heart of the Fog,Herz des Nebels,霧の心臓,雾之心,"cel wyprawy, finał historii"
+term.keeper,Opiekun,Keeper,Hüter,守り人,守护人,lore: opiekun latarni (podpis O. / K. / H.)
+term.chain,Łańcuch Latarni,the Chain,die Kette,灯火の鎖,灯塔之链,lore: dawny łańcuch wysp z latarniami

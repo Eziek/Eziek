@@ -216,6 +216,31 @@
       "y": 0.05556
     },
     {
+      "name": "crop_ashwheat_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ashwheat_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ashwheat_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ashwheat_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_ashwheat_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
       "name": "crop_belladonna_0",
       "x": 0.52273,
       "y": 0.11538
@@ -257,6 +282,31 @@
     },
     {
       "name": "crop_bloodrose_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_bloodwormwood_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_bloodwormwood_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_bloodwormwood_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_bloodwormwood_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_bloodwormwood_3_glow",
       "x": 0.52273,
       "y": 0.11538
     },
@@ -446,6 +496,31 @@
       "y": 0.11538
     },
     {
+      "name": "crop_moonpoppy_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonpoppy_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonpoppy_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonpoppy_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_moonpoppy_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
       "name": "crop_poppy_0",
       "x": 0.52273,
       "y": 0.11538
@@ -486,6 +561,31 @@
       "y": 0.11538
     },
     {
+      "name": "crop_screamgarlic_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_screamgarlic_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_screamgarlic_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_screamgarlic_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_screamgarlic_3_glow",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
       "name": "crop_wheat_0",
       "x": 0.52273,
       "y": 0.11538
@@ -502,6 +602,31 @@
     },
     {
       "name": "crop_wheat_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wolfcarrot_0",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wolfcarrot_1",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wolfcarrot_2",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wolfcarrot_3",
+      "x": 0.52273,
+      "y": 0.11538
+    },
+    {
+      "name": "crop_wolfcarrot_3_glow",
       "x": 0.52273,
       "y": 0.11538
     },
@@ -1056,12 +1181,22 @@
       "y": 0.5
     },
     {
+      "name": "icon_seed_ashwheat",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_seed_belladonna",
       "x": 0.5,
       "y": 0.5
     },
     {
       "name": "icon_seed_bloodrose",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_bloodwormwood",
       "x": 0.5,
       "y": 0.5
     },
@@ -1106,6 +1241,11 @@
       "y": 0.5
     },
     {
+      "name": "icon_seed_moonpoppy",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_seed_poppy",
       "x": 0.5,
       "y": 0.5
@@ -1116,7 +1256,17 @@
       "y": 0.5
     },
     {
+      "name": "icon_seed_screamgarlic",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "icon_seed_wheat",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "icon_seed_wolfcarrot",
       "x": 0.5,
       "y": 0.5
     },

@@ -840,7 +840,6 @@ namespace Wyspa.UI
         int lorePage;
         static readonly string[] FishIds = { "normal", "glow" };
         static readonly string[] EventIds = { "wisp", "star", "merchant", "monster", "fullmoon" };
-        static readonly string[] LoreIds = { "lore.1", "lore.2", "lore.3", "lore.4", "lore.5", "lore.6", "lore.crypt", "lore.statue", "lore.stairs", "lore.monster" };
         // nagroda za ukończenie kategorii (punkty księżyca)
         static readonly int[] CategoryReward = { 2, 1, 2, 3 };
 
@@ -881,7 +880,7 @@ namespace Wyspa.UI
                     foreach (var e in EventIds) entries.Add(("event:" + e, Loc.Get("ui.event." + e)));
                     break;
                 default:
-                    foreach (var l in LoreIds) entries.Add(("lore:" + l, Loc.Get(l)));
+                    foreach (var l in Lore.LoreBook.All) entries.Add(("lore:" + l, Loc.Get(l)));
                     break;
             }
             int found = 0;

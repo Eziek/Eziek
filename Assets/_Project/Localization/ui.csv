@@ -99,8 +99,6 @@ ui.shop.boat.desc,Wyprawy w mgłę,Expeditions into the fog,Fahrten in den Nebel
 ui.shop.built,Zbudowano,Built,Gebaut,建設済み,已建造,
 ui.shop.needs_pier,Wymaga pomostu,Needs a pier,Benötigt einen Steg,桟橋が必要,需要栈桥,
 ui.boat.docked,Czeka przy pomoście,Waiting at the pier,Wartet am Steg,桟橋で待機中,在栈桥边等待,
-ui.boat.short,Krótka wyprawa ({0} h pracy),Short trip ({0} h of work),Kurze Fahrt ({0} Std. Arbeit),短い遠征（作業{0}時間）,短途远航（工作{0}小时）,h = godziny aktywnej pracy
-ui.boat.long,Długa wyprawa ({0} h pracy),Long trip ({0} h of work),Lange Fahrt ({0} Std. Arbeit),長い遠征（作業{0}時間）,长途远航（工作{0}小时）,
 ui.boat.away,W mgle: jeszcze {0:0.0} h pracy,In the fog: {0:0.0} h of work left,Im Nebel: noch {0:0.0} Std. Arbeit,霧の中：残り作業{0:0.0}時間,迷雾中：还需工作{0:0.0}小时,
 ui.boat.returned,Wróciła z łupem!,Back with loot!,Mit Beute zurück!,戦利品を持って帰ってきた！,满载而归！,
 ui.boat.unload,Rozładuj,Unload,Entladen,荷下ろし,卸货,
@@ -269,3 +267,10 @@ ui.rune.wild,"Wokół runy wyrastają dzikie drzewa, krzaki i kamienie","Wild tr
 ui.rune.next,Coś wyrośnie za {0},Something grows in {0},Nächstes Wachstum in {0},あと{0}で何かが生える,{0}后长出新东西,{0} = m:ss
 ui.rune.full,Wokół runy nie ma wolnego miejsca,No free space around the rune,Kein freier Platz um die Rune,ルーンの周りに空きがない,符文周围没有空地,
 ui.shop.nest.desc,"Dom 3 ogników, pole 7x7","Home for 3 wisps, 7x7 area","Heim für 3 Irrlichter, 7x7",鬼火3体の巣、7x7,3只鬼火的巢，7x7,
+ui.boat.choose,"Dokąd płyniemy? (godziny pracy, znalezione zapiski)","Where to? (hours of work, notes found)","Wohin? (Arbeitsstunden, gefundene Notizen)",どこへ行く？（作業時間・見つけた手記）,去哪里？（工作小时，已找到的手记）,
+ui.boat.dest,"{0} ({1:0.#} h, {2}/{3})","{0} ({1:0.#} h, {2}/{3})","{0} ({1:0.#} Std., {2}/{3})",{0}（{1:0.#}時間、{2}/{3}）,{0}（{1:0.#}小时，{2}/{3}）,"{0} cel, {1} godziny pracy, {2}/{3} zapiski"
+ui.boat.locked,{0}: za {1} {1:plural:wyprawę|wyprawy|wypraw},{0}: after {1} more {1:plural:trip|trips},{0}: noch {1} {1:plural:Fahrt|Fahrten},{0}：あと{1}回の遠征で解放,{0}：再远航{1}次解锁,
+ui.boat.locked_lore,{0}: przeczytaj zapiski z innych wypraw ({1}/{2}),{0}: read the notes from all other trips ({1}/{2}),{0}: lies die Notizen aller anderen Fahrten ({1}/{2}),{0}：他の遠征の手記をすべて読むこと（{1}/{2}）,{0}：读完其他远航的全部手记（{1}/{2}）,
+ui.boat.target,Cel: {0},Destination: {0},Ziel: {0},行き先：{0},目的地：{0},
+ui.loot.lore,Zapisek: {0},Note: {0},Notiz: {0},手記：{0},手记：{0},
+ui.seed.parents,Krzyżówka: {0} + {1},Cross: {0} + {1},Kreuzung: {0} + {1},交配：{0}＋{1},杂交：{0}＋{1},rodzice hybrydy

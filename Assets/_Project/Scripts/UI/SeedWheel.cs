@@ -250,6 +250,8 @@ namespace Wyspa.UI
                  + time;
             if (c.requiresFullMoon)
                 s += "\n" + Loc.Get("ui.seed.fullmoon");
+            if (c.hybrid && !string.IsNullOrEmpty(c.parentA))
+                s += "\n" + Loc.Get("ui.seed.parents", Loc.Get("crop." + c.parentA), Loc.Get("crop." + c.parentB));
             if (inBag > 0)
                 s += "\n" + Loc.Get("ui.seed.bag", inBag);
             if (game != null && game.Fertilizer > 0)

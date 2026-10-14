@@ -216,7 +216,19 @@ namespace Wyspa.UI
                 if (GUILayout.Button("Potwór")) events.SpawnMonster();
                 GUILayout.EndHorizontal();
             }
-            GUILayout.Label($"Worek: nawóz {game.Fertilizer}, hybrydy {game.Seeds.Count("hybridpumpkin")}");
+            int hybrids = 0;
+            if (game.Crops != null)
+                foreach (var c in game.Crops.crops)
+                    if (c != null && c.hybrid) hybrids += game.Seeds.Count(c.id);
+            GUILayout.Label($"Worek: nawóz {game.Fertilizer}, nasiona hybryd {hybrids}");
+            var boat = Island.Instance != null ? Island.Instance.Boat : null;
+            if (boat != null)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Wyprawa: wróć teraz")) boat.DebugFinish();
+                if (GUILayout.Button("Wyprawy +3 (cele)")) boat.DebugAddTrips(3);
+                GUILayout.EndHorizontal();
+            }
 
             var island = game.Island;
             if (island != null && island.Ready)

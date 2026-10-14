@@ -333,13 +333,13 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Krzywa cen kafelków: kwadratowa, mocniejsza od 6d (§13.2).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
 - [ ] Progi rytmu pracy (seria 25 min, przerwa 5 min, zmęczenie 8 h/10 h) do sprawdzenia w praktyce.
-- [ ] Mutacje: które pary roślin dają które hybrydy. Na razie jedna para: dynia + upiorna dynia = dynia-upiór (dane w `CropDefinition.parentA/B`).
+- [x] Mutacje (wybór gracza: 5 nowych hybryd, razem 6): pary w §11.3 D (dane w `CropDefinition.parentA/B`, `WyspaSetup.CropSpecs`).
 - [x] Nasiona spoza sklepu (hybrydy, kupiec-widmo, wyprawy) trafiają do **worka nasion**; koło nasion najpierw bierze z worka.
 - [x] Nawóz (+1 jakości) na razie tylko od kupca-widma i z wypraw, zużywany automatycznie przy sadzeniu. Kompostownik później.
 - [x] Bonus ruin: na razie brak (ruiny mają miejsce na ołtarz, Etap 5b/5c).
 - [x] Budowle morskie kosztują monety + drewno: pomost 300 + 10, sieci 150 + 5, łódź 600 + 15 (do balansu).
-- [ ] Tabela łupów wypraw łodzią.
-- [ ] Treść lore (historia wyspy, mgły, potwora).
+- [x] Wyprawy łodzią (wybór gracza): **cele wypraw** zamiast krótkiej/długiej, każdy z własną tabelą łupów i zapiskami (§11.3 F).
+- [x] Lore (wybór gracza): historia **„Ostatnia latarnia”** (§11.3 H), 33 zapiski odkrywane po kolei w każdym źródle.
 - [x] Punkty księżyca (Etap 5c): przy nowiu cykl daje plony/10 + plony nocy/5 + ryby/5 + zdarzenia/3 + kafelki/10, maks. 12;
   pełna strona bestiariusza daje jednorazowo 2 / 1 / 2 / 3 pkt (rośliny / ryby / zjawy / zapiski). Liczby do balansu.
 - [x] Pierwsze rytuały (jednorazowe, na zawsze): Zmierzchowe ziarno (rośliny nocy rosną o zmierzchu, 2 pkt + 3 odłamki),
@@ -565,6 +565,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     wokół), sianie przejął siewca. Kocioł: przepis dla alchemika. Zapis v12, stare ogniki stają się gniazdami z ogrodnikiem.
 59. Skala UI od rozdzielczości monitora zamiast od powiększenia okna (pasek HUD i karteczki nie rosną z x6),
     nowa opcja „Rozmiar interfejsu” (auto, x1-x4).
+60. Treść: 5 nowych hybryd (wilcza marchew, popielne zboże, księżycowy mak, wrzeszczący czosnek, krwawy piołun), cele wypraw
+    z tabelami łupów (wrak, rafa, zatopiona latarnia, cmentarzysko statków, Serce mgły), historia „Ostatnia latarnia”
+    (33 zapiski po kolei). Zapis v13 (cel wyprawy, liczba wypraw).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -696,7 +699,11 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 **D. Rośliny**
 - Kolejne nasiona dnia i nocy (sklep i kupiec-widmo).
 - **Mutacje:** przy zbiorze, jeśli sąsiednia grządka (4 kierunki) ma inną roślinę, jest 3% szansy na nasiono hybrydy
-  (np. dynia-upiór). Hybrydy wyglądają inaczej i są droższe.
+  (np. dynia-upiór). Hybrydy wyglądają inaczej i są droższe. Pary (rodzice → hybryda, cena sprzedaży):
+  dynia + upiorna dynia → dynia-upiór (noc, 150); marchew + wilcza jagoda → wilcza marchew (dzień, 55);
+  zboże + trupi grzyb → popielne zboże (dzień, 70); mak + księżycowy kwiat → księżycowy mak (noc, 160);
+  czosnek + mandragora → wrzeszczący czosnek (noc, 220); piołun + krwawa róża → krwawy piołun (tylko pełnia, 450).
+  Hybryd nie da się kupić w sklepie: mutacja, kupiec-widmo (losowa hybryda) albo wyprawy. Dymek nasiona pokazuje rodziców.
 - **Jakość 1–3 gwiazdki:** baza 1, +1 za nawóz, +1 za wzrost w świetle ognika. Cena ×1 / ×1.5 / ×2.5. Kupiec składa zamówienia na jakość.
 
 **E. Automatyzacja (kamienie milowe, bez niej gra przeszkadza w pracy)**
@@ -730,8 +737,17 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 
 **F. Morze**
 - **Pomost** (400 monet): łowienie (klik w rybę przy brzegu).
-- **Łódź i wyprawy** (800 monet): łódź płynie w mgłę na N godzin **aktywnej pracy** (np. 4 h) i wraca z nasionami, surowcami
-  i fragmentami lore. Jedna wyprawa naraz, a ulepszenia łodzi skracają czas i powiększają ładownię.
+- **Łódź i wyprawy** (800 monet): łódź płynie w mgłę na N godzin **aktywnej pracy** i wraca z łupem. Jedna wyprawa naraz.
+  **Cele wypraw** (wybór gracza; dane w `Sea/Destinations.cs`): każda wyprawa daje kolejny zapisek z tego miejsca i 2-6 losowań
+  z tabeli celu (wagi), dalekie cele jeszcze jedno rzadkie (odłamek albo hybryda).
+  | Cel | Czas | Odblokowanie | Łup (główne) |
+  |---|---|---|---|
+  | Wrak „Czapli” | 2 h | od początku | drewno, monety, nawóz |
+  | Kościana rafa | 2 h | 1 wyprawa | kamień, nasiona nocy, nawóz |
+  | Zatopiona latarnia | 3 h | 3 wyprawy | odłamki, monety, kamień, rzadko hybryda |
+  | Cmentarzysko statków | 4 h | 5 wypraw | drewno, monety, odłamki, hybrydy (+ rzadkie) |
+  | Serce mgły | 6 h | wszystkie zapiski z 4 celów | odłamki, hybrydy, monety (+ rzadkie) |
+  Rytuał „Pamięć przypływu” skraca wszystkie o 25%. Nowy cel ogłasza toast.
 - **Ołtarz ofiarny na brzegu:** wymiana z potworem.
 
 **G. Rytuały i księżyc (późna gra)**
@@ -742,6 +758,13 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 **H. Kolekcje i lore**
 - **Bestiariusz:** ryby, rośliny, hybrydy, zdarzenia, potwór. Ukończenie kategorii daje nagrody.
 - **Lore z wypraw i wraków** stopniowo odsłania historię wyspy, mgły i potwora (narracja bez postaci i dialogów).
+  **„Ostatnia latarnia”** (wybór gracza; `Lore/LoreBook.cs`, teksty `lore.*` w game.csv). Świat zjadła mgła. Kiedyś trzymał ją
+  w ryzach **Łańcuch Latarni**: wyspy, których lampy palą się od pracy opiekunów (stąd Esencja z pracy gracza). Latarnie gasły
+  jedna po drugiej. Wyspa gracza jest ostatnia. Poprzedni **Opiekun** (podpis „O.”) zostawił zapiski i popłynął w mgłę.
+  Na końcu okazuje się, że potwór-oko to **Pierwszy Opiekun**: od stu lat trzyma mgłę na dnie. Lampy dają mu siłę, a ofiary
+  na ołtarzu są dla niego łykiem powietrza. Poprzedni Opiekun został z nim („Pal światło, a my utrzymamy resztę”).
+  Źródła (w każdym zapiski po kolei): Opiekun 8 (znaleziska na kafelkach, nagrobki), zabytki 3 i oko 1,
+  wrak 4, rafa 4, zatopiona latarnia 4, cmentarzysko 4, Serce mgły 5. Razem 33 na stronie Zapiski w bestiariuszu.
 
 **I. Wygoda (opcje, nie sklep)**
 - Okno: przezroczyste, zawsze na wierzchu, przyklejone do rogu ekranu, mini-tryb.

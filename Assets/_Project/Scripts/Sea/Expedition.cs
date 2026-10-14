@@ -18,20 +18,21 @@ namespace Wyspa.Sea
         public int state;          // 0 przy pomoście, 1 w drodze, 2 wróciła z łupem
         public float progress;     // sekundy aktywnej pracy
         public float need;
-        public bool longTrip;
+        public bool longTrip;      // zapisy sprzed celów wypraw
+        public string dest;        // v13: cel wyprawy (Destinations)
+        public int trips;          // v13: odbyte wyprawy (odblokowują kolejne cele)
     }
 
     /// <summary>
-    /// Łódź i wyprawy (GDD §11.3 F): łódź płynie w mgłę na N godzin AKTYWNEJ pracy i wraca z łupem
-    /// (nasiona, drewno, kamień, monety, czasem odłamek gwiazdy, fragment lore albo nasiono hybrydy). Jedna wyprawa naraz.
+    /// Łódź i wyprawy (GDD §11.3 F): łódź płynie w mgłę na N godzin AKTYWNEJ pracy i wraca z łupem. Gracz wybiera cel
+    /// (wrak, rafa, zatopiona latarnia, cmentarzysko statków, Serce mgły): każdy ma własny czas, tabelę łupów i zapiski lore
+    /// (jeden nowy na wyprawę, po kolei). Jedna wyprawa naraz.
     /// </summary>
     public class Expedition : MonoBehaviour, IClickable, IContextActions
     {
-        public const float BaseShortHours = 2f, BaseLongHours = 4f;
         /// <summary>Rytuał „Pamięć przypływu”: wyprawy krótsze.</summary>
         public static float DurationMultiplier = 1f;
-        public static float ShortHours => BaseShortHours * DurationMultiplier;
-        public static float LongHours => BaseLongHours * DurationMultiplier;
+        public static float Hours(Destination d) => d.hours * DurationMultiplier;
         const float Ppu = 16f;
 
         enum State { Docked, Away, Returned }
@@ -42,8 +43,11 @@ namespace Wyspa.Sea
         Vector3 dock;
         State state;
         float progress, need;
-        bool longTrip;
+        string dest;
+        int trips;
         bool animating;
+
+        Destination Current => Destinations.Find(dest) ?? Destinations.All[0];
 
         public void Init(SpriteRenderer bodyRenderer, SpriteRenderer glowRenderer, Collider2D area)
         {
@@ -54,7 +58,7 @@ namespace Wyspa.Sea
             Show(true);
         }
 
-        public ExpeditionSave Snapshot() => new ExpeditionSave { state = (int)state, progress = progress, need = need, longTrip = longTrip };
+        public ExpeditionSave Snapshot() => new ExpeditionSave { state = (int)state, progress = progress, need = need, dest = dest, trips = trips };
 
         public void Restore(ExpeditionSave s)
         {
@@ -63,7 +67,8 @@ namespace Wyspa.Sea
             state = (State)Mathf.Clamp(s.state, 0, 2);
             progress = s.progress;
             need = s.need;
-            longTrip = s.longTrip;
+            dest = !string.IsNullOrEmpty(s.dest) ? s.dest : (s.longTrip ? "graveyard" : "wreck");   // zapis sprzed celów
+            trips = Mathf.Max(0, s.trips);
             Show(state != State.Away);
         }
 
@@ -81,6 +86,11 @@ namespace Wyspa.Sea
         {
             if (state != State.Away)
                 return;
+            if (progress >= need && !animating)
+            {
+                StartCoroutine(Return());
+                return;
+            }
             var game = GameLoop.Instance;
             if (game == null || !game.Activity.IsActive)
                 return;
@@ -88,6 +98,16 @@ namespace Wyspa.Sea
             if (progress >= need && !animating)
                 StartCoroutine(Return());
         }
+
+        /// <summary>Do testów (HUD debugowy): wyprawa w drodze wraca od razu.</summary>
+        public void DebugFinish()
+        {
+            if (state == State.Away)
+                progress = need;
+        }
+
+        /// <summary>Do testów: odblokowanie celów (dolicza wyprawy).</summary>
+        public void DebugAddTrips(int n) => trips += n;
 
         public void OnClick()
         {
@@ -104,10 +124,24 @@ namespace Wyspa.Sea
             {
                 case State.Docked:
                     info.lines.Add(Loc.Get("ui.boat.docked"));
-                    info.Button(Loc.Get("ui.boat.short", ShortHours), () => Send(false));
-                    info.Button(Loc.Get("ui.boat.long", LongHours), () => Send(true));
+                    info.lines.Add(Loc.Get("ui.boat.choose"));
+                    foreach (var d in Destinations.All)
+                    {
+                        var target = d;
+                        if (Destinations.Unlocked(d, trips))
+                            info.Button(Loc.Get("ui.boat.dest", Loc.Get(d.NameKey), Hours(d), Lore.LoreBook.FoundIn(d.lore), d.lore.Length),
+                                        () => Send(target));
+                        else if (d.needsAllLore)
+                        {
+                            var (found, total) = Destinations.OtherLore();
+                            info.lines.Add(Loc.Get("ui.boat.locked_lore", Loc.Get(d.NameKey), found, total));
+                        }
+                        else
+                            info.lines.Add(Loc.Get("ui.boat.locked", Loc.Get(d.NameKey), d.minTrips - trips));
+                    }
                     break;
                 case State.Away:
+                    info.lines.Add(Loc.Get("ui.boat.target", Loc.Get(Current.NameKey)));
                     info.lines.Add(Loc.Get("ui.boat.away", Mathf.Max(0f, (need - progress) / 3600f)));
                     break;
                 case State.Returned:
@@ -117,12 +151,12 @@ namespace Wyspa.Sea
             }
         }
 
-        void Send(bool isLong)
+        void Send(Destination d)
         {
-            if (state != State.Docked || animating)
+            if (state != State.Docked || animating || d == null || !Destinations.Unlocked(d, trips))
                 return;
-            longTrip = isLong;
-            need = (isLong ? LongHours : ShortHours) * 3600f;
+            dest = d.id;
+            need = Hours(d) * 3600f;
             progress = 0f;
             state = State.Away;
             GameEvents.RaiseToast("toast.boat.sent");
@@ -169,11 +203,25 @@ namespace Wyspa.Sea
                 return;
             var summary = new LootSummary { anchor = transform.position + new Vector3(0f, 1.5f, 0f) };
             var rnd = new System.Random();
-            int rolls = longTrip ? rnd.Next(5, 7) : rnd.Next(2, 4);
+            var d = Current;
+            summary.title = Loc.Get(d.NameKey);
+            // zapisek z tego miejsca (po kolei), potem łup z tabeli celu
+            string lore = Lore.LoreBook.NextOf(d.lore);
+            if (lore != null)
+            {
+                Lore.Chronicle.Note("lore:" + lore);
+                summary.lines.Add(Loc.Get("ui.loot.lore", Loc.Get(lore)));
+            }
+            int rolls = rnd.Next(d.rollsMin, d.rollsMax + 1);
             for (int i = 0; i < rolls; i++)
-                Roll(game, rnd, summary, false);
-            if (longTrip)
-                Roll(game, rnd, summary, true);   // długa wyprawa: zawsze coś rzadkiego
+                Give(game, rnd, summary, Destinations.Roll(d, rnd, false));
+            if (d.rareRoll)
+                Give(game, rnd, summary, Destinations.Roll(d, rnd, true));   // daleka wyprawa: zawsze coś rzadkiego
+            var before = UnlockedSet();
+            trips++;
+            foreach (var n in Destinations.All)
+                if (!before.Contains(n) && Destinations.Unlocked(n, trips))
+                    GameEvents.RaiseToast("toast.boat.new_dest", Loc.Get(n.NameKey));
             state = State.Docked;
             progress = 0f;
             need = 0f;
@@ -182,48 +230,50 @@ namespace Wyspa.Sea
             GameEvents.RequestContext(summary);
         }
 
-        void Roll(GameLoop game, System.Random rnd, LootSummary s, bool rare)
+        HashSet<Destination> UnlockedSet()
         {
-            double v = rare ? 0.75 + rnd.NextDouble() * 0.25 : rnd.NextDouble();
+            var set = new HashSet<Destination>();
+            foreach (var n in Destinations.All)
+                if (Destinations.Unlocked(n, trips)) set.Add(n);
+            return set;
+        }
+
+        void Give(GameLoop game, System.Random rnd, LootSummary s, LootKind kind)
+        {
             var at = transform.position;
-            if (v < 0.22)
+            switch (kind)
             {
-                var seed = RandomNightSeed(game, rnd);
-                if (seed != null)
-                {
+                case LootKind.NightSeeds:
+                    var seed = RandomNightSeed(game, rnd);
+                    if (seed == null) goto case LootKind.Coins;
                     game.Seeds.Add(seed.id, 2);
                     s.lines.Add(Loc.Get("ui.loot.seeds", 2, Loc.Get("crop." + seed.id)));
-                    return;
-                }
+                    break;
+                case LootKind.Wood: Give(game, s, CurrencyType.Wood, rnd.Next(4, 9), at); break;
+                case LootKind.Stone: Give(game, s, CurrencyType.Stone, rnd.Next(3, 7), at); break;
+                case LootKind.Fertilizer:
+                    game.AddFertilizer(2);
+                    s.lines.Add(Loc.Get("ui.loot.fertilizer", 2));
+                    break;
+                case LootKind.Shard: Give(game, s, CurrencyType.StarShard, 1, at); break;
+                case LootKind.Hybrid:
+                    var hybrid = RandomHybrid(game, rnd);
+                    if (hybrid == null) goto case LootKind.Shard;
+                    game.Seeds.Add(hybrid.id, 1);
+                    s.lines.Add(Loc.Get("ui.loot.seeds", 1, Loc.Get("crop." + hybrid.id)));
+                    break;
+                case LootKind.Coins:
+                default: Give(game, s, CurrencyType.Coins, rnd.Next(40, 121), at); break;
             }
-            if (v < 0.40) { Give(game, s, CurrencyType.Wood, rnd.Next(4, 9), at); return; }
-            if (v < 0.55) { Give(game, s, CurrencyType.Stone, rnd.Next(3, 7), at); return; }
-            if (v < 0.70) { Give(game, s, CurrencyType.Coins, rnd.Next(40, 121), at); return; }
-            if (v < 0.78)
-            {
-                game.AddFertilizer(2);
-                s.lines.Add(Loc.Get("ui.loot.fertilizer", 2));
-                return;
-            }
-            if (v < 0.88) { Give(game, s, CurrencyType.StarShard, 1, at); return; }
-            if (v < 0.95)
-            {
-                string key = "lore." + rnd.Next(1, 7);
-                Lore.Chronicle.Note("lore:" + key);
-                s.lines.Add(Loc.Get(key));
-                return;
-            }
-            CropDefinition hybrid = null;
+        }
+
+        public static CropDefinition RandomHybrid(GameLoop game, System.Random rnd)
+        {
+            var list = new List<CropDefinition>();
             if (game.Crops != null)
                 foreach (var c in game.Crops.crops)
-                    if (c != null && c.hybrid) hybrid = c;
-            if (hybrid != null)
-            {
-                game.Seeds.Add(hybrid.id, 1);
-                s.lines.Add(Loc.Get("ui.loot.seeds", 1, Loc.Get("crop." + hybrid.id)));
-            }
-            else
-                Give(game, s, CurrencyType.StarShard, 1, at);
+                    if (c != null && c.hybrid) list.Add(c);
+            return list.Count > 0 ? list[rnd.Next(list.Count)] : null;
         }
 
         static CropDefinition RandomNightSeed(GameLoop game, System.Random rnd)
@@ -247,11 +297,12 @@ namespace Wyspa.Sea
         class LootSummary : IContextActions
         {
             public Vector3 anchor;
+            public string title;
             public readonly List<string> lines = new List<string>();
 
             public void FillContext(ContextInfo info)
             {
-                info.title = Loc.Get("ui.loot.title");
+                info.title = title ?? Loc.Get("ui.loot.title");
                 info.worldAnchor = anchor;
                 info.lines.AddRange(lines);
             }

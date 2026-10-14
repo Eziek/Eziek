@@ -183,12 +183,12 @@ namespace Wyspa.Sea
         {
             var rnd = new WRandom(seed);
             var night = new System.Collections.Generic.List<CropDefinition>();
-            CropDefinition hybrid = null;
+            var hybrids = new System.Collections.Generic.List<CropDefinition>();
             if (game.Crops != null)
                 foreach (var c in game.Crops.crops)
                 {
                     if (c == null) continue;
-                    if (c.hybrid) hybrid = c;
+                    if (c.hybrid) hybrids.Add(c);
                     else if (c.kind == CropKind.Night && !c.requiresFullMoon) night.Add(c);
                 }
             var list = new System.Collections.Generic.List<Offer>();
@@ -211,13 +211,13 @@ namespace Wyspa.Sea
                 coins = 30, night = 1,
                 give = () => game.AddFertilizer(3),
             });
-            if (hybrid != null && rnd.Value() < 0.35)
+            if (hybrids.Count > 0 && rnd.Value() < 0.35)
             {
-                var h = hybrid;
+                var h = hybrids[rnd.Range(0, hybrids.Count)];
                 list.Add(new Offer
                 {
                     label = Loc.Get("ui.merchant.hybrid", Loc.Get("crop." + h.id)),
-                    coins = 120, night = 3,
+                    coins = Mathf.Max(120, h.sellPrice), night = 3,
                     give = () => game.Seeds.Add(h.id, 1),
                 });
             }

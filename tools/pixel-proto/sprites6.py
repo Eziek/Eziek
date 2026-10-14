@@ -123,6 +123,66 @@ CROPS_DAY = {'garlic': garlic, 'poppy': poppy, 'wormwood': wormwood}
 CROPS_NIGHT = {'mandrake': mandrake, 'belladonna': belladonna, 'graveivy': grave_ivy}
 
 
+# ---------------- hybrydy (mutacje): kolory rodziców, faza 3 z własnym akcentem ----------------
+import copy
+
+TO_NIGHT = {'g0': 'p0', 'g1': 'b1', 'g2': 'b2', 'g3': 'b3'}
+TO_ASH = {'g0': 'p0', 'g1': 'b1', 'g2': 'b3', 'g3': 'fo', 'go': 'b3', 'cr': 'fo'}
+TO_WOLF = {'g1': 'g0', 'g2': 'g1', 'g3': 'g2', 'p2': 'p1', 'co': 'p2', 'or': 'mu', 'go': 'ml'}
+TO_MOON = {'g0': 'p0', 'g1': 'b1', 'g2': 'b2', 'g3': 'b3', 'p2': 'fo', 'co': 'cr'}
+TO_BLOOD = {'g1': 'p1', 'b3': 'p2', 'fo': 'co', 'go': 'fx'}
+
+
+def recolor(spr, mapping):
+    out = copy.deepcopy(spr)
+    out.px = {p: mapping.get(k, k) for p, k in spr.px.items()}
+    return out
+
+
+def moon_poppy(stage):
+    """Księżycowy mak (mak + księżycowy kwiat): blade płatki, środek świeci."""
+    s = recolor(poppy(stage), TO_MOON)
+    if stage == 3:
+        s.set(9, 7, 'wl'); s.set(8, 7, 'wi'); s.set(10, 7, 'wi')
+    return s
+
+
+def ash_wheat(stage):
+    """Popielne zboże (zboże + trupi grzyb): szare kłosy z żarzącymi się końcami."""
+    s = recolor(sprites.wheat(stage), TO_ASH)
+    if stage == 3:
+        for p in sorted((p for p, k in s.px.items() if k != 'o'), key=lambda p: p[1])[:6]:
+            s.px[p] = 'fx'                                    # px ma już przesunięcie, więc bez set()
+    return s
+
+
+def wolf_carrot(stage):
+    """Wilcza marchew (marchew + wilcza jagoda): ciemna nać, fioletowy korzeń z jagodą."""
+    s = recolor(sprites.carrot(stage), TO_WOLF)
+    if stage == 3:
+        s.set(9, 5, 'ml'); s.set(5, 7, 'ml')
+    return s
+
+
+def scream_garlic(stage):
+    """Wrzeszczący czosnek (czosnek + mandragora): główka z otwartymi ustami i świecącymi oczami."""
+    s = recolor(garlic(stage), TO_NIGHT)
+    if stage == 3:
+        s.set(8, 17, 'wi'); s.set(10, 17, 'wi'); s.set(9, 19, 'o')
+    return s
+
+
+def blood_wormwood(stage):
+    """Krwawy piołun (piołun + krwawa róża, tylko w pełnię): czerwone pióra z rozżarzonymi kwiatkami."""
+    return recolor(wormwood(stage), TO_BLOOD)
+
+
+HYBRIDS = {
+    'moonpoppy': (moon_poppy, 'night'), 'ashwheat': (ash_wheat, 'day'), 'wolfcarrot': (wolf_carrot, 'day'),
+    'screamgarlic': (scream_garlic, 'night'), 'bloodwormwood': (blood_wormwood, 'night'),
+}
+
+
 # ---------------- duszek-handlarz ----------------
 def merchant_spirit(f):
     """Złoty duszek z sakiewką: lata do skrzyń i sprzedaje plony (Etap 6b)."""
@@ -150,6 +210,11 @@ SEED_SYMBOLS = {
     'mandrake': [".m.m.", "..m..", ".jhj.", "jWhWj", ".h.h."],
     'belladonna': [".1U1.", "1UMU1", ".1U1.", "..k..", ".kk.."],
     'graveivy': ["..W..", ".WhW.", "..h..", ".WhW.", "..h.."],
+    'moonpoppy': [".z.z.", "zWzWz", ".z.z.", "..d..", ".dd.."],
+    'ashwheat': ["..X..", ".sXs.", "..s..", ".sss.", "..b.."],
+    'wolfcarrot': ["...MU", "..3U.", ".33..", "32...", "2...."],
+    'screamgarlic': [".d.d.", "..d..", ".www.", "wWoWw", ".www."],
+    'bloodwormwood': ["3.X.3", ".3c3.", "..3..", ".3k3.", "..k.."],
 }
 
 

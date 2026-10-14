@@ -55,6 +55,17 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
    (imiona, poziomy), tryb siewcy i przepis alchemika.
 9. Przeniesienie gniazda: ogniki wracają do nowego miejsca; rozbiórka: ogniki znikają, niesione plony trafiają do skrzyni.
 
+## 4b. Hybrydy, wyprawy, zapiski
+1. Wyspa → 2 (nowe rośliny). F1 → „Mutacje zawsze”: posadź obok siebie marchew i wilczą jagodę, zbierz: toast mutacji,
+   w worku „Wilcza marchew”. Dymek nasiona w kole: „Krzyżówka: Marchew + Wilcza jagoda”. Sprawdź wygląd 4 faz każdej hybrydy.
+2. Łódź: panel pokazuje „Dokąd płyniemy?”, dostępny tylko wrak, reszta z liczbą wypraw do odblokowania.
+3. Wyślij na wrak, F1 → „Wyprawa: wróć teraz” → Rozładuj: tytuł panelu to nazwa celu, pierwsza linia „Zapisek: ...”, potem łup.
+   Toast „Nowy cel wypraw: Kościana rafa”.
+4. F1 → „Wyprawy +3 (cele)”: odblokowuje latarnię i cmentarzysko. Serce mgły: linia z licznikiem zapisków (np. 2/16).
+5. Bestiariusz → Zapiski: zapiski w kolejności, 4 na stronę, strzałki stron. Nowe znaleziska „lore” na kafelkach dają
+   zapiski Opiekuna po kolei (1, 2, 3...).
+6. Stary zapis z łodzią w drodze: po wczytaniu wyprawa trwa dalej (cel: wrak albo cmentarzysko dla dawnej długiej).
+
 ## 5. Zamówienia i chowańce
 1. Przy karteczce „gotowe” zaczynają przychodzić zamówienia (toast „Nowa karteczka na tablicy”); po ok. 20 s karteczka
    wprowadzenia znika. Klik w tablicę: lista (kto, czego ile, cykle, nagroda). F1 → „Zamówienie teraz” dokłada kolejną.

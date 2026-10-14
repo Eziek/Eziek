@@ -76,6 +76,17 @@ namespace Wyspa.EditorTools
             // hybryda (Etap 4a): nasiona tylko z mutacji dyni i upiornej dyni na sąsiednich grządkach
             new CropSpec { id = "hybridpumpkin", name = "Dynia-upiór", sprite = "crop_hybridpumpkin", kind = CropKind.Night, seconds = 2400, seed = 0, sell = 150,
                            hybrid = true, parentA = "pumpkin", parentB = "ghostpumpkin", seedIcon = "seed_hybrid" },
+            // hybrydy z mutacji (treść: 5 nowych par, część dnia, krwawy piołun tylko w pełnię); ikony nasion icon_seed_<id>
+            new CropSpec { id = "wolfcarrot", name = "Wilcza marchew", sprite = "crop_wolfcarrot", kind = CropKind.Day, seconds = 400, seed = 0, sell = 55,
+                           hybrid = true, parentA = "carrot", parentB = "belladonna" },
+            new CropSpec { id = "ashwheat", name = "Popielne zboże", sprite = "crop_ashwheat", kind = CropKind.Day, seconds = 600, seed = 0, sell = 70,
+                           hybrid = true, parentA = "wheat", parentB = "corpseshroom" },
+            new CropSpec { id = "moonpoppy", name = "Księżycowy mak", sprite = "crop_moonpoppy", kind = CropKind.Night, seconds = 1800, seed = 0, sell = 160,
+                           hybrid = true, parentA = "poppy", parentB = "moonflower" },
+            new CropSpec { id = "screamgarlic", name = "Wrzeszczący czosnek", sprite = "crop_screamgarlic", kind = CropKind.Night, seconds = 2400, seed = 0, sell = 220,
+                           hybrid = true, parentA = "garlic", parentB = "mandrake" },
+            new CropSpec { id = "bloodwormwood", name = "Krwawy piołun", sprite = "crop_bloodwormwood", kind = CropKind.Night, seconds = 1200, seed = 0, sell = 450,
+                           fullMoon = true, hybrid = true, parentA = "wormwood", parentB = "bloodrose" },
         };
 
         struct UpgradeSpec

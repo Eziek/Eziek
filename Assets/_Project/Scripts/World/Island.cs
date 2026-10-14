@@ -819,8 +819,7 @@ namespace Wyspa.World
                     GameEvents.RaiseToast("toast.find.shard");
                     break;
                 case FindKind.Lore:
-                    string loreKey = "lore." + (1 + h % 6);
-                    Lore.Chronicle.Note("lore:" + loreKey);
+                    string loreKey = Lore.LoreBook.TakeKeeper();   // zapiski Opiekuna po kolei
                     GameEvents.RaiseToast("toast.find.lore", Localization.Loc.Get(loreKey));
                     break;
                 case FindKind.Spring:
@@ -974,8 +973,7 @@ namespace Wyspa.World
             GameEvents.RaiseCurrencyGained(at, a.reward, a.rewardAmount);
             if (a.bonusLore && UnityEngine.Random.value < a.bonusChance)
             {
-                string loreKey = "lore." + UnityEngine.Random.Range(1, 7);
-                Lore.Chronicle.Note("lore:" + loreKey);
+                string loreKey = Lore.LoreBook.TakeKeeper();
                 GameEvents.RaiseToast("toast.find.lore", Localization.Loc.Get(loreKey));
             }
             else if (a.bonusAmount > 0 && UnityEngine.Random.value < a.bonusChance)
@@ -1076,6 +1074,7 @@ namespace Wyspa.World
         public Sea.Pier PierObject => pier;
         public bool HasNets => nets != null;
         public bool HasBoat => boat != null;
+        public Sea.Expedition Boat => boat;
 
         /// <summary>Łódź przy końcu pomostu (wyprawy, Etap 4d).</summary>
         public bool BuildBoat()

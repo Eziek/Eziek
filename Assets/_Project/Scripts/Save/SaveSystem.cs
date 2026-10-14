@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 12;  // v12: rój ogników (gniazda, runy dziczy), v11: chowańce (v10: kocioł i mikstury, v9: zamówienia, v8: wprowadzenie)
+        public int version = 13;  // v13: cele wypraw i liczba wypraw, v12: rój ogników (gniazda, runy dziczy), v11: chowańce (v10: kocioł i mikstury, v9: zamówienia, v8: wprowadzenie)
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
