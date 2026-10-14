@@ -172,7 +172,7 @@ namespace TMPro
     {
         public string text; public TMP_FontAsset font; public float fontSize; public TextAlignmentOptions alignment;
         public TextWrappingModes textWrappingMode; public TextOverflowModes overflowMode; public bool richText;
-        public Vector2 GetPreferredValues(string text) => default; public Vector2 GetPreferredValues(string text, float width, float height) => default;
+        public Vector2 GetPreferredValues(string text) => default; public Vector2 GetPreferredValues(string text, float width, float height) => default; public void ForceMeshUpdate() { }
     }
     public class TextMeshProUGUI : TMP_Text { }
 }

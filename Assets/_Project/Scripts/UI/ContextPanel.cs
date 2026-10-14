@@ -53,9 +53,10 @@ namespace Wyspa.UI
                 info.Button(Loc.Get("act.move"), () => startMove(obj));
             target = what;
             anchor = info.worldAnchor;
-            Build(info);
+            // najpierw aktywny: TextMeshPro źle mierzy teksty na nieaktywnych obiektach (za wąskie przyciski)
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();
+            Build(info);
             Follow();
         }
 
@@ -73,55 +74,78 @@ namespace Wyspa.UI
             var t = Ui.Theme;
             var img = Ui.Img(blocker.transform, "Context", t.tooltip, true, true);   // raycast: klik w panel go nie zamyka
             panel = img.rectTransform;
-            float y = 4, w = 40;
-            var texts = new List<(TextMeshProUGUI tmp, float y)>();
-            void Line(string s, Color c)
+            // najszerszy panel mieści się w oknie; dłuższe napisy łamią się na kilka linii
+            float maxW = Mathf.Max(80f, canvasRect.rect.width - 20f);
+            float w = 40;
+            var texts = new List<TextMeshProUGUI>();
+            var buttons = new List<(Button b, TextMeshProUGUI label, float w)>();
+
+            TextMeshProUGUI Measure(TextMeshProUGUI tx, string s, float pad)
             {
-                var tx = Ui.Txt(panel, "Line", c);
                 tx.text = s;
-                w = Mathf.Max(w, Ui.Width(tx));
-                texts.Add((tx, y));
-                y += 10;
+                tx.ForceMeshUpdate();
+                w = Mathf.Max(w, Mathf.Min(maxW, Ui.Width(tx) + pad));
+                return tx;
             }
+
             if (!string.IsNullOrEmpty(info.title))
-                Line(info.title, t.textGold);
+                texts.Add(Measure(Ui.Txt(panel, "Title", t.textGold), info.title, 0));
             foreach (var l in info.lines)
-                Line(l, t.textLight);
-            float bx = 0;
-            var buttons = new List<(Button b, float w)>();
+                texts.Add(Measure(Ui.Txt(panel, "Line", t.textLight), l, 0));
+            float rowW = -4;
             foreach (var cb in info.buttons)
             {
                 var c = cb;
                 var b = Ui.Btn(panel, "Button", () => { c.action?.Invoke(); Close(); });
                 var label = Ui.Txt(b.transform, "Text", t.textLight, TextAlignmentOptions.Center);
                 label.text = c.label;
-                float bw = Mathf.Max(30f, Ui.Width(label) + 10f);
-                Ui.Stretch(label.rectTransform);
+                label.ForceMeshUpdate();
+                float bw = Mathf.Min(maxW, Mathf.Max(30f, Ui.Width(label) + 10f));
                 b.interactable = c.enabled;
-                buttons.Add((b, bw));
-                bx += bw + 4;
+                buttons.Add((b, label, bw));
+                rowW += bw + 4;
+                if (info.verticalButtons)
+                    w = Mathf.Max(w, bw);
+            }
+            if (!info.verticalButtons && buttons.Count > 0)
+                w = Mathf.Max(w, Mathf.Min(maxW, rowW));
+
+            // układ z góry na dół; teksty szersze niż panel łamią się (wysokość z TextMeshPro)
+            float y = 4;
+            foreach (var tx in texts)
+            {
+                float h = 10;
+                if (Ui.Width(tx) > w)
+                {
+                    tx.textWrappingMode = TextWrappingModes.Normal;
+                    h = Mathf.Ceil(tx.GetPreferredValues(tx.text, w, 0f).y);
+                }
+                Ui.Place(tx.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -y), new Vector2(w, h));
+                y += h;
             }
             if (buttons.Count > 0)
-            {
-                float widest = 0;
-                foreach (var (_, bw) in buttons)
-                    widest = Mathf.Max(widest, bw);
-                w = Mathf.Max(w, info.verticalButtons ? widest : bx - 4);
                 y += 2;
-            }
-            foreach (var (tmp, ty) in texts)
-                Ui.Place(tmp.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -ty), new Vector2(w, 10));
             float x = 5;
-            foreach (var (b, bw) in buttons)
+            foreach (var (b, label, bw) in buttons)
             {
+                float width = info.verticalButtons ? w : Mathf.Min(bw, w);
+                float h = 14;
+                if (Ui.Width(label) + 10f > width)
+                {
+                    label.textWrappingMode = TextWrappingModes.Normal;
+                    h = Mathf.Ceil(label.GetPreferredValues(label.text, width - 8f, 0f).y) + 4f;
+                }
+                Ui.Stretch(label.rectTransform, 0f);
+                label.rectTransform.offsetMin = new Vector2(4f, 0f);
+                label.rectTransform.offsetMax = new Vector2(-4f, 0f);
                 if (info.verticalButtons)
                 {
-                    Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -y), new Vector2(w, 14));
-                    y += 16;
+                    Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -y), new Vector2(width, h));
+                    y += h + 2;
                     continue;
                 }
-                Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, -y), new Vector2(bw, 14));
-                x += bw + 4;
+                Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, -y), new Vector2(width, h));
+                x += width + 4;
             }
             if (buttons.Count > 0 && !info.verticalButtons)
                 y += 14;
