@@ -99,6 +99,11 @@ namespace Wyspa.Automation
         float shinyTimer;
         bool warnedFull;
         Transform visual;           // sprite'y ognika (odsuwane od sąsiadów)
+        SpriteRenderer tool, toolFront, toolGlow;   // narzędzie zawodu (koszyk: tył + przód, rzeczy między nimi)
+        Sprite[] toolFrames, toolGlowFrames;
+        int toolPose;
+        float toolPoseUntil;
+        const float HandX = 5f / 16f, HandY = 9.5f / 16f;   // chwyt: prawy bok tułowia (sprite ognika 16x20, pivot u dołu)
         Vector3 nudge;
         WispBubble bubble;
         float chatCooldown;
@@ -216,6 +221,109 @@ namespace Wyspa.Automation
             StartCoroutine(Brain());
         }
 
+        // ------------------------------------------------------------ narzędzie zawodu
+
+        /// <summary>Narzędzie zawodu (nazwa plików tool_*, tools/pixel-proto/wisp_tools.py).</summary>
+        public static string ToolName(WispKind k)
+        {
+            switch (k)
+            {
+                case WispKind.Gardener: return "sickle";
+                case WispKind.Sower: return "seedbag";
+                case WispKind.Woodcutter: return "axepick";
+                case WispKind.Alchemist: return "flask";
+                case WispKind.Lamplighter: return "lantern";
+                default: return "basket";
+            }
+        }
+
+        bool HasBasket => kind == WispKind.Gatherer && toolFront != null;
+
+        /// <summary>
+        /// Narzędzie w dłoni: drwal siekiero-kilof, ogrodnik sierp, siewca worek nasion, alchemik fiolka, latarnik latarenka,
+        /// zbieracz koszyk (zebrane rzeczy leżą w nim). Bez grafiki (przed Wyspa → 2) ognik jest bez narzędzia.
+        /// </summary>
+        public void SetTool(Sprite[] frames, Sprite[] glowFrames, Material glowMaterial)
+        {
+            if (frames == null || frames.Length == 0 || frames[0] == null)
+                return;
+            toolFrames = frames;
+            toolGlowFrames = glowFrames;
+            var parent = visual != null ? visual : transform;
+            tool = NewPart("Tool", parent);
+            tool.sprite = frames[0];
+            if (kind == WispKind.Gatherer && frames.Length > 1 && frames[1] != null)
+            {
+                toolFront = NewPart("ToolFront", parent);
+                toolFront.sprite = frames[1];
+            }
+            if (glowFrames != null && glowFrames.Length > 0 && glowFrames[0] != null)
+            {
+                toolGlow = NewPart("ToolGlow", parent);
+                if (glowMaterial != null)
+                    toolGlow.sharedMaterial = glowMaterial;   // płomyk latarenki i wywar świecą też w nocy
+            }
+            if (carried.Count > 0)
+                ShowCarried();
+        }
+
+        static SpriteRenderer NewPart(string name, Transform parent)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = new Vector3(HandX, HandY, 0f);
+            return go.AddComponent<SpriteRenderer>();
+        }
+
+        /// <summary>Poza narzędzia na chwilę (uderzenie, zamach, sypanie nasion), potem wraca klatka 0.</summary>
+        void Pose(int frame, float seconds)
+        {
+            toolPose = frame;
+            toolPoseUntil = Time.unscaledTime + seconds;
+        }
+
+        void UpdateTool()
+        {
+            if (tool == null)
+                return;
+            bool flip = body != null && body.flipX;
+            int f;
+            if (kind == WispKind.Alchemist || kind == WispKind.Lamplighter)
+                f = Mathf.FloorToInt(Time.unscaledTime * (kind == WispKind.Lamplighter ? 6f : 3f) + seed) % 2;   // bulgotanie, migotanie
+            else if (kind == WispKind.Gatherer)
+                f = 0;
+            else
+                f = Time.unscaledTime < toolPoseUntil ? toolPose : 0;
+            if (!HasBasket && f < toolFrames.Length && toolFrames[f] != null)
+                tool.sprite = toolFrames[f];
+            var at = new Vector3(flip ? -HandX : HandX, HandY, 0f);
+            foreach (var part in new[] { tool, toolFront, toolGlow })
+            {
+                if (part == null)
+                    continue;
+                part.flipX = flip;
+                part.transform.localPosition = at;
+            }
+            if (HasBasket)
+            {
+                // rzeczy w koszyku idą za koszykiem, gdy ognik się obraca
+                int n = 0, count = 0;
+                foreach (var c in carriedSprites)
+                    if (c != null && c.enabled) count++;
+                foreach (var c in carriedSprites)
+                    if (c != null && c.enabled)
+                        c.transform.localPosition = new Vector3(at.x + (n++ - (count - 1) / 2f) * 2.5f / 16f, HandY - 4.5f / 16f, 0f);
+            }
+            tool.sortingOrder = 4402;
+            if (toolFront != null)
+                toolFront.sortingOrder = 4404;
+            if (toolGlow != null)
+            {
+                toolGlow.sortingOrder = 4405;
+                toolGlow.sprite = toolGlowFrames != null && f < toolGlowFrames.Length ? toolGlowFrames[f] : null;
+            }
+        }
+
         /// <summary>Świt (scenka): senny dymek z wielokropkiem i mruczenie (gdy akurat nic nie mówi).</summary>
         public void Yawn()
         {
@@ -272,7 +380,8 @@ namespace Wyspa.Automation
             if (body != null) body.sortingOrder = 4400;   // ogniki latają nad wyspą
             if (glow != null) glow.sortingOrder = 4401;
             foreach (var c in carriedSprites)
-                if (c != null) c.sortingOrder = 4399;
+                if (c != null) c.sortingOrder = HasBasket ? 4403 : 4399;   // w koszyku: między tyłem a przodem
+            UpdateTool();
             chatCooldown -= Time.unscaledDeltaTime;
             if (flying)
             {
@@ -677,6 +786,7 @@ namespace Wyspa.Automation
                 if (plot == null || !plot.State.IsRipe)
                     continue;
                 int quality = plot.State.Quality;
+                Pose(1, 0.25f);   // zamach sierpem
                 var crop = plot.HarvestSilently();
                 if (crop == null)
                     continue;
@@ -787,7 +897,19 @@ namespace Wyspa.Automation
                 if (!on)
                     continue;
                 carriedSprites[i].sprite = single != null ? single : carried[i].sprite;
-                carriedSprites[i].transform.localPosition = new Vector3((i - (count - 1) / 2f) * 0.35f, -0.15f, 0f);
+                if (HasBasket)
+                {
+                    // zbieracz: rzeczy leżą w koszyku (mniejsze, nad brzegiem), koszyk idzie za stroną, w którą patrzy ognik
+                    bool flip = body != null && body.flipX;
+                    float x = (flip ? -HandX : HandX) + (i - (count - 1) / 2f) * 2.5f / 16f;
+                    carriedSprites[i].transform.localScale = new Vector3(0.4f, 0.4f, 1f);
+                    carriedSprites[i].transform.localPosition = new Vector3(x, HandY - 4.5f / 16f, 0f);
+                }
+                else
+                {
+                    carriedSprites[i].transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+                    carriedSprites[i].transform.localPosition = new Vector3((i - (count - 1) / 2f) * 0.35f, -0.15f, 0f);
+                }
             }
         }
 
@@ -853,6 +975,7 @@ namespace Wyspa.Automation
                 }
                 if (!game.Seeds.TryTake(crop.id) && (crop.hybrid || !game.Wallet.TrySpend(Economy.Market.SeedPrice(crop))))
                     continue;
+                Pose(1, 0.5f);    // worek przechylony, nasiona się sypią
                 plot.Replant(crop);
                 AddXp(1);
                 left--;
@@ -886,6 +1009,7 @@ namespace Wyspa.Automation
             for (int i = 0; i < strikes && d != null && !d.Removing; i++)
             {
                 yield return Flight.Arc(transform, perch, hit, 7f, 0.05f);
+                Pose(1, 0.22f);   // siekiero-kilof spada na drzewo albo kamień
                 GameEvents.PlaySound("chop", 0.5f);
                 IslandFx.LeafBurst(hit, 2, 4000);
                 yield return Flight.Arc(transform, hit, perch, 4f, 0.05f);

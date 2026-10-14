@@ -243,3 +243,13 @@ Najpierw **Wyspa → 2** (motyw UI wczytuje nowe ikony `icon_gift_*`; bez tego d
 2. Tuż przed świtem (06:00): mgła na moment podchodzi pod sam brzeg i przez ok. 20 s się cofa; z drzew zrywa się kilka
    ptaków; ogniki pokazują dymki z „...” z sennym mruczeniem.
 3. Wczytanie gry w nocy albo rano: bez scenek (lampy od razu w swoim stanie). Przezroczyste okno: bez cofania się mgły.
+
+## 17. Narzędzia ogników
+Najpierw **Wyspa → 2** (grafiki narzędzi). Bez tego ogniki są bez narzędzi, jak wcześniej.
+1. Każdy zawód ma narzędzie z boku: drwal siekiero-kilof, ogrodnik sierp, siewca worek, alchemik fiolka, latarnik
+   latarenka, zbieracz koszyk. Narzędzie przechodzi na drugą stronę, gdy ognik leci w lewo.
+2. Drwal: przy każdym uderzeniu głowica opada (dźwięk „chop”). Ogrodnik: zamach sierpem przy zbiorze. Siewca: worek
+   przechyla się nad grządką przy sadzeniu.
+3. Zbieracz: zebrane owoce, odłamki gwiazd i monety z trawy leżą w koszyku (wystają nad brzeg), obracają się z koszykiem.
+4. Latarenka i fiolka świecą w nocy (piksele emisyjne), płomyk migocze, wywar bulgocze.
+5. Pogaduszki i odsuwanie się ogników działają jak wcześniej, narzędzia nie zasłaniają dymków.

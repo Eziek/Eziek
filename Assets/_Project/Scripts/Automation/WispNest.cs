@@ -108,6 +108,16 @@ namespace Wyspa.Automation
                 if (w != null) w.OnNestMoved();
         }
 
+        static WispKindArt KindArt(IslandArt art, WispKind kind)
+        {
+            if (art == null || art.wispKinds == null)
+                return null;
+            foreach (var k in art.wispKinds)
+                if (k != null && k.kind == kind)
+                    return k;
+            return null;
+        }
+
         public static Sprite[] FramesFor(IslandArt art, WispKind kind, bool glow)
         {
             if (art == null || art.wispKinds == null)
@@ -148,6 +158,9 @@ namespace Wyspa.Automation
             var w = go.AddComponent<Wisp>();
             w.Setup(kind, this, slot, string.IsNullOrEmpty(id) ? "w" + Guid.NewGuid().ToString("N").Substring(0, 8) : id, xp,
                     name >= 0 ? name : UnityEngine.Random.Range(0, Wisp.NameCount), b, g, frames, glows);
+            var ka = KindArt(art, kind);
+            if (ka != null)
+                w.SetTool(ka.tool, ka.toolGlow, art.glow);   // narzędzie zawodu w dłoni
             Visual.NightGlow.Add(go, new Vector2(0f, 0.6f), KindColor(kind), 1.4f, 0.55f);
             slots[w] = slot;
             wisps.Add(w);

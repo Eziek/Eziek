@@ -15,6 +15,9 @@ namespace Wyspa.World
         public Automation.WispKind kind;
         public Sprite[] frames;
         public Sprite[] glow;
+        /// <summary>Narzędzie zawodu: 2 klatki (koszyk zbieracza: tył i przód) i piksele emisyjne (tools/pixel-proto/wisp_tools.py).</summary>
+        public Sprite[] tool;
+        public Sprite[] toolGlow;
     }
 
     [Serializable]

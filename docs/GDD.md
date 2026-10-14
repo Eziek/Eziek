@@ -441,6 +441,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `mockups.py` | makiety UI (`out/ui_*.png`) i plik `WyspaPixel.ttf` |
 | `export_unity_ui.py` | eksport nowych sprite'ów, UI (z granicami 9-slice) i fontu do Unity (uruchamiać po `export_unity.py`) |
 | `export_unity_auto.py` | Etapy 6b-6d: nowe rośliny, duszki, ptaki, skrzynia 16 px, tablica ogłoszeń i strzałka wprowadzenia |
+| `wisp_tools.py` + `export_unity_wisp_tools.py` | narzędzia ogników (6 zawodów, po 2 klatki, pivot = chwyt) → `Automation/tool_*.png` |
 | `gift_icons.py` + `export_unity_gifts.py` | ikony 37 Darów Mgły (12 px) → `UI/Icons/icon_gift_<id>.png`, arkusz `docs/img/ikony_darow.png` |
 | `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
@@ -696,6 +697,12 @@ Obrazki referencyjne (kopie): `docs/img/`
     samym brzegiem i przez ok. 22 s cofa się na zwykłą odległość (nie w przezroczystym oknie), z koron drzew zrywa się
     2-4 ptaków, ogniki ziewają (dymek z wielokropkiem i senne mruczenie). Tylko przy zmianie pory w trakcie gry, nie przy
     wczytaniu i nie w scenkach rejsu. Kod: `Visual/DayTransitions.cs` (+ Lamp, FogController, AmbientBirds, AmbientLife, Wisp).
+87. **Narzędzia ogników** (prośba gracza): każdy zawód trzyma swoje narzędzie z boku tułowia (obraca się z ognikiem):
+    drwal siekiero-kilof (przy każdym uderzeniu w drzewo albo kamień opada), ogrodnik sierp (zamach przy zbiorze),
+    siewca worek nasion (przechyla się i sypie przy sadzeniu), alchemik fiolka (wywar bulgocze i świeci), latarnik
+    latarenka (płomyk migocze i świeci w nocy), zbieracz koszyk: zebrane rzeczy (owoce, odłamki, błyskotki) leżą w koszyku.
+    Grafika: `tools/pixel-proto/wisp_tools.py` + `export_unity_wisp_tools.py` → `Automation/tool_<nazwa>_<0|1>.png`
+    (pivot = chwyt), w Unity Wyspa → 2. Kod: `Wisp.SetTool`, `Wisp.Pose`.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

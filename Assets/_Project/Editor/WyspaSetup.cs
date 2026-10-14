@@ -634,7 +634,13 @@ namespace Wyspa.EditorTools
             foreach (Wyspa.Automation.WispKind k in System.Enum.GetValues(typeof(Wyspa.Automation.WispKind)))
             {
                 string n = k.ToString().ToLowerInvariant();
-                art.wispKinds.Add(new WispKindArt { kind = k, frames = Frames("wisp_" + n), glow = Frames("wisp_" + n, "_glow") });
+                string tool = Wyspa.Automation.Wisp.ToolName(k);
+                Sprite T(int f, string suffix = "") => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Automation/tool_{tool}_{f}{suffix}.png");
+                art.wispKinds.Add(new WispKindArt
+                {
+                    kind = k, frames = Frames("wisp_" + n), glow = Frames("wisp_" + n, "_glow"),
+                    tool = new[] { T(0), T(1) }, toolGlow = new[] { T(0, "_glow"), T(1, "_glow") },
+                });
             }
             // chowańce: klatki i piksele emisyjne (oczy)
             Sprite[] Fam(string kind, string suffix, params string[] poses)
