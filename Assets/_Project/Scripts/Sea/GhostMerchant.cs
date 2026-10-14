@@ -80,7 +80,7 @@ namespace Wyspa.Sea
             var now = game.Clock.Now;
             if (present)
             {
-                if (Time.unscaledTime >= leaveAt || !game.Clock.IsNight)
+                if (Time.unscaledTime >= leaveAt)
                     Leave();
                 return;
             }
