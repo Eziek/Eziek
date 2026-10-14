@@ -21,7 +21,7 @@ namespace Wyspa.World
         [Tooltip("Zapas wokół lądu w pikselach (woda i mgła dookoła).")]
         [SerializeField] Vector2Int margin = new Vector2Int(48, 32);
         [Tooltip("Przezroczyste okno: dodatkowy zapas na kłęby mgły wokół wyspy (piksele).")]
-        [SerializeField] Vector2Int wideExtra = new Vector2Int(16, 24);
+        [SerializeField] Vector2Int wideExtra = new Vector2Int(24, 40);   // woda 46 px + wał mgły (ok. 20 px) wokół lądu
         bool wide;
 
         Vector2Int Margin => wide ? margin + wideExtra : margin;
