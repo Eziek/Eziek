@@ -167,10 +167,10 @@ namespace Wyspa.UI
             public UpgradeDefinition def;
             public NodeState state;
             public Image frame, icon;
-            public TextMeshProUGUI level;
+            public readonly List<Image> pips = new List<Image>();
         }
         readonly List<TreeNode> treeNodes = new List<TreeNode>();
-        const float Cell = 24f, NodeSize = 20f;
+        const float Cell = 28f, NodeSize = 22f;
 
         static NodeState StateOf(UpgradeState ups, UpgradeDefinition d)
         {
@@ -235,9 +235,22 @@ namespace Wyspa.UI
                 frame.gameObject.AddComponent<HoverTip>().Init(tooltip, () => Describe(d));
                 var icon = Ui.Img(frame.transform, "Icon", Ui.Theme.Icon(st == NodeState.Fog ? "lock" : UpgradeTree.Icon(def.id)), false);
                 Ui.Place(icon.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(12, 12));
-                var level = Ui.Txt(frame.transform, "Level", Ui.Theme.textDark, TextAlignmentOptions.BottomRight);
-                Ui.Place(level.rectTransform, Ui.BottomRight, Ui.BottomRight, new Vector2(3, -3), new Vector2(20, 10));
-                treeNodes.Add(new TreeNode { def = def, state = st, frame = frame, icon = icon, level = level });
+                var node = new TreeNode { def = def, state = st, frame = frame, icon = icon };
+                // poziomy jako kropki pod węzłem (po teście: napis „0/2” na ramce był nieczytelny)
+                int levels = st == NodeState.Fog ? 0 : def.MaxLevel;
+                if (levels > 1)
+                {
+                    float pw = 4f, gap = 1f, total = levels * pw + (levels - 1) * gap;
+                    for (int i = 0; i < levels; i++)
+                    {
+                        var pip = Ui.Img(content, "Pip", null, false);
+                        pip.enabled = true;
+                        Ui.Place(pip.rectTransform, Ui.TopLeft, Ui.TopLeft,
+                                 new Vector2(center.x - total / 2f + i * (pw + gap), center.y - NodeSize / 2f - 1f), new Vector2(pw, 2));
+                        node.pips.Add(pip);
+                    }
+                }
+                treeNodes.Add(node);
             }
             RefreshUpgrades();
         }
@@ -272,8 +285,8 @@ namespace Wyspa.UI
                 float pulse = canBuy ? 0.85f + 0.15f * Mathf.Sin(Time.unscaledTime * 4f) : 1f;
                 n.frame.color = n.state == NodeState.Fog ? new Color(0.6f, 0.6f, 0.6f, 0.8f) : new Color(pulse, pulse, pulse, 1f);
                 n.icon.color = n.state == NodeState.Open && !canBuy ? new Color(1f, 1f, 1f, 0.55f) : Color.white;
-                n.level.text = n.state == NodeState.Fog || n.def.MaxLevel <= 1 ? "" : lvl + "/" + n.def.MaxLevel;
-                n.level.color = max ? Ui.Theme.textGold : Ui.Theme.textDark;
+                for (int i = 0; i < n.pips.Count; i++)
+                    n.pips[i].color = i < lvl ? Ui.Theme.textGold : Ui.Theme.textDark;
             }
         }
 
