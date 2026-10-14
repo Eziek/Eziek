@@ -508,18 +508,39 @@ namespace Wyspa.World
             return true;
         }
 
+        /// <summary>
+        /// Obrazy wyspy malowane w tle (IslandPainter to czysty C#): trzy klatki wynurzania równolegle na kopii mapy,
+        /// w grze tylko wgranie gotowych tekstur. Wcześniej trzy pełne malowania 640x640 szły w głównym wątku (lag przy zakupie).
+        /// </summary>
+        static System.Threading.Tasks.Task<IslandPicture> PaintAsync(IslandMap snapshot, TilePos? rising, int grow) =>
+            System.Threading.Tasks.Task.Run(() => IslandPainter.Paint(snapshot, rising, grow));
+
+        /// <summary>Czeka na obraz z tła; gdy się nie udał, maluje w głównym wątku (jak dawniej).</summary>
+        IEnumerator ApplyWhenReady(System.Threading.Tasks.Task<IslandPicture> task, TilePos? rising, int grow)
+        {
+            while (!task.IsCompleted)
+                yield return null;
+            if (task.Status == System.Threading.Tasks.TaskStatus.RanToCompletion && task.Result != null)
+                ApplyPicture(task.Result);
+            else
+                Rebuild(rising, grow);
+        }
+
         /// <summary>Ląd wynurza się z wody w 3 skokowych klatkach, potem piana, znalezisko i (czasem) dekoracja (§13.5).</summary>
         IEnumerator Claim(TilePos p, FindKind find, Wallet wallet)
         {
             claiming = true;
             IslandFx.TileClaimed(TileCenter(p), art != null ? art.foam : null);
             var wait = new WaitForSecondsRealtime(0.1f);
-            foreach (int grow in new[] { 6, 11 })
-            {
-                Rebuild(p, grow);
-                yield return wait;
-            }
-            Rebuild();
+            var snapshot = map.Snapshot();
+            var frames = new[] { PaintAsync(snapshot, p, 6), PaintAsync(snapshot, p, 11), PaintAsync(snapshot, null, IslandPainter.Tile) };
+            yield return ApplyWhenReady(frames[0], p, 6);
+            yield return wait;
+            yield return ApplyWhenReady(frames[1], p, 11);
+            yield return wait;
+            yield return ApplyWhenReady(frames[2], null, IslandPainter.Tile);
+            if (map.Count != snapshot.Count)
+                Rebuild();   // w międzyczasie doszedł kafelek (np. darmowy pod budowlę): obraz z bieżącej mapy
             claiming = false;
             Lore.Chronicle.Count("tile");
             var zone = ZoneAt(p);
@@ -849,9 +870,12 @@ namespace Wyspa.World
 
         // ================================================================ obraz wyspy
 
-        void Rebuild(TilePos? rising = null, int grow = IslandPainter.Tile)
+        void Rebuild(TilePos? rising = null, int grow = IslandPainter.Tile) => ApplyPicture(IslandPainter.Paint(map, rising, grow));
+
+        /// <summary>Gotowy obraz wyspy do tekstur (ląd, woda, dane wody i mgły, maska grządek).</summary>
+        void ApplyPicture(IslandPicture pic)
         {
-            picture = IslandPainter.Paint(map, rising, grow);
+            picture = pic;
             int s = picture.width;
             if (islandTex == null)
             {

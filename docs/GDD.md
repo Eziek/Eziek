@@ -737,6 +737,11 @@ Obrazki referencyjne (kopie): `docs/img/`
 93. **Żar w HUD zaokrąglany w dół** (zgłoszenie gracza: nie mógł kupić kafelka za 3 Żaru, HUD pokazywał 3/60, a było
     ok. 2,6). HUD i statystyki pokazują część całkowitą, a dymek kafelka w trybie rozbudowy mówi, czego brakuje
     („Brakuje monet: N”, „Brakuje Żaru: N”) zamiast „LPM: wyrwij z mgły”.
+94. **Lag przy zakupie kafelka** (zgłoszenie gracza): wynurzanie kafelka malowało wyspę od nowa 3 razy (640x640: ląd,
+    klif, piana, odległości dla wody), każde ok. 130 ms poza Unity (w Mono więcej), w głównym wątku. Teraz 3 klatki
+    malują się równolegle w tle (`Task.Run`, `IslandMap.Snapshot`, ok. 95 ms razem na 4 rdzeniach), gra tylko wgrywa
+    gotowe tekstury; gdy malowanie w tle się nie uda, malowanie jak dawniej. Wczytanie i darmowy kafelek pod budowlę
+    malują dalej od razu (rzadkie).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

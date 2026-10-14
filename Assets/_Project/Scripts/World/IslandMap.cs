@@ -22,6 +22,15 @@ namespace Wyspa.World
         public int Count => tiles.Count;
 
         public bool Owns(TilePos p) => tiles.ContainsKey(p);
+
+        /// <summary>Kopia do malowania w tle (IslandPainter w osobnym wątku): własne kafelki, ten sam plan świata (tylko do odczytu).</summary>
+        public IslandMap Snapshot()
+        {
+            var copy = new IslandMap { Seed = Seed, Plan = Plan, Purchased = Purchased };
+            foreach (var kv in tiles)
+                copy.tiles[kv.Key] = kv.Value;
+            return copy;
+        }
         public TileKind KindAt(TilePos p) => tiles.TryGetValue(p, out var k) ? k : TileKind.Grass;
 
         /// <summary>Nowy świat: start 2x2 z dwiema grządkami.</summary>

@@ -288,3 +288,9 @@ Najpierw **Wyspa → 2** (grafiki czapek).
 ## 22. Żar i kupno kafelka
 1. Żar tuż poniżej ceny kafelka (np. 2,6 przy cenie 3, F1): HUD pokazuje 2/60, dymek kafelka „Brakuje Żaru: 1”, cena
    czerwona. Po dojściu do 3: HUD 3/60, cena jasna, klik kupuje kafelek.
+
+## 23. Płynność przy zakupie kafelka
+1. Duża wyspa (F1: kilkadziesiąt kafelków), kup kafelek w trybie rozbudowy: ogniki, woda i kursor nie zatrzymują się,
+   kafelek wynurza się w 3 krokach jak wcześniej (piana od razu, ląd po chwili).
+2. Kilka zakupów szybko pod rząd: każdy kafelek pojawia się, nic nie znika i nie miga stary obraz.
+3. Kupno „Ognik-ogrodnik” na pełnej wyspie zaraz po zakupie kafelka: darmowy kafelek pod budowlę jest widoczny.
