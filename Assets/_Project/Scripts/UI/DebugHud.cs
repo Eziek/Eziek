@@ -56,6 +56,8 @@ namespace Wyspa.UI
             GUILayout.Label(PlotUnderMouse(game));
             GUILayout.Label($"Księżyc: {clock.MoonPhase:0.00}{(clock.IsFullMoon ? "  PEŁNIA" : "")}");
 
+            var ups = game.Upgrades;
+
             GUILayout.Space(4);
             GUILayout.Label("Nasiona:");
             if (game.Crops == null || game.Crops.crops.Count == 0)
@@ -72,9 +74,24 @@ namespace Wyspa.UI
                 }
             }
 
+            var auto = game.Automation;
+            if (auto != null && auto.Crate != null)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label($"Skrzynia: {auto.Crate.Count}/{auto.Crate.Capacity}");
+                if (GUILayout.Button("Sprzedaj"))
+                    auto.Crate.SellAll(wallet, game.Crops, 1f);
+                GUILayout.EndHorizontal();
+                if (ups.Has(UpgradeIds.WispGardener) && auto.Wisp != null)
+                    GUILayout.Label($"Ognik: następny zbiór za {auto.Wisp.SecondsToNext(ups.Value(UpgradeIds.WispGardener, 30f)):0} s");
+                if (ups.Has(UpgradeIds.MerchantChest) && auto.MerchantChest != null)
+                    GUILayout.Label($"Kupiec: sprzedaż za {auto.MerchantChest.SecondsToNext(ups.Value(UpgradeIds.MerchantChest, 3600f)) / 60f:0} min");
+            }
+            else
+                GUILayout.Label("(brak automatyki w scenie: Wyspa > 3)");
+
             GUILayout.Space(4);
             GUILayout.Label("Ulepszenia:");
-            var ups = game.Upgrades;
             if (ups.Database == null)
                 GUILayout.Label("(brak bazy ulepszeń: uruchom Wyspa > 3)");
             else

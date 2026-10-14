@@ -6,6 +6,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using Wyspa.Automation;
 using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Farming;
@@ -269,8 +270,49 @@ namespace Wyspa.EditorTools
             MakeSprite("Water", world, LoadSprite("Ground/water"), Vector3.zero, -2000);
             MakeSprite("Island", world, LoadSprite("Ground/island"), Vector3.zero, -1900);
 
+            HarvestCrate crate = null;
             foreach (var o in layout.objects)
+            {
+                if (o.sprite == "crate")
+                {
+                    // skrzynia z prototypu staje się skrzynią na plony (automatyka, Etap 2b)
+                    var fill = new[] { LoadSprite("Automation/harvest_crate_0"), LoadSprite("Automation/harvest_crate_1"),
+                                       LoadSprite("Automation/harvest_crate_2") };
+                    var sr = MakeSprite("HarvestCrate", world, fill[0], Anchor(o.x, o.y), o.y);
+                    crate = sr.gameObject.AddComponent<HarvestCrate>();
+                    if (fill[0] != null)
+                        sr.GetComponent<BoxCollider2D>().size = fill[0].bounds.size;
+                    crate.Setup(fill, sr);
+                    continue;
+                }
                 MakeSprite(o.sprite, world, LoadSprite("Objects/" + o.sprite), Anchor(o.x, o.y), o.y);
+            }
+
+            // --- automatyka: obiekty pojawiają się po zakupie ulepszeń (GDD §11.3 E) ---
+            var autoRoot = new GameObject("Automation").transform;
+            var wispFrames = new Sprite[4];
+            var wispGlow = new Sprite[4];
+            for (int i = 0; i < 4; i++)
+            {
+                wispFrames[i] = LoadSprite($"Automation/wisp_gardener_{i}");
+                wispGlow[i] = LoadSprite($"Automation/wisp_gardener_{i}_glow");
+            }
+            var wispBody = MakeSprite("WispGardener", autoRoot, wispFrames[0], Anchor(196, 88), 88);
+            var wispGlowSr = MakeGlow(wispBody, wispGlow[0], 89, glowMat);
+            var wisp = wispBody.gameObject.AddComponent<WispGardener>();
+            wisp.Setup(wispBody, wispGlowSr, wispFrames, wispGlow);
+            wispBody.gameObject.SetActive(false);
+
+            var chestBody = MakeSprite("MerchantChest", autoRoot, LoadSprite("Automation/merchant_chest"), Anchor(198, 132), 132);
+            var chestGlow = MakeGlow(chestBody, LoadSprite("Automation/merchant_chest_glow"), 133, glowMat);
+            var chest = chestBody.gameObject.AddComponent<MerchantChest>();
+            chest.Setup(chestBody, LoadSprite("Automation/merchant_chest"), LoadSprite("Automation/merchant_chest_open"),
+                chestGlow, LoadSprite("Automation/merchant_chest_glow"), LoadSprite("Automation/merchant_chest_open_glow"));
+            chestBody.gameObject.SetActive(false);
+
+            var rune = MakeSprite("RuneStone", autoRoot, LoadSprite("Automation/rune_stone"), Anchor(126, 142), 142);
+            MakeGlow(rune, LoadSprite("Automation/rune_stone_glow"), 143, glowMat);
+            rune.gameObject.SetActive(false);
 
             // --- grządki ---
             var plotSprite = LoadSprite("Ground/plot");
@@ -327,12 +369,14 @@ namespace Wyspa.EditorTools
             var upgradeState = game.AddComponent<UpgradeState>();
             var loop = game.AddComponent<GameLoop>();
             game.AddComponent<AppPerformance>();
+            var automation = game.AddComponent<AutomationSystem>();
+            automation.Setup(crate, wisp, chest, rune.gameObject);
             var dayNight = game.AddComponent<DayNightLighting>();
             var click = game.AddComponent<ClickRouter>();
             game.AddComponent<DebugHud>();
 
             SetRefs(loop, ("activity", activity), ("clock", clock), ("essence", essence), ("wallet", wallet),
-                ("crops", db), ("saveSystem", save), ("rhythm", rhythm), ("upgrades", upgradeState));
+                ("crops", db), ("saveSystem", save), ("rhythm", rhythm), ("upgrades", upgradeState), ("automation", automation));
             SetRefs(upgradeState, ("database", upgradeDb));
             SetRefs(dayNight, ("clock", clock), ("globalLight", global));
             SetRefs(click, ("targetCamera", cam));
@@ -353,6 +397,15 @@ namespace Wyspa.EditorTools
             sr.sprite = sprite;
             sr.sortingOrder = order;
             return sr;
+        }
+
+        static SpriteRenderer MakeGlow(SpriteRenderer parent, Sprite sprite, int order, Material glowMat)
+        {
+            var glow = MakeSprite("Glow", parent.transform, sprite, Vector3.zero, order);
+            glow.transform.localPosition = Vector3.zero;
+            if (glowMat != null)
+                glow.sharedMaterial = glowMat;
+            return glow;
         }
 
         static Sprite LoadSprite(string relative)

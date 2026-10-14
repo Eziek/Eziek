@@ -10,7 +10,7 @@ namespace UnityEngine
     public class Behaviour : Component { public bool enabled; public bool isActiveAndEnabled; }
     public class MonoBehaviour : Behaviour { public Coroutine StartCoroutine(IEnumerator e) => null; public void StopCoroutine(Coroutine c) { } }
     public class ScriptableObject : Object { public static T CreateInstance<T>() where T : ScriptableObject => default; }
-    public class GameObject : Object { public GameObject(string n) { } public Transform transform; public string tag; public T AddComponent<T>() where T : Component => default; public T GetComponent<T>() => default; }
+    public class GameObject : Object { public GameObject(string n) { } public Transform transform; public string tag; public bool activeSelf; public void SetActive(bool v) { } public T AddComponent<T>() where T : Component => default; public T GetComponent<T>() => default; }
     public class Transform : Component { public Vector3 position, localPosition, localScale; public void SetParent(Transform p, bool w) { } }
     public class Renderer : Component { public int sortingOrder; public Material sharedMaterial; public bool enabled; }
     public class SpriteRenderer : Renderer { public Sprite sprite; }
@@ -29,12 +29,12 @@ namespace UnityEngine
     public class Coroutine { }
     public class WaitForSecondsRealtime { public WaitForSecondsRealtime(float s) { } }
     public struct Vector2 { public float x, y; public Vector2(float x, float y) { this.x = x; this.y = y; } public float sqrMagnitude => 0; public static Vector2 operator -(Vector2 a, Vector2 b) => a; public static implicit operator Vector2(Vector3 v) => default; public static implicit operator Vector3(Vector2 v) => default; }
-    public struct Vector3 { public float x, y, z; public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; } public static Vector3 zero, one; public static Vector3 operator -(Vector3 a, Vector3 b) => a; }
+    public struct Vector3 { public float x, y, z; public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; } public static Vector3 zero, one; public static Vector3 operator -(Vector3 a, Vector3 b) => a; public static Vector3 Lerp(Vector3 a, Vector3 b, float t) => a; }
     public struct Vector4 { public float x, y, z, w; public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; } public static Vector4 zero; }
     public struct Color { public float r, g, b, a; public Color(float r, float g, float b, float a = 1) { this.r = r; this.g = g; this.b = b; this.a = a; } public static Color white; public static implicit operator Color(Color32 c) => default; }
     public struct Color32 { public Color32(byte r, byte g, byte b, byte a) { } }
     public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; }
-    public static class Mathf { public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
+    public static class Mathf { public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
     public static class Random { public static float value; }
     public static class Application { public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath; public static event Action<bool> focusChanged; }
     public static class QualitySettings { public static int vSyncCount; }

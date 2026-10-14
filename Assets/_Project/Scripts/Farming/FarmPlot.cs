@@ -51,11 +51,13 @@ namespace Wyspa.Farming
 
             if (state.IsRipe)
             {
-                game.Wallet.Add(state.crop.sellPrice);
-                if (state.crop.kind == CropKind.Night)
-                    game.Wallet.Add(CurrencyType.NightHarvest, state.crop.nightHarvestYield);
+                var crop = state.crop;
+                game.Wallet.Add(crop.sellPrice);
+                if (crop.kind == CropKind.Night)
+                    game.Wallet.Add(CurrencyType.NightHarvest, crop.nightHarvestYield);
                 state.Clear();
                 RefreshVisual();
+                game.AfterHarvest(this, crop);
             }
             else if (state.IsEmpty)
             {
@@ -67,6 +69,24 @@ namespace Wyspa.Farming
                     Pop();
                 }
             }
+        }
+
+        /// <summary>Zbiór bez zapłaty (np. ognik-ogrodnik wkłada plon do skrzyni). Zwraca zebraną roślinę.</summary>
+        public CropDefinition HarvestSilently()
+        {
+            var crop = state.crop;
+            state.Clear();
+            RefreshVisual();
+            Pop();
+            return crop;
+        }
+
+        /// <summary>Ponowne sadzenie (pamięć ziemi) - koszt nasiona płaci wywołujący.</summary>
+        public void Replant(CropDefinition crop)
+        {
+            state.Plant(crop);
+            RefreshVisual();
+            Pop();
         }
 
         public void RefreshVisual()

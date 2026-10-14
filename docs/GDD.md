@@ -337,6 +337,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     aktualizujemy łatki 6000.6.x, a przejście na następne wydanie (np. kolejne LTS) robimy świadomie, z kopią na osobnej gałęzi.
 24. Etap 1 przetestowany w Unity (sadzenie, wzrost, zbiór działają). Start Etapu 2 w częściach: 2a waluty + ulepszenia + rytm pracy,
     2b automatyzacja, 2c docelowe UI z lokalizacją.
+25. Etap 2a przetestowany (waluty, ulepszenia, rytm pracy działają). Etap 2b: automatyzacja.
+    Ognik zbiera po jednym plonie co 30 s gry; ręczny zbiór dalej daje monety od razu, a skrzynię sprzedaje się kliknięciem (100%)
+    albo automatycznie skrzynią kupca (90%).
 
 ---
 
@@ -360,6 +363,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Economy/Currency.cs`, `Wallet.cs` | waluty (§11.2: monety, plony nocy, odłamki, łuski, dary, drewno, kamień), portfel na wszystkie, start 50 monet |
 | `Scripts/Upgrades/*` | `UpgradeDefinition` (poziomy z kosztem w wielu walutach + wartość efektu, wymagania), `UpgradeDatabase`, `UpgradeState` (posiadane poziomy, zakup), `UpgradeIds` |
 | `Scripts/Core/WorkRhythm.cs` | rytm pracy: seria skupienia, „odświeżony” po przerwie, zmęczenie; mnożnik Esencji |
+| `Scripts/Automation/*` | `HarvestCrate` (skrzynia na plony, 20 miejsc, klik = sprzedaż 100%), `WispGardener` (zbiór co 30 s gry), `MerchantChest` (sprzedaż co 1 h gry po 90%), `AutomationSystem` (włącza obiekty wg ulepszeń, ticki); pamięć ziemi w `GameLoop.AfterHarvest` |
 | `Scripts/Save/SaveSystem.cs` | JSON w persistentDataPath, autosave co 60 s, offline: rośliny nocy rosną za godziny nocy |
 | `Scripts/Input/ClickRouter.cs` | klik, potem Collider2D, potem `IClickable` (Input System albo stary Input) |
 | `Scripts/UI/DebugHud.cs` | tymczasowy HUD IMGUI: monety, Esencja, nasiona, pora dnia, czas x60 |
@@ -474,6 +478,7 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 ### 11.7 Etapy implementacji
 - **Etap 1 (gotowy):** szkielet systemów (§10).
 - **Etap 2a (gotowy, do testu w Unity):** waluty, fundament ulepszeń (dane + zakup w HUD debugowym), słój Esencji, rytm pracy, zapis v2. Rośliny nocy dają „plony nocy”.
+- **Etap 2b (gotowy, do testu w Unity):** automatyzacja: skrzynia na plony, ognik-ogrodnik, pamięć ziemi, skrzynia kupca (obiekty pojawiają się po zakupie).
 - **Etap 2 (reszta):** fundament ulepszeń (`UpgradeDefinition`/`UpgradeState`/`Currencies`), sklep (proste UI), słój,
   **rytm pracy**, **ognik-ogrodnik + skrzynia + pamięć ziemi + skrzynia kupca**.
 - **Etap 3:** shadery (kołysanie, woda, mgła), cząsteczki (monety, iskierki, listki), powiększanie wyspy z cofaniem mgły.

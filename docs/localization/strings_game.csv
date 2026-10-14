@@ -13,3 +13,7 @@ rhythm.refreshed.status,Odświeżony +{0}% ({1} min),Refreshed +{0}% ({1} min),E
 rhythm.fatigue.status,Zmęczenie: Esencja ×{0},Fatigue: Essence ×{0},Erschöpfung: Essenz ×{0},疲労：エッセンス×{0},疲劳：精华×{0},
 rhythm.today,Dziś: {0} h pracy,Today: {0} h of work,Heute: {0} Std. Arbeit,今日の作業：{0}時間,今日工作：{0}小时,
 cur.night_harvest.gain,+{0} {0:plural:plon nocy|plony nocy|plonów nocy},+{0} night {0:plural:harvest|harvests},+{0} Nachternte,夜の作物 +{0},夜间作物 +{0},
+toast.crate_sold,Sprzedano plony: +{0} monet,Crops sold: +{0} coins,Ernte verkauft: +{0} Münzen,作物を売却：+{0}コイン,已出售作物：+{0}金币,
+toast.merchant_sold,Skrzynia kupca sprzedała plony: +{0} monet,The Merchant's Chest sold crops: +{0} coins,Die Händlertruhe hat die Ernte verkauft: +{0} Münzen,商人の箱が作物を売った：+{0}コイン,商人宝箱出售了作物：+{0}金币,
+toast.crate_full,Skrzynia pełna - ognik czeka,The crate is full - the wisp is waiting,Die Kiste ist voll - das Irrlicht wartet,箱がいっぱい - 鬼火は待機中,箱子满了 - 鬼火在等待,
+crate.contents,Skrzynia: {0}/{1},Crate: {0}/{1},Kiste: {0}/{1},箱：{0}/{1},箱子：{0}/{1},

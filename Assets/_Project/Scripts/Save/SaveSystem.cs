@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Wyspa.Automation;
 using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Upgrades;
@@ -22,6 +23,7 @@ namespace Wyspa.Save
         public List<UpgradeSave> upgrades = new List<UpgradeSave>();
         public long rhythmDayTicks;
         public float rhythmDailySeconds;
+        public List<CrateEntry> crate = new List<CrateEntry>();
     }
 
     [Serializable]
@@ -83,6 +85,8 @@ namespace Wyspa.Save
                 upgrades = game.Upgrades.Snapshot(),
                 rhythmDayTicks = game.Rhythm.SaveDayTicks,
                 rhythmDailySeconds = game.Rhythm.SaveDailySeconds,
+                crate = game.Automation != null && game.Automation.Crate != null
+                    ? game.Automation.Crate.Snapshot() : new List<CrateEntry>(),
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth });
@@ -124,6 +128,8 @@ namespace Wyspa.Save
             game.ApplyUpgrades();                // pojemność słoja przed ustawieniem Esencji
             game.Essence.Set(data.essence);
             game.Rhythm.Restore(data.rhythmDayTicks, data.rhythmDailySeconds, DateTime.Now);
+            if (game.Automation != null && game.Automation.Crate != null)
+                game.Automation.Crate.Restore(data.crate);
 
             var savedAt = new DateTime(data.savedAtUtcTicks, DateTimeKind.Utc).ToLocalTime();
             float offlineNight = game.Clock.NightSecondsBetween(savedAt, DateTime.Now);

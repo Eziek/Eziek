@@ -89,6 +89,16 @@ Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (dodaje dane ulepsze
   HUD pokazuje stan grządki pod kursorem: czy jest w świetle, czy rośnie i dlaczego nie.
 - Stary zapis gry wczyta się bez utraty monet (zapis v2).
 
+## 4a2. Etap 2b: automatyzacja (test)
+Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (skrzynia, ognik, skrzynia kupca, kamień runiczny), potem Play.
+1. Posadź kilka roślin, ustaw **x60** i „Wymuś aktywność”.
+2. **Cheat** i kup **Ognik-ogrodnik**: obok skrzyni pojawi się ognik. Co 30 s gry (przy x60: 0,5 s) leci do dojrzałego plonu
+   i wkłada go do skrzyni. Sprite skrzyni zmienia się wraz z napełnieniem (pusta, połowa, pełna; pojemność 20).
+3. **Klik w skrzynię** albo przycisk „Sprzedaj” w HUD sprzedaje zawartość po pełnej cenie.
+4. **Pamięć ziemi** (kamień runiczny przy grządkach): po zbiorze grządka sama sadzi to samo, jeśli masz monety na nasiono.
+5. **Skrzynia kupca**: co godzinę gry (przy x60: minuta) sprzedaje zawartość po 90% ceny i na chwilę się otwiera.
+6. Zawartość skrzyni zapisuje się w save.
+
 ## 4b. UI i font (przygotowane, jeszcze niepodpięte w kodzie)
 - Sprite'y UI: `Assets/_Project/Art/Sprites/UI/Kit` (9-slice ustawiony automatycznie) i `UI/Icons`.
 - Font: `Assets/_Project/Art/Fonts/WyspaPixel.ttf`. W **Window → TextMeshPro → Font Asset Creator** ustaw:

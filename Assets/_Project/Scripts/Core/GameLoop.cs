@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Wyspa.Automation;
 using Wyspa.Economy;
 using Wyspa.Farming;
 using Wyspa.Lighting;
@@ -25,6 +26,7 @@ namespace Wyspa.Core
         [SerializeField] SaveSystem saveSystem;
         [SerializeField] WorkRhythm rhythm;
         [SerializeField] UpgradeState upgrades;
+        [SerializeField] AutomationSystem automation;
 
         [SerializeField] float tickInterval = 1f;
 
@@ -41,6 +43,7 @@ namespace Wyspa.Core
         public CropDatabase Crops => crops;
         public WorkRhythm Rhythm => rhythm;
         public UpgradeState Upgrades => upgrades;
+        public AutomationSystem Automation => automation;
 
         public float DebugTimeScale
         {
@@ -64,6 +67,17 @@ namespace Wyspa.Core
         public void ApplyUpgrades()
         {
             essence.SetCapacity(upgrades.Value(UpgradeIds.EssenceJar, essence.BaseCapacity));
+            if (automation != null)
+                automation.ApplyUpgrades(upgrades);
+        }
+
+        /// <summary>Po każdym zbiorze (ręcznym i przez ognika): pamięć ziemi sadzi to samo, jeśli stać gracza na nasiono.</summary>
+        public void AfterHarvest(FarmPlot plot, CropDefinition crop)
+        {
+            if (crop == null || plot == null || !plot.State.IsEmpty || !upgrades.Has(UpgradeIds.SoilMemory))
+                return;
+            if (wallet.TrySpend(crop.seedPrice))
+                plot.Replant(crop);
         }
 
         void Start()
@@ -113,6 +127,13 @@ namespace Wyspa.Core
 
             foreach (var plot in FarmPlot.All)
                 plot.Tick(dt, ContextFor(plot, night));
+
+            if (automation != null)
+            {
+                var harvested = automation.Tick(dt, upgrades, wallet, crops, out var crop);
+                if (harvested != null)
+                    AfterHarvest(harvested, crop);
+            }
         }
 
         /// <summary>Warunki wzrostu dla grządki (światło, noc, aktywność) - używane też przez HUD.</summary>
