@@ -294,8 +294,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   Dzień: czosnek (80), mak (200), piołun (450); noc: wilcza jagoda (250), mandragora (600), cmentarny bluszcz (1200). Do balansu.
 - [x] Przezroczyste okno: mgła zostaje pierścieniem wokół pasa wody (zaczyna się ok. 8 px od brzegu, kończy ok. 30 px,
   dalej rozpływa się ditheringiem Bayera).
-- [ ] UI do przemyślenia (prośba gracza): przyciski w prawym górnym rogu okna i pasek walut odklejone od wyspy, zwłaszcza
-  w przezroczystym oknie. Propozycje w §12.10, decyzja w Etapie 6d.
+- [x] UI na pulpicie (§12.10): gracz wybrał **wariant C**, pierścień akcji pod PPM zamiast przycisków w rogu okna. Pasek walut
+  i rytm pracy zostają na razie w rogach (do decyzji przy dalszym dopracowaniu UI w 6d).
 - [x] Cząsteczki: **własny system pikselowy** (pula sprite'ów, 12 kl./s) zamiast ParticleSystem, dla ostrych pikseli.
 - [x] Woda i mgła: **liczone w shaderze z mapy danych** (port prototypu), ryby i potwór w shaderze, nie jako osobne sprite'y.
 - [ ] Rozmiar fontu tekstu: 10 px czy 12 px. Sprawdzimy później w Unity (§16.3).
@@ -426,6 +426,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     automatyki w wielu egzemplarzach (Sklep → Budowle): ognik z zasięgiem 5x5, runa siewu 3x3 z wyborem nasion, duszek-handlarz
     zamiast skrzyni kupca, wiele skrzyń. Zapis v6 (stare zapisy: skrzynia, skrzynia kupca i kamień runiczny stają się budowlami).
     Mgła w przezroczystym oknie wraca jako pierścień wokół wyspy. Dźwięk i zasobnik przechodzą do 6c, wprowadzenie, UI i balans do 6d.
+38. UI (wariant C z §12.10): pierścień akcji pod PPM na wyspie (Księga, Sklep, Opcje, Rozbudowa) zamiast trzech przycisków
+    w prawym górnym rogu. PPM z przeciąganiem dalej przesuwa kamerę, PPM przy otwartym trybie/panelu dalej go zamyka.
+    Nowy gracz dostaje co 3 min podpowiedź (toast), aż pierwszy raz otworzy pierścień.
 
 ---
 
@@ -457,7 +460,8 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Localization/LocCore.cs`, `Loc.cs` | lokalizacja: tabele CSV, fallback en, potem pl, `{0}`, `{0:N0}`, `{0:plural:a\|b\|c}` (CLDR), liczby wg kultury; `Loc` = wybór języka (PlayerPrefs `lang`, przy pierwszym starcie język systemu) |
 | `Scripts/UI/UiRoot.cs` | korzeń UI: Canvas (Constant Pixel Size, skala UI = skala świata − 1), EventSystem, font TMP tworzony w locie z `WyspaPixel.ttf`, dymek nad grządką |
 | `Scripts/UI/Ui.cs`, `UiTheme.cs`, `UiInput.cs`, `LocText.cs` | fabryka elementów (9-slice, tekst, przycisk, pasek), motyw (sprite'y, ikony, kolory, tabele), wejście, tekst z klucza odświeżany po zmianie języka |
-| `Scripts/UI/HudView.cs` | HUD: waluty (pokazane po zdobyciu), Esencja, Księga i opcje, rytm pracy, zegar; chowa się po 5 s bez ruchu myszy |
+| `Scripts/UI/HudView.cs` | HUD: waluty (pokazane po zdobyciu), Esencja, rytm pracy, zegar; chowa się po 5 s bez ruchu myszy |
+| `Scripts/UI/ActionRing.cs` | pierścień akcji (PPM na wyspie): Księga, Sklep, Opcje, Rozbudowa; wyzwalany w `UiRoot` (bez przeciągania, gdy nic nie jest otwarte) |
 | `Scripts/UI/SeedWheel.cs` | koło nasion wokół pustej grządki, dymki z opisem, PPM/Esc zamyka |
 | `Scripts/UI/BookView.cs` | Księga: zakładki Sklep (Lampy, Morze), Ulepszenia, Rytuały, Bestiariusz, Statystyki, Opcje (język, jasność nocy, rytm pracy) |
 | `Scripts/UI/ToastView.cs`, `TooltipView.cs` | toasty (maks. 3, 4 s) i dymek przy kursorze |
@@ -643,7 +647,7 @@ Makiety: `docs/img/ui_hud.png`, `ui_ksiega_sklep.png`, `ui_ksiega_ulepszenia.png
 ### 12.2 HUD
 - **Górny pasek:** monety, Esencja (ikona + pasek + liczby), plony nocy, odłamki gwiazd.
   Waluty pojawiają się dopiero po odblokowaniu.
-- **Prawy górny róg:** przycisk Księgi i opcji.
+- **Menu:** pierścień akcji pod prawym klikiem na wyspie (Księga, Sklep, Opcje, Rozbudowa), §12.10. Przycisków w rogu okna już nie ma.
 - **Lewy dolny róg:** rytm pracy: ikona stanu (seria / odświeżony / zmęczenie), opis („SERIA 32 MIN +25%”), pasek, zegar.
 - **Mini-tryb:** HUD całkiem ukryty, zostaje tylko wyspa.
 
@@ -702,7 +706,7 @@ Cel jest podświetlony pulsem.
 
 ### 12.10 Do przemyślenia: UI na pulpicie (prośba gracza po Etapie 6a)
 Problem: HUD (waluty u góry, trzy przyciski w prawym górnym rogu, rytm na dole) przykleja się do rogów okna, a nie do wyspy.
-W przezroczystym oknie wisi „w powietrzu” nad pulpitem. Propozycje do wyboru w Etapie 6d:
+W przezroczystym oknie wisi „w powietrzu” nad pulpitem. **Wybrano C** (zrobione po Etapie 6b). Rozważane warianty:
 - **A. HUD przy wyspie:** jeden mały pasek nad wyspą (waluty + Esencja), pokazuje się po najechaniu na wyspę.
 - **B. Menu z wyspy:** zamiast trzech przycisków jeden „kamień z Księgą” stojący na wyspie (klik = Księga, PPM = rozbudowa).
 - **C. Pierścień akcji:** PPM na pustym miejscu wyspy otwiera koło (Księga, Rozbudowa, Sklep, Opcje), jak koło nasion.

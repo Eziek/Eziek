@@ -10,7 +10,7 @@ using Wyspa.Localization;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// HUD (GDD §12.2): u góry waluty i Esencja, w prawym górnym rogu Księga i opcje, w lewym dolnym rytm pracy i zegar.
+    /// HUD (GDD §12.2): u góry waluty i Esencja, w lewym dolnym rogu rytm pracy i zegar. Menu jest w pierścieniu akcji (PPM, §12.10).
     /// Znika po kilku sekundach bez ruchu myszy, wraca po jej poruszeniu.
     /// </summary>
     public class HudView : MonoBehaviour
@@ -42,17 +42,13 @@ namespace Wyspa.UI
         int flying;
 
         public bool ForceVisible { get; set; }
-        public Button ExpandButton { get; private set; }
 
-        public static HudView Create(RectTransform canvasRoot, System.Action openBook, System.Action openOptions, System.Action toggleExpand)
+        public static HudView Create(RectTransform canvasRoot)
         {
             var root = Ui.Stretch(Ui.Rect("HUD", canvasRoot));
             var view = root.gameObject.AddComponent<HudView>();
             view.group = root.gameObject.AddComponent<CanvasGroup>();
-            view.Build(root, openBook, openOptions);
-            var expand = Ui.IconBtn(root, "ExpandButton", "plus", new Vector2(18, 18), toggleExpand);
-            Ui.Place((RectTransform)expand.transform, Ui.TopRight, Ui.TopRight, new Vector2(-44, -4), new Vector2(18, 18));
-            view.ExpandButton = expand;
+            view.Build(root);
             return view;
         }
 
@@ -64,7 +60,7 @@ namespace Wyspa.UI
             flying = 0;
         }
 
-        void Build(RectTransform root, System.Action openBook, System.Action openOptions)
+        void Build(RectTransform root)
         {
             this.root = root;
             var t = Ui.Theme;
@@ -79,12 +75,6 @@ namespace Wyspa.UI
             items.Add(MakeItem("starshard", CurrencyType.StarShard));
             items.Add(MakeItem("wood", CurrencyType.Wood));
             items.Add(MakeItem("stone", CurrencyType.Stone));
-
-            // --- przyciski ---
-            var book = Ui.IconBtn(root, "BookButton", "book", new Vector2(18, 18), openBook);
-            Ui.Place((RectTransform)book.transform, Ui.TopRight, Ui.TopRight, new Vector2(-24, -4), new Vector2(18, 18));
-            var opt = Ui.IconBtn(root, "OptionsButton", "settings", new Vector2(18, 18), openOptions);
-            Ui.Place((RectTransform)opt.transform, Ui.TopRight, Ui.TopRight, new Vector2(-4, -4), new Vector2(18, 18));
 
             // --- rytm pracy ---
             var rp = Ui.Img(root, "Rhythm", t.tooltip, true);

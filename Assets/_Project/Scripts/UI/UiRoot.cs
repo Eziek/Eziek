@@ -34,6 +34,12 @@ namespace Wyspa.UI
         public ContextPanel Context { get; private set; }
         public PlacementMode Placement { get; private set; }
         public TooltipView Tooltip { get; private set; }
+        public ActionRing Ring { get; private set; }
+
+        // prawy klik na wyspie otwiera pierścień akcji (GDD §12.10): uzbrojony przy wciśnięciu, otwiera się po puszczeniu bez przeciągania
+        bool ringArmed;
+        bool busyLastFrame;   // panel/tryb otwarty w poprzedniej klatce (ten sam PPM, który go zamyka, nie otwiera koła)
+        Vector2 ringPress;
 
         public void Setup(UiTheme uiTheme) => theme = uiTheme;
 
@@ -56,7 +62,23 @@ namespace Wyspa.UI
         }
 
         // W Start, bo GameLoop.Instance ustawia się w Awake innego obiektu (kolejność Awake nie jest pewna).
-        void Start() => ApplySavedOptions();
+        void Start()
+        {
+            ApplySavedOptions();
+            if (PlayerPrefs.GetInt("hintRing", 0) == 0)
+                StartCoroutine(RingHint());
+        }
+
+        /// <summary>Podpowiedź dla nowego gracza: menu jest pod prawym przyciskiem (aż raz go użyje).</summary>
+        System.Collections.IEnumerator RingHint()
+        {
+            yield return new WaitForSecondsRealtime(3f);
+            while (PlayerPrefs.GetInt("hintRing", 0) == 0)
+            {
+                GameEvents.RaiseToast("toast.hint.ring");
+                yield return new WaitForSecondsRealtime(180f);
+            }
+        }
 
         void OnDestroy()
         {
@@ -117,15 +139,20 @@ namespace Wyspa.UI
             }
 
             Tooltip = TooltipView.Create(canvasRect);
-            Hud = HudView.Create(canvasRect, () => OpenBook(BookView.Tab.Upgrades), () => OpenBook(BookView.Tab.Options),
-                () => { Wheel.Close(); Context.Close(); Placement.Cancel(); Expansion.Toggle(); });
+            Hud = HudView.Create(canvasRect);
             Expansion = ExpansionMode.Create(canvasRect, Tooltip);
-            Hud.ExpandButton.gameObject.AddComponent<HoverTip>().Init(Tooltip, () => Loc.Get("menu.expand"));
             Toasts = ToastView.Create(canvasRect);
             Wheel = SeedWheel.Create(canvasRect, Tooltip);
             Book = BookView.Create(canvasRect, Tooltip);
             Context = ContextPanel.Create(canvasRect, StartMove);
             Placement = PlacementMode.Create(transform, Tooltip);
+            Ring = ActionRing.Create(canvasRect, Tooltip, new List<ActionRing.Entry>
+            {
+                new ActionRing.Entry { icon = "book", nameKey = "term.grimoire", run = () => OpenBook(BookView.Tab.Upgrades) },
+                new ActionRing.Entry { icon = "shop", nameKey = "menu.shop", run = () => OpenBook(BookView.Tab.Shop) },
+                new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
+                new ActionRing.Entry { icon = "plus", nameKey = "menu.expand", run = () => { CloseAll(); Expansion.Toggle(); } },
+            });
             Tooltip.transform.SetAsLastSibling();
         }
 
@@ -196,9 +223,38 @@ namespace Wyspa.UI
 
         void Update()
         {
+            UpdateRingTrigger();
             scaler.scaleFactor = Book.IsOpen ? BookScale() : UiScale();
-            Hud.ForceVisible = Book.IsOpen || Wheel.IsOpen || Expansion.IsActive || PlacementMode.Active;
+            Hud.ForceVisible = Book.IsOpen || Wheel.IsOpen || Ring.IsOpen || Expansion.IsActive || PlacementMode.Active;
             UpdatePlotTooltip();
+        }
+
+        bool Busy => Ring.IsOpen || Book.IsOpen || Wheel.IsOpen || Context.IsOpen || Expansion.IsActive || PlacementMode.Active;
+
+        void LateUpdate() => busyLastFrame = Busy;
+
+        /// <summary>
+        /// PPM bez przeciągania, gdy nic innego nie jest otwarte (tryby, panele, Księga): pierścień akcji przy kursorze.
+        /// Stan sprawdzamy przy wciśnięciu, bo to samo puszczenie PPM zamyka np. tryb rozbudowy.
+        /// </summary>
+        void UpdateRingTrigger()
+        {
+            var mouse = UiInput.MousePosition;
+            if (UiInput.RightPressed)
+            {
+                ringPress = mouse;
+                ringArmed = !busyLastFrame && !Busy && !PointerOverUi && !DebugHud.IsPointerOverHud(mouse);
+            }
+            if (UiInput.RightReleased && ringArmed)
+            {
+                ringArmed = false;
+                if ((mouse - ringPress).sqrMagnitude <= 16f)   // przeciąganie PPM przesuwa kamerę, nie otwiera menu
+                {
+                    Tooltip.Hide(plotHoverOwner);
+                    Ring.Open(mouse);
+                    PlayerPrefs.SetInt("hintRing", 1);
+                }
+            }
         }
 
         /// <summary>Dymek nad grządką (GDD §12.3): co rośnie i dlaczego nie rośnie.</summary>

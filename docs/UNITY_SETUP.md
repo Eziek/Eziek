@@ -242,6 +242,15 @@ ognik pojawia się sam przy wolnym kafelku.
 5. **Duszek-handlarz:** co godzinę (F1 → czas x60) leci do najpełniejszej skrzyni i ją sprzedaje. Dwa duszki = dwie skrzynie.
 6. **Przezroczyste tło:** wokół pasa wody wraca mgła (pierścień, który rozpływa się w pikselach).
 
+## 4l. Pierścień akcji (test)
+Sceny nie trzeba budować od nowa (UI powstaje z kodu). Przycisków w prawym górnym rogu już nie ma.
+1. Prawy klik na wyspie (bez przeciągania): koło z czterema ikonami przy kursorze. Najechanie = nazwa, klik = akcja:
+   Księga (Ulepszenia), Sklep, Opcje, Rozbudowa.
+2. Klik obok koła, PPM albo Esc zamyka. PPM z przeciąganiem dalej przesuwa kamerę (gdy wyspa większa niż okno).
+3. PPM w trybie rozbudowy, stawiania, przy otwartym panelu albo kole nasion tylko je zamyka (koło się nie otwiera).
+4. Nowa gra (Opcje → System → Reset): po 3 s toast „Prawy klik na wyspie: …”, powtarza się co 3 min, aż użyjesz koła.
+5. Przezroczyste okno: PPM na lądzie otwiera koło; na pulpicie obok wyspy klik idzie do pulpitu.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

@@ -70,7 +70,7 @@ place.spring,Źródło,Spring,Quelle,泉,泉眼,dziwny kafelek
 place.monolith,Pradawny kamień,Ancient Stone,Uralter Stein,古の石,远古之石,dziwny kafelek
 act.dig,Przekop,Dig,Umgraben,耕す,开垦,kafelek na grządkę
 mode.expand,Rozbudowa,Expansion,Ausbau,拡張,扩建,tryb rozbudowy
-menu.expand,Rozbudowa wyspy,Expand the island,Insel erweitern,島を広げる,扩建岛屿,przycisk w HUD
+menu.expand,Rozbudowa wyspy,Expand the island,Insel erweitern,島を広げる,扩建岛屿,w pierścieniu akcji (PPM)
 bld.harvest_crate,Skrzynia na plony,Harvest Crate,Erntekiste,収穫箱,收获箱,
 act.move,Przenieś,Move,Verschieben,移動,移动,
 deco.tree_round,Drzewo,Tree,Baum,木,树,
