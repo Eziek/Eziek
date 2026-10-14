@@ -145,7 +145,7 @@ namespace Wyspa.UI
             var title = Loc.Get("voyage.arrive.title", Prestige.Voyages + 1);
             int k = Mathf.Max(0, Prestige.Voyages - 1) % ArriveLines;
             var line = Line(Loc.Get("voyage.arrive." + k), title);
-            line.gameObject.SetActive(false);
+            line.transform.parent.gameObject.SetActive(false);   // tabliczka dopiero, gdy mgła się rozstąpi
             yield return Wait(0.4f);
             GameEvents.PlaySound("tile", 0.7f);
             StartCoroutine(ScaledTo(0f, 3.2f));
@@ -171,14 +171,14 @@ namespace Wyspa.UI
                 view.SceneOffset = Vector2.zero;
             curtain.Coverage = 0f;
             // zapiski Opiekuna: litera po literze, potem chwila na przeczytanie
-            line.gameObject.SetActive(true);
+            line.transform.parent.gameObject.SetActive(true);
             speed = 1f;
             for (float t = 0f; t < 5.5f && speed < 2f; t += Dt)
             {
                 Type(line, t, 0f);
                 yield return null;
             }
-            Destroy(line.gameObject);
+            Destroy(line.transform.parent.gameObject);   // cała tabliczka (tytuł i tekst), nie tylko tekst
             End();
         }
 

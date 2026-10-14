@@ -234,6 +234,7 @@ Najpierw **Wyspa → 2** (motyw UI wczytuje nowe ikony `icon_gift_*`; bez tego d
    monety. „Do przystani” → losowanie darów. Zamknij grę i wróć: podsumowanie już się nie pokazuje.
 3. „Wypłyń na nową wyspę”: okno zaczyna w mgle (bez mignięcia wyspy), mgła rozstępuje się od środka, kamera podpływa,
    latarnia rozbłyska (także w dzień), na dole „Rejs nr N” i linijka zapisków. Potem HUD wraca, można grać.
+   Po scenie tabliczka znika w całości (nie zostaje sam tytuł).
 4. Przewijanie PPM, Ctrl+kółko, pierścień PPM i kliki w wyspę nie działają w trakcie scenek.
 5. Czwarty ognik (Przytulne gniazdo) zostaje po zapisie i wczytaniu. Rozbiórka budowli nie podnosi „zarobku rejsu”.
 
@@ -273,3 +274,7 @@ Najpierw **Wyspa → 2** (grafiki czapek).
    ulepszenia albo wczytaniu siewca dołącza.
 3. Stary zapis z „Ognik-siewca” i runą: po wczytaniu dochodzi siewca, runa zostaje.
 4. Podsumowanie rejsu (PL, DE, EN): żaden wiersz nie wchodzi na ramkę, okno szersze przy dłuższych tekstach.
+
+## 20. Pasek HUD nad wyspą
+1. Wysokie obiekty w górnym rzędzie (dynia, latarnia, runa, gniazdo): pasek HUD wisi nad nimi, nie zasłania ich.
+2. Duża wyspa albo małe okno: pasek dalej mieści się w oknie (przy górnej krawędzi).

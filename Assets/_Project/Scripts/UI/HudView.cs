@@ -20,6 +20,8 @@ namespace Wyspa.UI
         const float Pad = 4f;
         const float RowH = 13f;
         const float Gap = 3f;   // piksele UI między paskiem a górą lądu
+        /// <summary>Zapas nad górnym rzędem kafelków (świat): wysokie obiekty (dynie, latarnie, runy, gniazda) sterczą ponad ląd.</summary>
+        const float ObjectHeadroom = 1.4f;
 
         class Item
         {
@@ -144,7 +146,7 @@ namespace Wyspa.UI
             if (cam == null || island == null || root == null)
                 return;
             var land = island.LandRect;
-            Vector2 screen = cam.WorldToScreenPoint(new Vector3(land.center.x, land.yMax, 0f));
+            Vector2 screen = cam.WorldToScreenPoint(new Vector3(land.center.x, land.yMax + ObjectHeadroom, 0f));
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(root, screen, null, out var local))
                 return;
             var r = root.rect;

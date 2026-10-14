@@ -726,6 +726,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     odblokowuje, ale kupuje się ją w sklepie (pierwsza 150 monet + 5 kamienia). Zapisy z kupionym „Ognik-siewca”
     dostają siewcę przy wczytaniu (runa, która już stoi, zostaje). Okno podsumowania rejsu: szerokość z najdłuższego
     wiersza, tekst z dala od ramek.
+91. Poprawki po zrzutach: tabliczka „Rejs nr N” ze scenki przypłynięcia znika w całości (wcześniej zostawał tytuł na stałe)
+    i pokazuje się dopiero, gdy mgła się rozstąpi. Pasek HUD wisi wyżej: nad górnym rzędem kafelków jest zapas 1,4 jednostki
+    na wysokie obiekty (dynie, latarnie, runy, gniazda), w granicach okna.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
