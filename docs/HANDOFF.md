@@ -37,7 +37,7 @@ Decyzja (GDD §9 p. 74, wariant C):
 - sprite'y świata: znów 16 px (PNG i `pivots.json` ze stanu `07d4a72` + ryba z `export_unity_auto.py`, potem `pad_sway.py`);
 - teren: `Island.cs` i `IslandPainter.cs` jak przed `386864d` (bez `PaintHi`, ląd PPU 16);
 - kołysanie: `_SwayAmount` 1 (WyspaSetup);
-- mgła: siatka 16 px, ale zostają ciemniejsza obwódka i limit zasięgu 18 px w przezroczystym oknie;
+- mgła: nowa, kłębiaste chmury jak z referencji gracza w brudnej palecie (GDD §9 p. 75, podgląd `docs/img/mgla_chmury.png`), siatka 32 px;
 - **zostaje**: `Water.shader` w 32 px, kamera PPU 32 z kadrem x2 (`ViewController.ArtScale`), parzysta skala okna (x2, x4, x6),
   `AmbientLife` (ćmy, ryba), pulsowanie roślin, obsługa pola `"hd"` w importerze (nieużywana);
 - `tools/art32/` zostaje jako archiwum, `convert32.py` nie uruchamiać.

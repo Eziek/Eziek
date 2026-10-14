@@ -142,7 +142,7 @@ Wszystkie liczby są do balansowania.
 5. **Przybój:** fale napływają do brzegu, pulsująca piana przy klifie, cień pod klifem.
 
 ### 4.6 Mgła
-- **Tylko poza wyspą, na krawędziach okna, nad morzem.** Pasma dryfują (szum z ditheringiem).
+- **Tylko poza wyspą, na krawędziach okna, nad morzem.** Kłębiaste chmury w pixel arcie (§7), powoli dryfują.
 - W dzień rzadsza, w nocy gęstsza. Kiedy gasną lampy, podchodzi bliżej.
 - Powiększenie wyspy odsłania nowy ląd i odsuwa mgłę.
 - Z mgły przychodzą zdarzenia nocne.
@@ -307,7 +307,11 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   (promień 4.5-8.5 px, dryfują i „oddychają”), płaskie kolory (jasny brzeg u góry, podstawa, cień od dołu), ciemny obrys
   1 px, prawie nieprzezroczyste. Przezroczyste okno: wał przyklejony do wody (zachodzi 3 px na wodę, bez obrysu od strony
   wody). Zwykłe okno: jednolita mgła dalej od wyspy z bulwiastym brzegiem od strony lądu (w nocy podchodzi bliżej).
-  Podgląd: `docs/img/mgla_chibi_*.png`, `tools/pixel-proto/fog_chibi_preview.py`.
+  Podgląd: `docs/img/mgla_chibi_*.png`, `tools/pixel-proto/fog_chibi_preview.py`. **Zastąpiona** chmurami (niżej).
+- [x] **Mgła jak pixel-artowe cumulusy** (prośba gracza, referencja z chmurami, „w brudnej palecie dark fantasy”):
+  chmury z guzków (sylwetka kalafiora), bliższa zasłania dalszą, bryła cieniowana jak kula, jasny rąbek od światła
+  z lewej-góry, łuki guzków w środku, 6 tonów od granatowo-szarego do brudnego pergaminu, bez obrysu, w głąb mgły
+  ciemniej. Siatka 32 px jak woda. Podgląd: `docs/img/mgla_chmury.png`, `tools/pixel-proto/fog_clouds_preview.py`.
 - [x] **Menu główne i 3 sloty zapisu** (prośba gracza): nazwa do 10 znaków, data i godzina zapisu, usuwanie z potwierdzeniem,
   powrót do menu z pierścienia akcji (§12.11).
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
@@ -612,6 +616,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     Mgła znów liczona w siatce 16 px (z p. 71 zostają ciemniejsza obwódka i limit zasięgu 18 px w przezroczystym oknie).
     Zostają: shader wody z p. 69, kamera PPU 32 z kadrem x2 (bez niej woda straciłaby detal), więc skala okna jest parzysta
     (Opcje: x2, x4, x6), oraz animacje z p. 72 (ryba w 16 px). Narzędzia `tools/art32/` zostają jako archiwum.
+75. Mgła jak pixel-artowe cumulusy z referencji gracza, ale w brudnej palecie dark fantasy (§7): chmury z guzków,
+    cieniowanie bryły i rąbków w 6 tonach, bez obrysu, siatka 32 px (jak woda). Zastępuje mgłę „chibi” z p. 49 i obwódkę z p. 71;
+    limit zasięgu 18 px w przezroczystym oknie zostaje. Podgląd `docs/img/mgla_chmury.png` (zwykłe okno, przezroczyste, noc).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
