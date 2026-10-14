@@ -90,12 +90,10 @@ namespace Wyspa.Sea
                 SpawnWisp();
             if (Random.value < StarPerMinute / 60f * mult)
                 SpawnStar();
-            string night = NightKey(game.Clock.Now);
+            string night = game.Clock.NightKey;
             if (monster == null && monsterNight != night && Random.value < MonsterPerMinute / 60f * mult * (HasAltar ? 3f : 1f))
                 SpawnMonster();
         }
-
-        static string NightKey(System.DateTime now) => (now.Hour < 12 ? now.Date.AddDays(-1) : now.Date).ToString("yyyy-MM-dd");
 
         // ------------------------------------------------------------- zdarzenia (także z HUD debugowego)
 
@@ -144,7 +142,7 @@ namespace Wyspa.Sea
             if (island == null || monster != null || tentacle == null || tentacle.Length == 0)
                 return;
             if (game != null)
-                monsterNight = NightKey(game.Clock.Now);
+                monsterNight = game.Clock.NightKey;
             var go = new GameObject("Monster");
             go.transform.SetParent(transform, false);
             go.transform.position = island.WaterBelow(30) + new Vector3(Random.Range(-2f, 2f), 0f, 0f);

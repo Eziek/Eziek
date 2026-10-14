@@ -324,6 +324,16 @@ nowej wyspie: Opcje → System → reset zapisu (albo usuń `save.json`). Jeśli
    z małym odbiciem.
 7. Ceny: kafelki droższe (np. 10. kafelek 140 monet + 5 Esencji), ognik 100 monet, czosnek 100, piołun 600.
 
+## 4s. Cykl gry 1 h, wzrost x3, opisy w sklepie (test)
+Po pobraniu: **Wyspa → 2** (nowe czasy wzrostu i ceny w danych roślin i ulepszeń), potem Play.
+1. Zegar w pasku HUD idzie szybko: 06:00-20:00 przez 40 min, potem noc 20:00-06:00 przez 20 min. Zmierzch ok. 3 min przed nocą.
+   F1 → 12:00 / 19:30 / 23:30 dalej przestawia porę (do testów).
+2. Marchew dojrzewa w ok. 3 min pracy (z tempem szybciej). Rośliny nocy: trupi grzyb w jedną noc (20 min ciemności).
+3. Kupiec-widmo: nie każdej nocy (ok. co trzecią), w pierwszej połowie nocy.
+4. Księga → Rytuały: „Nów za N nocy” (cykl księżyca 8 nocy). Pełnia: F1 pokazuje fazę.
+5. Sklep → Morze: długi opis latarni morskiej kończy się „...” przed przyciskiem, koszt widać cały; najechanie pokazuje całość.
+6. Opcje → Ogólne: nie ma już „Godziny nocy”.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

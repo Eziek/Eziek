@@ -12,7 +12,8 @@ using Wyspa.World;
 namespace Wyspa.Sea
 {
     /// <summary>
-    /// Kupiec-widmo (GDD §4.7): raz na noc, o losowej porze (21:00-3:00), łódź wypływa z mgły pod wyspą i czeka ok. 10 minut.
+    /// Kupiec-widmo (GDD §4.7): przypływa w co trzecią noc cyklu gry (losowo, ziarno z numeru nocy), w pierwszej połowie nocy;
+    /// łódź wypływa z mgły pod wyspą i czeka ok. 10 minut.
     /// Sprzedaje tanie paczki nasion nocy, nawóz i czasem nasiono hybrydy; skupuje zawartość skrzyni drożej (150%).
     /// Nagradza, nie karze: przegapiony kupiec to tylko brak okazji.
     /// </summary>
@@ -80,32 +81,38 @@ namespace Wyspa.Sea
             var game = GameLoop.Instance;
             if (game == null)
                 return;
-            var now = game.Clock.Now;
+            var clock = game.Clock;
             if (present)
             {
                 if (Time.unscaledTime >= leaveAt)
                     Leave();
                 return;
             }
-            if (!game.Clock.IsNight)
+            if (!clock.IsNight)
                 return;
-            string night = NightKey(now);
+            string night = clock.NightKey;
             if (night == visitedNight)
                 return;
-            // pora przybycia losowana z daty nocy (ta sama po restarcie gry)
-            var start = NightStart(now);
-            var rnd = new WRandom(DateSeed(start));
-            var arrive = start.AddHours(21 + rnd.Range(0.0, 6.0));
-            if (now >= arrive && now < arrive.AddSeconds(StaySeconds))
-                Arrive(night, (float)(arrive.AddSeconds(StaySeconds) - now).TotalSeconds);
-            else if (now >= arrive.AddSeconds(StaySeconds))
-                visitedNight = night;   // przegapiony: następna szansa jutro
+            // czy i kiedy przypłynie: losowane z numeru nocy (to samo po restarcie gry)
+            var rnd = new WRandom(NightSeed(clock));
+            if (rnd.Range(0.0, 1.0) >= VisitChance)
+            {
+                visitedNight = night;   // tej nocy nie przypłynie
+                return;
+            }
+            float arrive = (float)rnd.Range(0.0, 0.5) * GameClock.NightSeconds;
+            float into = clock.SecondsIntoNight;
+            if (into >= arrive && into < arrive + StaySeconds)
+                Arrive(night, arrive + StaySeconds - into);
+            else if (into >= arrive + StaySeconds)
+                visitedNight = night;   // przegapiony: następna szansa za kilka nocy
         }
 
-        static DateTime NightStart(DateTime now) => now.Hour < 12 ? now.Date.AddDays(-1) : now.Date;
-        // stałe ziarno z daty (string.GetHashCode bywa losowany przy każdym uruchomieniu)
-        static int DateSeed(DateTime d) => d.Year * 10000 + d.Month * 100 + d.Day;
-        static string NightKey(DateTime now) => NightStart(now).ToString("yyyy-MM-dd");
+        /// <summary>Szansa, że kupiec przypłynie danej nocy (noc jest co godzinę).</summary>
+        const double VisitChance = 0.34;
+
+        // stałe ziarno z numeru nocy (string.GetHashCode bywa losowany przy każdym uruchomieniu)
+        static long NightSeed(GameClock clock) => clock.CycleNumber * 7919L + 13;
 
         /// <summary>Przybycie (także z HUD debugowego): oferta na tę noc, łódź wyłania się z mgły.</summary>
         public void Arrive(string night = null, float stay = -1f)
@@ -115,9 +122,9 @@ namespace Wyspa.Sea
             var game = GameLoop.Instance;
             if (game == null)
                 return;
-            visitedNight = night ?? NightKey(game.Clock.Now);
+            visitedNight = night ?? game.Clock.NightKey;
             leaveAt = Time.unscaledTime + Mathf.Max(30f, stay);
-            BuildOffers(game, DateSeed(NightStart(game.Clock.Now)) + 17);
+            BuildOffers(game, (int)(NightSeed(game.Clock) % int.MaxValue) + 17);
             var island = Island.Instance;
             transform.position = island != null ? island.WaterBelow(18) : new Vector3(0f, -3f, 0f);
             present = true;

@@ -461,6 +461,26 @@ namespace Wyspa.UI
                 });
         }
 
+        /// <summary>
+        /// Tekst „opis + końcówka” w jednej linii o szerokości maxW: gdy się nie mieści, opis skraca się z „...”,
+        /// a końcówka (np. koszt) zostaje cała.
+        /// </summary>
+        static void FitWithSuffix(TextMeshProUGUI t, string main, string suffix, float maxW)
+        {
+            t.text = main + suffix;
+            if (Ui.Width(t) <= maxW)
+                return;
+            int lo = 0, hi = main.Length;
+            while (lo < hi)   // najdłuższy początek opisu, który mieści się z „...” i końcówką
+            {
+                int mid = (lo + hi + 1) / 2;
+                t.text = main.Substring(0, mid).TrimEnd() + "..." + suffix;
+                if (Ui.Width(t) <= maxW) lo = mid;
+                else hi = mid - 1;
+            }
+            t.text = (lo > 0 ? main.Substring(0, lo).TrimEnd() + "..." : "") + suffix;
+        }
+
         /// <summary>Wiersze sklepu (nasiona, budowle, morze): obrazek, nazwa, opis z kosztem, przycisk albo powód blokady.</summary>
         void BuildItems(ref float y, float rowH)
         {
@@ -476,14 +496,21 @@ namespace Wyspa.UI
                 var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
                 LocText.On(name, it.nameKey);
                 Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -pad + 2), new Vector2(160, 10));
-                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
-                desc.text = (it.descKey != null ? Loc.Get(it.descKey) : it.desc) + " - " + PlacementMode.CostText(it.cost);
-                Ui.Place(desc.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -pad - 8), new Vector2(240, 10));
                 var item = it;
                 it.button = Ui.Btn(row, "Buy", () => { if (Island.Instance != null) item.buy(Island.Instance); });
                 var bt = Ui.Txt(it.button.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
                 LocText.On(bt, it.buyKey);
                 float bw = Mathf.Max(40f, Ui.Width(bt) + 10f);
+                // opis z kosztem kończy się przed przyciskiem: za długi opis skracamy („...”), koszt zostaje cały,
+                // a pełny tekst pokazuje dymek po najechaniu
+                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
+                string fullDesc = it.descKey != null ? Loc.Get(it.descKey) : it.desc;
+                string costText = PlacementMode.CostText(it.cost);
+                float descW = W - 64 - 28 - bw - 6;
+                FitWithSuffix(desc, fullDesc, " - " + costText, descW);
+                Ui.Place(desc.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -pad - 8), new Vector2(descW, 10));
+                desc.raycastTarget = true;
+                desc.gameObject.AddComponent<HoverTip>().Init(tooltip, () => fullDesc + "\n" + costText);
                 Ui.Stretch(bt.rectTransform);
                 Ui.Place((RectTransform)it.button.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -pad), new Vector2(bw, 16));
                 it.status = Ui.Txt(row, "Status", Ui.Theme.textMuted, TextAlignmentOptions.TopRight);
@@ -742,8 +769,12 @@ namespace Wyspa.UI
                 LocText.On(name, r.nameKey);
                 Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -1), new Vector2(160, 10));
                 var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
-                desc.text = Loc.Get(r.descKey) + " - " + Loc.Get("ui.rituals.points", r.points) + ", " + PlacementMode.CostText(r.cost);
+                string ritualDesc = Loc.Get(r.descKey);
+                string ritualCost = Loc.Get("ui.rituals.points", r.points) + ", " + PlacementMode.CostText(r.cost);
+                FitWithSuffix(desc, ritualDesc, " - " + ritualCost, W - 110);
                 Ui.Place(desc.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -11), new Vector2(W - 110, 10));
+                desc.raycastTarget = true;
+                desc.gameObject.AddComponent<HoverTip>().Init(tooltip, () => ritualDesc + "\n" + ritualCost);
                 var def = r;
                 var b = Ui.Btn(row, "Perform", () =>
                 {
@@ -770,7 +801,7 @@ namespace Wyspa.UI
             var game = GameLoop.Instance;
             if (moonLine != null && chronicle != null)
                 moonLine.text = Loc.Get("ui.rituals.moon", chronicle.MoonPoints)
-                              + "   " + Loc.Get("ui.rituals.cycle", Mathf.CeilToInt(GameClock.DaysToNewMoon(System.DateTime.UtcNow)), chronicle.PendingPoints);
+                              + "   " + Loc.Get("ui.rituals.cycle", GameClock.NightsToNewMoon(System.DateTime.UtcNow), chronicle.PendingPoints);
             foreach (var (def, b, status) in ritualRows)
             {
                 bool done = chronicle != null && chronicle.Has(def.id);
@@ -983,23 +1014,6 @@ namespace Wyspa.UI
                 lighting.MinBrightness = Mathf.Clamp(lighting.MinBrightness + d * 0.05f, 0.15f, 0.7f);
                 PlayerPrefs.SetFloat("minBrightness", lighting.MinBrightness);
             });
-            y += OptRow;
-
-            var clock = game != null ? game.Clock : null;
-            OptLabel("ui.options.night", y);
-            if (clock != null)
-            {
-                float after = Stepper(OptCol, y, $"{Mathf.RoundToInt(clock.NightStartsAt):00}:00", 26f, d =>
-                {
-                    float v = Mathf.Repeat(Mathf.Round(clock.NightStartsAt) + d, 24f);
-                    if (!Mathf.Approximately(v, clock.NightEndsAt)) clock.NightStartsAt = v;
-                });
-                Stepper(after + 6f, y, $"{Mathf.RoundToInt(clock.NightEndsAt):00}:00", 26f, d =>
-                {
-                    float v = Mathf.Repeat(Mathf.Round(clock.NightEndsAt) + d, 24f);
-                    if (!Mathf.Approximately(v, clock.NightStartsAt)) clock.NightEndsAt = v;
-                });
-            }
             y += OptRow;
 
             if (game != null)

@@ -32,7 +32,7 @@ namespace Wyspa.Lore
             bool Has(string id) => c != null && c.Has(id);
             GameLoop.DuskGrowth = Has("dusk");
             Lighting.Lamp.ConsumptionMultiplier = Has("quiet_lamps") ? 0.75f : 1f;
-            GameClock.FullMoonWindow = Has("moon_dew") ? 0.068f : 0.034f;
+            GameClock.FullMoonWindow = Has("moon_dew") ? 2f / 16f : 1f / 16f;   // jedna albo dwie noce pełni (cykl 8 nocy)
             GameLoop.DayGrowthMultiplier = Has("deep_roots") ? 1.1f : 1f;
             Sea.GhostMerchant.StayMultiplier = Has("fog_whisper") ? 2f : 1f;
             Sea.Expedition.DurationMultiplier = Has("tide_memory") ? 0.75f : 1f;

@@ -119,7 +119,7 @@ ui.rituals.hint,Rytuały kosztują punkty księżyca (dostajesz je na nowiu) i d
 ui.rituals.points,{0} pkt,{0} pts,{0} Pkt.,{0}点,{0}点,{0} = punkty księżyca
 ui.rituals.perform,Odpraw,Perform,Vollziehen,執り行う,举行,
 ui.rituals.moon,Punkty księżyca: {0},Moon points: {0},Mondpunkte: {0},月の点：{0},月之点数：{0},
-ui.rituals.cycle,"Nów za {0:plural:dzień|dni|dni}, cykl da: {1} pkt","New moon in {0:plural:day|days}, cycle gives: {1} pts","Neumond in {0:plural:Tag|Tagen}, Zyklus bringt: {1} Pkt.",新月まで{0}日、周期報酬：{1}点,距新月{0}天，本周期可得：{1}点,"{0} = dni, {1} = punkty"
+ui.rituals.cycle,"Nów za {0} {0:plural:noc|noce|nocy}, cykl da: {1} pkt","New moon in {0} {0:plural:night|nights}, cycle gives: {1} pts","Neumond in {0} {0:plural:Nacht|Nächten}, Zyklus bringt: {1} Pkt.",新月まであと{0}夜、周期報酬：{1}点,距新月还有{0}夜，本周期可得：{1}点,"{0} = noce cyklu gry (księżyc: 8 nocy), {1} = punkty"
 ui.rituals.done,Odprawiony,Performed,Vollzogen,完了,已举行,
 ui.bestiary.plants,Rośliny,Plants,Pflanzen,植物,植物,
 ui.bestiary.fish,Ryby,Fish,Fische,魚,鱼,
@@ -137,7 +137,6 @@ ui.event.fullmoon,Pełnia,Full moon,Vollmond,満月,满月,
 ui.options.general,Ogólne,General,Allgemein,一般,常规,
 ui.options.window,Okno,Window,Fenster,ウィンドウ,窗口,
 ui.options.system,System,System,System,システム,系统,
-ui.options.night,Godziny nocy,Night hours,Nachtstunden,夜の時間,夜晚时段,od - do
 ui.options.idle,Próg bezczynności,Idle after,Inaktiv nach,放置判定,闲置判定,
 ui.options.seconds,{0} s,{0} s,{0} s,{0}秒,{0}秒,{0} = sekundy
 ui.options.idle_hint,"Rośliny dnia rosną, gdy pracujesz. Bez myszy i klawiatury dłużej niż próg = przerwa.",Day crops grow while you work. No mouse or keyboard for longer than the limit = a break.,"Tagpflanzen wachsen, während du arbeitest. Länger ohne Maus und Tastatur = Pause.",昼の作物は作業中に育つ。設定時間より長く操作がないと休憩扱い。,你工作时白天作物会生长。超过设定时间没有操作即视为休息。,

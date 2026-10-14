@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 **Pockland**: gra w Unity, idle w okienku na pulpicie, wyspa w klimacie dark fantasy. Rośliny rosną od pracy gracza przy komputerze,
-a lampy zasilane Esencją oświetlają wyspę w nocy (pora dnia z zegara komputera).
+a lampy zasilane Esencją oświetlają wyspę w nocy (pora dnia z cyklu gry: 1 h = 40 min dnia + 20 min nocy).
 
 ## Zanim cokolwiek zrobisz
 - **Przeczytaj `docs/GDD.md`.** To źródło prawdy o projekcie: koncept, systemy, styl graficzny, paleta, otwarte decyzje,

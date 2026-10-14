@@ -15,7 +15,8 @@ ulepszenia i powiększenie wyspy.
 
 **Wyróżniki:**
 - Nagroda za coś, co gracz i tak robi: pracę przy komputerze.
-- **Prawdziwy zegar komputera** steruje porą dnia. W nocy na wyspie robi się ciemno i trzeba ją oświetlić lampami.
+- **Cykl gry** steruje porą dnia (od Etapu 6d+, zamiast zegara komputera): doba trwa 1 h, 40 min dnia i 20 min nocy, i idzie
+  także offline. W nocy na wyspie robi się ciemno i trzeba ją oświetlić lampami.
 - Lampy zasila **Esencja**, czyli energia zdobywana pracą.
 - Dwa typy roślin: **dnia** (rosną od aktywności, w świetle) i **nocy** (rosną w ciemności, także gdy gracz śpi).
 
@@ -40,7 +41,7 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 | Zapis | JSON w `Application.persistentDataPath`, autosave co ~1 min i przy wyjściu |
 | Postęp offline | Przy starcie liczymy, ile **nocnych godzin** minęło od zamknięcia, i doliczamy wzrost roślin nocy. Rośliny dnia offline **nie** rosną |
 | Czas | `System.DateTime.Now`. Opcjonalnie później prawdziwy wschód i zachód słońca (z szerokości geograficznej) albo godziny ustawiane w opcjach |
-| Faza księżyca | Liczona z daty (pełnia daje bonus, patrz zdarzenia) |
+| Faza księżyca | Z cyklu gry: 8 nocy od nowiu do nowiu, pełnia co ósmą noc (bonus, patrz zdarzenia) |
 
 **Architektura (zaimplementowana w Etapie 1, namespace `Wyspa.*`, szczegóły w §10):**
 - `ActivityTracker`: co 1 s sprawdza `SystemIdle`, emituje „aktywne sekundy”
@@ -116,7 +117,10 @@ Każda ma inny kolor światła („strefy nastroju”):
 Wszystkie liczby są do balansowania.
 
 ### 4.4 Pora dnia i oświetlenie
-- Pora dnia z zegara komputera wyznacza **kolor otoczenia**: dzień bez zmian, zmierzch ciepło-fioletowy, noc ciemnogranatowa
+- **Cykl gry** (`GameClock`, Etap 6d+): doba gry trwa 1 h liczoną od stałej daty w UTC (więc idzie też offline): 40 min dnia
+  (06:00-20:00 na zegarze gry w HUD) i 20 min nocy (20:00-06:00), zmierzch to ostatnia godzina zegara przed 20:00 (ok. 3 min).
+  Każdy cykl to osobna „doba gry”, więc zdarzenia „raz na noc” (kupiec, potwór, ołtarz) są raz na cykl. Opcji godzin nocy już nie ma.
+- Pora dnia wyznacza **kolor otoczenia**: dzień bez zmian, zmierzch ciepło-fioletowy, noc ciemnogranatowa
   (w Unity `Gradient` / LUT, Global Light 2D).
 - **Światło lamp ma 3 pasma z ditheringiem Bayera**, a nie gładki gradient, żeby zachować pikselowy charakter
   (własny shader kwantyzujący światło albo post-process).
@@ -148,7 +152,7 @@ Wszystkie liczby są do balansowania.
 - **Kupiec-widmo:** łódź z mgły raz na noc, o losowej porze, czeka ok. 10 min. Sprzedaje nasiona nocne i skupuje plony drożej.
 - **Błędne ogniki:** kliknięcie daje +Esencję.
 - **Spadająca gwiazda:** kliknięcie daje odłamek gwiazdy (rzadki surowiec do lamp).
-- **Pełnia księżyca** (prawdziwa faza): rośliny nocy rosną 2× szybciej, krwawe róże kwitną tylko wtedy.
+- **Pełnia księżyca** (co ósma noc cyklu gry; wcześniej prawdziwa faza): rośliny nocy rosną 2× szybciej, krwawe róże kwitną tylko wtedy.
 - **Wynurzenie potwora:** rzadko. Prosi o ofiarę (np. 5 dyń) i daje coś unikalnego.
 - **Świecące ryby:** tylko w nocy, do złowienia, składnik do klatki z ognikiem.
 
@@ -254,7 +258,16 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
-- [x] Liczby balansu, tempo **szybkie** (wybór gracza, Etap 6d): symulacja `tools/balance/sim.py` (8 h pracy dziennie).
+- [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
+  zegara). Księżyc: 8 nocy na cykl, pełnia jedną noc (rytuał „Księżycowa rosa”: dwie). Kupiec-widmo w co trzecią noc (34%),
+  w pierwszej połowie nocy, zostaje 10 min. Rośliny i drzewa rosną **x3 szybciej** (marchew 3:20, dynia 8:20); rośliny nocy
+  liczone w nocach cyklu (wilcza jagoda 3/4 nocy, trupi grzyb 1, księżycowy kwiat 1.25, mandragora 1.75, upiorna dynia
+  i dynia-upiór 2, cmentarny bluszcz 4, krwawa róża 1 noc pełni). Drzewa: wzrost 40-100 min, owoce 10-15 min, grusza 2 noce,
+  drzewo księżyca 1 noc pełni. Sieci i wyprawy bez zmian.
+  Balans po zmianie (symulacja z cyklem): kafelki `10 + 20n + 1.5n²` monet i `3 + n/3` Esencji, odblokowanie nasion
+  300/780/1800 (dzień) i 960/2400/4800 (noc), słój 200/800/3000, duszek-handlarz 1600. Wyniki jak wcześniej: ognik po ok. 2 h,
+  wszystkie nasiona ok. 49 h, 100 kafelków ok. 100 h, 150 kafelków ok. 180 h.
+- [x] Liczby balansu, tempo **szybkie** (wybór gracza, Etap 6d, przed cyklem gry): symulacja `tools/balance/sim.py` (8 h pracy dziennie).
   Wyniki: lampa w kilka minut (wprowadzenie), pierwszy ognik po ok. 1-3 h, wszystkie nasiona po ok. 40 h (tydzień),
   25 kafelków ok. 23 h, 100 kafelków ok. 100 h (2 tygodnie), 150 kafelków ok. 175 h (miesiąc). Zmiany: kafelki droższe (§13.2),
   ognik 100 monet bez plonów nocy, odblokowanie nasion x1.3. Czasy wzrostu i ceny roślin bez zmian.
@@ -473,6 +486,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     nasiona do odblokowania x1.3). Prośby gracza w trakcie: ogniki strącają owoce z drzew i zbierają je z ziemi,
     duszek-handlarz stoi przy skrzyni i sprzedaje ją, gdy jest pełna, mgła w przezroczystym oknie gęstsza i przyklejona
     do wody, wiatr jako fala przez wyspę z giętkimi łodygami i sprężystym powrotem. Zapis v8.
+47. Po teście 6d (prośby gracza): **cykl gry 1 h** (40 min dnia, 20 min nocy) zamiast zegara komputera, księżyc 8 nocy,
+    wzrost roślin i drzew **x3**, rośliny nocy liczone w nocach cyklu, ceny przeliczone symulacją (tempo bez zmian).
+    W sklepie i rytuałach za długi opis skraca się z „...” (koszt zostaje cały, pełny tekst w dymku).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -810,13 +826,13 @@ Skrypty: `tools/pixel-proto/tiles_proto.py`, `world_proto.py`.
 ### 13.2 Koszt
 - **Monety + Esencja.** Praca dosłownie „wyrywa ląd z mgły”.
   n = kafelki kupione od startu. Krzywa kwadratowa, bo wykładnicza nie pasuje do świata 32×32:
-  - Monety: `10 + 8n + 0.5n²` (Etap 6d, balans; wcześniej `10 + 4n + 0.06n²`);
-  - Esencja: `3 + n/4` (wcześniej `3 + n/8`).
+  - Monety: `10 + 20n + 1.5n²` (balans po cyklu gry i wzroście x3; wcześniej `10 + 8n + 0.5n²`, na początku `10 + 4n + 0.06n²`);
+  - Esencja: `3 + n/3` (wcześniej `3 + n/4`, na początku `3 + n/8`).
 
   | n | 0 | 10 | 50 | 100 | 300 | 600 | 1020 |
   |---|---|---|---|---|---|---|---|
-  | monety | 10 | 140 | 1660 | 5810 | 47410 | 184810 | 528370 |
-  | Esencja | 3 | 5 | 15 | 28 | 78 | 153 | 258 |
+  | monety | 10 | 360 | 4760 | 17010 | 141010 | 552010 | 1581010 |
+  | Esencja | 3 | 6 | 19 | 36 | 103 | 203 | 343 |
 
   Wysoka cena w Esencji późno w grze wymusza ulepszanie słoja, co jest celowym powiązaniem systemów.
 - Ostatnie kafelki świata (krawędź mapy, wnętrza stref) mogą wymagać rzadkich surowców (odłamki gwiazd, dary z głębin).

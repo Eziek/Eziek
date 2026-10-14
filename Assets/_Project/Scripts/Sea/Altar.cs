@@ -22,7 +22,7 @@ namespace Wyspa.Sea
             if (game == null || events == null)
                 return;
             bool night = game.Clock.IsNight;
-            string key = (game.Clock.Now.Hour < 12 ? game.Clock.Now.Date.AddDays(-1) : game.Clock.Now.Date).ToString("yyyy-MM-dd");
+            string key = game.Clock.NightKey;
             bool used = events.MonsterNight == key;
             if (!night)
                 info.lines.Add(Loc.Get("ui.altar.day"));
