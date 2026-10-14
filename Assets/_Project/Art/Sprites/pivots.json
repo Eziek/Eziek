@@ -1083,6 +1083,18 @@
       "hd": 2
     },
     {
+      "name": "fish_jump_down",
+      "x": 0.53571,
+      "y": 0.4,
+      "hd": 2
+    },
+    {
+      "name": "fish_jump_up",
+      "x": 0.53571,
+      "y": 0.4,
+      "hd": 2
+    },
+    {
       "name": "frame_buy",
       "x": 0.5,
       "y": 0.5

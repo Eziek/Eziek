@@ -54,6 +54,14 @@ namespace Wyspa.Farming
 
         void Update()
         {
+            // świecące rośliny (księżycowy kwiat, upiorna dynia...) delikatnie pulsują, każda w swoim rytmie
+            if (glowRenderer != null && glowRenderer.sprite != null)
+            {
+                float p = 0.78f + 0.22f * Mathf.Sin(Time.unscaledTime * 1.8f + (Cell.x * 7 + Cell.y * 13) * 0.7f);
+                var gc = glowRenderer.color;
+                gc.a = p;
+                glowRenderer.color = gc;
+            }
             if (cropFx == null)
                 return;
             Color c = Color.clear;

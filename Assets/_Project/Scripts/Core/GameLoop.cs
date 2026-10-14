@@ -132,6 +132,7 @@ namespace Wyspa.Core
             if (GetComponent<Familiars.FamiliarSystem>() == null) gameObject.AddComponent<Familiars.FamiliarSystem>();   // chowańce
             if (GetComponent<Weather.WeatherSystem>() == null) gameObject.AddComponent<Weather.WeatherSystem>();   // pogoda
             if (GetComponent<Audio.AudioManager>() == null) gameObject.AddComponent<Audio.AudioManager>();   // dźwięk
+            if (GetComponent<Visual.AmbientLife>() == null) gameObject.AddComponent<Visual.AmbientLife>();   // ćmy, skaczące ryby
             if (GetComponent<Platform.TrayIcon>() == null) gameObject.AddComponent<Platform.TrayIcon>();   // ikona w zasobniku (build Windows)
             upgrades.Changed += ApplyUpgrades;
         }

@@ -202,6 +202,20 @@ def merchant_spirit(f):
     return s
 
 
+# ---------------- ryba wyskakująca z wody (animacja otoczenia) ----------------
+def fish_jump(up):
+    """Mała srebrnoszara ryba w skoku: up = nos w górę (wyskok), inaczej nos w dół (powrót do wody). Patrzy w prawo."""
+    s = Sprite(14, 10, 7, 5)
+    ang = -0.55 if up else 0.55
+    s.blob(7, 5, 4.2, 2.0, ['b1', 'b2', 'b3', 'fo'], ang=ang)
+    dy = 2 if up else -2                                   # ogon po przeciwnej stronie niż nos
+    s.set(2, 5 + dy, 'b2'); s.set(1, 5 + dy - 1, 'b2'); s.set(1, 5 + dy + 1, 'b2'); s.set(2, 5 + dy - 1, 'b1')
+    s.set(8, 4 if up else 6, 'b0')                         # płetwa
+    s.outline()
+    s.set(10, 3 if up else 6, 'o')                         # oko
+    return s
+
+
 # ---------------- skład (nadwyżka drewna i kamienia na monety) ----------------
 def storehouse():
     """Skład: stos polan, kupka kamieni i ważąca je waga z mosiężnymi szalami. 16 px szerokości (kafelek)."""

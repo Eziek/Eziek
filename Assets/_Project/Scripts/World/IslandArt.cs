@@ -108,7 +108,9 @@ namespace Wyspa.World
         public Sprite[] familiarBatGlow;
 
         [Header("Kocioł alchemiczny")]
-        public Sprite storehouse;   // skład: nadwyżka drewna i kamienia na monety
+        public Sprite storehouse;
+        public Sprite[] moth;       // ćmy przy lampach nocą (AmbientLife)
+        public Sprite[] fishJump;   // ryba wyskakująca z wody: nos w górę, nos w dół   // skład: nadwyżka drewna i kamienia na monety
         public Sprite cauldronIdle;
         public Sprite[] cauldronBrew;
         public Sprite[] cauldronBrewGlow;

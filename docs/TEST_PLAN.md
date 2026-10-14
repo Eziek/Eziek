@@ -93,6 +93,18 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
 3. Po finale: ołtarz pokazuje nagrody, mgła w nocy rzadsza, w bestiariuszu 3 zapiski epilogu.
    Zapis i wczytanie: finał zostaje (nie da się go powtórzyć), zwykłe wynurzenia oka mają nowy opis.
 
+## 4d. Etap 7: grafika 32 px
+1. Pobierz, poczekaj na import (setki PNG), **Wyspa → 2** (dane, materiały: kołysanie x2, obwódka mgły, nowe sprite'y).
+2. Rośliny, drzewa, obiekty, budowle, ogniki, stworzenia: ostre, w 32 px, ciemniejsze kolory; rozmiar w świecie jak dawniej.
+3. Teren: klif z warstwami ziemi, kamieniami i korzeniami, trawa z kępkami, gładki brzeg (bez schodków 2x2). Grządki pasują.
+4. Woda: gładkie pasy głębi, dno z kamieniami przesuwa się przy przesuwaniu kamery (PPM), światełka przy dnie (nocą jasne),
+   fale idą do brzegu i rozbijają się w pianę, kręgi na wodzie. Ryby i potwór jak dawniej.
+5. Mgła: ciemniejsza obwódka; w przezroczystym oknie kończy się kłębami przed krawędzią okna (bez kreski).
+6. Opcje → Okno → Powiększenie: x1, x2, x3 (piksele ostre, bez rozmycia); Ctrl + kółko skacze co jeden poziom.
+7. Wiatr: rośliny i drzewa kołyszą się jak dawniej, bez pionowej kreski.
+8. Noc: ćmy wokół zapalonych lamp, świecące rośliny pulsują; co jakiś czas ryba wyskakuje z wody z pluskiem.
+9. Księga: drzewko ulepszeń i lista budowli przewijają się kółkiem i przeciąganiem.
+
 ## 5. Zamówienia i chowańce
 1. Przy karteczce „gotowe” zaczynają przychodzić zamówienia (toast „Nowa karteczka na tablicy”); po ok. 20 s karteczka
    wprowadzenia znika. Klik w tablicę: lista (kto, czego ile, cykle, nagroda). F1 → „Zamówienie teraz” dokłada kolejną.
