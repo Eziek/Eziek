@@ -1139,6 +1139,106 @@
       "y": 0.05556
     },
     {
+      "name": "hat_beanie",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_candle",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_candle_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_crown",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_crown_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_feather",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_flower",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_flower_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_halo",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_halo_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_horns",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_mushroom",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_nightcap",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_pumpkin",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_pumpkin_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_skull",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_straw",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_tophat",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_tricorne",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "hat_witch",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
       "name": "icon_bestiary",
       "x": 0.5,
       "y": 0.5

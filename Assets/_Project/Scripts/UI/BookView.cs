@@ -442,7 +442,7 @@ namespace Wyspa.UI
             float y = 0;
             // podzakładki: Nasiona / Lampy / Budowle / Morze
             float x = 0;
-            foreach (var (section, key) in new[] { (0, "ui.shop.seeds"), (4, "ui.shop.trees"), (1, "ui.shop.lamps"), (2, "ui.shop.buildings"), (3, "ui.shop.sea") })
+            foreach (var (section, key) in new[] { (0, "ui.shop.seeds"), (4, "ui.shop.trees"), (1, "ui.shop.lamps"), (2, "ui.shop.buildings"), (3, "ui.shop.sea"), (5, "ui.shop.hats") })
             {
                 int sec = section;
                 var b = Ui.Btn(content, "Section", () => { shopSection = sec; Show(Tab.Shop); });
@@ -477,6 +477,12 @@ namespace Wyspa.UI
                 BuildTreeShop();
                 BuildItems(ref y, 28f);
                 RefreshShop();
+                return;
+            }
+            if (shopSection == 5)
+            {
+                info.text = Loc.Get("ui.shop.hats_hint");
+                BuildHatShop(y);
                 return;
             }
             if (shopSection == 2)
@@ -524,6 +530,59 @@ namespace Wyspa.UI
                     y += 28;
                 }
             RefreshShop();
+        }
+
+        // ---- Czapki ogników: kosmetyka za dużo monet albo za perły, na zawsze (Economy/Hats)
+
+        void BuildHatShop(float y)
+        {
+            var art = Island.Instance != null ? Island.Instance.Art : null;
+            var game = GameLoop.Instance;
+            var culture = LocCore.Culture(Loc.Language);
+            foreach (var h in Hats.All)
+            {
+                var hat = h;
+                var row = Ui.Place(Ui.Rect("Hat_" + h.id, content), Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 64, 22));
+                var slot = Ui.Img(row, "Slot", Ui.Theme.slot, true);
+                Ui.Place(slot.rectTransform, Ui.TopLeft, Ui.TopLeft, Vector2.zero, new Vector2(22, 22));
+                var pic = Ui.Img(slot.transform, "Hat", art != null ? art.Hat(h.id, false) : null, false);
+                pic.preserveAspect = true;
+                Ui.Place(pic.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(16, 16));
+                var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
+                LocText.On(name, h.NameKey);
+                Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -6), new Vector2(120, 10));
+                if (Hats.Owns(h.id))
+                {
+                    var have = Ui.Txt(row, "Owned", Ui.Theme.textGoldOnPage, TextAlignmentOptions.TopRight);
+                    have.text = Loc.Get("ui.shop.hat_owned");
+                    Ui.Place(have.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -6), new Vector2(90, 10));
+                }
+                else
+                {
+                    bool pearls = h.pearls > 0;
+                    var icon = Ui.Img(row, "Cur", Ui.Theme.Icon(pearls ? "pearl" : "coin"), false);
+                    Ui.Place(icon.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-72, -5), new Vector2(12, 12));
+                    var price = Ui.Txt(row, "Price", Ui.Theme.textDark, TextAlignmentOptions.TopRight);
+                    price.text = pearls ? h.pearls.ToString() : h.coins.ToString("N0", culture);
+                    Ui.Place(price.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-86, -6), new Vector2(40, 10));
+                    var buy = Ui.Btn(row, "Buy", () =>
+                    {
+                        var g = GameLoop.Instance;
+                        if (g != null && Hats.TryBuy(hat, g.Wallet))
+                        {
+                            GameEvents.PlaySound("coin");
+                            GameEvents.RaiseToast("toast.hat_bought", Loc.Get(hat.NameKey));
+                            Show(Tab.Shop);
+                        }
+                    });
+                    Ui.Place((RectTransform)buy.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -3), new Vector2(64, 16));
+                    var bt = Ui.Txt(buy.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
+                    Ui.Stretch(bt.rectTransform);
+                    LocText.On(bt, "ui.upgrade.buy");
+                    buy.interactable = game != null && Hats.CanBuy(h, game.Wallet);
+                }
+                y += 24;
+            }
         }
 
         // ---- Morze: pomost, sieci, łódź. Koszty w monetach i drewnie (§11.2: drewno na budowle)

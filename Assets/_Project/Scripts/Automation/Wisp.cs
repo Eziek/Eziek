@@ -100,6 +100,9 @@ namespace Wyspa.Automation
         bool warnedFull;
         Transform visual;           // sprite'y ognika (odsuwane od sąsiadów)
         SpriteRenderer tool, toolFront, toolGlow;   // narzędzie zawodu (koszyk: tył + przód, rzeczy między nimi)
+        SpriteRenderer hatSr, hatGlow;              // czapka (sklep z czapkami)
+        string hat;
+        const float HatY = 14f / 16f;               // rondo na czubku głowy
         Sprite[] toolFrames, toolGlowFrames;
         int toolPose;
         float toolPoseUntil;
@@ -238,6 +241,55 @@ namespace Wyspa.Automation
         }
 
         bool HasBasket => kind == WispKind.Gatherer && toolFront != null;
+
+        // ------------------------------------------------------------ czapka
+
+        /// <summary>Czapka ognika (id z Economy.Hats) albo null.</summary>
+        public string Hat => hat;
+
+        /// <summary>Zakłada czapkę (null = bez). Grafika z IslandArt (Wyspa → 2); bez niej ognik jest bez czapki.</summary>
+        public void SetHat(string id)
+        {
+            var art = Island.Instance != null ? Island.Instance.Art : null;
+            hat = string.IsNullOrEmpty(id) || Economy.Hats.Find(id) == null ? null : id;
+            var sprite = art != null ? art.Hat(hat, false) : null;
+            var glowSprite = art != null ? art.Hat(hat, true) : null;
+            var parent = visual != null ? visual : transform;
+            if (hatSr == null)
+                hatSr = NewPart("Hat", parent);
+            hatSr.sprite = sprite;
+            hatSr.enabled = sprite != null;
+            if (glowSprite != null && hatGlow == null)
+            {
+                hatGlow = NewPart("HatGlow", parent);
+                if (art.glow != null)
+                    hatGlow.sharedMaterial = art.glow;   // świeca, aureola, klejnoty świecą w nocy
+            }
+            if (hatGlow != null)
+            {
+                hatGlow.sprite = glowSprite;
+                hatGlow.enabled = glowSprite != null;
+            }
+            if (bubble != null)
+                bubble.HeadHeight = HeadHeight + (sprite != null ? sprite.rect.height / 16f - 0.15f : 0f);   // dymek nad czapką
+        }
+
+        void UpdateHat()
+        {
+            if (hatSr == null)
+                return;
+            bool flip = body != null && body.flipX;
+            var at = new Vector3(flip ? -0.5f / 16f : 0.5f / 16f, HatY, 0f);
+            hatSr.flipX = flip;
+            hatSr.transform.localPosition = at;
+            hatSr.sortingOrder = 4406;
+            if (hatGlow != null)
+            {
+                hatGlow.flipX = flip;
+                hatGlow.transform.localPosition = at;
+                hatGlow.sortingOrder = 4407;
+            }
+        }
 
         /// <summary>
         /// Narzędzie w dłoni: drwal siekiero-kilof, ogrodnik sierp, siewca worek nasion, alchemik fiolka, latarnik latarenka,
@@ -382,6 +434,7 @@ namespace Wyspa.Automation
             foreach (var c in carriedSprites)
                 if (c != null) c.sortingOrder = HasBasket ? 4403 : 4399;   // w koszyku: między tyłem a przodem
             UpdateTool();
+            UpdateHat();
             chatCooldown -= Time.unscaledDeltaTime;
             if (flying)
             {

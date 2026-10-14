@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-14)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-87), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-88), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -16,8 +16,8 @@ Historia decyzji jest w GDD §9 (punkty 1-87), a lista testów w `docs/TEST_PLAN
   TEST_PLAN 9. Ceny sprzedaży liczy tylko `Economy/Market.cs` (nowe źródła sprzedaży muszą iść przez niego).
 - **Scena gry: `MainLevel.unity`** (dawniej Prototype). UI: czytelna czcionka Fusion Pixel 8px (opcja), poprawki z przeglądu
   kodu UI (GDD §9 p. 79, TEST_PLAN 10). Komentarze w kodzie bez historii rozmów; commity bez stopek o asystencie.
-- **W toku (wybór gracza):** sklep z czapkami dla ogników. Zrobione: scenka rejsu, świt/zmierzch, narzędzia ogników
-  (GDD §9 p. 84, 86, 87).
+- **Ostatnio (wybór gracza):** scenka rejsu, świt/zmierzch, narzędzia ogników, sklep z czapkami (GDD §9 p. 84, 86-88).
+  Następne z listy propozycji: zdarzenia na horyzoncie z sekcją „Widziane” w Bestiariuszu (gracz jeszcze nie wybrał).
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,

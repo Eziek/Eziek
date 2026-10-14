@@ -15,6 +15,7 @@ namespace Wyspa.Automation
         public int kind;
         public int xp;
         public int name;
+        public string hat;   // czapka (Economy.Hats), null = bez
     }
 
     /// <summary>
@@ -244,6 +245,19 @@ namespace Wyspa.Automation
                     ? Loc.Get("ui.nest.wisp_max", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level)
                     : Loc.Get("ui.nest.wisp", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level, w.Xp, next));
             }
+            // czapki: każdy ognik osobno, klik = następna posiadana czapka (albo bez)
+            if (Economy.Hats.AnyOwned)
+                foreach (var w in wisps)
+                {
+                    var wisp = w;
+                    string hatName = wisp.Hat != null ? Loc.Get("hat." + wisp.Hat) : Loc.Get("ui.nest.no_hat");
+                    info.Button(Loc.Get("ui.nest.hat", Loc.Get(wisp.NameKey), hatName), () =>
+                    {
+                        wisp.SetHat(Economy.Hats.Next(wisp.Hat));
+                        GameEvents.PlaySound("click", 0.5f);
+                        GameEvents.RequestContext(this);
+                    });
+                }
             if (wisps.Exists(w => w.Kind == WispKind.Sower))
             {
                 foreach (bool night in new[] { false, true })
@@ -289,7 +303,7 @@ namespace Wyspa.Automation
             var list = new List<WispSave>();
             foreach (var w in wisps)
                 if (w != null)
-                    list.Add(new WispSave { id = w.Id, kind = (int)w.Kind, xp = w.Xp, name = w.NameIndex });
+                    list.Add(new WispSave { id = w.Id, kind = (int)w.Kind, xp = w.Xp, name = w.NameIndex, hat = w.Hat });
             return list;
         }
 
@@ -310,7 +324,11 @@ namespace Wyspa.Automation
                 return;
             foreach (var s in list)
                 if (s != null && Enum.IsDefined(typeof(WispKind), s.kind))
-                    AddWisp((WispKind)s.kind, s.id, s.xp, s.name, true);
+                {
+                    var w = AddWisp((WispKind)s.kind, s.id, s.xp, s.name, true);
+                    if (w != null && !string.IsNullOrEmpty(s.hat))
+                        w.SetHat(s.hat);
+                }
         }
     }
 }

@@ -100,6 +100,19 @@ namespace Wyspa.World
         [Header("Rój ogników: gniazdo (2 klatki) i ogniki w kolorach zawodów")]
         public Sprite[] wispNest;
         public List<WispKindArt> wispKinds = new List<WispKindArt>();
+        [Tooltip("Czapki ogników (hat_<id>, Economy/Hats) i ich piksele emisyjne.")]
+        public List<UI.NamedSprite> hats = new List<UI.NamedSprite>();
+        public List<UI.NamedSprite> hatGlows = new List<UI.NamedSprite>();
+
+        public Sprite Hat(string id, bool glow)
+        {
+            var list = glow ? hatGlows : hats;
+            if (id == null || list == null)
+                return null;
+            foreach (var h in list)
+                if (h != null && h.name == id) return h.sprite;
+            return null;
+        }
 
         [Header("Chowańce: kot (sit0 sit1 walk0 walk1 sleep), kruk (sit0 sit1 fly0 fly1), ropucha (sit jump), nietoperz (fly0 fly1 hang)")]
         public Sprite[] familiarCat;

@@ -409,7 +409,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   monitora, nie od powiększenia okna** (1080p x2, 1440p x3, 4K x4), najwyżej o 1 mniej niż skala świata. Opcje → Okno →
   „Rozmiar interfejsu”: auto albo x1-x4.
 - [x] **Scenki** (wybór gracza): rejs (odpłynięcie, podsumowanie, przypłynięcie) i świt/zmierzch; potem narzędzia ogników
-  według zawodu i sklep z czapkami dla ogników (za dużo monet albo perły). §9 p. 84.
+  według zawodu i sklep z czapkami dla ogników (za dużo monet albo perły). §9 p. 84, 86-88.
+- [x] Czapki ogników: kosmetyka na zawsze (także po rejsie), zakładane w panelu gniazda każdemu ognikowi osobno (§9 p. 88).
+  Do balansu: ceny w monetach i perłach.
 - [x] Start gry **zawsze rano** (07:00 na zegarze gry), także po resecie i po rejsie; każdy zapis ma własne przesunięcie
   cyklu (§9 p. 82).
 - [x] Prestiż: **Przystań we mgle** między rejsami, dary **losowane** za perły (1 perła = 1 losowanie, animacja walki ikon),
@@ -441,6 +443,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `mockups.py` | makiety UI (`out/ui_*.png`) i plik `WyspaPixel.ttf` |
 | `export_unity_ui.py` | eksport nowych sprite'ów, UI (z granicami 9-slice) i fontu do Unity (uruchamiać po `export_unity.py`) |
 | `export_unity_auto.py` | Etapy 6b-6d: nowe rośliny, duszki, ptaki, skrzynia 16 px, tablica ogłoszeń i strzałka wprowadzenia |
+| `wisp_hats.py` + `export_unity_hats.py` | czapki ogników (15, pivot = środek dołu) → `Automation/hat_*.png` |
 | `wisp_tools.py` + `export_unity_wisp_tools.py` | narzędzia ogników (6 zawodów, po 2 klatki, pivot = chwyt) → `Automation/tool_*.png` |
 | `gift_icons.py` + `export_unity_gifts.py` | ikony 37 Darów Mgły (12 px) → `UI/Icons/icon_gift_<id>.png`, arkusz `docs/img/ikony_darow.png` |
 | `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze |
@@ -702,7 +705,15 @@ Obrazki referencyjne (kopie): `docs/img/`
     siewca worek nasion (przechyla się i sypie przy sadzeniu), alchemik fiolka (wywar bulgocze i świeci), latarnik
     latarenka (płomyk migocze i świeci w nocy), zbieracz koszyk: zebrane rzeczy (owoce, odłamki, błyskotki) leżą w koszyku.
     Grafika: `tools/pixel-proto/wisp_tools.py` + `export_unity_wisp_tools.py` → `Automation/tool_<nazwa>_<0|1>.png`
-    (pivot = chwyt), w Unity Wyspa → 2. Kod: `Wisp.SetTool`, `Wisp.Pose`.
+    (pivot = chwyt), w Unity Wyspa → 2. Kod: `Wisp.SetTool`, `Wisp.Pose`. Podgląd: `docs/img/narzedzia_ognikow.png`.
+88. **Sklep z czapkami dla ogników** (prośba gracza): Księga → Sklep → Czapki. 15 czapek, kosmetyka bez wpływu na grę:
+    za monety (słomkowy kapelusz 3000, czapka z pomponem 4000, szlafmyca 5000, wianek 6000, kapelusz muchomora 8000,
+    beret z piórem 10 000, cylinder 12 000, kapelusz wiedźmy 15 000, dyniowy hełm 20 000, rogi 25 000) albo za Perły Mgły
+    (piracki trójgraniasty 2, hełm z czaszki 3, świeca 3, korona 4, aureola mgły 5). Kupione **zostają na zawsze**
+    (zapis w PrestigeSave, także po rejsie). Zakłada się je w panelu gniazda, każdemu ognikowi osobno (klik = następna
+    posiadana czapka albo bez); dymek pogaduszek wędruje nad czapkę. Świeca, aureola, korona, wianek i dynia mają piksele
+    emisyjne. Grafika `tools/pixel-proto/wisp_hats.py` + `export_unity_hats.py`, podgląd `docs/img/czapki_ognikow.png`.
+    Kod: `Economy/Hats.cs`, `Wisp.SetHat`, `WispSave.hat`.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

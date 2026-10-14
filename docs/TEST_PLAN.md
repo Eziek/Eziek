@@ -253,3 +253,12 @@ Najpierw **Wyspa → 2** (grafiki narzędzi). Bez tego ogniki są bez narzędzi,
 3. Zbieracz: zebrane owoce, odłamki gwiazd i monety z trawy leżą w koszyku (wystają nad brzeg), obracają się z koszykiem.
 4. Latarenka i fiolka świecą w nocy (piksele emisyjne), płomyk migocze, wywar bulgocze.
 5. Pogaduszki i odsuwanie się ogników działają jak wcześniej, narzędzia nie zasłaniają dymków.
+
+## 18. Sklep z czapkami
+Najpierw **Wyspa → 2** (grafiki czapek).
+1. Księga → Sklep → Czapki: 15 czapek z podglądem, cena w monetach albo perłach (ikona perły), „Kup” nieaktywne bez środków.
+2. Kup czapkę za monety (F1: dużo monet) i za perły (F1: „Perły mgły +5”): toast, wiersz pokazuje „Masz”.
+3. Panel gniazda: przy każdym ogniku przycisk „Czapka – Imię: ...”; klik przełącza posiadane czapki i „bez czapki”.
+   Czapka siedzi na czubku głowy, obraca się z ognikiem, dymek pogaduszek pojawia się nad czapką.
+4. Świeca, aureola, korona, wianek, dynia: w nocy świecące piksele.
+5. Zapis i wczytanie: czapki na ognikach zostają. Rejs we mgłę: kupione czapki zostają w sklepie („Masz”) na nowej wyspie.

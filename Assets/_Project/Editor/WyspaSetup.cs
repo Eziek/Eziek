@@ -642,6 +642,16 @@ namespace Wyspa.EditorTools
                     tool = new[] { T(0), T(1) }, toolGlow = new[] { T(0, "_glow"), T(1, "_glow") },
                 });
             }
+            // czapki ogników (sklep z czapkami)
+            art.hats = new List<NamedSprite>();
+            art.hatGlows = new List<NamedSprite>();
+            foreach (var h in Wyspa.Economy.Hats.All)
+            {
+                art.hats.Add(new NamedSprite { name = h.id, sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Automation/hat_{h.id}.png") });
+                var g = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Automation/hat_{h.id}_glow.png");
+                if (g != null)
+                    art.hatGlows.Add(new NamedSprite { name = h.id, sprite = g });
+            }
             // chowańce: klatki i piksele emisyjne (oczy)
             Sprite[] Fam(string kind, string suffix, params string[] poses)
             {

@@ -144,6 +144,9 @@ namespace Wyspa.Automation
 
         Transform anchor;
         float headHeight;
+
+        /// <summary>Wysokość dymku nad punktem ognika (wyżej, gdy ma czapkę).</summary>
+        public float HeadHeight { get => headHeight; set => headHeight = value; }
         SpriteRenderer back;
         readonly List<SpriteRenderer> runes = new List<SpriteRenderer>();
         Coroutine running;

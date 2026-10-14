@@ -12,6 +12,7 @@ namespace Wyspa.Economy
         public int earned;      // perły zdobyte łącznie (każda daje „blask pereł”)
         public int voyages;     // ile razy gracz odpłynął we mgłę
         public List<UpgradeSave> gifts = new List<UpgradeSave>();
+        public List<string> hats = new List<string>();   // czapki ogników (kosmetyka na zawsze, Economy/Hats)
     }
 
     public enum GiftRarity { Common, Uncommon, Rare, Epic, Legendary }
@@ -260,6 +261,15 @@ namespace Wyspa.Economy
 
         public static bool CanSail => PendingPearls >= 1;
 
+        /// <summary>Perły na coś innego niż losowanie (czapki ogników).</summary>
+        public static bool TrySpendPearls(int n)
+        {
+            if (n <= 0 || Pearls < n)
+                return false;
+            Pearls -= n;
+            return true;
+        }
+
         /// <summary>Do testów (HUD debugowy): perły do wydania w Przystani (liczą się też do blasku).</summary>
         public static void DebugAddPearls(int n)
         {
@@ -275,6 +285,7 @@ namespace Wyspa.Economy
             Pearls = s != null ? Mathf.Max(0, s.pearls) : 0;
             Earned = s != null ? Mathf.Max(0, s.earned) : 0;
             Voyages = s != null ? Mathf.Max(0, s.voyages) : 0;
+            Hats.Restore(s != null ? s.hats : null);
             if (s != null && s.gifts != null)
                 foreach (var g in s.gifts)
                     if (!string.IsNullOrEmpty(g.id) && g.level > 0 && Find(g.id) != null)
@@ -283,7 +294,7 @@ namespace Wyspa.Economy
 
         public static PrestigeSave Snapshot()
         {
-            var s = new PrestigeSave { pearls = Pearls, earned = Earned, voyages = Voyages };
+            var s = new PrestigeSave { pearls = Pearls, earned = Earned, voyages = Voyages, hats = Hats.Snapshot() };
             foreach (var kv in levels)
                 s.gifts.Add(new UpgradeSave { id = kv.Key, level = kv.Value });
             return s;

@@ -129,6 +129,9 @@ ui.fish.normal,Ryba,Fish,Fisch,魚,鱼,
 ui.fish.glow,Świecąca ryba,Glowing fish,Leuchtfisch,光る魚,发光鱼,
 ui.fish.click,LPM: złów,Left click: catch,Linksklick: fangen,左クリック：釣る,左键：捕捞,
 ui.shop.sea,Morze,Sea,Meer,海,海洋,
+ui.shop.hats,Czapki,Hats,Mützen,帽子,帽子,podzakładka sklepu: czapki ogników
+ui.shop.hats_hint,"Czapki dla ogników, na zawsze (także po rejsie). Zakłada się je w panelu gniazda.","Hats for wisps, forever (even after a voyage). Put them on in the nest panel.","Mützen für Irrlichter, für immer (auch nach einer Reise). Aufsetzen im Nest-Fenster.",鬼火の帽子。永久に残る（航海の後も）。巣の画面でかぶせる。,鬼火的帽子，永久保留（航行后也在）。在巢穴面板里戴上。,
+ui.shop.hat_owned,Masz,Owned,Vorhanden,所持,已拥有,
 ui.shop.sea_hint,Pomost stawia się na wodzie przy brzegu (ląd z lewej albo z prawej).,Place the pier on water by the shore (land on its left or right).,Der Steg kommt aufs Wasser am Ufer (Land links oder rechts).,桟橋は岸辺の水上に置く（左右どちらかが陸）。,栈桥放在岸边的水面上（左侧或右侧是陆地）。,
 ui.shop.pier.desc,Łowienie przy brzegu,Fishing by the shore,Angeln am Ufer,岸辺で釣り,在岸边钓鱼,
 ui.shop.nets.desc,Połów co godzinę,A catch every hour,Fang jede Stunde,1時間ごとに漁獲,每小时捕获,
@@ -308,6 +311,8 @@ ui.nest.wisp,"{0} ({1}), poz. {2}: {3}/{4} dośw.","{0} ({1}), lv. {2}: {3}/{4} 
 ui.nest.wisp_max,"{0} ({1}), poz. {2} (najwyższy)","{0} ({1}), lv. {2} (max)","{0} ({1}), Stufe {2} (max.)",{0}（{1}）Lv.{2}（最大）,{0}（{1}）{2}级（满级）,
 ui.nest.sower,Siewca sieje: {0},Sower plants: {0},Säer sät: {0},種まき：{0},播种者种植：{0},"przycisk, otwiera koło nasion"
 ui.nest.full,Gniazdo pełne ({0} {0:plural:ognik|ogniki|ogników}),Nest full ({0} {0:plural:wisp|wisps}),Nest voll ({0} {0:plural:Irrlicht|Irrlichter}),巣は満員（{0}体）,巢已满（{0}只）,
+ui.nest.hat,Czapka – {0}: {1},Hat – {0}: {1},Mütze – {0}: {1},帽子 – {0}：{1},帽子 – {0}：{1},panel gniazda: klik = następna czapka
+ui.nest.no_hat,bez czapki,no hat,ohne Mütze,なし,无,
 ui.nest.summon,Przywołaj: {0} ({1}),Summon: {0} ({1}),Rufen: {0} ({1}),呼ぶ：{0}（{1}）,召唤：{0}（{1}）,"{0} zawód, {1} koszt"
 ui.cauldron.auto,Ognik-alchemik warzy: {0},Alchemist wisp brews: {0},Alchemie-Irrlicht braut: {0},錬金術師の鬼火：{0},炼金鬼火酿造：{0},przycisk przełącza przepis
 ui.cauldron.auto_none,nic,nothing,nichts,なし,无,
