@@ -38,6 +38,7 @@ namespace Wyspa.UI
         /// <summary>Menu główne (tylko gdy nie wybrano jeszcze slotu zapisu).</summary>
         public MainMenuView Menu { get; private set; }
         public MistHarborView Harbor { get; private set; }
+        public VoyageScene Scenes { get; private set; }
 
         // prawy klik na wyspie otwiera pierścień akcji (GDD §12.10): uzbrojony przy wciśnięciu, otwiera się po puszczeniu bez przeciągania
         bool ringArmed;
@@ -229,6 +230,7 @@ namespace Wyspa.UI
             Context = ContextPanel.Create(canvasRect, StartMove);
             Placement = PlacementMode.Create(transform, Tooltip);
             Ring = ActionRing.Create(canvasRect, Tooltip);
+            Scenes = VoyageScene.Create(canvasRect);   // scenki rejsu (przypłynięcie startuje samo po wczytaniu)
             if (Save.SaveSystem.InMist)
                 Harbor = MistHarborView.Create(canvasRect, Tooltip);   // między rejsami: losowanie darów, potem nowa wyspa
             else if (Save.SaveSystem.InMenu)
@@ -331,7 +333,7 @@ namespace Wyspa.UI
             UpdatePlotTooltip();
         }
 
-        bool Busy => Ring.IsOpen || Book.IsOpen || Wheel.IsOpen || Context.IsOpen || Expansion.IsActive || PlacementMode.Active;
+        bool Busy => VoyageScene.Playing || Ring.IsOpen || Book.IsOpen || Wheel.IsOpen || Context.IsOpen || Expansion.IsActive || PlacementMode.Active;
 
         void LateUpdate() => busyLastFrame = Busy;
 

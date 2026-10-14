@@ -22,6 +22,8 @@ namespace Wyspa.Economy
     {
         public long runCoins;   // monety zarobione w tym rejsie (perły przy prestiżu)
         public int sold;        // sprzedane plony i owoce w tym rejsie (renoma)
+        public int harvests;    // zebrane plony i owoce w tym rejsie (podsumowanie rejsu)
+        public long startTicks; // początek rejsu, UTC (podsumowanie: dni na wyspie)
     }
 
     /// <summary>
@@ -43,6 +45,12 @@ namespace Wyspa.Economy
 
         public static long RunCoins { get; private set; }
         public static int Sold { get; private set; }
+        /// <summary>Zebrane plony i owoce w tym rejsie (ręcznie i przez ogniki).</summary>
+        public static int RunHarvests { get; private set; }
+        /// <summary>Początek rejsu (UTC ticks); starsze zapisy: chwila wczytania.</summary>
+        public static long RunStartTicks { get; private set; }
+
+        public static void NoteHarvest(int count = 1) => RunHarvests += Math.Max(0, count);
         static float lastSale = -100f;
         static int combo;
         static float pendingIncome;           // ułamki monet z dniówki i Żaru
@@ -63,12 +71,15 @@ namespace Wyspa.Economy
         {
             RunCoins = s != null ? Math.Max(0, s.runCoins) : 0;
             Sold = s != null ? Math.Max(0, s.sold) : 0;
+            RunHarvests = s != null ? Math.Max(0, s.harvests) : 0;
+            RunStartTicks = s != null && s.startTicks > 0 ? s.startTicks : DateTime.UtcNow.Ticks;
             lastSale = -100f;
             combo = 0;
             pendingIncome = 0f;
         }
 
-        public static MarketSave Snapshot() => new MarketSave { runCoins = RunCoins, sold = Sold };
+        public static MarketSave Snapshot() =>
+            new MarketSave { runCoins = RunCoins, sold = Sold, harvests = RunHarvests, startTicks = RunStartTicks };
 
         /// <summary>Każda moneta, która wpada do portfela (Wallet.Add), liczy się do zarobku rejsu.</summary>
         public static void NoteIncome(int coins)
@@ -183,7 +194,7 @@ namespace Wyspa.Economy
             {
                 float m = Mathf.Max(BaseCritMultiplier, E.CritMult);
                 value *= m;
-                GameEvents.RaiseToast("toast.golden_deal", Mathf.RoundToInt(m));
+                GameEvents.RaiseToast("toast.golden_deal", Mathf.Round(m * 10f) / 10f);
             }
             if (E.ShardChance > 0f && game != null && UnityEngine.Random.value < E.ShardChance)
             {
@@ -279,7 +290,7 @@ namespace Wyspa.Economy
                 return;
             int coins = 0;
             if (E.InterestRate > 0f)
-                coins += Mathf.Min(Mathf.RoundToInt(game.Wallet.Coins * E.InterestRate), Mathf.RoundToInt(E.InterestRate * 100f) * 1000);
+                coins += Mathf.Min(Mathf.RoundToInt(game.Wallet.Coins * E.InterestRate), Mathf.RoundToInt(E.InterestRate * 100000f));   // limit 1000 monet za każdy 1%
             if (E.LandRent > 0 && game.Island != null)
                 coins += E.LandRent * game.Island.PurchasedTiles;
             if (coins > 0)

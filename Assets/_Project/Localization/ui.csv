@@ -11,7 +11,7 @@ ui.upgrade.level,Poziom {0}/{1},Level {0}/{1},Stufe {0}/{1},レベル {0}/{1},�
 ui.voyage.hint,"Rejs we mgłę: zostawiasz wyspę, w Przystani we mgle losujesz perłami dary i wypływasz na nową. Zostają perły, dary, kronika i bestiariusz. Przepadają wyspa, waluty, ulepszenia i budowle.","Sail into the mist: leave your island, draw gifts with pearls in the Harbor in the Mist and sail to a new one. You keep pearls, gifts, the chronicle and the bestiary. The island, currencies, upgrades and buildings are lost.","Reise in den Nebel: Du verlässt die Insel, ziehst im Hafen im Nebel Gaben mit Perlen und segelst zu einer neuen. Perlen, Gaben, Chronik und Bestiarium bleiben. Insel, Währungen, Verbesserungen und Bauten gehen verloren.",霧への航海：島を離れ、霧の港で真珠を使って贈り物を引き、新しい島へ出航する。真珠、贈り物、年代記と図鑑は残り、島、通貨、強化、建物は失われる。,驶入迷雾：离开小岛，在雾中港湾用珍珠抽取馈赠，再驶向新岛。珍珠、馈赠、编年史和图鉴会保留，小岛、货币、升级和建筑将失去。,
 ui.voyage.pearls,Perły Mgły: {0} (zdobyte: {1}) - rejs nr {2},Mist Pearls: {0} (earned: {1}) - voyage {2},Nebelperlen: {0} (gesamt: {1}) - Reise {2},霧の真珠：{0}（累計{1}）- 第{2}航海,雾珍珠：{0}（累计{1}）- 第{2}次航程,"{0} = niewydane, {1} = łącznie, {2} = numer rejsu"
 ui.voyage.glow,Blask pereł i dary: ceny +{0}%,Pearl glow and gifts: prices +{0}%,Perlenglanz und Gaben: Preise +{0}%,真珠の輝きと贈り物：価格+{0}%,珍珠光辉与馈赠：价格+{0}%,
-ui.voyage.run,Ten rejs: {0} monet = {1} {0:plural:perła|perły|pereł} (następna przy {2}),This voyage: {0} coins = {1} {0:plural:pearl|pearls} (next at {2}),Diese Reise: {0} Münzen = {1} {0:plural:Perle|Perlen} (nächste bei {2}),今回の航海：{0}コイン = 真珠{1}（次は{2}）,本次航程：{0}金币 = {1}颗珍珠（下一颗需{2}）,"{0} = zarobek rejsu, {2} = próg następnej perły"
+ui.voyage.run,Ten rejs: {0} monet = {1} {1:plural:perła|perły|pereł} (następna przy {2}),This voyage: {0} coins = {1} {1:plural:pearl|pearls} (next at {2}),Diese Reise: {0} Münzen = {1} {1:plural:Perle|Perlen} (nächste bei {2}),今回の航海：{0}コイン = 真珠{1}（次は{2}）,本次航程：{0}金币 = {1}颗珍珠（下一颗需{2}）,"{0} = zarobek rejsu, {2} = próg następnej perły"
 ui.voyage.sail,Odpłyń we mgłę (+{0} {0:plural:perła|perły|pereł}),Sail into the mist (+{0} {0:plural:pearl|pearls}),In den Nebel segeln (+{0} {0:plural:Perle|Perlen}),霧へ漕ぎ出す（真珠+{0}）,驶入迷雾（+{0}颗珍珠）,
 ui.voyage.confirm,Na pewno? Kliknij jeszcze raz (+{0} {0:plural:perła|perły|pereł}),Are you sure? Click again (+{0} {0:plural:pearl|pearls}),Sicher? Nochmal klicken (+{0} {0:plural:Perle|Perlen}),本当に？もう一度クリック（真珠+{0}）,确定吗？再点一次（+{0}颗珍珠）,
 ui.voyage.cant,Pierwsza perła przy 10 000 monet zarobku w rejsie,"First pearl at 10,000 coins earned this voyage",Erste Perle bei 10.000 Münzen Verdienst auf dieser Reise,"この航海で10,000コイン稼ぐと最初の真珠","本次航程赚到10,000金币时获得第一颗珍珠",
@@ -30,6 +30,16 @@ ui.harbor.sail,Wypłyń na nową wyspę,Sail to a new island,Zur neuen Insel seg
 ui.harbor.fight,Dary walczą... (klik: szybciej),The gifts fight... (click: faster),Die Gaben kämpfen... (Klick: schneller),贈り物が戦っている…（クリックで早送り）,馈赠正在争斗……（点击加速）,
 ui.harbor.won_new,Nowy dar: {0} ({1}),New gift: {0} ({1}),Neue Gabe: {0} ({1}),新しい贈り物：{0}（{1}）,新馈赠：{0}（{1}）,
 ui.harbor.won_level,{0}: poziom {1}/{2},{0}: level {1}/{2},{0}: Stufe {1}/{2},{0}：レベル{1}/{2},{0}：等级{1}/{2},
+ui.summary.title,Koniec rejsu nr {0},End of voyage {0},Ende der Reise {0},第{0}航海の終わり,第{0}次航行结束,
+ui.summary.days,Na wyspie: {0} {0:plural:dzień|dni|dni},On the island: {0} {0:plural:day|days},Auf der Insel: {0} {0:plural:Tag|Tage},島で過ごした日数：{0}日,在岛上：{0}天,
+ui.summary.days_less,Na wyspie: niecały dzień,On the island: less than a day,Auf der Insel: weniger als ein Tag,島で過ごした日数：1日未満,在岛上：不到一天,
+ui.summary.coins,Zarobione monety: {0},Coins earned: {0},Verdiente Münzen: {0},稼いだコイン：{0},赚得金币：{0},
+ui.summary.harvests,Zebrane plony i owoce: {0},Crops and fruit harvested: {0},Geerntete Pflanzen und Früchte: {0},収穫した作物と果物：{0},收获的作物和水果：{0},
+ui.summary.sold,Sprzedane: {0},Sold: {0},Verkauft: {0},売った数：{0},售出：{0},
+ui.summary.tiles,Kupione kafelki lądu: {0},Land tiles bought: {0},Gekaufte Landstücke: {0},買った土地マス：{0},购买的土地格：{0},
+ui.summary.wisps,Ogniki na wyspie: {0},Wisps on the island: {0},Irrlichter auf der Insel: {0},島の鬼火：{0},岛上的鬼火：{0},
+ui.summary.pearls,Perły Mgły: +{0},Mist Pearls: +{0},Nebelperlen: +{0},霧の真珠：+{0},雾珍珠：+{0},
+ui.summary.next,Do przystani,To the harbor,Zum Hafen,港へ,前往港湾,
 ui.gift.not_owned,Jeszcze nie zdobyty,Not collected yet,Noch nicht erhalten,未獲得,尚未获得,
 ui.upgrade.max,Maks.,Max,Max.,最大,已满,
 ui.upgrade.requires,Wymaga: {0},Requires: {0},Benötigt: {0},必要：{0},需要：{0},

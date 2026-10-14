@@ -52,6 +52,76 @@ namespace Wyspa.UI
                 SaveSystem.MistToMenu();   // slot już nie jest we mgle (np. usunięty): wracamy do menu
                 return;
             }
+            var summary = SaveSystem.PendingSummary();
+            if (summary != null)
+                StartCoroutine(ShowSummary(summary));   // prosto po odpłynięciu: najpierw podsumowanie rejsu
+            else
+                Build();
+        }
+
+        // ------------------------------------------------------------ podsumowanie rejsu
+
+        /// <summary>
+        /// Pergamin z liczbami skończonego rejsu, wypisywanymi wiersz po wierszu (perły na końcu, złotem).
+        /// Mgła po odpłynięciu rozstępuje się nad nim; „Do przystani” otwiera losowanie darów. Pokazywane raz.
+        /// </summary>
+        IEnumerator ShowSummary(VoyageSummary s)
+        {
+            busy = true;
+            var t = Ui.Theme;
+            var curtain = MistCurtain.Create(root, 1f);
+            var culture = LocCore.Culture(Loc.Language);
+            int days = Mathf.FloorToInt(s.days);
+            var lines = new List<(string text, bool gold)>
+            {
+                (days < 1 ? Loc.Get("ui.summary.days_less") : Loc.Get("ui.summary.days", days), false),
+                (Loc.Get("ui.summary.coins", s.coins.ToString("N0", culture)), false),
+                (Loc.Get("ui.summary.harvests", s.harvests), false),
+                (Loc.Get("ui.summary.sold", s.sold), false),
+                (Loc.Get("ui.summary.tiles", s.tiles), false),
+                (Loc.Get("ui.summary.wisps", s.wisps), false),
+                (Loc.Get("ui.summary.pearls", s.pearls), true),
+            };
+            const float w = 180f;
+            float h = 6 + 12 + 4 + lines.Count * 11 + 6 + 4 + 16 + 6;
+            var p = Ui.Img(root, "Summary", t.panel, true, true);
+            var box = Ui.Place(p.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(w, h));
+            var title = Ui.Txt(box, "Title", t.textGold, TextAlignmentOptions.Top);
+            title.text = Loc.Get("ui.summary.title", s.voyage);
+            Ui.Place(title.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -6), new Vector2(w, 10));
+            var page = Ui.Img(box, "Page", t.panelPage != null ? t.panelPage : t.tooltip, true);
+            var pageRt = Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(6, -22), new Vector2(w - 12, lines.Count * 11 + 6));
+            var texts = new List<TextMeshProUGUI>();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                var tx = Ui.Txt(pageRt, "Line", lines[i].gold ? t.textGoldOnPage : t.textDark);
+                tx.text = lines[i].text;
+                Ui.Place(tx.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(6, -4 - i * 11), new Vector2(w - 24, 10));
+                tx.gameObject.SetActive(false);
+                texts.Add(tx);
+            }
+            bool next = false;
+            var go = Ui.Btn(box, "Next", () => next = true);
+            Ui.Place((RectTransform)go.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0, 6), new Vector2(w - 60, 16));
+            var label = Ui.Txt(go.transform, "Text", t.textLight, TextAlignmentOptions.Center);
+            label.text = Loc.Get("ui.summary.next");
+            Ui.Stretch(label.rectTransform);
+            go.gameObject.SetActive(false);
+            curtain.transform.SetAsLastSibling();
+            yield return curtain.Open(1.6f);
+            Destroy(curtain.gameObject);
+            for (int i = 0; i < texts.Count; i++)
+            {
+                yield return new WaitForSecondsRealtime(i == texts.Count - 1 ? 0.6f : 0.3f);
+                texts[i].gameObject.SetActive(true);
+                GameEvents.PlaySound(lines[i].gold ? "coin" : "click", lines[i].gold ? 0.8f : 0.4f);
+            }
+            go.gameObject.SetActive(true);
+            while (!next)
+                yield return null;
+            SaveSystem.MarkSummaryShown();
+            Destroy(box.gameObject);
+            busy = false;
             Build();
         }
 

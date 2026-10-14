@@ -119,10 +119,12 @@ namespace Wyspa.Automation
         }
 
         /// <summary>Nowy ognik w gnieździe (zakup, darmowy pierwszy, zapis). Zwraca null, gdy gniazdo pełne.</summary>
-        public Wisp AddWisp(WispKind kind, string id = null, int xp = 0, int name = -1)
+        /// <param name="restoring">Wczytanie zapisu: bez limitu miejsc (ulepszenia i dary, które go podnoszą, wczytują się
+        /// później niż wyspa, więc czwarty i piąty ognik by przepadły).</param>
+        public Wisp AddWisp(WispKind kind, string id = null, int xp = 0, int name = -1, bool restoring = false)
         {
             wisps.RemoveAll(w => w == null);
-            if (wisps.Count >= Capacity)
+            if (!restoring && wisps.Count >= Capacity)
                 return null;
             int slot = 0;
             while (wisps.Exists(w => SlotOf(w) == slot))
@@ -207,7 +209,7 @@ namespace Wyspa.Automation
             var w = AddWisp(k);
             if (w == null)
             {
-                foreach (var c in cost) game.Wallet.Add(c.type, c.amount);
+                foreach (var c in cost) game.Wallet.Refund(c.type, c.amount);
                 return;
             }
             Visual.IslandFx.FindPopped(transform.position + new Vector3(0f, 1f, 0f));
@@ -295,7 +297,7 @@ namespace Wyspa.Automation
                 return;
             foreach (var s in list)
                 if (s != null && Enum.IsDefined(typeof(WispKind), s.kind))
-                    AddWisp((WispKind)s.kind, s.id, s.xp, s.name);
+                    AddWisp((WispKind)s.kind, s.id, s.xp, s.name, true);
         }
     }
 }

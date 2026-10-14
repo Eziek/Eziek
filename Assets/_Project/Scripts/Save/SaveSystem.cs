@@ -43,6 +43,23 @@ namespace Wyspa.Save
         public bool mist;                       // v16: slot czeka w Przystani we mgle (rejs skończony, nowej wyspy jeszcze nie ma)
         public List<string> mistUnlocks = new List<string>();   // v16: nasiona odblokowane w poprzednim rejsie (Pamięć nasion)
         public double clockOffset;              // v16: przesunięcie cyklu dnia i nocy (nowa wyspa zaczyna się rano, GameClock)
+        public VoyageSummary summary;           // v16: podsumowanie skończonego rejsu (Przystań pokazuje je raz)
+        public bool arrival;                    // v16: nowa wyspa po rejsie, scenka przypłynięcia jeszcze nie grała
+    }
+
+    /// <summary>Podsumowanie rejsu: liczby z ostatniej wyspy, pokazywane raz w Przystani we mgle.</summary>
+    [Serializable]
+    public class VoyageSummary
+    {
+        public int voyage;      // numer skończonego rejsu
+        public long coins;      // zarobek rejsu
+        public int harvests;    // zebrane plony i owoce
+        public int sold;        // sprzedane sztuki
+        public int tiles;       // kafelki lądu (kupione)
+        public int wisps;       // ogniki na wyspie
+        public int pearls;      // perły za ten rejs
+        public float days;      // dni (prawdziwe) od początku rejsu
+        public bool shown;
     }
 
     [Serializable]
@@ -63,6 +80,7 @@ namespace Wyspa.Save
         public long savedAtUtcTicks;
         public IslandHeader island;
         public bool mist;   // slot w Przystani we mgle
+        public bool arrival;   // nowa wyspa po rejsie, scenka przypłynięcia jeszcze nie grała
         [NonSerialized] public int index;
         [NonSerialized] public bool exists;
 
@@ -105,6 +123,7 @@ namespace Wyspa.Save
             CurrentSlot = -1;
             CurrentName = "";
             MistSlot = -1;
+            PendingArrival = false;
         }
 
         public static string SlotPath(int slot) => Path.Combine(Application.persistentDataPath, $"save_{slot + 1}.json");
@@ -212,6 +231,15 @@ namespace Wyspa.Save
                 CurrentSlot = slot;
             }
             ReloadScene();
+        }
+
+        /// <summary>Bieżący slot to nowa wyspa po rejsie (scenka przypłynięcia): czytane przed wczytaniem zapisu.</summary>
+        public static bool PeekArrival()
+        {
+            if (InMenu)
+                return false;
+            var info = ReadSlot(CurrentSlot);
+            return info != null && info.arrival && !info.mist;
         }
 
         static SlotInfo ReadSlot(int slot)
@@ -364,8 +392,23 @@ namespace Wyspa.Save
         /// </summary>
         public bool SailIntoMist(GameLoop game)
         {
-            if (InMenu || game == null || Prestige.CollectVoyage() <= 0)
+            if (InMenu || game == null)
                 return false;
+            int voyage = Prestige.Voyages + 1;
+            int pearls = Prestige.CollectVoyage();
+            if (pearls <= 0)
+                return false;
+            var summary = new VoyageSummary
+            {
+                voyage = voyage,
+                coins = Market.RunCoins,
+                harvests = Market.RunHarvests,
+                sold = Market.Sold,
+                tiles = game.Island != null ? game.Island.PurchasedTiles : 0,
+                wisps = Wisp.All.Count,
+                pearls = pearls,
+                days = (float)Math.Max(0.0, (DateTime.UtcNow - new DateTime(Market.RunStartTicks, DateTimeKind.Utc)).TotalDays),
+            };
             var data = new SaveData
             {
                 savedAtUtcTicks = DateTime.UtcNow.Ticks,
@@ -375,6 +418,7 @@ namespace Wyspa.Save
                 prestige = Prestige.Snapshot(),
                 mist = true,
                 mistUnlocks = game.SnapshotUnlocks(),
+                summary = summary,
             };
             owner = null;   // bez autozapisu starej wyspy w tej klatce
             WriteTo(FilePath, data);
@@ -413,6 +457,25 @@ namespace Wyspa.Save
             return true;
         }
 
+        /// <summary>Podsumowanie skończonego rejsu, jeśli Przystań jeszcze go nie pokazała (null = nie ma albo już było).</summary>
+        public static VoyageSummary PendingSummary()
+        {
+            var data = ReadMist();
+            return data != null && data.summary != null && !data.summary.shown ? data.summary : null;
+        }
+
+        public static void MarkSummaryShown()
+        {
+            var data = ReadMist();
+            if (data == null || data.summary == null)
+                return;
+            data.summary.shown = true;
+            WriteTo(SlotPath(MistSlot), data);
+        }
+
+        /// <summary>Nowa wyspa po rejsie: scenka przypłynięcia przy pierwszym wczytaniu (VoyageScene). Zeruje ją pierwszy zapis.</summary>
+        public static bool PendingArrival;
+
         /// <summary>Po każdym losowaniu w Przystani: perły i dary od razu do pliku (zamknięcie gry nic nie cofa).</summary>
         public static void SaveMist()
         {
@@ -450,6 +513,7 @@ namespace Wyspa.Save
                 fertilizer = Mathf.RoundToInt(Prestige.Value(Prestige.MistCompost)),
                 essence = Prestige.Level(Prestige.EmberReserve) > 0 ? 1e6f : 0f,   // przycięte do pojemności słoja
                 clockOffset = GameClock.MorningOffset(),   // nowa wyspa zaczyna się rano
+                arrival = true,                            // scenka przypłynięcia
             };
             data.coins = Prestige.StartCurrencies()[0].amount;
             int slot = MistSlot;
@@ -506,6 +570,7 @@ namespace Wyspa.Save
 
         public void Load(GameLoop game)
         {
+            PendingArrival = false;
             owner = game;
             if (InMenu)
                 return;
@@ -535,6 +600,7 @@ namespace Wyspa.Save
             if (!string.IsNullOrEmpty(data.slotName))
                 CurrentName = data.slotName;
             GameClock.SaveOffsetSeconds = data.clockOffset;
+            PendingArrival = data.arrival && !data.mist;
             if (data.mist)
             {
                 // slot we mgle (np. wczytany z pominięciem menu): najpierw Przystań

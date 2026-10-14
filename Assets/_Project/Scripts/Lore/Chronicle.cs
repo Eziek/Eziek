@@ -109,8 +109,8 @@ namespace Wyspa.Lore
                 cycle = now;
                 return;
             }
-            if (now == cycle)
-                return;
+            if (now <= cycle)
+                return;   // tylko do przodu: nowa wyspa po rejsie ma inne przesunięcie zegara (GameClock)
             CloseCycle(now);
         }
 

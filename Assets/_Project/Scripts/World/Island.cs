@@ -734,7 +734,7 @@ namespace Wyspa.World
             }
             if (refund > 0 && wallet != null)
             {
-                wallet.Add(refund);
+                wallet.Refund(refund);   // zwrot nie jest zarobkiem rejsu
                 GameEvents.RaiseCurrencyGained(obj.transform.position, CurrencyType.Coins, refund);
             }
             IslandFx.Planted(obj.transform.position, 0);
@@ -1399,8 +1399,9 @@ namespace Wyspa.World
         }
 
         /// <summary>
-        /// Darmowy kafelek trawy przy lądzie, najbliżej środka wyspy (nie na wodzie pomostu). Bez znaleziska i dekoracji,
-        /// bez podnoszenia ceny kolejnych kafelków. False = nie ma gdzie (koniec świata).
+        /// Darmowy kafelek trawy przy lądzie, najbliżej środka wyspy (nie na wodzie pomostu). Bez dekoracji (miejsce na
+        /// budowlę) i bez podnoszenia ceny kolejnych kafelków; znalezisko spod kafelka wypada jak przy zakupie.
+        /// False = nie ma gdzie (koniec świata).
         /// </summary>
         bool ClaimFreeTile(out TilePos tile)
         {
@@ -1424,6 +1425,9 @@ namespace Wyspa.World
             Rebuild();
             IslandFx.TileClaimed(TileCenter(tile), art != null ? art.foam : null);
             GameEvents.PlaySound("tile");
+            var game = GameLoop.Instance;
+            if (game != null && map.Plan != null)
+                GrantFind(tile, map.Plan.FindAt(tile), game.Wallet);   // znaleziska (też zapiski Opiekuna) nie przepadają
             Changed?.Invoke();
             return IsFree(tile);
         }

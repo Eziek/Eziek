@@ -242,7 +242,7 @@ namespace Wyspa.UI
             {
                 if (request.cost != null)
                     foreach (var c in request.cost)
-                        game.Wallet.Add(c.type, c.amount);
+                        game.Wallet.Refund(c.type, c.amount);
                 return;
             }
             Cancel();

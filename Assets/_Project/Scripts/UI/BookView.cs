@@ -867,7 +867,7 @@ namespace Wyspa.UI
             if (!build())
             {
                 foreach (var c in cost)
-                    game.Wallet.Add(c.type, c.amount);
+                    game.Wallet.Refund(c.type, c.amount);
                 return;
             }
             GameEvents.RaiseToast("ui.toast.placed", Loc.Get(nameKey));
@@ -1036,8 +1036,11 @@ namespace Wyspa.UI
             if (save == null || game == null)
                 return;
             Close();
-            GameEvents.PlaySound("magic");
-            save.SailIntoMist(game);
+            // scenka odpłynięcia (lampy gasną, ogniki wracają, mgła zamyka okno), potem Przystań we mgle
+            if (UiRoot.Instance != null && UiRoot.Instance.Scenes != null)
+                UiRoot.Instance.Scenes.Depart(() => save.SailIntoMist(game));
+            else
+                save.SailIntoMist(game);
         }
 
         // ------------------------------------------------------------------ Bestiariusz i lore (GDD §11.3 H)

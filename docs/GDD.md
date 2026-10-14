@@ -408,6 +408,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Skala UI (po teście: przy powiększonym oknie i małej wyspie pasek zajmował pół okna): **zależy od rozdzielczości
   monitora, nie od powiększenia okna** (1080p x2, 1440p x3, 4K x4), najwyżej o 1 mniej niż skala świata. Opcje → Okno →
   „Rozmiar interfejsu”: auto albo x1-x4.
+- [x] **Scenki** (wybór gracza): rejs (odpłynięcie, podsumowanie, przypłynięcie) i świt/zmierzch; potem narzędzia ogników
+  według zawodu i sklep z czapkami dla ogników (za dużo monet albo perły). §9 p. 84.
 - [x] Start gry **zawsze rano** (07:00 na zegarze gry), także po resecie i po rejsie; każdy zapis ma własne przesunięcie
   cyklu (§9 p. 82).
 - [x] Prestiż: **Przystań we mgle** między rejsami, dary **losowane** za perły (1 perła = 1 losowanie, animacja walki ikon),
@@ -680,6 +682,15 @@ Obrazki referencyjne (kopie): `docs/img/`
     ognika, bo nie było wolnego kafelka). Pierwsza sztuka z ulepszenia albo daru (skrzynia, gniazdo z ognikiem, runa): gdy
     wyspa nie ma wolnego kafelka, mgła odsłania obok darmowy kafelek trawy (bez znaleziska, nie podnosi ceny kolejnych).
     Zapis, w którym ognik przepadł, dostaje gniazdo przy następnym wczytaniu.
+84. **Scenka rejsu** (wybór gracza z propozycji scenek, §11.8): odpłynięcie (interfejs znika, ogniki wracają do gniazd, lampy
+    gasną po kolei od najdalszej, kamera zsuwa się ku morzu, pikselowa mgła zamyka okno od brzegów), **podsumowanie rejsu**
+    w Przystani (pergamin: dni na wyspie, zarobek, zebrane plony, sprzedane, kafelki, ogniki, perły; raz), przypłynięcie
+    (okno w mgle, mgła rozstępuje się od środka, kamera podpływa, latarnia rozbłyska, tytuł „Rejs nr N” i jedna z 8 linijek
+    zapisków Opiekuna, litera po literze). Klik przyspiesza. Kod: `UI/VoyageScene.cs`, `UI/MistCurtain.cs`.
+85. Poprawki z przeglądu logiki: ogniki ponad 3 w gnieździe (Przytulne gniazdo, Przestronne gniazdo) nie znikają przy
+    wczytaniu; zwroty (rozbiórka, nieudane postawienie) nie liczą się do zarobku rejsu (perły); Skarbonka 1. poziomu działa
+    (limit odsetek 1000 monet za 1%); odmiana „perła/pereł” w zakładce Rejs; cykl księżyca nie zamyka się wstecz po rejsie;
+    toast złotego interesu pokazuje prawdziwy mnożnik (x2.5); znalezisko spod darmowego kafelka nie przepada.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -1017,6 +1028,10 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 | legendarny | Korona mgły | ceny i dochody +25% |
 | legendarny | Perłowa łaska | +25% pereł z rejsu |
 | legendarny | Serce wyspy | wszystkie rośliny +25% |
+
+- **Scenki rejsu:** odpłynięcie (lampy gasną po kolei, ogniki wracają, mgła zamyka okno), podsumowanie rejsu w Przystani
+  (raz, przed losowaniem), przypłynięcie (mgła się rozstępuje, latarnia rozbłyska, zapiski Opiekuna „Rejs nr N”).
+  `UI/VoyageScene.cs`, kurtyna mgły `UI/MistCurtain.cs`, teksty `voyage.*` i `ui.summary.*`.
 
 Kod: `Economy/Prestige.cs` (dary, losowanie, `ApplyToEffects` po `UpgradeEffects.Apply`), Przystań `UI/MistHarborView.cs`,
 kolekcja `UI/GiftGrid.cs`, zapis `Save/SaveSystem` (`SailIntoMist`, `LoadMist`, `SaveMist`, `LeaveMist`, zapis v16 z polem

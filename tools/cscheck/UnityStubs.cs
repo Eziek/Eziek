@@ -205,6 +205,7 @@ namespace UnityEngine.UI
     using UnityEngine.EventSystems;
     public class Graphic : UIBehaviour { public UnityEngine.Color color; public bool raycastTarget; public UnityEngine.RectTransform rectTransform => null; }
     public class MaskableGraphic : Graphic { }
+    public class RawImage : MaskableGraphic { public UnityEngine.Texture texture; }
     public class Image : MaskableGraphic { public enum Type { Simple, Sliced, Tiled, Filled } public UnityEngine.Sprite sprite; public Type type; public float pixelsPerUnitMultiplier; public bool preserveAspect; }
     public struct SpriteState { public UnityEngine.Sprite highlightedSprite, pressedSprite, selectedSprite, disabledSprite; }
     public struct Navigation { public enum Mode { None, Horizontal, Vertical, Automatic, Explicit } public Mode mode; }
@@ -234,6 +235,7 @@ namespace TMPro
     }
     public class TMP_Text : UnityEngine.UI.MaskableGraphic
     {
+        public int maxVisibleCharacters;
         public string text; public TMP_FontAsset font; public float fontSize; public TextAlignmentOptions alignment;
         public TextWrappingModes textWrappingMode; public TextOverflowModes overflowMode; public bool richText;
         public Vector2 GetPreferredValues(string text) => default; public Vector2 GetPreferredValues(string text, float width, float height) => default; public void ForceMeshUpdate() { }

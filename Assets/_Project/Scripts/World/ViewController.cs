@@ -54,6 +54,11 @@ namespace Wyspa.World
 
         Vector2Int view;
         Vector2 pan;                 // przesunięcie kamery w pikselach, gdy wyspa jest większa niż kadr
+
+        /// <summary>Scenki (rejs): dodatkowe przesunięcie kamery w pikselach, poza przeciąganiem gracza.</summary>
+        public Vector2 SceneOffset { get; set; }
+        /// <summary>Scenki: gracz nie przesuwa ani nie powiększa widoku.</summary>
+        public bool Locked { get; set; }
         Vector2Int requiredWindow;   // np. otwarta Księga potrzebuje większego okna
         Vector2Int lastWindow;
         Vector2 dragStart;
@@ -197,9 +202,10 @@ namespace Wyspa.World
         {
             // Ctrl + kółko myszy: powiększenie okna (x1..x3 w pikselach 32 px, jak w Opcjach)
             int scroll = UiInput.Scroll;
-            if (scroll != 0 && UiInput.CtrlHeld && !mini)
+            if (!Locked && scroll != 0 && UiInput.CtrlHeld && !mini)
                 SetScale(Mathf.Clamp(windowScale + scroll * 2, 2, 6));
-            HandleDrag();
+            if (!Locked)
+                HandleDrag();
             Place();
         }
 
@@ -246,8 +252,9 @@ namespace Wyspa.World
             pan = new Vector2(Mathf.Clamp(pan.x, -hx, hx), Mathf.Clamp(pan.y, -hy, hy));
             float mx = Mathf.Max(0f, IslandPainter.Size / 2f - view.x / 2f), my = Mathf.Max(0f, IslandPainter.Size / 2f - view.y / 2f);
             pan = new Vector2(Mathf.Clamp(c.x + pan.x, -mx, mx) - c.x, Mathf.Clamp(c.y + pan.y, -my, my) - c.y);
-            float x = Mathf.Round(c.x + pan.x) / Ppu;
-            float y = Mathf.Round(c.y + pan.y) / Ppu;
+            var at = new Vector2(Mathf.Clamp(c.x + pan.x + SceneOffset.x, -mx, mx), Mathf.Clamp(c.y + pan.y + SceneOffset.y, -my, my));
+            float x = Mathf.Round(at.x) / Ppu;
+            float y = Mathf.Round(at.y) / Ppu;
             transform.position = new Vector3(x, y, transform.position.z);
         }
     }

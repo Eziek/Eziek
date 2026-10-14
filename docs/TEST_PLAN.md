@@ -225,3 +225,14 @@ Najpierw **Wyspa → 2** (motyw UI wczytuje nowe ikony `icon_gift_*`; bez tego d
    skrzynia i gniazdo z ognikiem-ogrodnikiem. Cena następnego kafelka w rozbudowie taka jak bez tych kafelków.
 2. Stary zapis, w którym „Ognik-ogrodnik” był kupiony, a gniazda nie ma: po wczytaniu gniazdo z ognikiem się pojawia.
 3. Zwykła gra: kup „Ognik-ogrodnik”, gdy wyspa jest pełna: to samo (darmowy kafelek), tylko raz na rodzaj budowli.
+
+## 15. Scenka rejsu
+1. Wieczorem z zapalonymi lampami: Księga → Rejs → „Odpłyń we mgłę” → drugi klik. HUD znika, ogniki lecą do gniazd, lampy
+   gasną po kolei (latarnia przy środku ostatnia), kamera zsuwa się w dół, napis „Mgła zamyka się nad wyspą...” pisze się
+   litera po literze, pikselowa mgła zamyka okno od brzegów. Klik przyspiesza. Potem Przystań.
+2. Przystań: mgła rozstępuje się nad pergaminem „Koniec rejsu nr N”, wiersze pojawiają się po kolei, perły złotem z dźwiękiem
+   monety. „Do przystani” → losowanie darów. Zamknij grę i wróć: podsumowanie już się nie pokazuje.
+3. „Wypłyń na nową wyspę”: okno zaczyna w mgle (bez mignięcia wyspy), mgła rozstępuje się od środka, kamera podpływa,
+   latarnia rozbłyska (także w dzień), na dole „Rejs nr N” i linijka zapisków. Potem HUD wraca, można grać.
+4. Przewijanie PPM, Ctrl+kółko, pierścień PPM i kliki w wyspę nie działają w trakcie scenek.
+5. Czwarty ognik (Przytulne gniazdo) zostaje po zapisie i wczytaniu. Rozbiórka budowli nie podnosi „zarobku rejsu”.

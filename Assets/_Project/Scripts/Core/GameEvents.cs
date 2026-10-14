@@ -30,7 +30,11 @@ namespace Wyspa.Core
         /// </summary>
         public static event Action<string, int> Harvested;
 
-        public static void RaiseHarvested(string itemId, int count) => Harvested?.Invoke(itemId, count);
+        public static void RaiseHarvested(string itemId, int count)
+        {
+            Market.NoteHarvest(count);   // plony i owoce rejsu (podsumowanie przy rejsie we mgłę)
+            Harvested?.Invoke(itemId, count);
+        }
 
         public static void RequestContext(IContextActions target) => ContextRequested?.Invoke(target);
 

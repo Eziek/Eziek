@@ -18,6 +18,50 @@ namespace Wyspa.Lighting
         /// <summary>Do testów: wszystkie lampy zgaszone (np. żeby sprawdzić rośliny nocy).</summary>
         public static bool DebugAllOff;
 
+        // ---- scenki: zmierzch zapala lampy łańcuchem, rejs gasi je po kolei, przypłynięcie rozpala latarnię
+        /// <summary>Łańcuch zapalania (zmierzch): lampa dalej od Origin zapala się później (PerUnit s na jednostkę świata).</summary>
+        public static float IgniteStart = -100f, IgnitePerUnit = 0.35f;
+        public static Vector2 IgniteOrigin;
+        /// <summary>Łańcuch gaszenia (odpłynięcie): od ExtinguishStart lampy gasną po kolei, od najdalszej.</summary>
+        public static float ExtinguishStart = float.MaxValue, ExtinguishPerUnit = 0.3f;
+        public static Vector2 ExtinguishOrigin;
+        float flareUntil;
+
+        /// <summary>Nowa scena: bez łańcuchów z poprzedniej (statyczne pola przeżywają przeładowanie).</summary>
+        public static void ResetScenes()
+        {
+            IgniteStart = -100f;
+            ExtinguishStart = float.MaxValue;
+        }
+
+        /// <summary>Zmierzch: lampy zapalą się po kolei od origin (najbliższa pierwsza).</summary>
+        public static void ChainIgnite(Vector2 origin, float perUnit = 0.35f)
+        {
+            IgniteOrigin = origin;
+            IgnitePerUnit = perUnit;
+            IgniteStart = Time.unscaledTime;
+        }
+
+        /// <summary>Odpłynięcie: lampy gasną po kolei, od najdalszej od origin do najbliższej.</summary>
+        public static void ChainExtinguish(Vector2 origin, float perUnit = 0.3f)
+        {
+            ExtinguishOrigin = origin;
+            ExtinguishPerUnit = perUnit;
+            ExtinguishStart = Time.unscaledTime;
+        }
+
+        /// <summary>Lampa świeci przez chwilę bez względu na porę i Żar (scenka przypłynięcia).</summary>
+        public void Flare(float seconds) => flareUntil = Time.unscaledTime + seconds;
+
+        /// <summary>Największa odległość lampy od punktu (do odwrócenia kolejności gaszenia).</summary>
+        static float MaxDistance(Vector2 origin)
+        {
+            float m = 0f;
+            foreach (var l in All)
+                if (l != null) m = Mathf.Max(m, Vector2.Distance(origin, l.transform.position));
+            return m;
+        }
+
         /// <summary>Rytuał „Ciche lampy”: lampy spalają mniej Esencji.</summary>
         public static float ConsumptionMultiplier = 1f;
 
@@ -65,7 +109,28 @@ namespace Wyspa.Lighting
             // nietoperz: o 20% mniej
             float burn = Alchemy.Potions.LampsFree ? 0f : definition != null
                 ? definition.essencePerMinute * ConsumptionMultiplier * Upgrades.UpgradeEffects.LampBurn * Lore.Story.LampBurn * Familiars.FamiliarSystem.LampBurn * (Refueled ? 0.5f : 1f) * dt / 60f : 0f;
+            float now = Time.unscaledTime;
+            if (now < flareUntil)
+            {
+                SetOn(true);
+                return;
+            }
+            if (now >= ExtinguishStart)
+            {
+                // odpłynięcie: najdalsza gaśnie pierwsza, latarnia przy origin ostatnia
+                float d = Vector2.Distance(ExtinguishOrigin, transform.position);
+                if (now >= ExtinguishStart + (MaxDistance(ExtinguishOrigin) - d) * ExtinguishPerUnit)
+                {
+                    SetOn(false);
+                    return;
+                }
+            }
+            // zmierzch: w łańcuchu lampa czeka na swoją kolej (jeszcze nie pali Żaru)
+            if (!isOn && night && now < IgniteStart + Vector2.Distance(IgniteOrigin, transform.position) * IgnitePerUnit)
+                return;
             bool on = !DebugAllOff && night && definition != null && essence.TryConsume(burn);
+            if (on && !isOn && now < IgniteStart + 30f)
+                Visual.IslandFx.FindPopped(LightCenter);   // błysk przy zapaleniu w łańcuchu
             SetOn(on);
         }
 

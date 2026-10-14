@@ -216,6 +216,28 @@ namespace Wyspa.Automation
             StartCoroutine(Brain());
         }
 
+        /// <summary>Scenka odpłynięcia: ognik odkłada to, co niesie, wraca do gniazda i już tylko unosi się nad nim.</summary>
+        public void RecallHome()
+        {
+            StopAllCoroutines();
+            Release();
+            LeaveChat();
+            flying = false;
+            if (carried.Count > 0)
+                Deliver(HarvestCrate.NearestWithSpace(transform.position));
+            if (loadAmount > 0)
+                DepositLoad();
+            StartCoroutine(RestAtHome());
+        }
+
+        IEnumerator RestAtHome()
+        {
+            yield return new WaitForSecondsRealtime(Random.Range(0f, 0.6f));
+            yield return FlyTo(Home, 0.3f);
+            while (true)
+                yield return HoverFor(5f);
+        }
+
         // ------------------------------------------------------------ wygląd
 
         void ApplyLevelLook()

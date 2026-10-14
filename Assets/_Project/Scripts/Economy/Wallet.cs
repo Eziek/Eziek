@@ -40,6 +40,11 @@ namespace Wyspa.Economy
             Changed?.Invoke();
         }
 
+        /// <summary>Zwrot (rozbiórka, nieudane postawienie): wraca do sakwy, ale nie liczy się do zarobku rejsu (perły).</summary>
+        public void Refund(CurrencyType type, int value) => Set(type, Get(type) + value);
+
+        public void Refund(int coins) => Refund(CurrencyType.Coins, coins);
+
         public void Add(CurrencyType type, int value)
         {
             if (type == CurrencyType.Coins)

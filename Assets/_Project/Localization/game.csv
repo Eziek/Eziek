@@ -115,6 +115,16 @@ gift.pearl_grace.name,Perłowa łaska,Pearl Grace,Perlengnade,真珠の恩寵,�
 gift.pearl_grace.desc,Rejs daje {0}% więcej pereł.,Voyages give {0}% more pearls.,Reisen bringen {0}% mehr Perlen.,航海で得る真珠+{0}%。,航行获得珍珠+{0}%。,
 gift.island_heart.name,Serce wyspy,Heart of the Island,Herz der Insel,島の心臓,岛之心,
 gift.island_heart.desc,Wszystkie rośliny rosną {0}% szybciej.,All plants grow {0}% faster.,Alle Pflanzen wachsen {0}% schneller.,すべての植物の成長+{0}%。,所有植物生长+{0}%。,
+voyage.depart,Mgła zamyka się nad wyspą. Wypływasz.,The mist closes over the island. You set sail.,Der Nebel schließt sich über der Insel. Du legst ab.,霧が島を覆っていく。君は出航する。,迷雾笼罩了小岛。你启航了。,scenka odpłynięcia (rejs we mgłę)
+voyage.arrive.title,Rejs nr {0},Voyage {0},Reise {0},第{0}航海,第{0}次航行,scenka przypłynięcia: tytuł
+voyage.arrive.0,Mgła oddała ci nowy brzeg. Zapal pierwsze światło.,The mist has given you a new shore. Light the first lamp.,Der Nebel hat dir ein neues Ufer geschenkt. Entzünde das erste Licht.,霧が新しい岸を返してくれた。最初の灯をともせ。,迷雾还给你一片新的海岸。点亮第一盏灯吧。,scenka przypłynięcia: zapiski Opiekuna (co rejs kolejna)
+voyage.arrive.1,Ta wyspa pamięta inne latarnie. Może pamięta i ciebie.,This island remembers other lanterns. Perhaps it remembers you too.,Diese Insel erinnert sich an andere Laternen. Vielleicht auch an dich.,この島はほかの灯を覚えている。君のことも覚えているかもしれない。,这座岛记得别的灯。也许也记得你。,
+voyage.arrive.2,"Ogniki płyną za światłem. Daj im powód, by zostały.",Wisps follow the light. Give them a reason to stay.,Irrlichter folgen dem Licht. Gib ihnen einen Grund zu bleiben.,鬼火は光を追う。ここに留まる理由をあげよう。,鬼火追随光明。给它们一个留下的理由。,
+voyage.arrive.3,Każdy rejs zostawia ślad w perłach. Mgła liczy uczciwie.,Every voyage leaves its mark in pearls. The mist counts fairly.,Jede Reise hinterlässt Spuren in Perlen. Der Nebel zählt ehrlich.,航海はどれも真珠に跡を残す。霧は公平に数える。,每次航行都会在珍珠上留下痕迹。迷雾算得很公道。,
+voyage.arrive.4,"Ziemia tu jest młoda, ale noce stare jak morze.","The soil here is young, but the nights are as old as the sea.","Die Erde hier ist jung, doch die Nächte sind alt wie das Meer.",ここの土は若いが、夜は海ほど古い。,这里的土地很年轻，夜晚却和大海一样古老。,
+voyage.arrive.5,Ktoś już tu był. Na kamieniu zostało wypalone znamię Opiekunów.,Someone was here before. The Keepers' mark is burned into a stone.,Jemand war schon hier. In einen Stein ist das Zeichen der Hüter gebrannt.,誰かがここにいた。石に守り人の印が焼きついている。,有人来过这里。石头上烙着守护者的印记。,
+voyage.arrive.6,"Mgła cofa się tylko przed tymi, którzy pracują.",The mist only retreats before those who work.,"Der Nebel weicht nur vor denen, die arbeiten.",霧が退くのは、働く者の前だけだ。,迷雾只在劳作者面前退却。,
+voyage.arrive.7,"Kolejna wyspa, kolejna latarnia. Morze wciąż czeka.","Another island, another lantern. The sea is still waiting.","Eine weitere Insel, eine weitere Laterne. Das Meer wartet noch.",また新しい島、また新しい灯。海はまだ待っている。,又一座岛，又一盏灯。大海仍在等待。,
 toast.fullmoon,Pełnia: rośliny nocy rosną 2x szybciej,Full moon: night crops grow 2x faster,Vollmond: Nachtpflanzen wachsen 2x schneller,満月：夜の作物が2倍の速さで育つ,满月：夜间作物生长速度x2,
 toast.merchant.arrived,Z mgły wypływa kupiec-widmo...,The Ghost Merchant drifts out of the fog...,Der Geisterhändler gleitet aus dem Nebel ...,霧の中から幽霊商人が現れた…,幽灵商人从迷雾中驶来……,
 toast.merchant.left,Kupiec-widmo odpłynął w mgłę,The Ghost Merchant sailed back into the fog,Der Geisterhändler ist in den Nebel zurückgekehrt,幽霊商人は霧の中へ去った,幽灵商人驶回了迷雾,
