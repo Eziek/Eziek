@@ -170,10 +170,14 @@ namespace Wyspa.EditorTools
                 return;
 
             CreateData();
-            var db = AssetDatabase.LoadAssetAtPath<CropDatabase>(DataDir + "/CropDatabase.asset");
-            var glowMat = GlowMaterial();
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            // Assety ładujemy dopiero PO NewScene - tworzenie sceny zwalnia nieużywane obiekty
+            // i wcześniejsze referencje stawały się puste (pole Crops w GameLoop było null).
+            var db = AssetDatabase.LoadAssetAtPath<CropDatabase>(DataDir + "/CropDatabase.asset");
+            var glowMat = GlowMaterial();
+            if (db == null)
+                Debug.LogError("[Wyspa] Nie znaleziono " + DataDir + "/CropDatabase.asset - uruchom Wyspa > 2.");
             float W = layout.width, H = layout.height;
 
             Vector3 Center(float x, float y) => new Vector3((x - W / 2f) / Ppu, (H / 2f - y) / Ppu, 0f);

@@ -46,6 +46,8 @@ namespace Wyspa.UI
 
             GUILayout.Space(4);
             GUILayout.Label("Nasiona:");
+            if (game.Crops == null || game.Crops.crops.Count == 0)
+                GUILayout.Label("(brak bazy roślin: obiekt Game > GameLoop > Crops)");
             if (game.Crops != null)
             {
                 foreach (var crop in game.Crops.crops)
