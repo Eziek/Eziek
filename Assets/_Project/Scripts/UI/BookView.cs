@@ -80,7 +80,20 @@ namespace Wyspa.UI
             Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(38, -6), new Vector2(W - 44, H - 12));
             title = Ui.Txt(page.transform, "Title", t.textDark, TextAlignmentOptions.TopLeft, Ui.TextSize * 2);
             Ui.Place(title.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(10, -8), new Vector2(200, 18));
-            content = Ui.Place(Ui.Rect("Content", page.transform), Ui.TopLeft, Ui.TopLeft, new Vector2(10, -30), new Vector2(W - 64, H - 64));
+            // treść w przewijanym oknie (po teście gracza: drzewko i lista budowli nie mieściły się na stronie):
+            // kółko myszy przewija, przeciąganie przesuwa; wszystko poza oknem jest przycięte
+            viewport = Ui.Place(Ui.Rect("Viewport", page.transform), Ui.TopLeft, Ui.TopLeft, new Vector2(10, -30), new Vector2(W - 64, ViewH));
+            viewport.gameObject.AddComponent<RectMask2D>();
+            var hit = Ui.Img(viewport, "DragArea", null, false, true);   // przeciąganie także w pustym miejscu strony
+            hit.color = new Color(0, 0, 0, 0);
+            Ui.Stretch(hit.rectTransform);
+            content = Ui.Place(Ui.Rect("Content", viewport), Ui.TopLeft, Ui.TopLeft, Vector2.zero, new Vector2(W - 64, ViewH));
+            scroller = viewport.gameObject.AddComponent<ScrollRect>();
+            scroller.viewport = viewport;
+            scroller.content = content;
+            scroller.movementType = ScrollRect.MovementType.Clamped;
+            scroller.inertia = false;
+            scroller.scrollSensitivity = 16f;
             info = Ui.Txt(page.transform, "Info", t.textDark);
             info.textWrappingMode = TextWrappingModes.Normal;
             Ui.Place(info.rectTransform, Ui.BottomLeft, Ui.BottomLeft, new Vector2(10, 8), new Vector2(W - 64, 20));
@@ -114,8 +127,38 @@ namespace Wyspa.UI
 
         void Rebuild() => Show(current);
 
+        RectTransform viewport;
+        ScrollRect scroller;
+        /// <summary>Wysokość okna treści: nad podpowiedzią na dole strony (wcześniej na nią zachodziła).</summary>
+        const float ViewH = H - 72;
+
+        /// <summary>Rozmiar treści = zasięg elementów strony (co najmniej okno); przewijanie tylko tam, gdzie się nie mieści.</summary>
+        void FitContent(bool keepScroll)
+        {
+            float vw = W - 64, vh = ViewH, maxX = vw, maxY = vh;
+            foreach (Transform c in content)
+            {
+                if (!(c is RectTransform rt) || rt.anchorMin != Ui.TopLeft || rt.anchorMax != Ui.TopLeft)
+                    continue;
+                float left = rt.anchoredPosition.x - rt.pivot.x * rt.sizeDelta.x;
+                float top = -rt.anchoredPosition.y - (1f - rt.pivot.y) * rt.sizeDelta.y;
+                maxX = Mathf.Max(maxX, left + rt.sizeDelta.x);
+                maxY = Mathf.Max(maxY, top + rt.sizeDelta.y + 4f);
+            }
+            content.sizeDelta = new Vector2(maxX, maxY);
+            scroller.horizontal = maxX > vw + 0.5f;
+            scroller.vertical = maxY > vh + 0.5f;
+            if (keepScroll)
+                content.anchoredPosition = new Vector2(Mathf.Clamp(content.anchoredPosition.x, -(maxX - vw), 0f),
+                                                       Mathf.Clamp(content.anchoredPosition.y, 0f, maxY - vh));
+            else
+                content.anchoredPosition = Vector2.zero;
+            scroller.StopMovement();
+        }
+
         public void Show(Tab tab)
         {
+            bool sameTab = tab == current;
             current = tab;
             foreach (var (tb, img) in tabImages)
                 img.sprite = tb == tab ? Ui.Theme.slotSelected : Ui.Theme.slot;
@@ -136,6 +179,7 @@ namespace Wyspa.UI
                 case Tab.Bestiary: BuildBestiary(); break;
                 default: Paragraph("ui.soon", 0); break;
             }
+            FitContent(sameTab);
         }
 
         void Update()
