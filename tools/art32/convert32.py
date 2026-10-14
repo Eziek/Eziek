@@ -86,7 +86,7 @@ def main(force=False):
         g = hd2x(Grid(im), SRC, seed=i + 1, crisp=True)
         render(g).save(path)
         glow_path = path[:-4] + "_glow.png"
-        if os.path.exists(glow_path) or any(k in EMISSIVE for row in g for k in row if k):
+        if os.path.exists(glow_path):   # poświata tylko tam, gdzie była (np. wrony celowo bez niej)
             gl = render(g, only_emissive=True)
             if gl.getbbox() is not None:
                 gl.save(glow_path)
