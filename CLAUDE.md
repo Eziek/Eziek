@@ -21,7 +21,7 @@ a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wysp�
   i przed commitem kompilujemy: `python3 tools/shadercheck/check.py --dxc <dxc> --gfx <gfx> Assets/_Project/Shaders/*.shader`
   (DXC i biblioteki shaderów do scratchpada, instrukcja na górze `check.py`). To nie zastępuje testu w Unity.
 - Grafiki-placeholdery generuje `tools/pixel-proto/export_unity.py` (paleta mroczna), a dodatki kolejne skrypty `export_unity_*.py`
-  (dopisują do `pivots.json`). Docelowe assety rysuje się ręcznie.
+  (dopisują do `pivots.json`). Po eksporcie zawsze `tools/pixel-proto/pad_sway.py` (margines na kołysanie, bez niego wiatr ucina liście). Docelowe assety rysuje się ręcznie.
 - Gracz woli mroczną, stonowaną estetykę (odrzucił „cukierkową”). Bez postaci, animacje tylko przez shadery i cząsteczki.
 - **Lokalizacja (PL, EN, DE, JA, ZH):** żadnego tekstu w sprite'ach ani w kodzie na sztywno. Każdy napis to klucz z tabeli CSV
   w `Assets/_Project/Localization/` (`game.csv`, `ui.csv`; własna warstwa `Wyspa.Localization.Loc`, format `{0:plural:...}`),

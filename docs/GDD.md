@@ -576,6 +576,8 @@ Obrazki referencyjne (kopie): `docs/img/`
 62. Drzewko ulepszeń (prośba gracza): strona Ulepszenia jako odkrywane drzewko z ognikiem-ogrodnikiem w środku,
     18 ulepszeń w 4 gałęziach (rój, Żar, ziemia, handel), 14 nowych. Słój Żaru wymaga teraz ognika-ogrodnika (100 monet).
 63. Zakończenie historii: Światło Opiekunów na ołtarzu w noc pełni, ostatnie wynurzenie oka z epilogiem, stałe nagrody.
+64. Wiatr: pionowa „kreska” przy kołysaniu to ucinanie przesuniętych pikseli na krawędzi sprite'a. Kołyszące się sprite'y
+    (rośliny, drzewa, krzaki) mają teraz 6 px przezroczystego marginesu po bokach (`tools/pixel-proto/pad_sway.py`, po eksporcie).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
