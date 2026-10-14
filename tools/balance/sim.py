@@ -24,7 +24,7 @@ CROPS = {
     'mandrake': (2100, 35, 120, True, 2400), 'graveivy': (4800, 60, 260, True, 4800),
 }
 START_COINS = 50
-TILE_COINS = lambda n: round(10 + 20 * n + 1.5 * n * n)
+TILE_COINS = lambda n: max(10, round((10 + 20 * n + 1.5 * n * n) * (0.4 + 0.6 * n / 20 if n < 20 else 1)))
 TILE_ESS = lambda n: 3 + n // 3
 DIG = lambda soil: 10 + 5 * max(0, soil - 2)
 JAR = [(120, 200), (240, 800), (480, 3000)]          # pojemność, monety

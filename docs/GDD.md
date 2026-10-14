@@ -849,12 +849,13 @@ Skrypty: `tools/pixel-proto/tiles_proto.py`, `world_proto.py`.
 ### 13.2 Koszt
 - **Monety + Esencja.** Praca dosłownie „wyrywa ląd z mgły”.
   n = kafelki kupione od startu. Krzywa kwadratowa, bo wykładnicza nie pasuje do świata 32×32:
-  - Monety: `10 + 20n + 1.5n²` (balans po cyklu gry i wzroście x3; wcześniej `10 + 8n + 0.5n²`, na początku `10 + 4n + 0.06n²`);
+  - Monety: `10 + 20n + 1.5n²` (balans po cyklu gry i wzroście x3; wcześniej `10 + 8n + 0.5n²`, na początku `10 + 4n + 0.06n²`),
+    a pierwsze 20 kafelków taniej (prośba gracza): mnożnik `0.4 + 0.6n/20`, czyli 5. kafelek 81, 10. 252, 15. 550 monet, min. 10;
   - Esencja: `3 + n/3` (wcześniej `3 + n/4`, na początku `3 + n/8`).
 
   | n | 0 | 10 | 50 | 100 | 300 | 600 | 1020 |
   |---|---|---|---|---|---|---|---|
-  | monety | 10 | 360 | 4760 | 17010 | 141010 | 552010 | 1581010 |
+  | monety | 10 | 252 | 4760 | 17010 | 141010 | 552010 | 1581010 |
   | Esencja | 3 | 6 | 19 | 36 | 103 | 203 | 343 |
 
   Wysoka cena w Esencji późno w grze wymusza ulepszanie słoja, co jest celowym powiązaniem systemów.
