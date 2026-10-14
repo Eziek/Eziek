@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 14;  // v14: siewca dzień/noc i podmiana, v13: cele wypraw i liczba wypraw, v12: rój ogników (gniazda, runy dziczy), v11: chowańce (v10: kocioł i mikstury, v9: zamówienia, v8: wprowadzenie)
+        public int version = 15;  // v15: prestiż (perły, dary mgły) i zarobek rejsu, v14: siewca dzień/noc i podmiana, v13: cele wypraw i liczba wypraw, v12: rój ogników (gniazda, runy dziczy), v11: chowańce (v10: kocioł i mikstury, v9: zamówienia, v8: wprowadzenie)
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
@@ -38,6 +38,8 @@ namespace Wyspa.Save
         public Orders.OrderSave orders;         // v9: zamówienia z tablicy ogłoszeń
         public List<Alchemy.PotionSave> potions = new List<Alchemy.PotionSave>();   // v10: działające mikstury
         public Familiars.FamiliarSave familiars;    // v11: chowańce na wyspie
+        public MarketSave market;               // v15: zarobek rejsu i renoma (Economy/Market)
+        public PrestigeSave prestige;           // v15: perły mgły, dary, liczba rejsów (Economy/Prestige)
     }
 
     [Serializable]
@@ -308,11 +310,49 @@ namespace Wyspa.Save
                 orders = Orders.OrderBook.Instance != null ? Orders.OrderBook.Instance.Snapshot() : null,
                 potions = Alchemy.Potions.Snapshot(),
                 familiars = Familiars.FamiliarSystem.Instance != null ? Familiars.FamiliarSystem.Instance.Snapshot() : null,
+                market = Market.Snapshot(),
+                prestige = Prestige.Snapshot(),
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
                                               boost = plot.State.boostSeconds, fertilized = plot.State.fertilized });
 
+            Write(data);
+        }
+
+        /// <summary>
+        /// Rejs we mgłę (prestiż, Etap 8): perły z zarobku rejsu, potem zapis nowej wyspy w tym samym slocie. Zostają perły,
+        /// dary mgły, kronika (bestiariusz, historia, rytuały), nazwa wyspy; reszta zaczyna się od nowa (dary mogą coś zostawić:
+        /// odblokowane nasiona, ognika-ogrodnika, monety i surowce na start). Scena ładuje się od nowa. False = za mało pereł.
+        /// </summary>
+        public bool SailIntoMist(GameLoop game)
+        {
+            if (InMenu || game == null || Prestige.CollectVoyage() <= 0)
+                return false;
+            var upgrades = new List<UpgradeSave>();
+            if (Prestige.Level(Prestige.FaithfulWisp) > 0)
+                upgrades.Add(new UpgradeSave { id = UpgradeIds.WispGardener, level = 1 });
+            var data = new SaveData
+            {
+                savedAtUtcTicks = DateTime.UtcNow.Ticks,
+                currencies = Prestige.StartCurrencies(),
+                upgrades = upgrades,
+                unlockedSeeds = Prestige.Level(Prestige.SeedMemory) > 0 ? game.SnapshotUnlocks() : new List<string>(),
+                chronicle = Lore.Chronicle.Instance != null ? Lore.Chronicle.Instance.Snapshot() : null,
+                intro = UI.IntroNotes.Done,
+                slotName = CurrentName,
+                market = new MarketSave(),
+                prestige = Prestige.Snapshot(),
+            };
+            data.coins = Prestige.StartCurrencies()[0].amount;
+            owner = null;   // bez autozapisu starej wyspy w tej klatce
+            Write(data);
+            ReloadScene();
+            return true;
+        }
+
+        void Write(SaveData data)
+        {
             try
             {
                 // najpierw plik tymczasowy, potem podmiana: przerwany zapis (ubity proces) nie zostawi uciętego JSON-a
@@ -390,6 +430,8 @@ namespace Wyspa.Save
                 game.Wallet.Restore(data.currencies);
             else
                 game.Wallet.Set(data.coins);
+            Market.Restore(data.market);
+            Prestige.Restore(data.prestige);
             game.Upgrades.Restore(data.upgrades);
             game.ApplyUpgrades();                // pojemność słoja przed ustawieniem Esencji
             game.Essence.Set(data.essence);

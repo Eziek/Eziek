@@ -83,7 +83,15 @@ namespace Wyspa.UI
                 return;
             if (!target.State.IsEmpty && forcedNight < 0)
                 forcedNight = game.Clock.IsNight ? 1 : 0;
-            var slots = new List<Slot>();
+            // pierwsze miejsce: losowe nasiono pasujące do pory dnia (prośba gracza), niezależnie od kategorii koła
+            var slots = new List<Slot>
+            {
+                new Slot
+                {
+                    icon = "dice", tip = DescribeRandom, pick = PlantRandom,
+                    affordable = () => game.RandomSeed(game.Clock.IsNight, target.State.crop) != null,
+                },
+            };
             foreach (var cd in game.Crops.crops)
             {
                 if (cd == null || !InCategory(cd) || !(game.IsUnlocked(cd) || game.Seeds.Count(cd.id) > 0))
@@ -93,7 +101,7 @@ namespace Wyspa.UI
                 {
                     icon = c.SeedIcon, count = game.Seeds.Count(c.id), crop = c,
                     tip = () => Describe(c), pick = () => Plant(c),
-                    affordable = () => game.Seeds.Count(c.id) > 0 || (!c.hybrid && game.Wallet.Coins >= c.seedPrice),
+                    affordable = () => game.Seeds.Count(c.id) > 0 || (!c.hybrid && game.Wallet.Coins >= Economy.Market.SeedPrice(c)),
                 });
             }
             plot = target;
@@ -115,6 +123,8 @@ namespace Wyspa.UI
             {
                 new Slot { icon = "ritual", selected = rune.Seed == Automation.WispNest.Memory, tip = () => Loc.Get("ui.rune.memory_tip"),
                            pick = () => rune.Seed = Automation.WispNest.Memory },
+                new Slot { icon = "dice", selected = rune.Seed == Automation.WispNest.Random, tip = () => Loc.Get("ui.rune.random_tip"),
+                           pick = () => rune.Seed = Automation.WispNest.Random },
             };
             foreach (var cd in game.Crops.crops)
             {
@@ -243,15 +253,33 @@ namespace Wyspa.UI
             // najpierw worek nasion (za darmo), potem zakup za monety (hybryd nie da się kupić)
             if (game == null || target == null || target.State.IsRipe || target.State.crop == crop)
                 return;
-            if (game.Seeds.Count(crop.id) > 0 || (!crop.hybrid && game.Wallet.Coins >= crop.seedPrice))
+            if (game.Seeds.Count(crop.id) > 0 || (!crop.hybrid && game.Wallet.Coins >= Economy.Market.SeedPrice(crop)))
                 target.DigUp();   // podmiana: najpierw wykop (nasiono wraca do worka), dopiero potem płać za nowe
             if (target.State.IsEmpty
-                && (game.Seeds.TryTake(crop.id) || (!crop.hybrid && game.Wallet.TrySpend(crop.seedPrice))))
+                && (game.Seeds.TryTake(crop.id) || (!crop.hybrid && game.Wallet.TrySpend(Economy.Market.SeedPrice(crop)))))
             {
                 target.Replant(crop);
                 if (game.TakeFertilizer())
                     target.State.fertilized = true;   // nawóz idzie od razu do ziemi (+1 jakości)
             }
+        }
+
+        /// <summary>Losowe nasiono na teraz: w nocy roślina nocy, w dzień roślina dnia (inna niż ta, która rośnie).</summary>
+        void PlantRandom()
+        {
+            var game = GameLoop.Instance;
+            if (game == null || plot == null)
+                return;
+            var crop = game.RandomSeed(game.Clock.IsNight, plot.State.crop);
+            if (crop != null)
+                Plant(crop);
+        }
+
+        static string DescribeRandom()
+        {
+            var game = GameLoop.Instance;
+            bool night = game != null && game.Clock.IsNight;
+            return Loc.Get("ui.wheel.random") + "\n" + Loc.Get(night ? "ui.wheel.random_night" : "ui.wheel.random_day");
         }
 
         static string Describe(CropDefinition c)
@@ -261,13 +289,15 @@ namespace Wyspa.UI
                 : Loc.Get("ui.seed.time_night", Mathf.Round(c.growSeconds / 360f) / 10f);
             var game = GameLoop.Instance;
             int inBag = game != null ? game.Seeds.Count(c.id) : 0;
-            string price = c.hybrid ? Loc.Get("ui.seed.hybrid") : Loc.Get("ui.seed.price", c.seedPrice);
+            string price = c.hybrid ? Loc.Get("ui.seed.hybrid") : Loc.Get("ui.seed.price", Economy.Market.SeedPrice(c));
             string s = Loc.Get("crop." + c.id) + "\n"
                  + Loc.Get(c.kind == CropKind.Day ? "ui.seed.kind_day" : "ui.seed.kind_night") + "\n"
                  + price + "   " + Loc.Get("ui.seed.sell", c.sellPrice) + "\n"
                  + time;
             if (c.requiresFullMoon)
                 s += "\n" + Loc.Get("ui.seed.fullmoon");
+            if (Economy.Market.DemandCropId() == c.id)
+                s += "\n" + Loc.Get("ui.seed.demand", Upgrades.UpgradeEffects.DemandMult);   // Popyt dnia
             if (c.hybrid && !string.IsNullOrEmpty(c.parentA))
                 s += "\n" + Loc.Get("ui.seed.parents", Loc.Get("crop." + c.parentA), Loc.Get("crop." + c.parentB));
             if (inBag > 0)

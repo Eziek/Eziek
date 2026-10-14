@@ -316,6 +316,23 @@ namespace Wyspa.UI
                 new ActionRing.Entry { icon = "menu", nameKey = "menu.main", run = BackToMenu },
                 new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame },
             };
+            // losowe sadzenie na wszystkich pustych grządkach (prośba gracza): w nocy rośliny nocy, w dzień rośliny dnia
+            bool anyEmpty = false;
+            foreach (var p in FarmPlot.All)
+                if (p != null && p.State.IsEmpty) { anyEmpty = true; break; }
+            if (anyEmpty)
+                list.Insert(0, new ActionRing.Entry
+                {
+                    icon = "dice",
+                    tip = () => Loc.Get("act.plant_random") + "\n" + Loc.Get(GameLoop.Instance != null && GameLoop.Instance.Clock.IsNight
+                                                                            ? "ui.wheel.random_night" : "ui.wheel.random_day"),
+                    run = () =>
+                    {
+                        var game = GameLoop.Instance;
+                        if (game != null && game.PlantRandomEverywhere() == 0)
+                            GameEvents.RaiseToast("toast.plant_random.none");
+                    },
+                });
             var cam = Camera.main;
             var hit = cam != null ? Wyspa.Input.ClickRouter.Pick(cam.ScreenToWorldPoint(screen)) : null;
             if (hit != null && hit.TryGetComponent(out FarmPlot grown) && !grown.State.IsEmpty && !grown.State.IsRipe)

@@ -103,7 +103,7 @@ namespace Wyspa.UI
                 GUILayout.Label($"Skrzynie: {HarvestCrate.All.Count}, plonów {HarvestCrate.TotalCount()}");
                 if (GUILayout.Button("Sprzedaj"))
                     foreach (var c in HarvestCrate.All.ToArray())
-                        c.SellAll(wallet, game.Crops, 1f);
+                        c.SellAll(wallet, game.Crops, Wyspa.Economy.SaleChannel.Crate);
                 GUILayout.EndHorizontal();
                 var act = game.Activity;
                 GUILayout.BeginHorizontal();

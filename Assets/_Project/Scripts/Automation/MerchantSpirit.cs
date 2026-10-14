@@ -67,12 +67,13 @@ namespace Wyspa.Automation
             }
         }
 
-        /// <summary>Pełna skrzynia = sprzedaż od razu (bez czekania). Zwraca monety.</summary>
+        /// <summary>Pełna skrzynia (z „Gorliwym handlarzem” już połowa) = sprzedaż od razu. Zwraca monety.</summary>
         public int Tick(Wallet wallet, CropDatabase crops)
         {
-            if (crate == null || !crate.IsFull)
+            if (crate == null || crate.Count <= 0
+                || crate.Count < Mathf.CeilToInt(crate.Capacity * Mathf.Clamp01(Upgrades.UpgradeEffects.MerchantThreshold)))
                 return 0;
-            int coins = crate.SellAll(wallet, crops, PriceMultiplier);
+            int coins = crate.SellAll(wallet, crops, SaleChannel.Merchant);
             if (coins > 0)
             {
                 GameEvents.RaiseToast("toast.merchant_sold", coins);

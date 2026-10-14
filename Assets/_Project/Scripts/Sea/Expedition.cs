@@ -219,6 +219,8 @@ namespace Wyspa.Sea
                 Give(game, rnd, summary, Destinations.Roll(d, rnd, false));
             if (d.rareRoll)
                 Give(game, rnd, summary, Destinations.Roll(d, rnd, true));   // daleka wyprawa: zawsze coś rzadkiego
+            if (Upgrades.UpgradeEffects.ExpCoins > 0)
+                Give(game, summary, CurrencyType.Coins, Upgrades.UpgradeEffects.ExpCoins, summary.anchor);   // Morski handel
             var before = UnlockedSet();
             trips++;
             foreach (var n in Destinations.All)
@@ -290,6 +292,7 @@ namespace Wyspa.Sea
 
         static void Give(GameLoop game, LootSummary s, CurrencyType type, int amount, Vector3 at)
         {
+            amount = Mathf.CeilToInt(amount * Upgrades.UpgradeEffects.ExpLoot);   // Bogaty ładunek
             game.Wallet.Add(type, amount);
             GameEvents.RaiseCurrencyGained(at, type, amount);
             s.lines.Add(Loc.Get("cost." + type.ToString().ToLowerInvariant(), amount));

@@ -16,11 +16,12 @@ namespace Wyspa.UI
     /// </summary>
     public class BookView : MonoBehaviour
     {
-        public enum Tab { Shop, Upgrades, Rituals, Bestiary, Stats, Options }
+        public enum Tab { Shop, Upgrades, Rituals, Bestiary, Stats, Options, Voyage }
 
         static readonly (Tab tab, string icon, string key)[] Tabs =
         {
-            (Tab.Shop, "shop", "menu.shop"), (Tab.Upgrades, "upgrade", "menu.upgrades"), (Tab.Rituals, "ritual", "menu.rituals"),
+            (Tab.Shop, "shop", "menu.shop"), (Tab.Upgrades, "upgrade", "menu.upgrades"), (Tab.Voyage, "pearl", "menu.voyage"),
+            (Tab.Rituals, "ritual", "menu.rituals"),
             (Tab.Bestiary, "bestiary", "menu.bestiary"), (Tab.Stats, "stats", "menu.stats"), (Tab.Options, "settings", "menu.options"),
         };
 
@@ -112,6 +113,8 @@ namespace Wyspa.UI
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();
             Show(tab);
+            if (tab == Tab.Upgrades)
+                CenterTree();   // drzewko jest duże: po otwarciu Księgi zawsze od środka
         }
 
         public void Close()
@@ -177,9 +180,12 @@ namespace Wyspa.UI
                 case Tab.Shop: BuildShop(); break;
                 case Tab.Rituals: BuildRituals(); break;
                 case Tab.Bestiary: BuildBestiary(); break;
+                case Tab.Voyage: BuildVoyage(); break;
                 default: Paragraph("ui.soon", 0); break;
             }
             FitContent(sameTab);
+            if (tab == Tab.Upgrades && !sameTab)
+                CenterTree();
         }
 
         void Update()
@@ -198,6 +204,7 @@ namespace Wyspa.UI
             if (current == Tab.Upgrades) RefreshUpgrades();
             else if (current == Tab.Shop) RefreshShop();
             else if (current == Tab.Rituals) RefreshRituals();
+            else if (current == Tab.Voyage) RefreshVoyage();
             else if (current == Tab.Stats) BuildStats();
         }
 
@@ -226,11 +233,26 @@ namespace Wyspa.UI
             return NodeState.Hidden;
         }
 
-        /// <summary>Środek komórki na stronie: drzewko wyśrodkowane w polu treści (296x168).</summary>
+        const float TreeMargin = 18f;
+
+        /// <summary>
+        /// Środek komórki na stronie: drzewko od lewego górnego rogu (78 węzłów, Etap 8), strona przewija się w obie strony;
+        /// po otwarciu widok staje na ogniku-ogrodniku (CenterTree).
+        /// </summary>
         static Vector2 CellCenter(Vector2Int c)
         {
-            var mid = UpgradeTree.Middle;
-            return new Vector2((W - 64) / 2f + (c.x - mid.x) * Cell, -(H - 64) / 2f - (c.y - mid.y) * Cell);
+            var min = UpgradeTree.Min;
+            return new Vector2(TreeMargin + (c.x - min.x) * Cell + Cell / 2f, -(TreeMargin + (c.y - min.y) * Cell + Cell / 2f));
+        }
+
+        /// <summary>Przewija drzewko tak, żeby ognik-ogrodnik (środek) był na środku okna.</summary>
+        void CenterTree()
+        {
+            var c = CellCenter(UpgradeTree.Cell(UpgradeIds.WispGardener));
+            float vw = W - 64, vh = ViewH;
+            var size = content.sizeDelta;
+            content.anchoredPosition = new Vector2(Mathf.Clamp(vw / 2f - c.x, -(size.x - vw), 0f),
+                                                   Mathf.Clamp(-c.y - vh / 2f, 0f, Mathf.Max(0f, size.y - vh)));
         }
 
         void BuildUpgrades()
@@ -371,7 +393,7 @@ namespace Wyspa.UI
                      + Loc.Get(d.descriptionKey, UpgradeTree.Display(d.id, value));
             if (next == null)
                 return s + "\n" + Loc.Get("ui.upgrade.max");
-            s += "\n" + Loc.Get("ui.upgrade.cost", PlacementMode.CostText(next.cost));
+            s += "\n" + Loc.Get("ui.upgrade.cost", PlacementMode.CostText(ups.CostOf(next)));
             if (!ups.RequirementsMet(d))
                 return s + "\n" + Loc.Get("ui.upgrade.requires", RequirementNames(d));
             return s + "\n" + Loc.Get(ups.CanBuy(d, game.Wallet) ? "ui.upgrade.click_buy" : "ui.upgrade.cant_afford");
@@ -925,6 +947,123 @@ namespace Wyspa.UI
                 b.interactable = chronicle != null && game != null && chronicle.MoonPoints >= def.points && game.Wallet.CanAfford(def.cost);
                 status.text = done ? Loc.Get("ui.rituals.done") : "";
             }
+        }
+
+        // ------------------------------------------------------------------ Rejs we mgłę (prestiż, Etap 8)
+
+        TextMeshProUGUI voyageHead, voyageRun, voyageGlow, sailText;
+        Button sailButton;
+        float sailArmedUntil;
+        readonly List<(Prestige.Gift gift, Button buy, TextMeshProUGUI price, TextMeshProUGUI desc, TextMeshProUGUI level)> giftRows =
+            new List<(Prestige.Gift, Button, TextMeshProUGUI, TextMeshProUGUI, TextMeshProUGUI)>();
+
+        static string Num(long n) => n.ToString("N0", LocCore.Culture(Loc.Language));
+
+        void BuildVoyage()
+        {
+            giftRows.Clear();
+            info.text = Loc.Get("ui.voyage.hint");
+            float w = W - 64;
+            voyageHead = Ui.Txt(content, "Pearls", Ui.Theme.textDark);
+            Ui.Place(voyageHead.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, 0), new Vector2(w, 10));
+            voyageGlow = Ui.Txt(content, "Glow", Ui.Theme.textMuted);
+            Ui.Place(voyageGlow.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -11), new Vector2(w, 10));
+            voyageRun = Ui.Txt(content, "Run", Ui.Theme.textMuted);
+            Ui.Place(voyageRun.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -22), new Vector2(w, 10));
+            sailButton = Ui.Btn(content, "Sail", Sail);
+            Ui.Place((RectTransform)sailButton.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -35), new Vector2(w, 16));
+            sailText = Ui.Txt(sailButton.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
+            Ui.Stretch(sailText.rectTransform);
+            sailButton.gameObject.AddComponent<HoverTip>().Init(tooltip, () => Loc.Get("ui.voyage.sail_tip"));
+
+            var head = Ui.Txt(content, "Gifts", Ui.Theme.textGold);
+            Ui.Place(head.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -57), new Vector2(w, 10));
+            LocText.On(head, "ui.voyage.gifts");
+            float y = 69;
+            foreach (var g in Prestige.Gifts)
+            {
+                var gift = g;
+                var row = Ui.Place(Ui.Rect("Gift_" + g.id, content), Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(w, 22));
+                var icon = Ui.Img(row, "Icon", Ui.Theme.Icon(g.icon), false);
+                Ui.Place(icon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -4), new Vector2(12, 12));
+                var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
+                LocText.On(name, g.NameKey);
+                Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(16, -1), new Vector2(150, 10));
+                var level = Ui.Txt(row, "Level", Ui.Theme.textGold, TextAlignmentOptions.TopRight);
+                Ui.Place(level.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-48, -1), new Vector2(40, 10));
+                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
+                Ui.Place(desc.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(16, -11), new Vector2(w - 66, 10));
+                desc.raycastTarget = true;
+                desc.gameObject.AddComponent<HoverTip>().Init(tooltip, () => GiftText(gift));
+                var buy = Ui.Btn(row, "Buy", () =>
+                {
+                    if (Prestige.TryBuy(gift))
+                    {
+                        GameEvents.RaiseToast("toast.gift_bought", Loc.Get(gift.NameKey));
+                        GameEvents.PlaySound("magic", 0.6f);
+                        var game = GameLoop.Instance;
+                        if (game != null)
+                            game.ApplyUpgrades();
+                    }
+                    RefreshVoyage();
+                });
+                Ui.Place((RectTransform)buy.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -3), new Vector2(42, 16));
+                var price = Ui.Txt(buy.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
+                Ui.Stretch(price.rectTransform);
+                giftRows.Add((g, buy, price, desc, level));
+                y += 23;
+            }
+            RefreshVoyage();
+        }
+
+        /// <summary>Opis daru: wartość następnego poziomu (albo obecnego, gdy maksymalny).</summary>
+        static string GiftText(Prestige.Gift g)
+        {
+            int lvl = Prestige.Level(g.id);
+            float v = g.values[Mathf.Min(lvl, g.values.Length - 1)];
+            return Loc.Get(g.DescKey, g.percent ? Mathf.Round(v * 100f) : v);
+        }
+
+        void RefreshVoyage()
+        {
+            if (voyageHead == null)
+                return;
+            voyageHead.text = Loc.Get("ui.voyage.pearls", Prestige.Pearls, Prestige.Earned, Prestige.Voyages + 1);
+            voyageGlow.text = Loc.Get("ui.voyage.glow", Mathf.RoundToInt((Prestige.SaleMultiplier - 1f) * 100f));
+            voyageRun.text = Loc.Get("ui.voyage.run", Num(Market.RunCoins), Prestige.PendingPearls, Num(Prestige.CoinsForNextPearl));
+            bool armed = Time.unscaledTime < sailArmedUntil;
+            sailButton.interactable = Prestige.CanSail;
+            sailText.text = !Prestige.CanSail ? Loc.Get("ui.voyage.cant")
+                          : Loc.Get(armed ? "ui.voyage.confirm" : "ui.voyage.sail", Prestige.PendingPearls);
+            foreach (var (g, buy, price, desc, level) in giftRows)
+            {
+                int lvl = Prestige.Level(g.id), cost = Prestige.NextCost(g);
+                level.text = Loc.Get("ui.upgrade.level", lvl, g.MaxLevel);
+                desc.text = GiftText(g);
+                buy.gameObject.SetActive(cost > 0);
+                buy.interactable = cost > 0 && Prestige.Pearls >= cost;
+                price.text = cost > 0 ? Loc.Get("ui.voyage.buy", cost) : "";
+            }
+        }
+
+        /// <summary>Rejs: pierwszy klik uzbraja (4 s), drugi odpływa (nowa wyspa w tym samym slocie).</summary>
+        void Sail()
+        {
+            if (!Prestige.CanSail)
+                return;
+            if (Time.unscaledTime >= sailArmedUntil)
+            {
+                sailArmedUntil = Time.unscaledTime + 4f;
+                RefreshVoyage();
+                return;
+            }
+            var save = FindAnyObjectByType<Save.SaveSystem>();
+            var game = GameLoop.Instance;
+            if (save == null || game == null)
+                return;
+            Close();
+            GameEvents.PlaySound("magic");
+            save.SailIntoMist(game);
         }
 
         // ------------------------------------------------------------------ Bestiariusz i lore (GDD §11.3 H)

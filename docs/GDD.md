@@ -259,6 +259,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 ## 7. Otwarte decyzje
 - [x] Siatka: **16 px dla sprite'ów i terenu, woda w 32 px** (decyzja gracza po teście Etapu 7, §9 p. 74; wcześniejszy
   wybór „wszystko w 32 px” wycofany, bo przerobione grafiki wyszły „wygładzone i nijakie”). Font 12 px osobnym etapem.
+- [x] **Etap 8** (prośby gracza): losowe sadzenie wg pory dnia, 60 ulepszeń handlu (`docs/UPGRADES_TRADE.md`),
+  prestiż „Rejs we mgłę” z Perłami i Darami Mgły (§11.8). Balans liczb na koniec.
 - [x] Nazwa gry: **Misty Packland** (decyzja gracza 2026-10-14; wcześniej robocza „Pockland”, ryzyko zbieżności z „Pokéland”, §16.5).
 - [x] **Pakiet do wydania** (prośba gracza): ikona (pixel art, plakietka: nocne morze, wyspa z latarnią, księżyc, chmury
   mgły; 32 px i uproszczona 16 px), logo własnym krojem pikselowym (w menu głównym, na ekranie startowym, w sklepie),
@@ -631,6 +633,14 @@ Obrazki referencyjne (kopie): `docs/img/`
     sklepowe), `Editor/ReleaseBuild.cs` (Wyspa → Wydanie), `release/` (README, PRIVACY, THIRD_PARTY_NOTICES, teksty sklepu,
     press kit). Logo w menu głównym i numer wersji. Zapisy kopiowane ze starego folderu (`DefaultCompany/My project (5)`),
     wpis autostartu „Pockland” przenoszony na nowy plik. Jedna kopia gry naraz.
+78. Etap 8 (prośby gracza):
+    - **Losowe sadzenie** według pory dnia (w nocy losowa roślina nocy, w dzień dnia): kostka w kole nasion, tryb „losowo”
+      dla ognika-siewcy (dzień i noc osobno, z podmianą) i akcja w pierścieniu PPM „Obsiej puste grządki losowo”.
+    - **60 ulepszeń handlu i dochodów** (`docs/UPGRADES_TRADE.md`, podgląd `docs/img/drzewko_ulepszen.png`): drzewko ma 78
+      węzłów w 9 nowych gałęziach, ceny liczy jedno miejsce (`Economy/Market.cs`). Księga otwiera drzewko na środku.
+    - **Prestiż „Rejs we mgłę”** (§11.8): Perły Mgły z zarobku rejsu, blask pereł (+2% cen za każdą), 10 Darów Mgły.
+    - PPM przesuwa widok także w przezroczystym oknie (zapas 40 px).
+    Zapis v15.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -893,6 +903,32 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 - `HarvestCrate` + `WispGardener`: automatyczny zbiór do skrzyni, `AutoSeller`.
 - `Expedition`: stan łodzi (licznik aktywnych sekund, tabela łupów).
 - `Mutation`: tabela par roślin i hybrydy, rzut przy zbiorze.
+
+### 11.8 Prestiż: Rejs we mgłę (Etap 8, prośba gracza)
+- **Po co:** po kilku tygodniach wyspa jest „skończona”. Rejs pozwala zacząć od nowa, mocniejszym, z nową wyspą (nowe
+  ziarno świata, inne strefy we mgle).
+- **Jak:** Księga → zakładka Rejs (ikona perły) → „Odpłyń we mgłę” (drugi klik potwierdza). Zapis slotu zastępuje nowa wyspa.
+- **Perły Mgły** = pierwiastek z (monety zarobione w tym rejsie / 10 000): 10 tys. = 1, 40 tys. = 2, 1 mln = 10.
+  Zarobek liczy każda moneta wpadająca do portfela (sprzedaż, zamówienia, odsetki, wyprawy).
+- **Blask pereł:** każda kiedykolwiek zdobyta perła +2% do wszystkich cen i dochodów (na zawsze, także po wydaniu perły).
+- **Zostaje:** perły, dary, liczba rejsów, kronika (bestiariusz, historia, rytuały), nazwa wyspy, opcje.
+  **Przepada:** wyspa, waluty, ulepszenia z drzewka, budowle, worek nasion, chowańce, zamówienia.
+- **Dary Mgły** (za perły, trwałe):
+
+| Dar | Efekt | Poziomy (koszt w perłach) |
+|---|---|---|
+| Mgielny targ | ceny i dochody +10/20/30/40/50% | 1, 2, 3, 4, 5 |
+| Posag | nowa wyspa +500 / 2000 / 8000 monet | 1, 2, 4 |
+| Wierny ognik | ognik-ogrodnik od startu | 2 |
+| Pamięć nasion | odblokowane nasiona zostają | 2 |
+| Żar Opiekunów | Żar z pracy +10/20/30% | 1, 2, 3 |
+| Zielone ręce | wzrost roślin +10/20/30% | 1, 2, 3 |
+| Stare znajomości | ulepszenia -10/20/30% monet | 2, 3, 4 |
+| Tania ziemia | kafelki -10/20/30% monet | 1, 2, 3 |
+| Pełna spiżarnia | start z 30 / 80 drewna i kamienia | 1, 2 |
+| Perłowe szczęście | szansa na złoty interes +3/6/9% | 2, 3, 4 |
+
+Kod: `Economy/Prestige.cs`, rejs `Save/SaveSystem.SailIntoMist`, strona `UI/BookView.BuildVoyage`. Liczby do balansu.
 
 ### 11.7 Etapy implementacji
 - **Etap 1 (gotowy):** szkielet systemów (§10).

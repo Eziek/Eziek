@@ -511,7 +511,7 @@ namespace Wyspa.Automation
                     if (preferred != null && preferred.TryAddFruit(c.fruit)) continue;
                     var other = HarvestCrate.NearestWithSpace(transform.position);
                     if (other != null && other.TryAddFruit(c.fruit)) continue;
-                    if (game != null) game.Wallet.Add(Mathf.RoundToInt(c.fruit.fruitPrice * MerchantSpirit.PriceMultiplier));
+                    if (game != null) game.Wallet.Add(Economy.Market.SellFruit(c.fruit, 1, Economy.SaleChannel.Wisp));
                     continue;
                 }
                 if (c.crop == null)
@@ -519,7 +519,7 @@ namespace Wyspa.Automation
                 if (preferred != null && preferred.TryAdd(c.crop, c.quality)) continue;
                 var crate = HarvestCrate.NearestWithSpace(transform.position);
                 if (crate != null && crate.TryAdd(c.crop, c.quality)) continue;
-                if (game != null) game.Wallet.Add(Mathf.RoundToInt(c.crop.SellPrice(c.quality) * MerchantSpirit.PriceMultiplier));
+                if (game != null) game.Wallet.Add(Economy.Market.SellCrop(c.crop, c.quality, 1, Economy.SaleChannel.Wisp));
             }
             carried.Clear();
             ShowCarried();
@@ -559,7 +559,8 @@ namespace Wyspa.Automation
             string mode = nest.SeedFor(night);
             if (mode == WispNest.Off)
                 return null;
-            var chosen = mode == WispNest.Memory || game.Crops == null ? null : game.Crops.Find(mode);
+            bool random = mode == WispNest.Random;   // losowo: osobne losowanie dla każdej grządki
+            var chosen = mode == WispNest.Memory || random || game.Crops == null ? null : game.Crops.Find(mode);
             var route = new List<(FarmPlot plot, CropDefinition crop)>();
             foreach (var plot in FarmPlot.All)
             {
@@ -569,15 +570,15 @@ namespace Wyspa.Automation
                     continue;
                 CropDefinition crop;
                 if (plot.State.IsEmpty)
-                    crop = chosen != null ? chosen : plot.LastCrop;
-                else if (nest.Swap && chosen != null && plot.OutOfSeason(night, game.ContextFor(plot, night).lit))
-                    crop = chosen;   // podmiana: stara roślina wraca do worka jako nasiono
+                    crop = random ? game.RandomSeed(night) : chosen != null ? chosen : plot.LastCrop;
+                else if (nest.Swap && (chosen != null || random) && plot.OutOfSeason(night, game.ContextFor(plot, night).lit))
+                    crop = random ? game.RandomSeed(night) : chosen;   // podmiana: stara roślina wraca do worka jako nasiono
                 else
                     continue;
                 // nie sadzimy rośliny, która o tej porze i tak by nie rosła (np. pamięć ziemi z nocną o świcie)
                 if (crop == null || (crop.kind == CropKind.Night) != night || crop == plot.State.crop)
                     continue;
-                if (game.Seeds.Count(crop.id) <= 0 && (crop.hybrid || game.Wallet.Coins < crop.seedPrice))
+                if (game.Seeds.Count(crop.id) <= 0 && (crop.hybrid || game.Wallet.Coins < Economy.Market.SeedPrice(crop)))
                     continue;
                 if (Reserve(plot))
                     route.Add((plot, crop));
@@ -606,7 +607,7 @@ namespace Wyspa.Automation
                         continue;   // w międzyczasie zaczęła rosnąć albo gracz wyłączył podmianę
                     plot.DigUp();
                 }
-                if (!game.Seeds.TryTake(crop.id) && (crop.hybrid || !game.Wallet.TrySpend(crop.seedPrice)))
+                if (!game.Seeds.TryTake(crop.id) && (crop.hybrid || !game.Wallet.TrySpend(Economy.Market.SeedPrice(crop))))
                     continue;
                 plot.Replant(crop);
                 AddXp(1);

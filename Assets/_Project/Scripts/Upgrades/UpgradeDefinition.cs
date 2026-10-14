@@ -14,6 +14,7 @@ namespace Wyspa.Upgrades
         Lamps,
         Sea,
         Rituals,
+        Trade,      // Etap 8: handel i dochody (Economy/Market)
     }
 
     [Serializable]

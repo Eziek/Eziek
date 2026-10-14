@@ -480,7 +480,9 @@ namespace Wyspa.World
 
         // ================================================================ zakup i przekopywanie
 
-        public int NextTileCoins => IslandEconomy.TileCoins(map.Purchased);
+        public int NextTileCoins => Mathf.Max(1, Mathf.RoundToInt(IslandEconomy.TileCoins(map.Purchased) * Economy.Prestige.TileCostMultiplier));   // Tania ziemia
+        /// <summary>Kupione kafelki (Dzierżawa).</summary>
+        public int PurchasedTiles => map != null ? map.Purchased : 0;
         public int NextTileEssence => IslandEconomy.TileEssence(map.Purchased);
         public int DigCoins => IslandEconomy.DigCoins(SoilCount);
 
@@ -726,7 +728,7 @@ namespace Wyspa.World
             }
             if (obj.TryGetComponent(out Automation.HarvestCrate crate) && wallet != null)
             {
-                int sold = crate.SellAll(wallet, crops, 1f);
+                int sold = crate.SellAll(wallet, crops, Economy.SaleChannel.Crate);
                 if (sold > 0)
                     GameEvents.RaiseCurrencyGained(obj.transform.position, CurrencyType.Coins, sold);
             }

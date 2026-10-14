@@ -22,8 +22,10 @@ namespace Wyspa.Sea
         const float BaseStaySeconds = 600f;
         /// <summary>Rytuał „Szept mgły”: kupiec zostaje dłużej.</summary>
         public static float StayMultiplier = 1f;
-        static float StaySeconds => BaseStaySeconds * StayMultiplier;
-        const float SellMultiplier = 1.5f;
+        static float StaySeconds => BaseStaySeconds * StayMultiplier * Upgrades.UpgradeEffects.GhostStay;   // Cierpliwy kupiec
+        /// <summary>Kupiec-widmo płaci za plony x1.5 („Targ z widmem” więcej, Economy.Market).</summary>
+        public const float SellMultiplier = 1.5f;
+        static int Discounted(int coins) => Mathf.Max(1, Mathf.RoundToInt(coins * (1f - Upgrades.UpgradeEffects.GhostDiscount)));   // Widmowe rabaty
         const float Ppu = 16f;
 
         [SerializeField] SpriteRenderer body;
@@ -132,6 +134,11 @@ namespace Wyspa.Sea
             present = true;
             StartCoroutine(Fade(true));
             GameEvents.RaiseToast("toast.merchant.arrived");
+            if (Upgrades.UpgradeEffects.GhostTip > 0)
+            {
+                game.Wallet.Add(Upgrades.UpgradeEffects.GhostTip);   // Widmowy napiwek
+                GameEvents.RaiseCurrencyGained(transform.position, CurrencyType.Coins, Upgrades.UpgradeEffects.GhostTip);
+            }
             Lore.Chronicle.Note("event:merchant");
             Lore.Chronicle.Count("event");
         }
@@ -201,14 +208,14 @@ namespace Wyspa.Sea
                 list.Add(new Offer
                 {
                     label = Loc.Get("ui.merchant.seeds", 3, Loc.Get("crop." + crop.id)),
-                    coins = Mathf.RoundToInt(crop.seedPrice * 3 * 0.6f),
+                    coins = Discounted(Mathf.RoundToInt(crop.seedPrice * 3 * 0.6f)),
                     give = () => game.Seeds.Add(crop.id, 3),
                 });
             }
             list.Add(new Offer
             {
                 label = Loc.Get("ui.merchant.fertilizer", 3),
-                coins = 30, night = 1,
+                coins = Discounted(30), night = 1,
                 give = () => game.AddFertilizer(3),
             });
             if (hybrids.Count > 0 && rnd.Value() < 0.35)
@@ -217,7 +224,7 @@ namespace Wyspa.Sea
                 list.Add(new Offer
                 {
                     label = Loc.Get("ui.merchant.hybrid", Loc.Get("crop." + h.id)),
-                    coins = Mathf.Max(120, h.sellPrice), night = 3,
+                    coins = Discounted(Mathf.Max(120, h.sellPrice)), night = 3,
                     give = () => game.Seeds.Add(h.id, 1),
                 });
             }
@@ -278,7 +285,7 @@ namespace Wyspa.Sea
                 return;
             int coins = 0;
             foreach (var crate in HarvestCrate.All.ToArray())
-                coins += crate.SellAll(game.Wallet, game.Crops, SellMultiplier);
+                coins += crate.SellAll(game.Wallet, game.Crops, SaleChannel.Ghost);
             if (coins <= 0)
                 return;
             GameEvents.RaiseToast("toast.merchant.bought", coins);

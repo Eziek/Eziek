@@ -91,13 +91,14 @@ namespace Wyspa.Farming
             if (state.IsRipe)
             {
                 var crop = state.crop;
-                int price = crop.SellPrice(state.Quality);
+                int price = Market.SellCrop(crop, state.Quality, 1, SaleChannel.Hand);
                 game.Wallet.Add(price);
                 GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.Coins, price);
-                if (crop.kind == CropKind.Night)
+                int night = Market.NightYield(crop);
+                if (night > 0)
                 {
-                    game.Wallet.Add(CurrencyType.NightHarvest, crop.nightHarvestYield);
-                    GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.NightHarvest, crop.nightHarvestYield);
+                    game.Wallet.Add(CurrencyType.NightHarvest, night);
+                    GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.NightHarvest, night);
                 }
                 IslandFx.Harvest(CropPosition, crop.StageSprite(3), CropOrder);
                 GameEvents.PlaySound("harvest");
@@ -120,7 +121,7 @@ namespace Wyspa.Farming
                     return;
                 }
                 var seed = SeedSelection.Current;
-                if (seed != null && game.Wallet.TrySpend(seed.seedPrice))
+                if (seed != null && game.Wallet.TrySpend(Economy.Market.SeedPrice(seed)))
                     Replant(seed);
             }
         }

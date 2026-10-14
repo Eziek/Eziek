@@ -45,7 +45,9 @@ namespace Wyspa.Automation
             if (timer < Interval)
                 return;
             timer = 0f;
-            int coins = Sell(game, CurrencyType.Wood, WoodPrice, Batch) + Sell(game, CurrencyType.Stone, StonePrice, Batch);
+            int batch = Batch * Mathf.Max(1, Mathf.RoundToInt(Upgrades.UpgradeEffects.StoreBatch));   // Wielki skład
+            int coins = Sell(game, CurrencyType.Wood, WoodPrice + Upgrades.UpgradeEffects.WoodBonus, batch)
+                      + Sell(game, CurrencyType.Stone, StonePrice + Upgrades.UpgradeEffects.StoneBonus, batch);
             Pay(game, coins);
         }
 
@@ -83,7 +85,8 @@ namespace Wyspa.Automation
             int value = wood * WoodPrice + stone * StonePrice;
             info.Button(Loc.Get("ui.store.sell_now", value), () =>
             {
-                Pay(game, Sell(game, CurrencyType.Wood, WoodPrice, int.MaxValue) + Sell(game, CurrencyType.Stone, StonePrice, int.MaxValue));
+                Pay(game, Sell(game, CurrencyType.Wood, WoodPrice + Upgrades.UpgradeEffects.WoodBonus, int.MaxValue)
+                         + Sell(game, CurrencyType.Stone, StonePrice + Upgrades.UpgradeEffects.StoneBonus, int.MaxValue));
                 GameEvents.RequestContext(this);
             }, value > 0);
         }

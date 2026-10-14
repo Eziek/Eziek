@@ -53,7 +53,8 @@ namespace Wyspa.Farming
 
         public List<CurrencyAmount> Cost()
         {
-            var list = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, saplingCoins) };
+            int coins = Mathf.Max(1, Mathf.RoundToInt(saplingCoins * (1f - Upgrades.UpgradeEffects.TreeDiscount)));   // Szczepienie
+            var list = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, coins) };
             if (extraCost.amount > 0)
                 list.Add(extraCost);
             return list;
@@ -253,7 +254,7 @@ namespace Wyspa.Farming
             if (game == null || fallen.Count == 0)
                 return;
             int n = fallen.Count;
-            int coins = n * species.fruitPrice;
+            int coins = Market.SellFruit(species, n, SaleChannel.Hand);
             var at = transform.position + new Vector3(0f, 0.3f, 0f);
             foreach (var f in fallen)
                 if (f != null) Destroy(f.gameObject);
@@ -346,7 +347,7 @@ namespace Wyspa.Farming
             var game = GameLoop.Instance;
             if (game == null || !Fruiting)
                 return;
-            int coins = species.fruitCount * species.fruitPrice;
+            int coins = Market.SellFruit(species, species.fruitCount, SaleChannel.Hand);
             game.Wallet.Add(coins);
             var at = transform.position + new Vector3(0f, 1.2f, 0f);
             GameEvents.RaiseCurrencyGained(at, CurrencyType.Coins, coins);

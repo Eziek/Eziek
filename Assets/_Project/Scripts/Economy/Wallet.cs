@@ -40,7 +40,12 @@ namespace Wyspa.Economy
             Changed?.Invoke();
         }
 
-        public void Add(CurrencyType type, int value) => Set(type, Get(type) + value);
+        public void Add(CurrencyType type, int value)
+        {
+            if (type == CurrencyType.Coins)
+                Market.NoteIncome(value);   // zarobek rejsu (perły mgły przy prestiżu)
+            Set(type, Get(type) + value);
+        }
 
         public bool CanAfford(IReadOnlyList<CurrencyAmount> cost)
         {

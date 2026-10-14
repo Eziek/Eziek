@@ -22,7 +22,14 @@ namespace Wyspa.Core
         public float Capacity => currentCapacity > 0f ? currentCapacity : capacity;
         public float Normalized => Capacity > 0f ? amount / Capacity : 0f;
 
-        public void AddActiveSeconds(float seconds) => Set(amount + seconds / 60f * perActiveMinute);
+        /// <summary>Żar za sekundy pracy. Zwraca nadmiar, który nie zmieścił się w słoju („Żar w złoto”).</summary>
+        public float AddActiveSeconds(float seconds)
+        {
+            float add = seconds / 60f * perActiveMinute;
+            float overflow = Mathf.Max(0f, amount + add - Capacity);
+            Set(amount + add);
+            return overflow;
+        }
 
         public bool TryConsume(float value)
         {

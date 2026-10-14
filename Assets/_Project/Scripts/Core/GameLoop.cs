@@ -40,6 +40,7 @@ namespace Wyspa.Core
         readonly HashSet<string> unlockedSeeds = new HashSet<string>();
         readonly SeedBag seeds = new SeedBag();
         bool fullMoonAnnounced;
+        long lastCycle = -1;   // doba gry z poprzedniego ticku (świt = nowa doba)
 
         /// <summary>Szansa na nasiono hybrydy przy zbiorze, gdy sąsiad (4 kierunki) ma roślinę-partnera (GDD §11.3 D).</summary>
         /// <summary>Szansa mutacji przy zbiorze (3%, ulepszenie „Krzyżowanie” więcej).</summary>
@@ -91,6 +92,47 @@ namespace Wyspa.Core
             return true;
         }
 
+        /// <summary>
+        /// Losowe nasiono na porę dnia (prośba gracza): w nocy roślina nocy, w dzień roślina dnia. Spośród odblokowanych
+        /// (na które stać) i tych z worka; krwawe rośliny pełni tylko w pełnię. Null, gdy nie ma z czego losować.
+        /// </summary>
+        public CropDefinition RandomSeed(bool night, CropDefinition except = null)
+        {
+            if (crops == null)
+                return null;
+            var pool = new List<CropDefinition>();
+            foreach (var c in crops.crops)
+            {
+                if (c == null || c == except || (c.kind == CropKind.Night) != night || (c.requiresFullMoon && !clock.IsFullMoon))
+                    continue;
+                if (seeds.Count(c.id) > 0 || (IsUnlocked(c) && wallet.Coins >= Economy.Market.SeedPrice(c)))
+                    pool.Add(c);
+            }
+            return pool.Count > 0 ? pool[Random.Range(0, pool.Count)] : null;
+        }
+
+        /// <summary>Pierścień akcji: każda pusta grządka dostaje losowe nasiono na porę dnia (worek, potem monety). Zwraca ile.</summary>
+        public int PlantRandomEverywhere()
+        {
+            int planted = 0;
+            bool night = clock.IsNight;
+            foreach (var plot in FarmPlot.All.ToArray())
+            {
+                if (plot == null || !plot.State.IsEmpty)
+                    continue;
+                var crop = RandomSeed(night);
+                if (crop == null)
+                    break;   // nie stać na żadne nasiono
+                if (!seeds.TryTake(crop.id) && (crop.hybrid || !wallet.TrySpend(Economy.Market.SeedPrice(crop))))
+                    continue;
+                plot.Replant(crop);
+                if (TakeFertilizer())
+                    plot.State.fertilized = true;
+                planted++;
+            }
+            return planted;   // dźwięk i efekt daje każde Replant
+        }
+
         /// <summary>Do testów (HUD debugowy): wszystkie nasiona odblokowane.</summary>
         public void DebugUnlockAll()
         {
@@ -128,6 +170,8 @@ namespace Wyspa.Core
             if (upgrades == null) upgrades = GetComponent<UpgradeState>();
             if (upgrades == null) upgrades = gameObject.AddComponent<UpgradeState>();
             Alchemy.Potions.Restore(null);   // statyczne: bez tego mikstury z poprzedniego slotu działałyby dalej
+            Economy.Market.Restore(null);    // zarobek rejsu i renoma (wczytuje SaveSystem)
+            Economy.Prestige.Restore(null);  // perły i dary mgły (wczytuje SaveSystem)
             if (GetComponent<Orders.OrderBook>() == null) gameObject.AddComponent<Orders.OrderBook>();   // zamówienia z tablicy
             if (GetComponent<Familiars.FamiliarSystem>() == null) gameObject.AddComponent<Familiars.FamiliarSystem>();   // chowańce
             if (GetComponent<Weather.WeatherSystem>() == null) gameObject.AddComponent<Weather.WeatherSystem>();   // pogoda
@@ -160,6 +204,11 @@ namespace Wyspa.Core
                     Lore.Chronicle.Count("night");
             }
             TryMutate(plot, crop);
+            if (crop != null && UpgradeEffects.SeedReturn > 0f && Random.value < UpgradeEffects.SeedReturn)
+            {
+                seeds.Add(crop.id);   // Zbieracz nasion
+                Visual.IslandFx.FindPopped(plot != null ? plot.CropPosition : Vector3.zero);
+            }
             if (crop != null)
                 GameEvents.RaiseHarvested("crop:" + crop.id, 1);
         }
@@ -241,7 +290,17 @@ namespace Wyspa.Core
             else if (!night)
                 fullMoonAnnounced = false;
             if (activity.IsActive)
-                essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier * Alchemy.Potions.Essence * UpgradeEffects.WorkEssence);   // napar skupienia
+            {
+                float overflow = essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier * Alchemy.Potions.Essence * UpgradeEffects.WorkEssence
+                                                          * Economy.Prestige.EmberMultiplier);   // napar skupienia, Żar Opiekunów
+                // Żar w złoto (nadmiar ponad pełny słój) i Dniówka (monety za minutę pracy)
+                Economy.Market.AddIncome(wallet, overflow * UpgradeEffects.EmberCoins + dt / 60f * UpgradeEffects.WorkWage);
+            }
+            // świt nowej doby gry: odsetki, dzierżawa, popyt dnia (bez wypłaty przy wczytaniu)
+            long cycle = clock.CycleNumber;
+            if (lastCycle >= 0 && cycle != lastCycle)
+                Economy.Market.OnNewDay(this);
+            lastCycle = cycle;
 
             // Najtańsze lampy dostają Esencję pierwsze - gdy jej braknie, gasną najdroższe.
             lampOrder.Clear();
@@ -257,7 +316,8 @@ namespace Wyspa.Core
             for (int i = FruitTree.All.Count - 1; i >= 0; i--)
             {
                 var tree = FruitTree.All[i];
-                float mult = activity.TempoMultiplier * (island != null ? island.TreeZoneBonus(tree) : 1f) * Familiars.FamiliarSystem.TreeSpeed;   // kruk
+                float mult = activity.TempoMultiplier * (island != null ? island.TreeZoneBonus(tree) : 1f) * Familiars.FamiliarSystem.TreeSpeed   // kruk
+                           * UpgradeEffects.FruitSpeed;   // Dojrzałe owoce
                 tree.Tick(dt, activity.IsActive, night, clock.IsFullMoon, mult);
             }
 
@@ -267,6 +327,8 @@ namespace Wyspa.Core
                 automation.Tick(dt, this, autoHarvested);
                 foreach (var (plot, crop) in autoHarvested)
                     AfterHarvest(plot, crop);
+                if (autoHarvested.Count > 0 && UpgradeEffects.WispTip > 0)
+                    wallet.Add(UpgradeEffects.WispTip * autoHarvested.Count);   // Napiwki ogników
             }
         }
 
@@ -288,7 +350,8 @@ namespace Wyspa.Core
                 playerActive = activity.IsActive,
                 night = night,
                 lit = Illumination.IsLit(p, night),
-                multiplier = (night ? Illumination.GrowthMultiplier(p) : 1f) * (island != null ? island.ZoneBonus(plot) : 1f) * dayBonus,
+                multiplier = (night ? Illumination.GrowthMultiplier(p) : 1f) * (island != null ? island.ZoneBonus(plot) : 1f) * dayBonus
+                           * Economy.Prestige.GrowthMultiplier,   // Zielone ręce (dar mgły)
                 fullMoon = clock.IsFullMoon,
             };
         }

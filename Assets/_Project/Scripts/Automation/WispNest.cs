@@ -26,8 +26,8 @@ namespace Wyspa.Automation
     {
         /// <summary>Miejsca w gnieździe: 3, ulepszenie „Przestronne gniazdo” do 5.</summary>
         public static int Capacity => Upgrades.UpgradeEffects.NestCapacity;
-        /// <summary>Tryb siewcy: „pamięć ziemi” (to samo, co rosło) i „nic nie sadź”.</summary>
-        public const string Memory = "", Off = "-";
+        /// <summary>Tryb siewcy: „pamięć ziemi” (to samo, co rosło), „nic nie sadź” i „losowo” (roślina pasująca do pory dnia).</summary>
+        public const string Memory = "", Off = "-", Random = "?";
 
         public static readonly List<WispNest> All = new List<WispNest>();
 
@@ -233,7 +233,8 @@ namespace Wyspa.Automation
                 {
                     var slot = new SeedSlot { nest = this, night = night };
                     string s = slot.Seed;
-                    string what = s == Memory ? Loc.Get("ui.rune.memory") : s == Off ? Loc.Get("ui.rune.off") : Loc.Get("crop." + s);
+                    string what = s == Memory ? Loc.Get("ui.rune.memory") : s == Off ? Loc.Get("ui.rune.off")
+                                : s == Random ? Loc.Get("ui.rune.random") : Loc.Get("crop." + s);
                     info.Button(Loc.Get(night ? "ui.nest.sower_night" : "ui.nest.sower_day", what), () =>
                     {
                         var ui = UI.UiRoot.Instance;

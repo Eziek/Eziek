@@ -4,6 +4,9 @@ term.essence,Żar,Ember,Glut,熾火,余火,energia z pracy (wybór gracza: Żar;
 term.grimoire,Księga,Grimoire,Grimoire,魔導書,魔典,główne menu
 menu.shop,Sklep,Shop,Laden,ショップ,商店,
 menu.upgrades,Ulepszenia,Upgrades,Verbesserungen,強化,升级,
+menu.voyage,Rejs,Voyage,Reise,航海,航程,prestiż: rejs we mgłę (Księga)
+term.pearls,Perły Mgły,Mist Pearls,Nebelperlen,霧の真珠,雾珍珠,waluta prestiżu
+term.gifts,Dary Mgły,Gifts of the Mist,Gaben des Nebels,霧の贈り物,雾之馈赠,trwałe ulepszenia za perły
 menu.rituals,Rytuały,Rituals,Rituale,儀式,仪式,
 menu.bestiary,Bestiariusz,Bestiary,Bestiarium,図鑑,图鉴,
 menu.stats,Statystyki,Statistics,Statistiken,統計,统计,

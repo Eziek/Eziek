@@ -157,8 +157,8 @@ namespace Wyspa.Automation
             return true;
         }
 
-        /// <summary>Sprzedaje całą zawartość. multiplier = 1 (ręcznie) albo 0.9 (skrzynia kupca). Zwraca monety.</summary>
-        public int SellAll(Wallet wallet, CropDatabase crops, float multiplier)
+        /// <summary>Sprzedaje całą zawartość kanałem (ręcznie, duszek-handlarz, kupiec-widmo); ceny liczy Economy.Market. Zwraca monety.</summary>
+        public int SellAll(Wallet wallet, CropDatabase crops, SaleChannel channel)
         {
             if (count == 0 || wallet == null || crops == null)
                 return 0;
@@ -170,15 +170,15 @@ namespace Wyspa.Automation
                 {
                     var tree = TreeSpecies.Find(id.Substring(FruitPrefix.Length));
                     if (tree != null)
-                        coins += Mathf.RoundToInt(tree.fruitPrice * kv.Value * multiplier);
+                        coins += Market.SellFruit(tree, kv.Value, channel);
                     continue;
                 }
                 var def = crops.Find(id);
                 if (def == null)
                     continue;
-                coins += Mathf.RoundToInt(def.SellPrice(quality) * kv.Value * multiplier);
+                coins += Market.SellCrop(def, quality, kv.Value, channel);
                 if (def.kind == CropKind.Night)
-                    wallet.Add(CurrencyType.NightHarvest, def.nightHarvestYield * kv.Value);
+                    wallet.Add(CurrencyType.NightHarvest, Market.NightYield(def) * kv.Value);
             }
             wallet.Add(CurrencyType.Coins, coins);
             contents.Clear();
@@ -202,7 +202,7 @@ namespace Wyspa.Automation
             var game = GameLoop.Instance;
             if (game == null)
                 return;
-            int coins = SellAll(game.Wallet, game.Crops, 1f);
+            int coins = SellAll(game.Wallet, game.Crops, SaleChannel.Crate);
             if (coins > 0)
             {
                 GameEvents.RaiseToast("toast.crate_sold", coins);

@@ -254,6 +254,11 @@ SEED_SYMBOLS = {
 
 # ---------------- ikony UI (Etap 6b+): kategorie koła nasion, wyjście, zasypanie grządki ----------------
 ICON_MAPS = {
+    # losowe sadzenie (kostka) i prestiż (perła mgły)
+    'dice': [".wwwwwwwz.", ".w1www1wz.", ".wwwwwwwz.", ".www1wwwz.", ".wwwwwwwz.",
+             ".w1www1wz.", ".wwwwwwwz.", ".zzzzzzzz.", "..........", ".........."],
+    'pearl': ["..........", "...zzzz...", "..zLwwzz..", ".zLwwwzzs.", ".zwwwzzzs.",
+              ".zwwzzzss.", "..zzzzss..", "...ssss...", "..........", ".........."],
     'sun': ["....F.....", ".F.....F..", "...XXX....", "..XFFFX...", "F.XFLFX.F.",
             "..XFFFX...", "...XXX....", ".F.....F..", "....F.....", ".........."],
     'moon': ["..sss.....", ".szzs.....", "szz.......", "sz........", "sz.....L..",

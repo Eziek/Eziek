@@ -55,8 +55,10 @@ namespace Wyspa.Orders
     /// </summary>
     public class OrderBook : MonoBehaviour
     {
-        public const int MaxOrders = 3;
-        const int CyclesBetween = 2;
+        /// <summary>Najwięcej zamówień naraz: 3, „Pełna tablica” do 5.</summary>
+        public static int MaxOrders => 3 + Upgrades.UpgradeEffects.OrderSlots;
+        /// <summary>Nowe zamówienie co dwie doby gry, „Częste zlecenia” co dobę.</summary>
+        static int CyclesBetween => Mathf.Max(1, 2 - Upgrades.UpgradeEffects.OrderFaster);
         public static readonly string[] Requesters = { "herbalist", "gravedigger", "keeper", "witch", "monk", "fisher" };
 
         public static OrderBook Instance { get; private set; }
@@ -175,6 +177,15 @@ namespace Wyspa.Orders
                     break;
             }
             GameEvents.RaiseToast("toast.order.done", Loc.Get("npc." + o.requester), RewardText(o));
+            if (UnityEngine.Random.value < Upgrades.UpgradeEffects.OrderSeedChance)
+            {
+                var h = Sea.Expedition.RandomHybrid(game, new System.Random());   // Zapłata w nasionach
+                if (h != null)
+                {
+                    game.Seeds.Add(h.id);
+                    GameEvents.RaiseToast("toast.order_seed", Loc.Get("crop." + h.id));
+                }
+            }
             GameEvents.PlaySound("magic");
             Lore.Chronicle.Count("order");
             if (board != null && board.TryGetComponent(out UI.NoticeBoard nb))
@@ -233,6 +244,11 @@ namespace Wyspa.Orders
             }
             o.deadline = cycle + 3 + o.items.Count + (anyNight ? 2 : 0);
             o.coins = Mathf.Max(20, Mathf.RoundToInt(value * 1.8f / 5f) * 5);
+            // Sakiewka (+%) i Szlachetni klienci (szansa na podwójną zapłatę); widać to od razu na karteczce
+            float pay = (1f + Upgrades.UpgradeEffects.OrderBonus) * Economy.Prestige.SaleMultiplier;
+            if (UnityEngine.Random.value < Upgrades.UpgradeEffects.OrderVip)
+                pay *= 2f;
+            o.coins = Mathf.RoundToInt(o.coins * pay / 5f) * 5;
             PickBonus(o, game);
             return o;
         }

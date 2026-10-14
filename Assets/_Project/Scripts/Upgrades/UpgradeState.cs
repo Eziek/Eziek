@@ -45,6 +45,18 @@ namespace Wyspa.Upgrades
             return level < def.levels.Count ? def.levels[level] : null;
         }
 
+        /// <summary>Koszt poziomu po zniżce z darów mgły („Stare znajomości”: mniej monet).</summary>
+        public List<CurrencyAmount> CostOf(UpgradeLevel level)
+        {
+            var list = new List<CurrencyAmount>();
+            if (level == null)
+                return list;
+            float m = Prestige.UpgradeCostMultiplier;
+            foreach (var c in level.cost)
+                list.Add(c.type == CurrencyType.Coins && m < 1f ? new CurrencyAmount(c.type, Mathf.Max(1, Mathf.RoundToInt(c.amount * m))) : c);
+            return list;
+        }
+
         public bool RequirementsMet(UpgradeDefinition def)
         {
             if (def == null)
@@ -58,7 +70,7 @@ namespace Wyspa.Upgrades
         public bool CanBuy(UpgradeDefinition def, Wallet wallet)
         {
             var next = NextLevel(def);
-            return next != null && RequirementsMet(def) && wallet.CanAfford(next.cost);
+            return next != null && RequirementsMet(def) && wallet.CanAfford(CostOf(next));
         }
 
         public bool TryBuy(UpgradeDefinition def, Wallet wallet)
@@ -66,7 +78,7 @@ namespace Wyspa.Upgrades
             if (!CanBuy(def, wallet))
                 return false;
             var next = NextLevel(def);
-            if (!wallet.TrySpend(next.cost))
+            if (!wallet.TrySpend(CostOf(next)))
                 return false;
             levels[def.id] = Level(def.id) + 1;
             Changed?.Invoke();

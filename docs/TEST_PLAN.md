@@ -148,3 +148,21 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
 5. Stare zapisy (z czasu „My project (5)”) pojawiają się w menu w nowym buildzie. Autostart włączony w starym buildzie
    po pierwszym uruchomieniu nowego wskazuje nowy plik (Menedżer zadań → Autostart: „Misty Packland”, bez „Pockland”).
 6. Druga kopia gry się nie uruchamia (jedna kopia naraz).
+
+## 9. Etap 8: losowe sadzenie, 60 ulepszeń handlu, prestiż
+Najpierw **Wyspa → 2** (nowe ulepszenia, ikony kostki i perły).
+1. Koło nasion na pustej grządce: pierwsza jest kostka. W dzień sadzi losową roślinę dnia, w nocy nocy (dymek mówi, którą porę).
+   Bez pieniędzy na żadne nasiono kostka jest szara.
+2. PPM na wyspie (bez przeciągania): w pierścieniu kostka „Obsiej puste grządki losowo”; wszystkie puste grządki dostają nasiona.
+3. Gniazdo → „Siewca w dzień / w nocy” → kostka „losowo”: ognik sadzi na każdej grządce inną roślinę, o świcie i zmierzchu podmienia.
+4. Księga → Ulepszenia: drzewko otwiera się na ogniku-ogrodniku, przewija się w obie strony. Po Uczciwym handlu, Szybkiej łodzi,
+   Pojemnych skrzyniach, Żyznej glebie, Nocnej rosie, Krzyżowaniu, Dzikich runach, Słoju, Drugim oddechu i Skupieniu
+   pojawiają się nowe węzły za mgłą (kłódka). Dymek: nazwa, poziom, efekt z liczbą, koszt.
+5. F1: dużo monet, kup Stragan, Targowanie, Złoty interes. Zbieraj ręcznie: ceny wyższe, czasem toast „Złoty interes! x3”.
+6. Popyt dnia: o świcie toast z rośliną; w kole nasion przy niej „Dziś popyt: x1.5”. Odsetki i Dzierżawa: toast o świcie z monetami.
+7. Gorliwy handlarz: duszek sprzedaje przy połowie skrzyni. Kupiec-widmo: napiwek przy przybyciu, tańsze towary, dłuższy pobyt.
+8. Księga → Rejs (ikona perły): perły, blask, zarobek rejsu i próg następnej perły. Bez 10 000 monet zarobku przycisk nieaktywny.
+   F1 → monety (dodane monety liczą się do zarobku) → „Odpłyń we mgłę” → drugi klik: nowa wyspa w tym samym slocie, rejs nr 2,
+   perły w sakwie, bestiariusz zachowany, waluty i ulepszenia od zera (dary: Posag, Wierny ognik, Pamięć nasion działają).
+9. Dar kupiony za perły od razu działa (np. Mgielny targ podnosi ceny), zostaje po zapisie i wczytaniu.
+10. Stary zapis (v14) wczytuje się bez błędów: zarobek rejsu od zera, perły 0.

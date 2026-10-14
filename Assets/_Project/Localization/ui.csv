@@ -8,6 +8,16 @@ ui.soon,Wkrótce,Coming soon,Demnächst,近日公開,即将推出,
 ui.shop.soon,"Lampy i budowle pojawią się wkrótce. Nasiona kupujesz, klikając pustą grządkę.",Lamps and buildings are coming soon. Buy seeds by clicking an empty plot.,Lampen und Gebäude kommen bald. Samen kaufst du per Klick auf ein leeres Beet.,ランプと建物は近日公開。種は空いた畑をクリックして買えます。,灯和建筑即将推出。点击空田地即可购买种子。,
 ui.upgrade.buy,Kup,Buy,Kaufen,購入,购买,
 ui.upgrade.level,Poziom {0}/{1},Level {0}/{1},Stufe {0}/{1},レベル {0}/{1},等级 {0}/{1},
+ui.voyage.hint,"Rejs we mgłę: zostawiasz wyspę i zaczynasz na nowej. Zostają perły, dary, kronika i bestiariusz. Przepadają wyspa, waluty, ulepszenia i budowle.","Sail into the mist: leave your island and start on a new one. You keep pearls, gifts, the chronicle and the bestiary. The island, currencies, upgrades and buildings are lost.","Reise in den Nebel: Du verlässt die Insel und beginnst auf einer neuen. Perlen, Gaben, Chronik und Bestiarium bleiben. Insel, Währungen, Verbesserungen und Bauten gehen verloren.",霧への航海：島を離れ、新しい島で始める。真珠、贈り物、年代記と図鑑は残り、島、通貨、強化、建物は失われる。,驶入迷雾：离开小岛，在新岛上重新开始。珍珠、馈赠、编年史和图鉴会保留，小岛、货币、升级和建筑将失去。,
+ui.voyage.pearls,Perły Mgły: {0} (zdobyte: {1}) - rejs nr {2},Mist Pearls: {0} (earned: {1}) - voyage {2},Nebelperlen: {0} (gesamt: {1}) - Reise {2},霧の真珠：{0}（累計{1}）- 第{2}航海,雾珍珠：{0}（累计{1}）- 第{2}次航程,"{0} = niewydane, {1} = łącznie, {2} = numer rejsu"
+ui.voyage.glow,Blask pereł i dary: ceny +{0}%,Pearl glow and gifts: prices +{0}%,Perlenglanz und Gaben: Preise +{0}%,真珠の輝きと贈り物：価格+{0}%,珍珠光辉与馈赠：价格+{0}%,
+ui.voyage.run,Ten rejs: {0} monet = {1} {0:plural:perła|perły|pereł} (następna przy {2}),This voyage: {0} coins = {1} {0:plural:pearl|pearls} (next at {2}),Diese Reise: {0} Münzen = {1} {0:plural:Perle|Perlen} (nächste bei {2}),今回の航海：{0}コイン = 真珠{1}（次は{2}）,本次航程：{0}金币 = {1}颗珍珠（下一颗需{2}）,"{0} = zarobek rejsu, {2} = próg następnej perły"
+ui.voyage.sail,Odpłyń we mgłę (+{0} {0:plural:perła|perły|pereł}),Sail into the mist (+{0} {0:plural:pearl|pearls}),In den Nebel segeln (+{0} {0:plural:Perle|Perlen}),霧へ漕ぎ出す（真珠+{0}）,驶入迷雾（+{0}颗珍珠）,
+ui.voyage.confirm,Na pewno? Kliknij jeszcze raz (+{0} {0:plural:perła|perły|pereł}),Are you sure? Click again (+{0} {0:plural:pearl|pearls}),Sicher? Nochmal klicken (+{0} {0:plural:Perle|Perlen}),本当に？もう一度クリック（真珠+{0}）,确定吗？再点一次（+{0}颗珍珠）,
+ui.voyage.cant,Pierwsza perła przy 10 000 monet zarobku w rejsie,"First pearl at 10,000 coins earned this voyage",Erste Perle bei 10.000 Münzen Verdienst auf dieser Reise,"この航海で10,000コイン稼ぐと最初の真珠","本次航程赚到10,000金币时获得第一颗珍珠",
+ui.voyage.sail_tip,Perły = pierwiastek z (zarobek rejsu / 10 000). Każda zdobyta perła: +2% do wszystkich cen na zawsze.,"Pearls = square root of (voyage earnings / 10,000). Each pearl earned: +2% to all prices forever.",Perlen = Wurzel aus (Reiseverdienst / 10.000). Jede erhaltene Perle: +2% auf alle Preise für immer.,"真珠 = √(航海の稼ぎ ÷ 10,000)。得た真珠1つにつき全価格が永久に+2%。","珍珠 = √(本次航程收入 ÷ 10,000)。每获得一颗珍珠，所有价格永久+2%。",
+ui.voyage.gifts,"Dary Mgły (za perły, na zawsze)","Gifts of the Mist (for pearls, forever)","Gaben des Nebels (für Perlen, für immer)",霧の贈り物（真珠で交換、永続）,雾之馈赠（用珍珠兑换，永久）,
+ui.voyage.buy,{0} {0:plural:perła|perły|pereł},{0} {0:plural:pearl|pearls},{0} {0:plural:Perle|Perlen},真珠{0},{0}颗珍珠,cena daru
 ui.upgrade.max,Maks.,Max,Max.,最大,已满,
 ui.upgrade.requires,Wymaga: {0},Requires: {0},Benötigt: {0},必要：{0},需要：{0},
 ui.toast.upgrade_bought,Kupiono: {0},Bought: {0},Gekauft: {0},購入：{0},已购买：{0},
@@ -67,6 +77,7 @@ ui.shop.more,Budowle i Morze wkrótce.,Buildings and Sea coming soon.,Bauwerke u
 ui.shop.hint,Kup lampę i postaw ją na wolnym kafelku.,Buy a lamp and place it on a free tile.,Kaufe eine Lampe und stelle sie auf ein freies Landstück.,ランプを買って空きマスに置こう。,购买灯并放在空闲的土地格上。,
 ui.seed.hybrid,Tylko z worka nasion,Seed bag only,Nur aus dem Saatbeutel,種袋からのみ,仅来自种子袋,hybryda
 ui.seed.fullmoon,Rośnie tylko w pełnię,Grows only at full moon,Wächst nur bei Vollmond,満月の夜にだけ育つ,仅在满月时生长,
+ui.seed.demand,Dziś popyt: x{0},In demand today: x{0},Heute gefragt: x{0},本日の需要：{0}倍,今日需求：x{0},Popyt dnia
 ui.seed.bag,W worku: {0},In the bag: {0},Im Beutel: {0},種袋：{0},袋中：{0},
 ui.plot.quality,Jakość: {0}/3,Quality: {0}/3,Qualität: {0}/3,品質：{0}/3,品质：{0}/3,
 ui.plot.need_fullmoon,{0}: czeka na pełnię,{0}: waiting for the full moon,{0}: wartet auf den Vollmond,{0}：満月を待っている,{0}：等待满月,
@@ -169,6 +180,8 @@ ui.rune.range,Sadzi na 8 polach wokół siebie,Plants on the 8 plots around it,P
 ui.rune.choose,Nasiona,Seeds,Samen,種,种子,
 ui.rune.memory_tip,"Pamięć ziemi: sadzi to samo, co rosło na grządce",Soil memory: replants whatever grew on the plot,"Erdgedächtnis: pflanzt, was auf dem Beet wuchs",大地の記憶：前と同じ作物を植える,大地之忆：重新种下原来的作物,
 ui.rune.off_tip,Nic nie sadź,Don't plant anything,Nichts pflanzen,何も植えない,不种植,
+ui.rune.random,losowo,random,zufällig,ランダム,随机,
+ui.rune.random_tip,"Losowo: na każdej grządce inna roślina, pasująca do pory dnia","Random: a different plant on each plot, matching the time of day","Zufällig: auf jedem Beet eine andere Pflanze, passend zur Tageszeit",ランダム：畑ごとに時間帯に合った別の植物,随机：每块地种不同的植物，匹配当前时段,
 ui.place.covers,Obejmie: {0} {0:plural:grządkę|grządki|grządek},Covers: {0} {0:plural:plot|plots},Umfasst: {0} {0:plural:Beet|Beete},範囲内の畑：{0},覆盖：{0}块地,
 ui.shop.seeds,Nasiona,Seeds,Samen,種,种子,
 ui.shop.buildings,Budowle,Buildings,Bauwerke,建物,建筑,
@@ -187,6 +200,9 @@ ui.fill.lose,{0} przepadnie,{0} will be lost,{0} geht verloren,{0}は失われ�
 ui.options.quit_button,Wyjdź,Quit,Beenden,終了,退出,
 ui.wheel.show_day,Pokaż nasiona dnia,Show day seeds,Tagsamen zeigen,昼の種を表示,显示白天种子,
 ui.wheel.show_night,Pokaż nasiona nocy,Show night seeds,Nachtsamen zeigen,夜の種を表示,显示夜晚种子,
+ui.wheel.random,Losowe nasiono,Random seed,Zufälliger Samen,ランダムな種,随机种子,
+ui.wheel.random_day,Teraz dzień: losowa roślina dnia,It's day: a random day plant,Es ist Tag: eine zufällige Tagpflanze,今は昼：ランダムな昼の植物,现在是白天：随机白天植物,
+ui.wheel.random_night,Teraz noc: losowa roślina nocy,It's night: a random night plant,Es ist Nacht: eine zufällige Nachtpflanze,今は夜：ランダムな夜の植物,现在是夜晚：随机夜间植物,
 ui.plot.tempo,Tempo pracy: x{0:0.0},Work tempo: x{0:0.0},Arbeitstempo: x{0:0.0},作業テンポ：x{0:0.0},工作节奏：x{0:0.0},
 ui.rhythm.tempo,Tempo x{0:0.0},Tempo x{0:0.0},Tempo x{0:0.0},テンポ x{0:0.0},节奏 x{0:0.0},mnożnik roślin dnia
 ui.wisp.flying,W locie: niesie {0},In flight: carrying {0},Unterwegs: trägt {0},飛行中：{0}個運搬,飞行中：携带{0}个,{0} = plony
@@ -287,6 +303,7 @@ ui.monster.next,Dalej,Next,Weiter,次へ,继续,
 ui.monster.farewell,Pożegnaj,Say farewell,Abschied nehmen,別れを告げる,告别,
 ui.plot.replace_hint,"Kliknij, aby podmienić (nasiono wróci do worka)",Click to replace (the seed goes back to the bag),Klicken zum Ersetzen (der Samen kommt in den Beutel zurück),クリックで植え替え（種は袋に戻る）,点击替换（种子会回到袋中）,
 act.dig_up,Wykop roślinę,Dig up the plant,Pflanze ausgraben,植物を掘り出す,挖出植物,pierścień akcji na grządce
+act.plant_random,Obsiej puste grządki losowo,Plant random seeds on empty plots,Leere Beete zufällig bepflanzen,空いた畑にランダムに植える,在空地随机播种,pierścień akcji: losowe sadzenie
 ui.dig_up.back,"{0}: nasiono wróci do worka, wzrost przepadnie","{0}: the seed goes back to the bag, growth is lost","{0}: Der Samen kommt in den Beutel zurück, das Wachstum geht verloren",{0}：種は袋に戻り、成長は失われる,{0}：种子回到袋中，生长进度丢失,
 ui.nest.sower_day,Siewca w dzień: {0},Sower by day: {0},Säer am Tag: {0},昼の種まき：{0},白天播种：{0},otwiera koło nasion dnia
 ui.nest.sower_night,Siewca w nocy: {0},Sower by night: {0},Säer in der Nacht: {0},夜の種まき：{0},夜间播种：{0},otwiera koło nasion nocy
