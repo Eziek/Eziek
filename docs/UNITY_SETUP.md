@@ -64,8 +64,8 @@ i pivoty.
 
 Potem naciśnij **Play**.
 
-## 4. Testowanie (HUD w lewym górnym rogu)
-- **Nasiona:** wybierz roślinę i kliknij pustą grządkę, żeby posadzić (kosztuje monety). Kliknięcie dojrzałej rośliny ją zbiera.
+## 4. Testowanie (HUD debugowy: F1)
+- **Nasiona:** kliknij pustą grządkę i wybierz nasiono z koła (kosztuje monety). Kliknięcie dojrzałej rośliny ją zbiera.
 - **Wzrost** wymaga aktywności, czyli ruchu myszy lub klawiatury w ostatnich 60 s (cały system, nie tylko okno gry)
   i światła (dzień albo lampa).
 - **Czas x60:** minuta gry mija w sekundę. Marchew rośnie 10 minut aktywności, więc z x60 w 10 sekund.
@@ -94,20 +94,28 @@ Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (skrzynia, ognik, sk
 1. Posadź kilka roślin, ustaw **x60** i „Wymuś aktywność”.
 2. **Cheat** i kup **Ognik-ogrodnik**: obok skrzyni pojawi się ognik. Co 30 s gry (przy x60: 0,5 s) leci do dojrzałego plonu
    i wkłada go do skrzyni. Sprite skrzyni zmienia się wraz z napełnieniem (pusta, połowa, pełna; pojemność 20).
-3. **Klik w skrzynię** albo przycisk „Sprzedaj” w HUD sprzedaje zawartość po pełnej cenie.
+3. **Klik w skrzynię** albo przycisk „Sprzedaj” w HUD debugowym (F1) sprzedaje zawartość po pełnej cenie.
 4. **Pamięć ziemi** (kamień runiczny przy grządkach): po zbiorze grządka sama sadzi to samo, jeśli masz monety na nasiono.
 5. **Skrzynia kupca**: co godzinę gry (przy x60: minuta) sprzedaje zawartość po 90% ceny i na chwilę się otwiera.
 6. Zawartość skrzyni zapisuje się w save.
 
-## 4b. UI i font (przygotowane, jeszcze niepodpięte w kodzie)
-- Sprite'y UI: `Assets/_Project/Art/Sprites/UI/Kit` (9-slice ustawiony automatycznie) i `UI/Icons`.
-- Font: `Assets/_Project/Art/Fonts/WyspaPixel.ttf`. W **Window → TextMeshPro → Font Asset Creator** ustaw:
-  - Sampling Point Size **8**, Padding **1**, Render Mode **RASTER**, Atlas **256×256**;
-  - Character Set: Custom Characters, wklej ASCII i `ĄĆĘŁŃÓŚŹŻąćęłńóśźż`.
+## 4b. Etap 2c: docelowe UI (test)
+Raz na projekt: **Window → TextMeshPro → Import TMP Essential Resources** (bez tego tekst się nie pokaże,
+a w konsoli będzie błąd „Brak zasobów TextMeshPro”).
 
-  Szczegóły w GDD §12.9.
-- Rośliny nocy są w danych (menu „Wyspa → 2”). Rosną tylko w nocy, poza zasięgiem lamp, także gdy gra jest zamknięta.
-  Do testu: przycisk **23:30** w HUD i **Czas x60**.
+Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (krok 3 sam uruchamia krok 2, który tworzy `Data/UiTheme.asset`), potem Play.
+1. **HUD:** u góry monety i Esencja z paskiem, w prawym górnym rogu Księga i opcje, w lewym dolnym rytm pracy i zegar.
+   Po 5 s bez ruchu myszy HUD znika, wraca po jej poruszeniu. Inne waluty pokażą się dopiero, gdy je zdobędziesz.
+2. **Klik w pustą grządkę** otwiera koło nasion. Najedź na nasiono: dymek z opisem. Na nasiona, na które cię nie stać, nie da się kliknąć.
+   Klik obok, PPM albo Esc zamyka koło.
+3. **Najedź na grządkę:** dymek mówi, co rośnie, ile procent i dlaczego nie rośnie (brak światła, brak pracy, za jasno dla nocnej).
+4. **Księga** (ikona książki): Ulepszenia (kupno, koszt, wymagania), Statystyki, Opcje (język, jasność nocy, rytm pracy).
+   Zakup daje toast w prawym górnym rogu. Sklep, Rytuały i Bestiariusz mają na razie „Wkrótce”.
+5. **Język:** Opcje → Polski / English / Deutsch. Teksty zmieniają się od razu. 日本語 i 简体中文 pokażą puste znaki,
+   dopóki nie dodamy fontu Fusion Pixel.
+6. **F1** pokazuje HUD debugowy (cheat, x60, przełączniki testowe). Toasty dają też: sprzedaż skrzyni, skrzynia kupca,
+   pełna skrzynia przy ogniku.
+7. Pliki tekstów: `Assets/_Project/Localization/*.csv` (UTF-8). Po zmianie pliku wystarczy ponownie Play.
 
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
@@ -120,6 +128,9 @@ Unity 6: **File → Build Profiles → Windows → Build**.
 | Noc nie ciemnieje, lampy nie świecą, w konsoli „URP używa renderera 3D” | Projekt powstał z szablonu Universal 3D. Napraw: patrz sekcja „Przełączenie na 2D Renderer” niżej |
 | Płomienie lamp przyciemnione w nocy | Brak materiału `Data/GlowUnlit.mat` (shader URP Sprite-Unlit-Default). Uruchom ponownie krok 2 |
 | Klikanie nie działa | Na scenie musi być `ClickRouter` (obiekt `Game`), a grządki muszą mieć BoxCollider2D |
+| Brak napisów w UI, w konsoli „Brak zasobów TextMeshPro” | **Window → TextMeshPro → Import TMP Essential Resources**, potem Play |
+| Brak UI, w konsoli „UiRoot: brak motywu UI” | **Wyspa → 3** (tworzy `Data/UiTheme.asset` i podpina go do obiektu `UI`) |
+| W konsoli „[Loc] Brak klucza …” | Klucz nie istnieje w żadnym CSV w `Assets/_Project/Localization/`. Zgłoś mi nazwę klucza |
 
 ## Co już jest, a czego jeszcze nie ma
 **Jest (Etap 1, szkielet systemów):**

@@ -265,6 +265,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Treść lore (historia wyspy, mgły, potwora).
 - [x] Chiński: **uproszczony (zh-Hans)**.
 - [ ] Rozmiar fontu tekstu: 10 px czy 12 px. Sprawdzimy później w Unity (§16.3).
+- [x] Lokalizacja w kodzie: **własna warstwa CSV** (`LocCore`/`Loc`) zamiast paczki Unity Localization (§16.4).
+- [ ] Przejście na Unity Localization: później albo wcale (klucze są zgodne, więc migracja jest możliwa).
 - [x] Drewno i kamień jako materiały do budowli (§14.3). Odnawialne drewno i owoce: drzewa do sadzenia, na później (§15).
 
 ---
@@ -340,6 +342,11 @@ Obrazki referencyjne (kopie): `docs/img/`
 25. Etap 2a przetestowany (waluty, ulepszenia, rytm pracy działają). Etap 2b: automatyzacja.
     Ognik zbiera po jednym plonie co 30 s gry; ręczny zbiór dalej daje monety od razu, a skrzynię sprzedaje się kliknięciem (100%)
     albo automatycznie skrzynią kupca (90%).
+26. Etap 2b przetestowany. **Etap 2c: docelowe UI** budowane z kodu (uGUI + TextMeshPro): HUD, koło nasion, Księga
+    (działają Ulepszenia, Statystyki, Opcje), toasty, dymki. HUD debugowy schowany pod **F1**.
+    Lokalizacja przez **własną warstwę CSV** zamiast paczki Unity Localization: mniej konfiguracji w edytorze,
+    da się ją testować poza Unity, a klucze i format `{0:plural:...}` zostają zgodne, gdyby trzeba było przejść na paczkę.
+    Tabele: `Assets/_Project/Localization/` (glossary, game, ui).
 
 ---
 
@@ -366,9 +373,18 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Automation/*` | `HarvestCrate` (skrzynia na plony, 20 miejsc, klik = sprzedaż 100%), `WispGardener` (zbiór co 30 s gry), `MerchantChest` (sprzedaż co 1 h gry po 90%), `AutomationSystem` (włącza obiekty wg ulepszeń, ticki); pamięć ziemi w `GameLoop.AfterHarvest` |
 | `Scripts/Save/SaveSystem.cs` | JSON w persistentDataPath, autosave co 60 s, offline: rośliny nocy rosną za godziny nocy |
 | `Scripts/Input/ClickRouter.cs` | klik, potem Collider2D, potem `IClickable` (Input System albo stary Input) |
-| `Scripts/UI/DebugHud.cs` | tymczasowy HUD IMGUI: monety, Esencja, nasiona, pora dnia, czas x60 |
+| `Scripts/UI/DebugHud.cs` | HUD debugowy IMGUI (F1): waluty, rytm, ulepszenia, przełączniki testowe, czas x60, cheat |
+| `Scripts/Core/GameEvents.cs` | zdarzenia dla UI (toast = klucz lokalizacji + argumenty) |
+| `Scripts/Localization/LocCore.cs`, `Loc.cs` | lokalizacja: tabele CSV, fallback en, potem pl, `{0}`, `{0:N0}`, `{0:plural:a\|b\|c}` (CLDR), liczby wg kultury; `Loc` = wybór języka (PlayerPrefs `lang`, przy pierwszym starcie język systemu) |
+| `Scripts/UI/UiRoot.cs` | korzeń UI: Canvas (Constant Pixel Size, skala UI = skala świata − 1), EventSystem, font TMP tworzony w locie z `WyspaPixel.ttf`, dymek nad grządką |
+| `Scripts/UI/Ui.cs`, `UiTheme.cs`, `UiInput.cs`, `LocText.cs` | fabryka elementów (9-slice, tekst, przycisk, pasek), motyw (sprite'y, ikony, kolory, tabele), wejście, tekst z klucza odświeżany po zmianie języka |
+| `Scripts/UI/HudView.cs` | HUD: waluty (pokazane po zdobyciu), Esencja, Księga i opcje, rytm pracy, zegar; chowa się po 5 s bez ruchu myszy |
+| `Scripts/UI/SeedWheel.cs` | koło nasion wokół pustej grządki, dymki z opisem, PPM/Esc zamyka |
+| `Scripts/UI/BookView.cs` | Księga: zakładki; Ulepszenia (zakup), Statystyki, Opcje (język, jasność nocy, rytm pracy); reszta „Wkrótce” |
+| `Scripts/UI/ToastView.cs`, `TooltipView.cs` | toasty (maks. 3, 4 s) i dymek przy kursorze |
+| `Localization/*.csv` | tabele: `glossary` (słownik terminów), `game` (teksty gry), `ui` (interfejs) |
 | `Editor/PixelArtImporter.cs` | automatyczne ustawienia importu sprite'ów + pivoty z `pivots.json` |
-| `Editor/WyspaSetup.cs` | menu „Wyspa”: ustawienia projektu, dane (SO), budowa sceny z `prototype_layout.json` |
+| `Editor/WyspaSetup.cs` | menu „Wyspa”: ustawienia projektu, dane (SO, także `Data/UiTheme.asset`), budowa sceny z `prototype_layout.json` (z obiektem UI) |
 
 Wartości startowe (do balansu): marchew 600 s / 5 / 12, zboże 900 s / 8 / 18, dynia 1500 s / 15 / 40 (wzrost / cena nasiona / cena sprzedaży).
 Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5), grzyby 0.
@@ -479,8 +495,8 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Etap 1 (gotowy):** szkielet systemów (§10).
 - **Etap 2a (gotowy, do testu w Unity):** waluty, fundament ulepszeń (dane + zakup w HUD debugowym), słój Esencji, rytm pracy, zapis v2. Rośliny nocy dają „plony nocy”.
 - **Etap 2b (gotowy, do testu w Unity):** automatyzacja: skrzynia na plony, ognik-ogrodnik, pamięć ziemi, skrzynia kupca (obiekty pojawiają się po zakupie).
-- **Etap 2 (reszta):** fundament ulepszeń (`UpgradeDefinition`/`UpgradeState`/`Currencies`), sklep (proste UI), słój,
-  **rytm pracy**, **ognik-ogrodnik + skrzynia + pamięć ziemi + skrzynia kupca**.
+- **Etap 2c (gotowy, do testu w Unity):** docelowe UI z lokalizacją: HUD, koło nasion, Księga (Ulepszenia, Statystyki, Opcje),
+  toasty, dymki. Sklep, Rytuały i Bestiariusz w Księdze mają na razie „Wkrótce”. CJK czeka na fonty Fusion Pixel.
 - **Etap 3:** shadery (kołysanie, woda, mgła), cząsteczki (monety, iskierki, listki), powiększanie wyspy z cofaniem mgły.
 - **Etap 4:** rośliny nocy (grafiki), kupiec-widmo, pomost i łowienie, łódź i wyprawy, mutacje i jakość.
 - **Etap 5:** strefy, latarnia morska, Księga rytuałów i cykle księżyca, bestiariusz, lore, potwór.
@@ -550,7 +566,10 @@ Cel jest podświetlony pulsem.
 - **uGUI:** Canvas Screen Space - Overlay + Canvas Scaler **Constant Pixel Size**, `scaleFactor` = skala okna (całkowita),
   **Reference Pixels Per Unit = 16**. Obrazy typu **Sliced** ze sprite'ów `Art/Sprites/UI/Kit`
   (granice 9-slice ustawia `PixelArtImporter` z `pivots.json`).
-- **Font:** TextMeshPro, Font Asset Creator ze źródłem `Art/Fonts/WyspaPixel.ttf`:
+- **Stan (Etap 2c):** całe UI budowane z kodu (`UiRoot`), motyw w `Data/UiTheme.asset` (tworzy go Wyspa > 2).
+  Font asset TMP powstaje w locie z `WyspaPixel.ttf` (RASTER, atlas dynamiczny 256×256, filtr Point), więc Font Asset Creator nie jest potrzebny.
+  Tekst ma rozmiar 8 (jednostki UI), a ×2 daje skala płótna.
+- **Font (gdyby trzeba było zrobić asset ręcznie):** TextMeshPro, Font Asset Creator ze źródłem `Art/Fonts/WyspaPixel.ttf`:
   - Sampling Point Size 8 (albo wielokrotność), Render Mode **RASTER** (bez wygładzania), Padding 1, atlas 256×256;
   - znaki: ASCII + `ĄĆĘŁŃÓŚŹŻąćęłńóśźż`;
   - rozmiar tekstu w UI = 8 × skala.
@@ -720,10 +739,11 @@ Pętla: odkryj kafelek, usuń dekorację, zbuduj. Odnawialne źródło drewna to
 
 ## 16. Lokalizacja
 **Języki (decyzja gracza):** polski, angielski, niemiecki, japoński, **chiński uproszczony (zh-Hans)**.
-Pliki: `docs/localization/glossary.csv` (słownik terminów), `docs/localization/strings_sample.csv` (przykłady z odmianą).
+Pliki: `Assets/_Project/Localization/glossary.csv` (słownik terminów), `game.csv` i `ui.csv` (teksty),
+`docs/localization/strings_sample.csv` (przykłady z odmianą). Format: `key,pl,en,de,ja,zh-Hans,uwagi`, UTF-8.
 
 ### 16.1 Zasady
-1. **Żadnego tekstu w sprite'ach.** Każdy napis to klucz lokalizacji (TextMeshPro + Unity Localization). Nasze sprite'y już są bez tekstu.
+1. **Żadnego tekstu w sprite'ach.** Każdy napis to klucz lokalizacji (TextMeshPro + nasza warstwa `Loc`, §16.4). Nasze sprite'y już są bez tekstu.
 2. **Nie sklejamy zdań z kawałków.** Każdy komunikat to jeden szablon z argumentami (`{0}`, `{1}`), bo szyk zdania różni się między językami.
 3. **Odmiana przez liczby przez Smart Strings:** `{0:plural:...}` według reguł CLDR (standardowe reguły odmiany przez liczby dla każdego języka).
    - PL ma 3 formy (1 / 2–4 / 5+): „1 grządkę, 2 grządki, 5 grządek”.
@@ -765,14 +785,17 @@ Pliki: `docs/localization/glossary.csv` (słownik terminów), `docs/localization
 - **Łamanie linii CJK** (bez spacji): reguły łamania w TextMeshPro (Line Breaking Rules dla JA/ZH).
 
 ### 16.4 Technicznie (Unity)
-- Paczka **`com.unity.localization`**:
-  - **String Tables** (UI, przedmioty, zdarzenia, lore) i Smart Strings;
-  - Locale: `pl`, `en`, `de`, `ja`, `zh-Hans`;
-  - Asset Tables tylko dla fontów (font per język).
+- **Stan (Etap 2c): własna warstwa** `Scripts/Localization/LocCore.cs` (czyste C#, testowalne poza Unity) i `Loc.cs` (Unity):
+  - tabele CSV jako TextAsset (lista w `UiTheme.tables`), brak klucza w języku: angielski, potem polski, a na końcu sam klucz (+ ostrzeżenie w konsoli);
+  - podzbiór Smart Strings: `{0}`, `{0:N0}`, `{0:0.0}`, `{0:plural:jeden|kilka|wiele}` z regułami CLDR (PL 3 formy, EN/DE 2, JA/ZH 1);
+  - liczby według kultury języka; zmiana języka od razu odświeża teksty (`Loc.Changed`, `LocText`).
+- **Paczka `com.unity.localization` (plan zapasowy):** klucze i format są zgodne, więc można przenieść tabele do String Tables,
+  gdy będą potrzebne Asset Tables (font per język) albo pseudo-lokalizacja.
+  - Locale: `pl`, `en`, `de`, `ja`, `zh-Hans`.
 - **Wybór języka:** przy pierwszym starcie z `Application.systemLanguage`, a gdy język nie jest obsługiwany, angielski.
   W opcjach lista nazw w ich własnym języku: Polski, English, Deutsch, 日本語, 简体中文.
 - **Klucze:** `obszar.element[.wariant]`, np. `crop.carrot.name`, `crop.carrot.desc`, `toast.wisp_harvested`, `ui.shop.title`.
-- **Tłumaczenia:** eksport i import CSV z Unity Localization, ten sam format co `strings_sample.csv`.
+- **Tłumaczenia:** tłumacz pracuje wprost na plikach CSV (ten sam format co `strings_sample.csv`).
 - **Lore** (dłuższe teksty) w osobnej tabeli, żeby tłumacz mógł pracować nad nim osobno.
 
 ### 16.5 Nazwa gry: Pockland

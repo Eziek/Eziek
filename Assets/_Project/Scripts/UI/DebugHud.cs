@@ -13,7 +13,8 @@ namespace Wyspa.UI
     /// </summary>
     public class DebugHud : MonoBehaviour
     {
-        [SerializeField] bool visible = true;
+        [Tooltip("F1 przełącza. Bez docelowego UI (UiRoot) HUD debugowy jest widoczny od startu.")]
+        [SerializeField] bool visible;
 
         static Rect panelRect;
         static bool panelVisible;
@@ -26,6 +27,18 @@ namespace Wyspa.UI
                 return false;
             var gui = new Vector2(screenPos.x, Screen.height - screenPos.y); // IMGUI liczy y od góry
             return panelRect.Contains(gui);
+        }
+
+        void Start()
+        {
+            if (UiRoot.Instance == null)
+                visible = true;
+        }
+
+        void Update()
+        {
+            if (UiInput.F1Pressed)
+                visible = !visible;
         }
 
         void OnGUI()

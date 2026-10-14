@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Wyspa.UI;
 
 namespace Wyspa.Input
@@ -14,6 +15,8 @@ namespace Wyspa.Input
                 return;
             if (DebugHud.IsPointerOverHud(screenPos))
                 return;
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                return;   // klik w UI (księga, koło nasion, przyciski) nie trafia w wyspę
 
             var cam = targetCamera != null ? targetCamera : Camera.main;
             if (cam == null)

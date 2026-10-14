@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Farming;
 
@@ -39,6 +40,8 @@ namespace Wyspa.Automation
                 return 0;
             timer = 0f;
             int coins = crate != null ? crate.SellAll(wallet, crops, priceMultiplier) : 0;
+            if (coins > 0)
+                GameEvents.RaiseToast("toast.merchant_sold", coins);
             if (coins > 0 && isActiveAndEnabled)
                 StartCoroutine(OpenBriefly());
             return coins;

@@ -5,13 +5,22 @@ using System.Collections;
 using System.Collections.Generic;
 namespace UnityEngine
 {
-    public class Object { public string name; public static implicit operator bool(Object o) => o != null; }
+    public class Object { public string name; public static implicit operator bool(Object o) => o != null; public static void Destroy(Object o) { } public static T FindAnyObjectByType<T>() where T : Object => default; }
     public class Component : Object { public Transform transform; public GameObject gameObject; public T GetComponent<T>() => default; public bool TryGetComponent<T>(out T c) { c = default; return false; } public string tag; }
     public class Behaviour : Component { public bool enabled; public bool isActiveAndEnabled; }
     public class MonoBehaviour : Behaviour { public Coroutine StartCoroutine(IEnumerator e) => null; public void StopCoroutine(Coroutine c) { } }
     public class ScriptableObject : Object { public static T CreateInstance<T>() where T : ScriptableObject => default; }
-    public class GameObject : Object { public GameObject(string n) { } public Transform transform; public string tag; public bool activeSelf; public void SetActive(bool v) { } public T AddComponent<T>() where T : Component => default; public T GetComponent<T>() => default; }
-    public class Transform : Component { public Vector3 position, localPosition, localScale; public void SetParent(Transform p, bool w) { } }
+    public class GameObject : Object { public GameObject(string n) { } public GameObject(string n, params Type[] components) { } public Transform transform; public string tag; public bool activeSelf; public void SetActive(bool v) { } public T AddComponent<T>() where T : Component => default; public T GetComponent<T>() => default; }
+    public class Transform : Component, IEnumerable { public Vector3 position, localPosition, localScale; public Transform parent; public void SetParent(Transform p, bool w) { } public void SetAsLastSibling() { } public IEnumerator GetEnumerator() => null; }
+    public class RectTransform : Transform { public Vector2 anchorMin, anchorMax, pivot, anchoredPosition, sizeDelta, offsetMin, offsetMax; public Rect rect; }
+    public static class RectTransformUtility { public static bool ScreenPointToLocalPointInRectangle(RectTransform rect, Vector2 screenPoint, Camera cam, out Vector2 localPoint) { localPoint = default; return false; } }
+    public enum RenderMode { ScreenSpaceOverlay, ScreenSpaceCamera, WorldSpace }
+    public class Canvas : Behaviour { public RenderMode renderMode; public bool pixelPerfect; public int sortingOrder; }
+    public class CanvasGroup : Behaviour { public float alpha; public bool blocksRaycasts, interactable; }
+    public class Font : Object { }
+    public static class PlayerPrefs { public static bool HasKey(string k) => false; public static float GetFloat(string k) => 0; public static void SetFloat(string k, float v) { } public static int GetInt(string k) => 0; public static void SetInt(string k, int v) { } public static string GetString(string k, string d = "") => d; public static void SetString(string k, string v) { } public static void Save() { } }
+    public enum SystemLanguage { Chinese, German, Japanese, Polish, English, ChineseSimplified, ChineseTraditional, Unknown }
+    public enum KeyCode { Escape, F1 }
     public class Renderer : Component { public int sortingOrder; public Material sharedMaterial; public bool enabled; }
     public class SpriteRenderer : Renderer { public Sprite sprite; }
     public class Sprite : Object { public Bounds bounds; }
@@ -19,27 +28,28 @@ namespace UnityEngine
     public class Material : Object { public Material(Shader s) { } }
     public class Shader : Object { public static Shader Find(string n) => null; }
     public class TextAsset : Object { public string text; }
-    public class Texture2D : Object { public static Texture2D whiteTexture; }
-    public class Camera : Behaviour { public static Camera main; public bool orthographic; public float orthographicSize; public CameraClearFlags clearFlags; public Color backgroundColor; public Vector3 ScreenToWorldPoint(Vector3 p) => p; }
+    public class Texture : Object { public FilterMode filterMode; }
+    public class Texture2D : Texture { public static Texture2D whiteTexture; }
+    public class Camera : Behaviour { public static Camera main; public bool orthographic; public float orthographicSize; public CameraClearFlags clearFlags; public Color backgroundColor; public Vector3 ScreenToWorldPoint(Vector3 p) => p; public Vector3 WorldToScreenPoint(Vector3 p) => p; }
     public enum CameraClearFlags { Skybox, SolidColor }
     public class Collider2D : Behaviour { }
     public class BoxCollider2D : Collider2D { public Vector2 size; }
-    public static class Input { public static Vector3 mousePosition; public static bool GetMouseButtonDown(int b) => false; }
+    public static class Input { public static Vector3 mousePosition; public static bool GetMouseButtonDown(int b) => false; public static bool GetKeyDown(KeyCode k) => false; }
     public static class Physics2D { public static Collider2D OverlapPoint(Vector2 p) => null; }
     public class Coroutine { }
     public class WaitForSecondsRealtime { public WaitForSecondsRealtime(float s) { } }
-    public struct Vector2 { public float x, y; public Vector2(float x, float y) { this.x = x; this.y = y; } public float sqrMagnitude => 0; public static Vector2 operator -(Vector2 a, Vector2 b) => a; public static implicit operator Vector2(Vector3 v) => default; public static implicit operator Vector3(Vector2 v) => default; }
+    public struct Vector2 { public float x, y; public Vector2(float x, float y) { this.x = x; this.y = y; } public float sqrMagnitude => 0; public static Vector2 zero, one; public static Vector2 operator -(Vector2 a, Vector2 b) => a; public static Vector2 operator +(Vector2 a, Vector2 b) => a; public static Vector2 operator *(Vector2 a, float f) => a; public static implicit operator Vector2(Vector3 v) => default; public static implicit operator Vector3(Vector2 v) => default; }
     public struct Vector3 { public float x, y, z; public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; } public static Vector3 zero, one; public static Vector3 operator -(Vector3 a, Vector3 b) => a; public static Vector3 Lerp(Vector3 a, Vector3 b, float t) => a; }
     public struct Vector4 { public float x, y, z, w; public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; } public static Vector4 zero; }
     public struct Color { public float r, g, b, a; public Color(float r, float g, float b, float a = 1) { this.r = r; this.g = g; this.b = b; this.a = a; } public static Color white; public static implicit operator Color(Color32 c) => default; }
     public struct Color32 { public Color32(byte r, byte g, byte b, byte a) { } }
-    public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; }
-    public static class Mathf { public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
+    public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; public Vector2 size => default; }
+    public static class Mathf { public const float PI = 3.14159265f; public static float Ceil(float f) => f; public static int CeilToInt(float f) => 0; public static float Round(float f) => f; public static float Cos(float f) => f; public static float MoveTowards(float c, float t, float d) => c; public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
     public static class Random { public static float value; }
-    public static class Application { public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath; public static event Action<bool> focusChanged; }
+    public static class Application { public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath; public static event Action<bool> focusChanged; }
     public static class QualitySettings { public static int vSyncCount; }
     public static class Time { public static float unscaledDeltaTime, unscaledTime; }
-    public static class Screen { public static int height; }
+    public static class Screen { public static int width, height; }
     public static class Debug { public static void Log(object o) { } public static void LogWarning(object o) { } public static void LogError(object o) { } }
     public static class JsonUtility { public static string ToJson(object o, bool p) => ""; public static T FromJson<T>(string s) => default; }
     public class Gradient { public void SetKeys(GradientColorKey[] c, GradientAlphaKey[] a) { } public Color Evaluate(float t) => default; }
@@ -80,8 +90,10 @@ namespace UnityEngine.Rendering.Universal
 namespace UnityEngine.InputSystem
 {
     public class ButtonControl { public bool wasPressedThisFrame; }
+    public class KeyControl : ButtonControl { }
     public class Vector2Control { public UnityEngine.Vector2 ReadValue() => default; }
-    public class Mouse { public static Mouse current; public ButtonControl leftButton; public Vector2Control position; }
+    public class Mouse { public static Mouse current; public ButtonControl leftButton, rightButton; public Vector2Control position; }
+    public class Keyboard { public static Keyboard current; public KeyControl escapeKey, f1Key; }
 }
 namespace UnityEditor
 {
@@ -108,4 +120,54 @@ namespace UnityEditor.SceneManagement
     public enum NewSceneSetup { EmptyScene }
     public enum NewSceneMode { Single }
     public static class EditorSceneManager { public static UnityEngine.SceneManagement.Scene NewScene(NewSceneSetup s, NewSceneMode m) => default; public static bool SaveScene(UnityEngine.SceneManagement.Scene s, string p) => true; public static bool SaveCurrentModifiedScenesIfUserWantsTo() => true; }
+}
+
+namespace UnityEngine.Events { public class UnityEvent { public void AddListener(Action a) { } public void RemoveAllListeners() { } } }
+namespace UnityEngine.EventSystems
+{
+    public class UIBehaviour : UnityEngine.MonoBehaviour { }
+    public class EventSystem : UIBehaviour { public static EventSystem current; public bool IsPointerOverGameObject() => false; }
+    public class BaseInputModule : UIBehaviour { }
+    public class StandaloneInputModule : BaseInputModule { }
+    public class BaseEventData { }
+    public class PointerEventData : BaseEventData { }
+    public interface IEventSystemHandler { }
+    public interface IPointerEnterHandler : IEventSystemHandler { void OnPointerEnter(PointerEventData e); }
+    public interface IPointerExitHandler : IEventSystemHandler { void OnPointerExit(PointerEventData e); }
+}
+namespace UnityEngine.UI
+{
+    using UnityEngine.EventSystems;
+    public class Graphic : UIBehaviour { public UnityEngine.Color color; public bool raycastTarget; public UnityEngine.RectTransform rectTransform => null; }
+    public class MaskableGraphic : Graphic { }
+    public class Image : MaskableGraphic { public enum Type { Simple, Sliced, Tiled, Filled } public UnityEngine.Sprite sprite; public Type type; public float pixelsPerUnitMultiplier; }
+    public struct SpriteState { public UnityEngine.Sprite highlightedSprite, pressedSprite, selectedSprite, disabledSprite; }
+    public struct Navigation { public enum Mode { None, Horizontal, Vertical, Automatic, Explicit } public Mode mode; }
+    public class Selectable : UIBehaviour { public enum Transition { None, ColorTint, SpriteSwap, Animation } public Transition transition; public Graphic targetGraphic; public SpriteState spriteState; public Navigation navigation; public bool interactable; }
+    public class Button : Selectable { public class ButtonClickedEvent : UnityEngine.Events.UnityEvent { } public ButtonClickedEvent onClick; }
+    public class CanvasScaler : UIBehaviour { public enum ScaleMode { ConstantPixelSize, ScaleWithScreenSize, ConstantPhysicalSize } public ScaleMode uiScaleMode; public float referencePixelsPerUnit; public float scaleFactor; }
+    public class GraphicRaycaster : UIBehaviour { }
+}
+namespace UnityEngine.InputSystem.UI { public class InputSystemUIInputModule : UnityEngine.EventSystems.BaseInputModule { } }
+namespace UnityEngine.TextCore.LowLevel { public enum GlyphRenderMode { SMOOTH_HINTED = 4121, SMOOTH = 4117, RASTER_HINTED = 4161, RASTER = 4157, SDF = 4134, SDFAA = 4165 } }
+namespace TMPro
+{
+    using UnityEngine;
+    public enum TextAlignmentOptions { TopLeft = 257, Top = 258, TopRight = 260, Left = 513, Center = 514, Right = 516, BottomLeft = 1025, BottomRight = 1028 }
+    public enum TextWrappingModes { NoWrap = 0, Normal = 1, PreserveWhitespace = 2, PreserveWhitespaceNoWrap = 3 }
+    public enum TextOverflowModes { Overflow = 0, Ellipsis = 1, Masking = 2, Truncate = 3 }
+    public enum AtlasPopulationMode { Static = 0, Dynamic = 1, DynamicOS = 2 }
+    public class TMP_Settings : ScriptableObject { public static TMP_Settings instance; }
+    public class TMP_FontAsset : ScriptableObject
+    {
+        public Texture2D atlasTexture;
+        public static TMP_FontAsset CreateFontAsset(Font font, int samplingPointSize, int atlasPadding, UnityEngine.TextCore.LowLevel.GlyphRenderMode renderMode, int atlasWidth, int atlasHeight, AtlasPopulationMode atlasPopulationMode = AtlasPopulationMode.Dynamic, bool enableMultiAtlasSupport = true) => null;
+    }
+    public class TMP_Text : UnityEngine.UI.MaskableGraphic
+    {
+        public string text; public TMP_FontAsset font; public float fontSize; public TextAlignmentOptions alignment;
+        public TextWrappingModes textWrappingMode; public TextOverflowModes overflowMode; public bool richText;
+        public Vector2 GetPreferredValues(string text) => default;
+    }
+    public class TextMeshProUGUI : TMP_Text { }
 }

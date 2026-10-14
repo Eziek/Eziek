@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Wyspa.Core;
 using Wyspa.Farming;
 
 namespace Wyspa.Automation
@@ -19,6 +20,7 @@ namespace Wyspa.Automation
         Vector3 home;
         float timer;
         Coroutine flight;
+        bool warnedFull;   // toast o pełnej skrzyni tylko raz, aż skrzynia się opróżni
 
         public float SecondsToNext(float interval) => Mathf.Max(0f, interval - timer);
 
@@ -36,7 +38,19 @@ namespace Wyspa.Automation
         public FarmPlot Tick(float dt, float interval, HarvestCrate crate)
         {
             timer += dt;
-            if (timer < interval || crate == null || crate.IsFull)
+            if (crate == null)
+                return null;
+            if (crate.IsFull)
+            {
+                if (!warnedFull && AnyRipe())
+                {
+                    warnedFull = true;
+                    GameEvents.RaiseToast("toast.crate_full");
+                }
+                return null;
+            }
+            warnedFull = false;
+            if (timer < interval)
                 return null;
             foreach (var plot in FarmPlot.All)
             {
@@ -48,6 +62,14 @@ namespace Wyspa.Automation
             }
             timer = interval;   // nic dojrzałego - czeka gotowy na pierwszy plon
             return null;
+        }
+
+        static bool AnyRipe()
+        {
+            foreach (var plot in FarmPlot.All)
+                if (plot.State.IsRipe)
+                    return true;
+            return false;
         }
 
         void FlyTo(Vector3 target)

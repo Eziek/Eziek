@@ -19,5 +19,7 @@ a lampy zasilane Esencją oświetlają wyspę w nocy (pora dnia z zegara kompute
   zgodnie z prawdziwą sygnaturą. Atrapy nie gwarantują zgodności z prawdziwym Unity, więc mów graczowi, co jest niesprawdzone.
 - Grafiki-placeholdery generuje `tools/pixel-proto/export_unity.py` (paleta mroczna). Docelowe assety rysuje się ręcznie.
 - Gracz woli mroczną, stonowaną estetykę (odrzucił „cukierkową”). Bez postaci, animacje tylko przez shadery i cząsteczki.
-- **Lokalizacja (PL, EN, DE, JA, ZH):** żadnego tekstu w sprite'ach ani w kodzie na sztywno. Każdy napis to klucz z tabeli
-  (Unity Localization, Smart Strings), a nowe terminy najpierw trafiają do `docs/localization/glossary.csv`. Zasady w GDD §16.
+- **Lokalizacja (PL, EN, DE, JA, ZH):** żadnego tekstu w sprite'ach ani w kodzie na sztywno. Każdy napis to klucz z tabeli CSV
+  w `Assets/_Project/Localization/` (`game.csv`, `ui.csv`; własna warstwa `Wyspa.Localization.Loc`, format `{0:plural:...}`),
+  a nowe terminy najpierw trafiają do `Assets/_Project/Localization/glossary.csv`. Zasady w GDD §16.
+- UI budujemy z kodu (`Scripts/UI/`, `UiRoot`). HUD debugowy (`DebugHud`, F1) może mieć napisy na sztywno, bo nie trafia do gry.

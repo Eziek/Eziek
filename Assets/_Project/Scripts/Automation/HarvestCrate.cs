@@ -80,8 +80,11 @@ namespace Wyspa.Automation
         public void OnClick()
         {
             var game = GameLoop.Instance;
-            if (game != null)
-                SellAll(game.Wallet, game.Crops, 1f);
+            if (game == null)
+                return;
+            int coins = SellAll(game.Wallet, game.Crops, 1f);
+            if (coins > 0)
+                GameEvents.RaiseToast("toast.crate_sold", coins);
         }
 
         void RefreshVisual()

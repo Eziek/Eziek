@@ -178,6 +178,7 @@ namespace Wyspa.EditorTools
             }
 
             CreateUpgrades();
+            CreateUiTheme();
             GlowMaterial();
             AssetDatabase.SaveAssets();
             Debug.Log("[Wyspa] Dane utworzone w " + DataDir);
@@ -217,6 +218,60 @@ namespace Wyspa.EditorTools
         }
 
         // =====================================================================
+        const string ThemePath = DataDir + "/UiTheme.asset";
+        const string LocDir = Root + "/Localization";
+        const string FontPath = Root + "/Art/Fonts/WyspaPixel.ttf";
+        static readonly string[] LocTables = { "glossary", "game", "ui" };
+
+        /// <summary>Motyw UI: elementy 9-slice z Art/Sprites/UI/Kit, ikony z UI/Icons, font i tabele lokalizacji.</summary>
+        static UiTheme CreateUiTheme()
+        {
+            var theme = LoadOrCreate<UiTheme>(ThemePath);
+            Sprite Kit(string n) => LoadSprite("UI/Kit/ui_" + n);
+            theme.panel = Kit("panel");
+            theme.panelPage = Kit("panel_page");
+            theme.buttonNormal = Kit("button_normal");
+            theme.buttonHover = Kit("button_hover");
+            theme.buttonPressed = Kit("button_pressed");
+            theme.buttonDisabled = Kit("button_disabled");
+            theme.tabActive = Kit("tab_active");
+            theme.tabInactive = Kit("tab_inactive");
+            theme.slot = Kit("slot");
+            theme.slotSelected = Kit("slot_selected");
+            theme.slotLocked = Kit("slot_locked");
+            theme.tooltip = Kit("tooltip");
+            theme.toast = Kit("toast");
+            theme.barFrame = Kit("bar_frame");
+            theme.barFillEssence = Kit("bar_fill_essence");
+            theme.barFillGrowth = Kit("bar_fill_growth");
+            theme.barFillRhythm = Kit("bar_fill_rhythm");
+            theme.wheel = Kit("wheel");
+
+            theme.icons = new List<NamedSprite>();
+            foreach (var guid in AssetDatabase.FindAssets("t:Sprite", new[] { Sprites + "UI/Icons" }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                string file = Path.GetFileNameWithoutExtension(path);
+                if (!file.StartsWith("icon_", StringComparison.Ordinal))
+                    continue;
+                theme.icons.Add(new NamedSprite { name = file.Substring(5), sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path) });
+            }
+
+            theme.font = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
+            if (theme.font == null)
+                Debug.LogWarning("[Wyspa] Brak fontu: " + FontPath);
+            var tables = new List<TextAsset>();
+            foreach (var t in LocTables)
+            {
+                var ta = AssetDatabase.LoadAssetAtPath<TextAsset>($"{LocDir}/{t}.csv");
+                if (ta != null) tables.Add(ta);
+                else Debug.LogWarning($"[Wyspa] Brak tabeli lokalizacji: {LocDir}/{t}.csv");
+            }
+            theme.tables = tables.ToArray();
+            EditorUtility.SetDirty(theme);
+            return theme;
+        }
+
         [MenuItem("Wyspa/3. Zbuduj scenę prototypu", priority = 3)]
         public static void BuildScene()
         {
@@ -237,6 +292,7 @@ namespace Wyspa.EditorTools
             var db = AssetDatabase.LoadAssetAtPath<CropDatabase>(DataDir + "/CropDatabase.asset");
             var upgradeDb = AssetDatabase.LoadAssetAtPath<UpgradeDatabase>(DataDir + "/UpgradeDatabase.asset");
             var glowMat = GlowMaterial();
+            var uiTheme = AssetDatabase.LoadAssetAtPath<UiTheme>(ThemePath);
             if (db == null)
                 Debug.LogError("[Wyspa] Nie znaleziono " + DataDir + "/CropDatabase.asset - uruchom Wyspa > 2.");
             float W = layout.width, H = layout.height;
@@ -380,6 +436,11 @@ namespace Wyspa.EditorTools
             SetRefs(upgradeState, ("database", upgradeDb));
             SetRefs(dayNight, ("clock", clock), ("globalLight", global));
             SetRefs(click, ("targetCamera", cam));
+
+            // --- UI (płótno budowane w kodzie przy starcie, GDD §12) ---
+            var ui = new GameObject("UI");
+            var uiRoot = ui.AddComponent<UiRoot>();
+            SetRefs(uiRoot, ("theme", uiTheme));
 
             EnsureFolder(Path.GetDirectoryName(ScenePath).Replace('\\', '/'));
             EditorSceneManager.SaveScene(scene, ScenePath);

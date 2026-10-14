@@ -1,0 +1,39 @@
+﻿key,pl,en,de,ja,zh-Hans,uwagi
+lang.pl,Polski,Polski,Polski,Polski,Polski,nazwa języka zawsze we własnym języku
+lang.en,English,English,English,English,English,
+lang.de,Deutsch,Deutsch,Deutsch,Deutsch,Deutsch,
+lang.ja,日本語,日本語,日本語,日本語,日本語,wymaga fontu CJK (GDD §16.2)
+lang.zh-Hans,简体中文,简体中文,简体中文,简体中文,简体中文,wymaga fontu CJK (GDD §16.2)
+ui.soon,Wkrótce,Coming soon,Demnächst,近日公開,即将推出,
+ui.shop.soon,"Lampy i budowle pojawią się wkrótce. Nasiona kupujesz, klikając pustą grządkę.",Lamps and buildings are coming soon. Buy seeds by clicking an empty plot.,Lampen und Gebäude kommen bald. Samen kaufst du per Klick auf ein leeres Beet.,ランプと建物は近日公開。種は空いた畑をクリックして買えます。,灯和建筑即将推出。点击空田地即可购买种子。,
+ui.upgrade.buy,Kup,Buy,Kaufen,購入,购买,
+ui.upgrade.level,Poziom {0}/{1},Level {0}/{1},Stufe {0}/{1},レベル {0}/{1},等级 {0}/{1},
+ui.upgrade.max,Maks.,Max,Max.,最大,已满,
+ui.upgrade.requires,Wymaga: {0},Requires: {0},Benötigt: {0},必要：{0},需要：{0},
+ui.toast.upgrade_bought,Kupiono: {0},Bought: {0},Gekauft: {0},購入：{0},已购买：{0},
+ui.seed.price,Cena: {0},Price: {0},Preis: {0},価格：{0},价格：{0},
+ui.seed.sell,Sprzedaż: {0},Sells for: {0},Verkauf: {0},売値：{0},售价：{0},
+ui.seed.time_work,{0} min pracy,{0} min of work,{0} Min. Arbeit,作業{0}分,工作{0}分钟,
+ui.seed.time_night,{0} h nocy,{0} h of night,{0} Std. Nacht,夜{0}時間,夜晚{0}小时,
+ui.seed.kind_day,"Roślina dnia: rośnie, gdy pracujesz",Day crop: grows while you work,"Tagpflanze: wächst, während du arbeitest",昼の作物：作業中に育つ,日间作物：工作时生长,
+ui.seed.kind_night,Roślina nocy: rośnie w ciemności,Night crop: grows in darkness,Nachtpflanze: wächst im Dunkeln,夜の作物：暗闇で育つ,夜间作物：在黑暗中生长,
+ui.plot.empty,"Pusta grządka: kliknij, aby posadzić",Empty plot: click to plant,Leeres Beet: klicken zum Pflanzen,空いた畑：クリックで植える,空田地：点击种植,
+ui.plot.ripe,"{0}: dojrzałe, kliknij, aby zebrać","{0}: ripe, click to harvest","{0}: reif, klicken zum Ernten",{0}：実った、クリックで収穫,{0}：已成熟，点击收获,{0} = nazwa rośliny
+ui.plot.growing,{0}: rośnie,{0}: growing,{0}: wächst,{0}：成長中,{0}：生长中,
+ui.plot.need_light,{0}: potrzebuje światła,{0}: needs light,{0}: braucht Licht,{0}：光が必要,{0}：需要光照,
+ui.plot.need_work,"{0}: rośnie, gdy pracujesz",{0}: grows while you work,"{0}: wächst, während du arbeitest",{0}：作業中に育つ,{0}：工作时生长,
+ui.plot.need_night,{0}: czeka na noc,{0}: waiting for night,{0}: wartet auf die Nacht,{0}：夜を待っている,{0}：等待夜晚,
+ui.plot.too_bright,{0}: za jasno (lampa),{0}: too bright (lamp),{0}: zu hell (Lampe),{0}：明るすぎる（ランプ）,{0}：太亮了（灯）,
+ui.plot.progress,{0}%,{0}%,{0} %,{0}%,{0}%,postęp wzrostu
+ui.options.language,Język,Language,Sprache,言語,语言,
+ui.options.brightness,Jasność nocy,Night brightness,Nachthelligkeit,夜の明るさ,夜间亮度,
+ui.options.rhythm,"Rytm pracy (seria, przerwa, zmęczenie)","Work rhythm (streak, break, fatigue)","Arbeitsrhythmus (Serie, Pause, Erschöpfung)",作業リズム（連続・休憩・疲労）,工作节奏（连续、休息、疲劳）,
+ui.options.debug,HUD debugowy: klawisz F1,Debug HUD: F1 key,Debug-HUD: Taste F1,デバッグHUD：F1キー,调试HUD：F1键,
+ui.on,Wł.,On,An,オン,开,
+ui.off,Wył.,Off,Aus,オフ,关,
+ui.stats.today,Dziś: {0:0.0} h pracy,Today: {0:0.0} h of work,Heute: {0:0.0} Std. Arbeit,今日の作業：{0:0.0}時間,今日工作：{0:0.0}小时,
+ui.stats.streak,Obecna seria: {0:0} min,Current streak: {0:0} min,Aktuelle Serie: {0:0} Min.,現在の連続：{0:0}分,当前连续：{0:0}分钟,
+ui.stats.essence,Esencja: {0:0}/{1:0},Essence: {0:0}/{1:0},Essenz: {0:0}/{1:0},エッセンス：{0:0}/{1:0},精华：{0:0}/{1:0},
+ui.stats.multiplier,Mnożnik Esencji: ×{0:0.00},Essence multiplier: ×{0:0.00},Essenz-Multiplikator: ×{0:0.00},エッセンス倍率：×{0:0.00},精华倍率：×{0:0.00},
+ui.rhythm.normal,Praca: {0:0} min,Working: {0:0} min,Arbeit: {0:0} Min.,作業：{0:0}分,工作：{0:0}分钟,HUD
+ui.rhythm.idle,Przerwa,On a break,Pause,休憩中,休息中,HUD

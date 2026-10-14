@@ -4,10 +4,11 @@ using UnityEngine;
 using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Input;
+using Wyspa.UI;
 
 namespace Wyspa.Farming
 {
-    /// <summary>Grządka: klik na pustą = posadź wybrane nasiono, klik na dojrzałą = zbierz.</summary>
+    /// <summary>Grządka: klik na pustą = koło nasion (albo wybrane nasiono, gdy nie ma UI), klik na dojrzałą = zbierz.</summary>
     [RequireComponent(typeof(BoxCollider2D))]
     public class FarmPlot : MonoBehaviour, IClickable
     {
@@ -61,6 +62,11 @@ namespace Wyspa.Farming
             }
             else if (state.IsEmpty)
             {
+                if (UiRoot.Instance != null)
+                {
+                    UiRoot.Instance.Wheel.Open(this);
+                    return;
+                }
                 var seed = SeedSelection.Current;
                 if (seed != null && game.Wallet.TrySpend(seed.seedPrice))
                 {
