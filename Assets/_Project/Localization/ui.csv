@@ -72,9 +72,9 @@ ui.plot.quality,Jakość: {0}/3,Quality: {0}/3,Qualität: {0}/3,品質：{0}/3,�
 ui.plot.need_fullmoon,{0}: czeka na pełnię,{0}: waiting for the full moon,{0}: wartet auf den Vollmond,{0}：満月を待っている,{0}：等待满月,
 ui.plot.fullmoon,Pełnia: rośnie 2x szybciej,Full moon: grows 2x faster,Vollmond: wächst 2x schneller,満月：2倍の速さで育つ,满月：生长速度x2,
 ui.seed.fertilizer,Nawóz: {0} (+1 jakości przy sadzeniu),Fertilizer: {0} (+1 quality when planting),Dünger: {0} (+1 Qualität beim Pflanzen),肥料：{0}（植えると品質+1）,肥料：{0}（种植时品质+1）,
-ui.merchant.seeds,Nasiona: {1} x{0},Seeds: {1} x{0},Samen: {1} x{0},種：{1} x{0},种子：{1} x{0},{1} = roślina
+ui.merchant.seeds,{1} x{0},{1} x{0},{1} x{0},{1} x{0},{1} x{0},{1} = roślina
 ui.merchant.fertilizer,Nawóz x{0},Fertilizer x{0},Dünger x{0},肥料 x{0},肥料 x{0},
-ui.merchant.hybrid,Nasiono: {0},Seed: {0},Samen: {0},種：{0},种子：{0},hybryda
+ui.merchant.hybrid,{0},{0},{0},{0},{0},hybryda
 ui.merchant.price,{0} {0:plural:moneta|monety|monet},{0} {0:plural:coin|coins},{0} {0:plural:Münze|Münzen},{0}コイン,{0}金币,
 ui.merchant.price2,{0} {0:plural:moneta|monety|monet} + {1} {1:plural:plon nocy|plony nocy|plonów nocy},{0} {0:plural:coin|coins} + {1} night {1:plural:harvest|harvests},{0} {0:plural:Münze|Münzen} + {1} Nachternte,{0}コイン + 夜の作物{1},{0}金币 + 夜间作物{1},
 ui.merchant.leaves,Odpłynie za {0} min,Leaves in {0} min,Legt in {0} Min. ab,あと{0}分で去る,{0}分钟后离开,
@@ -105,5 +105,5 @@ ui.boat.away,W mgle: jeszcze {0:0.0} h pracy,In the fog: {0:0.0} h of work left,
 ui.boat.returned,Wróciła z łupem!,Back with loot!,Mit Beute zurück!,戦利品を持って帰ってきた！,满载而归！,
 ui.boat.unload,Rozładuj,Unload,Entladen,荷下ろし,卸货,
 ui.loot.title,Łup z wyprawy,Expedition loot,Beute der Fahrt,遠征の戦利品,远航战利品,
-ui.loot.seeds,Nasiona: {1} x{0},Seeds: {1} x{0},Samen: {1} x{0},種：{1} x{0},种子：{1} x{0},
+ui.loot.seeds,{1} x{0},{1} x{0},{1} x{0},{1} x{0},{1} x{0},
 ui.loot.fertilizer,Nawóz x{0},Fertilizer x{0},Dünger x{0},肥料 x{0},肥料 x{0},
