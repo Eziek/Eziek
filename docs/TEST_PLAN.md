@@ -284,3 +284,7 @@ Najpierw **Wyspa → 2** (grafiki czapek).
    (dymek bez „Jakość”).
 2. Z nawozem (kupiec-widmo albo dar „Nawóz z mgły”): „Jakość: 2/3 (nawóz)”.
 3. Roślina dnia rosnąca nocą głównie w świetle klatki z ognikiem: „Jakość: 2/3 (światło ognika)”, z nawozem 3/3.
+
+## 22. Żar i kupno kafelka
+1. Żar tuż poniżej ceny kafelka (np. 2,6 przy cenie 3, F1): HUD pokazuje 2/60, dymek kafelka „Brakuje Żaru: 1”, cena
+   czerwona. Po dojściu do 3: HUD 3/60, cena jasna, klik kupuje kafelek.

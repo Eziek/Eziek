@@ -734,6 +734,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     Teraz liczy się tylko światło lampy z mnożnikiem wzrostu (klatka z ognikiem, nocą; `GrowthContext.lightBoost`).
     Zasady jakości bez zmian: baza 1, +1 za co najmniej połowę wzrostu w świetle ognika, +1 za nawóz; cena x1 / x1,5 / x2,5.
     Dymek grządki pokazuje powód jakości („światło ognika”, „nawóz”). Rośliny posadzone przed poprawką mają już naliczone.
+93. **Żar w HUD zaokrąglany w dół** (zgłoszenie gracza: nie mógł kupić kafelka za 3 Żaru, HUD pokazywał 3/60, a było
+    ok. 2,6). HUD i statystyki pokazują część całkowitą, a dymek kafelka w trybie rozbudowy mówi, czego brakuje
+    („Brakuje monet: N”, „Brakuje Żaru: N”) zamiast „LPM: wyrwij z mgły”.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

@@ -77,6 +77,8 @@ ui.expand.title,Nowy kafelek,New land tile,Neues Landstück,新しい土地マ�
 ui.expand.cost,{0} {0:plural:moneta|monety|monet} i {1} Żaru,{0} {0:plural:coin|coins} and {1} Ember,{0} {0:plural:Münze|Münzen} und {1} Glut,{0}コインと{1}熾火,{0}金币和{1}余火,
 ui.expand.find,Coś błyszczy we mgle...,Something glimmers in the fog...,Etwas schimmert im Nebel ...,霧の中で何かが光っている…,迷雾中有东西在闪烁……,znalezisko
 ui.expand.click,LPM: wyrwij z mgły,Left click: claim from the fog,Linksklick: dem Nebel entreißen,左クリック：霧から取り戻す,左键：从迷雾中夺回,
+ui.expand.missing_coins,Brakuje monet: {0},Coins missing: {0},Fehlende Münzen: {0},コインが足りない：{0},缺少金币：{0},
+ui.expand.missing_ember,Brakuje Żaru: {0},Ember missing: {0},Fehlende Glut: {0},熾火が足りない：{0},缺少余火：{0},
 ui.expand.panel,Rozbudowa: {0} {0:plural:kafelek|kafelki|kafelków} - PPM: wyjdź,Expanding: {0} {0:plural:tile|tiles} - right click: exit,Ausbau: {0} {0:plural:Landstück|Landstücke} - Rechtsklick: beenden,拡張：{0}マス - 右クリックで終了,扩建：{0}格 - 右键退出,
 ui.expand.need,Potrzeba {0} {0:plural:monety|monet|monet} i {1} Żaru,You need {0} {0:plural:coin|coins} and {1} Ember,Benötigt: {0} {0:plural:Münze|Münzen} und {1} Glut,{0}コインと{1}熾火が必要,需要{0}金币和{1}余火,toast
 ui.dig.title,Przekop na grządkę,Dig a plot,Beet anlegen,畑を耕す,开垦田地,

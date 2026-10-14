@@ -235,6 +235,18 @@ namespace Wyspa.UI
                 string s = Loc.Get("ui.expand.title") + "\n" + Loc.Get("ui.expand.cost", island.NextTileCoins, island.NextTileEssence);
                 if (island.Map.Plan != null && island.Map.Plan.FindAt(f.Tile) != FindKind.None)
                     s += "\n" + Loc.Get("ui.expand.find");
+                // brak środków: co dokładnie (Żar w HUD jest zaokrąglony w dół, ale ułamki też się liczą)
+                var game = GameLoop.Instance;
+                if (game != null && !island.CanAffordTile(game.Wallet, game.Essence))
+                {
+                    int coins = island.NextTileCoins - game.Wallet.Coins;
+                    float ember = island.NextTileEssence - game.Essence.Amount;
+                    if (coins > 0)
+                        s += "\n" + Loc.Get("ui.expand.missing_coins", coins);
+                    if (ember > 0f)
+                        s += "\n" + Loc.Get("ui.expand.missing_ember", Mathf.Max(1, Mathf.CeilToInt(ember)));
+                    return s;
+                }
                 return s + "\n" + Loc.Get("ui.expand.click");
             }
             return Loc.Get("ui.dig.title") + "\n" + Loc.Get("ui.dig.cost", island.DigCoins) + "\n" + Loc.Get("ui.dig.click");

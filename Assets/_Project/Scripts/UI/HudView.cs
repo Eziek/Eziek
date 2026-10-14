@@ -172,7 +172,8 @@ namespace Wyspa.UI
                 if (it == essenceItem)
                 {
                     show = true;
-                    it.text.text = $"{game.Essence.Amount:0}/{game.Essence.Capacity:0}";
+                    // w dół: 2,6 Żaru to „2”, nie „3” (inaczej HUD pokazuje Żar, którego jeszcze nie ma na zakup)
+                    it.text.text = $"{Mathf.FloorToInt(game.Essence.Amount + 0.001f)}/{game.Essence.Capacity:0}";
                     Ui.SetBar(essenceFill, game.Essence.Normalized);
                     it.text.rectTransform.anchoredPosition = new Vector2(46, -2);
                 }

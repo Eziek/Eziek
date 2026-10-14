@@ -1236,7 +1236,7 @@ namespace Wyspa.UI
             Line("ui.stats.today", ref y, r.DailyActiveHours);
             Line("ui.stats.streak", ref y, r.StreakMinutes);
             Line("ui.stats.multiplier", ref y, r.EssenceMultiplier);
-            Line("ui.stats.essence", ref y, game.Essence.Amount, game.Essence.Capacity);
+            Line("ui.stats.essence", ref y, Mathf.FloorToInt(game.Essence.Amount + 0.001f), game.Essence.Capacity);   // w dół, jak w HUD
         }
 
         void Line(string key, ref float y, params object[] args)
