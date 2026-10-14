@@ -262,7 +262,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   zawsze na wierzchu, mini-tryb, wyjście). Powiadomienia Windows, gdy okno schowane albo nieaktywne (najwyżej co minutę):
   kupiec-widmo, potwór, nowe/wykonane zamówienie, chowaniec, gotowa mikstura, co najmniej 3 dojrzałe plony. Opcje → System →
   „Powiadomienia Windows”. Ikona z pliku gry (Player Settings), komunikaty przez osobne okno HWND_MESSAGE. `Platform/TrayIcon.cs`.
-- [x] **Dźwięk** (Etap 6c): tło dnia (fale, wiatr, rzadkie ptaki), nocy (świerszcze, pomruk głębin, fale) i deszczu (ponad tłem,
+- [x] **Dźwięk** (Etap 6c): tło dnia (fale, wiatr, rzadkie ptaki), nocy (ciche fale, wiatr, pomruk głębin, rzadka daleka sowa; świerszcze usunięte po teście - drażniły) i deszczu (ponad tłem,
   burza głośniej), przenikanie przy zmianie pory; efekty: sadzenie, zbiór, moneta, kopanie, ścinanie/usuwanie, stawianie,
   klik, Księga, powiadomienie, grzmot, magia (kocioł, zamówienie, chowaniec), nowy kafelek, bąbel. Placeholdery syntezowane
   w `tools/audio/gen_audio.py` (numpy + ffmpeg, OGG) do `Resources/Audio`; `Audio/AudioManager.cs`, `GameEvents.PlaySound`.

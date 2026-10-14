@@ -1,6 +1,6 @@
 """Dźwięki-placeholdery Pockland (Etap 6c): syntezowane w numpy, zapisywane jako OGG (ffmpeg, libvorbis).
 
-Mroczne i ciche: tło dnia (fale, wiatr, rzadkie ptaki), tło nocy (świerszcze, niski pomruk, fale), deszcz,
+Mroczne i ciche: tło dnia (fale, wiatr, rzadkie ptaki), tło nocy (fale, wiatr, pomruk, rzadka sowa), deszcz,
 krótkie efekty (sadzenie, zbiór, moneta, kopanie, ścinanie, stawianie, klik, Księga, powiadomienie, grzmot, magia, kafelek, bąbel).
 Docelowe dźwięki nagra albo dobierze się ręcznie - nazwy plików zostają.
 
@@ -123,16 +123,25 @@ def amb_day():
     return loopable(x)
 
 
+def owl(dur=0.45, f=380.0):
+    """Daleka sowa: miękkie „hu” z lekkim opadaniem tonu i drżeniem (bez ostrych wysokich częstotliwości)."""
+    t = t_axis(dur)
+    pitch = f * (1 - 0.08 * t / dur) * (1 + 0.01 * np.sin(2 * np.pi * 6 * t))
+    tone = np.sin(2 * np.pi * np.cumsum(pitch) / SR)
+    e = np.sin(np.pi * np.clip(t / dur, 0, 1)) ** 2          # łagodne wejście i wyjście
+    return lowpass_fast(tone * e, 900)
+
+
 def amb_night():
+    """Noc (po teście: świerszcze były drażniące): ciche fale, lekki wiatr, niski miękki pomruk, rzadko daleka sowa."""
     sec = 12.0
     t = t_axis(sec)
-    x = waves(sec, 0.5) * 0.5
-    # świerszcze: wysoki ton cięty w krótkie ćwierknięcia, dwa „owady” w innym rytmie
-    for f, rate, phase, amp in ((4300, 3.0, 0.0, 0.05), (4700, 2.2, 1.1, 0.035)):
-        gate = (np.sin(2 * np.pi * rate * t + phase) > 0.6).astype(float)
-        trill = (np.sin(2 * np.pi * 45 * t) > 0).astype(float)
-        x += np.sin(2 * np.pi * f * t) * gate * trill * amp
-    x += np.sin(2 * np.pi * 55 * t) * 0.04 * (0.6 + 0.4 * np.sin(2 * np.pi * t / sec))   # niski pomruk głębin
+    x = waves(sec, 0.5) * 0.45 + wind(sec) * 0.12
+    x += np.sin(2 * np.pi * 55 * t) * 0.025 * (0.6 + 0.4 * np.sin(2 * np.pi * t / sec))   # pomruk głębin, ledwo słyszalny
+    for at in (3.0, 3.6):                                   # dwa „hu” sowy, raz na pętlę, cicho
+        o = owl() * 0.06
+        i = int(at * SR)
+        x[i:i + len(o)] += o
     return loopable(x)
 
 
@@ -211,7 +220,7 @@ def sfx_bubble():
 
 if __name__ == "__main__":
     save("amb_day", amb_day(), 0.5)
-    save("amb_night", amb_night(), 0.5)
+    save("amb_night", amb_night(), 0.4)
     save("amb_rain", amb_rain(), 0.5)
     save("sfx_plant", thud(110, 0.25, 0.7), 0.5)
     save("sfx_harvest", pluck(330, 0.45) + bell((1320,), 0.45, 0.12) * 0.3, 0.55)
