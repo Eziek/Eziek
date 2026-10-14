@@ -54,6 +54,18 @@ namespace Wyspa.Visual
             return material;
         }
 
+        static readonly int ShoreRangeId = Shader.PropertyToID("_ShoreRange");
+        float shoreRange;
+
+        /// <summary>Przezroczyste okno: woda tylko w pasie przy brzegu (piksele od lądu, 0 = całe morze).</summary>
+        public void SetShoreOnly(float pixels)
+        {
+            shoreRange = Mathf.Max(0f, pixels);
+            var m = EnsureMaterial();
+            if (m != null)
+                m.SetFloat(ShoreRangeId, shoreRange);
+        }
+
         /// <summary>Nowy obraz wyspy: mapa danych, ryby i potwór.</summary>
         public void SetData(Texture2D data, IslandPicture picture)
         {
@@ -61,6 +73,7 @@ namespace Wyspa.Visual
             if (m == null)
                 return;
             m.SetTexture(DataTexId, data);
+            m.SetFloat(ShoreRangeId, shoreRange);
             fish.Clear();
             if (picture != null)
                 foreach (var f in picture.fish)

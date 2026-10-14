@@ -96,6 +96,13 @@ namespace Wyspa.World
             Apply(false);
         }
 
+        /// <summary>Ponowne ustawienie rozmiaru okna (np. po przełączeniu z pełnego ekranu na okno).</summary>
+        public void ForceWindowSize()
+        {
+            lastWindow = Vector2Int.zero;
+            Apply(true);
+        }
+
         public void SetScale(int scale)
         {
             windowScale = Mathf.Clamp(scale, 1, 6);

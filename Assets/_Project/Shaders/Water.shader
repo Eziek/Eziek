@@ -19,6 +19,7 @@ Shader "Wyspa/Water"
         _Night("Night (0..1, set by WaterAnimator)", Range(0, 1)) = 0
         _FishPeriod("Fish loop (s)", Float) = 30
         _BeastPeriod("Beast drift loop (s)", Float) = 40
+        _ShoreRange("Water only near shore (px, 0 = everywhere)", Float) = 0
 
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
         [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
@@ -69,6 +70,7 @@ Shader "Wyspa/Water"
                 float _Night;
                 float _FishPeriod;
                 float _BeastPeriod;
+                float _ShoreRange;
             CBUFFER_END
 
             // Tablice ustawia WaterAnimator (SetVectorArray). Współrzędne w pikselach kadru, y w dół (jak w Pythonie).
@@ -237,6 +239,12 @@ Shader "Wyspa/Water"
                 if (cls >= 5) emit = false;
 
                 half alpha = cls > 0 ? input.color.a : 0;
+                // przezroczyste okno (Etap 6a): zostaje tylko pas wody przy brzegu, krawędź w szachownicę pikseli
+                if (_ShoreRange > 0.0 && cls >= 1 && cls <= 4)
+                {
+                    if (d > _ShoreRange || (d > _ShoreRange - 2.0 && ((x + y) & 1) == 1))
+                        alpha = 0;
+                }
                 half4 lit = WyspaLight(col, alpha, input.uv, input.lightingUV);
                 return emit ? half4(emitCol, alpha) : lit;
             }

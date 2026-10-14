@@ -282,7 +282,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Chiński: **uproszczony (zh-Hans)**.
 - [x] Okno (Etap 6a): własny kod WinAPI zamiast UniWindowController (bez zależności, kompiluje się na atrapach). Działa tylko
   w buildzie na Windows; w edytorze działają skala, mini-tryb i podgląd przezroczystości (schowane morze i mgła).
-- [x] Przezroczyste okno: bez morza i mgły, wyspa „leży” na pulpicie; klik w puste miejsce idzie do pulpitu (ląd, obiekty
+- [x] Przezroczyste okno: bez mgły, z morza zostaje pas ok. 14 px przy brzegu (krawędź w szachownicę), wyspa „leży” na pulpicie; klik w puste miejsce idzie do pulpitu (ląd, obiekty
   i UI łapią klik). Wymaga wyłączonego „DXGI flip model” (ustawia Wyspa → 1). Łowienie ryb w tym trybie jest trudne (ryby
   są w wodzie), do przemyślenia.
 - [x] Mini-tryb = najmniejszy kadr (144×112) w skali ×2. Okno bez ramki przesuwa się LPM za puste miejsce; puszczone przy rogu
@@ -412,6 +412,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     z Windows przez HKCU\Run, reset zapisu). Okno obsługuje własny kod WinAPI.
 35. Poprawka buildu: brak UI, bo build wycinał shader fontu TMP (font tworzony w locie). Wyspa → 1 dołącza go na stałe,
     a bez niego UI startuje z domyślnym fontem TMP.
+36. Build startował na pełnym ekranie (Unity pamięta tryb z poprzednich uruchomień): gra przy starcie przełącza się w okno.
+    Przezroczyste okno zostawia pas wody przy brzegu (shader wody, `_ShoreRange`).
 
 ---
 

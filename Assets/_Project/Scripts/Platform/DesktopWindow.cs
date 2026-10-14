@@ -22,6 +22,8 @@ namespace Wyspa.Platform
 
         const int CornerMargin = 8;
         const int SnapDistance = 32;
+        /// <summary>Szerokość pasa wody przy brzegu w przezroczystym oknie (piksele gry).</summary>
+        const float ShoreWaterPixels = 14f;
 
         bool frameless, topMost, transparent;
         ScreenCorner corner;
@@ -88,13 +90,28 @@ namespace Wyspa.Platform
                 Instance = null;
         }
 
-        void Start()
+        void Start() => StartCoroutine(Init());
+
+        /// <summary>
+        /// Build pamięta tryb ekranu z poprzednich uruchomień (domyślnie Unity: pełny ekran w oknie). Gra to małe okno na pulpicie,
+        /// więc najpierw przełączamy na tryb okienkowy, czekamy, aż Unity go zastosuje, a dopiero potem ramka, róg i rozmiar.
+        /// </summary>
+        System.Collections.IEnumerator Init()
         {
+            if (Supported && Screen.fullScreenMode != FullScreenMode.Windowed)
+            {
+                Screen.SetResolution(Mathf.Max(320, Screen.width / 3), Mathf.Max(240, Screen.height / 3), FullScreenMode.Windowed);
+                yield return null;
+                yield return null;
+                hwnd = IntPtr.Zero;   // Unity mógł odtworzyć okno
+            }
             if (Supported && Hwnd != IntPtr.Zero && corner == ScreenCorner.None && PlayerPrefs.HasKey("winX"))
                 WinApi.SetWindowPos(hwnd, IntPtr.Zero, PlayerPrefs.GetInt("winX"), PlayerPrefs.GetInt("winY"), 0, 0,
                     WinApi.SWP_NOSIZE | WinApi.SWP_NOZORDER | WinApi.SWP_NOACTIVATE);
             ApplyStyle();
             ApplyTransparency();
+            if (ViewController.Instance != null)
+                ViewController.Instance.ForceWindowSize();
         }
 
         // ------------------------------------------------------------ rozmiar i położenie
@@ -170,9 +187,10 @@ namespace Wyspa.Platform
                 cam.backgroundColor = transparent ? new Color(0f, 0f, 0f, 0f) : cameraColor;
                 cam.allowHDR = !transparent && cameraHdr;
             }
+            // morze zostaje tylko pasem przy brzegu (shader wody), mgła znika
             var water = FindAnyObjectByType<WaterAnimator>();
-            if (water != null && water.Renderer != null)
-                water.Renderer.enabled = !transparent;
+            if (water != null)
+                water.SetShoreOnly(transparent ? ShoreWaterPixels : 0f);
             var fog = FindAnyObjectByType<FogController>();
             if (fog != null && fog.Renderer != null)
                 fog.Renderer.enabled = !transparent;
