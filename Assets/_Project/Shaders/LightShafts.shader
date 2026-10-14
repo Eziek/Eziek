@@ -83,7 +83,7 @@ Shader "Wyspa/LightShafts"
                 if (_MaskRange > 0.0 && water && d > _MaskRange)
                     return half4(0, 0, 0, 0);
 
-                float T = WyspaFrame() / 10.0;
+                float T = _Time.y;   // płynny dryf snopów
                 float th = WyspaBayer(x, y) + 1.0 / 32.0;   // próg > 0: przy zerowej sile żaden piksel się nie zapala
                 half3 col = 0;
 

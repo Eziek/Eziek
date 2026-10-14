@@ -88,7 +88,7 @@ Shader "Wyspa/Fog"
                 int x = (int)pix.x;
                 int y = (int)(size.y - 1.0 - pix.y);
                 float d = data.r * 255.0 / 4.0;      // odległość od brzegu w pikselach (do ok. 64)
-                float T = 6.2831853 * frac(WyspaFrame() / 10.0 / _FogPeriod);
+                float T = 6.2831853 * frac(_Time.y / _FogPeriod);   // płynny dryf pasm mgły
                 // gęstsza mgła (noc, zgaszone lampy) zaczyna się bliżej brzegu
                 float from = _FogFrom / max(0.3, _Density);
                 float v = (d - from) / max(1.0, _FogSpan)
@@ -101,21 +101,31 @@ Shader "Wyspa/Fog"
                 if (v > 0.85) { col = _ColFo.rgb; a = 1; }
                 else if (v > 0.55) { col = th < (v - 0.55) / 0.3 ? _ColFo.rgb : _ColB3.rgb; a = 1; }
                 else if (v > 0.25 && th < (v - 0.25) / 0.3) { col = _ColB3.rgb; a = 1; }
-                // przezroczyste okno (Etap 6a): mgła tylko nad pasem wody (nie nad pulpitem). Od _FogFrom gęstnieje
-                // ku krawędzi pasa (_FogOuter = _ShoreRange wody), dryfuje; krawędź w tę samą szachownicę co woda.
-                if (_FogOuter > 0.0)
+                // przezroczyste okno: nad pasem wody mgła gęstnieje ku jego krawędzi, a za nią (nad pulpitem) zostają
+                // tylko rzadkie, dryfujące kłęby, które rozpływają się w ciągu ok. 10 px. Próg Bayera > 0 (bez siatki kropek).
+                bool band = _FogOuter > 0.0;
+                if (band)
                 {
                     float drift = 0.25 * sin(x / 9.0 + T) * sin(y / 7.0) + 0.15 * sin(6.2831853 * (x / 45.0 + y / 90.0) - 2.0 * T);
-                    float c = saturate((d - _FogFrom) / max(1.0, _FogOuter - _FogFrom) + drift) * 0.6 * clamp(_Density, 0.7, 1.3);
-                    a = th < c ? 1 : 0;
-                    col = th < c * 0.35 ? _ColFo.rgb : _ColB3.rgb;
-                    if (d > _FogOuter || (d > _FogOuter - 2.0 && ((x + y) & 1) == 1))
-                        a = 0;
+                    float c;
+                    if (d <= _FogOuter)
+                        c = saturate((d - _FogFrom) / max(1.0, _FogOuter - _FogFrom) + drift) * 0.6;
+                    else
+                    {
+                        float patch = saturate(0.5 + 0.5 * sin(x / 13.0 + T) * sin(y / 9.0 - T) + drift);
+                        c = saturate(1.0 - (d - _FogOuter) / 10.0) * patch * 0.45;
+                    }
+                    c *= clamp(_Density, 0.7, 1.3);
+                    float tb = th + 1.0 / 32.0;
+                    a = tb < c ? 1 : 0;
+                    col = tb < c * 0.35 ? _ColFo.rgb : _ColB3.rgb;
                 }
                 if (!water) a = 0;
 
                 // światło liczymy zawsze z alfą 1 (CombinedShapeLightShared odrzuca alfę 0), alfę ustawiamy na końcu
                 half4 lit = WyspaLight(col, 1, input.uv, input.lightingUV);
+                if (band)
+                    lit.rgb = max(lit.rgb, col * 0.45);   // w nocy mgła zostaje bladą poświatą, nie znika w ciemności
                 return half4(lit.rgb, a * input.color.a);
             }
             ENDHLSL

@@ -98,6 +98,29 @@ namespace Wyspa.World
             objects = tileObjects;
         }
 
+        void Start() => EnsureLightShafts();
+
+        /// <summary>
+        /// Światło wolumetryczne (LightShafts): scena sprzed tej zmiany go nie ma (bez Wyspa → 3), więc tworzymy obiekt sami,
+        /// na tej samej mapie danych co mgła (materiał z IslandArt, Wyspa → 2).
+        /// </summary>
+        void EnsureLightShafts()
+        {
+            if (FindAnyObjectByType<LightShafts>() != null || art == null || art.lightShafts == null || fogRenderer == null)
+                return;
+            var go = new GameObject("LightShafts");
+            go.transform.SetParent(fogRenderer.transform.parent, false);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sortingOrder = 4800;
+            sr.sharedMaterial = art.lightShafts;
+            sr.sprite = fogRenderer.sprite;
+            var shafts = go.AddComponent<LightShafts>();
+            shafts.Setup(sr, fogRenderer, FindAnyObjectByType<GameClock>());
+            var desk = Platform.DesktopWindow.Instance;
+            if (desk != null && desk.Transparent)
+                shafts.SetMask(Platform.DesktopWindow.ShoreWaterPixels);
+        }
+
         void Awake()
         {
             Instance = this;

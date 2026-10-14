@@ -123,7 +123,7 @@ Shader "Wyspa/Water"
                 int x = (int)pix.x;
                 int y = (int)(size.y - 1.0 - pix.y);
                 float f = WyspaFrame();
-                float t = f / 10.0;
+                float t = _Time.y;   // ruch ryb i cielska płynnie; miganie, połyski i piana dalej w klatkach (f)
                 int baseCls = cls >= 1 && cls <= 4 ? cls : 1;
                 half3 col = BaseColor(baseCls);
                 bool emit = false;

@@ -442,6 +442,7 @@ namespace Wyspa.EditorTools
             art.swayCropGlow = LoadMat("SwayCropGlow");
             art.swayTree = LoadMat("SwayTree");
             art.glow = GlowMaterial();
+            art.lightShafts = LoadMat("LightShafts");
             EditorUtility.SetDirty(art);
             return art;
         }

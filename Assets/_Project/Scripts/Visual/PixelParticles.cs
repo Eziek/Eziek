@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Wyspa.Visual
 {
     /// <summary>
-    /// Cząsteczki pikselowe (GDD §5.5): pula SpriteRendererów, ruch skokowy 12 kl./s, pozycje przyciągnięte do siatki pikseli.
+    /// Cząsteczki pikselowe (GDD §5.5): pula SpriteRendererów, ruch co klatkę, pozycje przyciągnięte do siatki pikseli.
     /// Własny system zamiast ParticleSystem, bo daje ostre piksele i ten sam „skokowy” rytm co reszta animacji.
     /// </summary>
     public class PixelParticles : MonoBehaviour
@@ -12,7 +12,8 @@ namespace Wyspa.Visual
         public static PixelParticles Instance { get; private set; }
 
         const float Ppu = 16f;
-        const float Step = 1f / 12f;
+        // Etap 6c+ (prośba gracza): ruch co klatkę (płynnie), pozycje dalej przyciągnięte do siatki pikseli
+        const float Step = 0f;
         const int MaxParticles = 160;
 
         [SerializeField] Material glowMaterial;

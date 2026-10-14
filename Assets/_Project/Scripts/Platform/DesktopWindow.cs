@@ -23,7 +23,7 @@ namespace Wyspa.Platform
         const int CornerMargin = 8;
         const int SnapDistance = 32;
         /// <summary>Szerokość pasa wody przy brzegu w przezroczystym oknie (piksele gry).</summary>
-        const float ShoreWaterPixels = 18f;
+        public const float ShoreWaterPixels = 18f;
 
         bool frameless, topMost, transparent;
         ScreenCorner corner;

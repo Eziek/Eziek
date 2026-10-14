@@ -277,6 +277,9 @@ Po pobraniu: **Wyspa → 2** (materiał `LightShafts`, nowe klatki ognika i dusz
 4. Ognik: płynny lot po łuku; zbiera do 3 dojrzałych plonów (widać je pod nim), potem leci do skrzyni i wraca.
    Klik w ognika w locie: „W locie: niesie N”. Duszek-handlarz też lata płynnie, a oba unoszą się w miejscu.
 5. F1 → „Shadery efektów” wyłącza też światło (porównanie przed/po).
+6. Bez Wyspa → 3 obiekt `LightShafts` tworzy się sam przy starcie (wystarczy Wyspa → 2 dla materiału).
+7. Płynność: Opcje → Ogólne → Płynność (Eko / Płynna / Max). Rośliny kołyszą się, ryby pływają, cząsteczki i monety lecą płynnie.
+8. Przezroczyste okno w nocy: mgła nad pasem wody jaśniejsza (blada poświata), za wodą rzadkie kłęby; ogniki i runy świecą poświatą.
 
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.

@@ -30,9 +30,12 @@ namespace Wyspa.Visual
         [Header("Dzień / zmierzch / noc")]
         [SerializeField] Color dayColor = new Color(0.13f, 0.10f, 0.055f);
         [SerializeField] Color duskColor = new Color(0.15f, 0.075f, 0.035f);
-        [SerializeField] Color nightColor = new Color(0.045f, 0.06f, 0.10f);
+        [SerializeField] Color nightColor = new Color(0.06f, 0.08f, 0.13f);
         [SerializeField] float dayStrength = 0.55f;
-        [SerializeField] float nightStrength = 0.3f;
+        [SerializeField] float nightStrength = 0.45f;
+        [Header("Poświata świecących obiektów (w nocy)")]
+        [SerializeField] Color wispColor = new Color(0.37f, 0.81f, 0.72f);
+        [SerializeField] Color merchantColor = new Color(0.94f, 0.75f, 0.35f);
 
         Material material;
         Color color;
@@ -114,16 +117,25 @@ namespace Wyspa.Visual
             m.SetFloat(HaloId, halo);
 
             int n = 0;
-            foreach (var lamp in Lamp.All)
+            void Add(Vector2 world, float radiusPx, float power, Color c)
             {
-                if (n >= MaxLamps || lamp == null || !lamp.IsOn || lamp.Definition == null)
-                    continue;
-                var p = Island.WorldToPixel(lamp.LightCenter);
-                lamps[n] = new Vector4(p.x, p.y, lamp.Definition.radius * 16f * 0.7f, Mathf.Clamp01(lamp.Definition.intensity));
-                var lc = lamp.Definition.color;
-                lampColors[n] = new Vector4(lc.r, lc.g, lc.b, 1f);
+                if (n >= MaxLamps)
+                    return;
+                var p = Island.WorldToPixel(world);
+                lamps[n] = new Vector4(p.x, p.y, radiusPx, power);
+                lampColors[n] = new Vector4(c.r, c.g, c.b, 1f);
                 n++;
             }
+            foreach (var lamp in Lamp.All)
+                if (lamp != null && lamp.IsOn && lamp.Definition != null)
+                    Add(lamp.LightCenter, lamp.Definition.radius * 16f * 0.7f, Mathf.Clamp01(lamp.Definition.intensity), lamp.Definition.color);
+            // świecące duszki i runy też dają małą poświatę (płynie razem z lecącym ognikiem)
+            foreach (var w in Automation.WispGardener.All)
+                Add(w.transform.position + new Vector3(0f, 0.6f, 0f), 18f, 0.8f, wispColor);
+            foreach (var m2 in Automation.MerchantSpirit.All)
+                Add(m2.transform.position + new Vector3(0f, 0.7f, 0f), 18f, 0.8f, merchantColor);
+            foreach (var r in Automation.SeedRune.All)
+                Add(r.transform.position + new Vector3(0f, 0.6f, 0f), 13f, 0.6f, wispColor);
             m.SetVectorArray(LampsId, lamps);
             m.SetVectorArray(LampColorsId, lampColors);
             m.SetFloat(LampCountId, n);

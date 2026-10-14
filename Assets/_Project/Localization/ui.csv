@@ -191,3 +191,7 @@ ui.wheel.show_night,Pokaż nasiona nocy,Show night seeds,Nachtsamen zeigen,夜�
 ui.plot.tempo,Tempo pracy: x{0:0.0},Work tempo: x{0:0.0},Arbeitstempo: x{0:0.0},作業テンポ：x{0:0.0},工作节奏：x{0:0.0},
 ui.rhythm.tempo,Tempo x{0:0.0},Tempo x{0:0.0},Tempo x{0:0.0},テンポ x{0:0.0},节奏 x{0:0.0},mnożnik roślin dnia
 ui.wisp.flying,W locie: niesie {0},In flight: carrying {0},Unterwegs: trägt {0},飛行中：{0}個運搬,飞行中：携带{0}个,{0} = plony
+ui.options.smooth,Płynność,Smoothness,Flüssigkeit,なめらかさ,流畅度,klatki na sekundę
+ui.options.smooth.0,Eko,Eco,Eco,省電力,节能,30 / 12 kl./s
+ui.options.smooth.1,Płynna,Smooth,Flüssig,なめらか,流畅,60 / 30 kl./s (domyślnie)
+ui.options.smooth.2,Max,Max,Max,最大,最高,60 / 60 kl./s

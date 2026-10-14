@@ -136,23 +136,26 @@ namespace Wyspa.Sea
             yield return Sail(false);
         }
 
-        /// <summary>Łódź odpływa w mgłę (albo z niej wraca) skokowo, migając przy końcu jak cząsteczki.</summary>
+        /// <summary>Łódź odpływa w mgłę (albo z niej wraca), płynnie znikając.</summary>
         IEnumerator Sail(bool away)
         {
             animating = true;
-            var wait = new WaitForSecondsRealtime(0.15f);
             var dir = new Vector3(0f, -1f, 0f);
             if (body != null) body.enabled = true;
             if (glow != null) glow.enabled = true;
             if (clickArea != null) clickArea.enabled = false;
-            for (int i = 0; i <= 8; i++)
+            // płynnie: łódź odpływa 24 px w mgłę, znikając (albo z niej wypływa)
+            const float duration = 1.4f;
+            for (float time = 0f; time <= duration; time += Time.unscaledDeltaTime)
             {
-                int k = away ? i : 8 - i;
-                transform.position = dock + dir * (k * 3f / Ppu);
-                float a = 1f - k / 8f;
-                if (body != null) body.color = new Color(1f, 1f, 1f, a);
-                yield return wait;
+                float u = Mathf.Clamp01(time / duration);
+                float e = u * u * (3f - 2f * u);
+                float k = away ? e : 1f - e;
+                transform.position = dock + dir * (k * 24f / Ppu);
+                if (body != null) body.color = new Color(1f, 1f, 1f, 1f - k);
+                yield return null;
             }
+            transform.position = away ? dock + dir * (24f / Ppu) : dock;
             Show(!away);
             animating = false;
         }

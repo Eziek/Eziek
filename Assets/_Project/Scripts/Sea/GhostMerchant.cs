@@ -139,12 +139,13 @@ namespace Wyspa.Sea
         IEnumerator Fade(bool appear)
         {
             fading = true;
-            var wait = new WaitForSecondsRealtime(0.15f);
-            // skokowo, jak reszta animacji: wynurza się z mgły w 4 krokach
-            for (int i = 1; i <= 4; i++)
+            // płynnie wynurza się z mgły (albo w niej znika)
+            const float duration = 0.8f;
+            for (float time = 0f; time < duration; time += Time.unscaledDeltaTime)
             {
-                Show(true, appear ? i / 4f : 1f - i / 4f);
-                yield return wait;
+                float u = time / duration;
+                Show(true, appear ? u : 1f - u);
+                yield return null;
             }
             Show(appear, appear ? 1f : 0f);
             fading = false;
@@ -160,10 +161,10 @@ namespace Wyspa.Sea
 
         void LateUpdate()
         {
-            // łódź kołysze się o piksel
+            // łódź płynnie kołysze się na wodzie
             if (!present || fading || body == null)
                 return;
-            float bob = Mathf.FloorToInt(Time.unscaledTime * 2f) % 2 == 0 ? 0f : 1f / Ppu;
+            float bob = (Mathf.Sin(Time.unscaledTime * 1.6f) * 0.8f + 0.5f) / Ppu;
             body.transform.localPosition = new Vector3(0f, bob, 0f);
         }
 

@@ -109,14 +109,14 @@ namespace Wyspa.Visual
         }
 
         /// <summary>
-        /// Środek ryby w świecie - ta sama rachuba co w Water.shader (klatki 10/s, ósemka, zaokrąglenie do pikseli),
+        /// Środek ryby w świecie - ta sama rachuba co w Water.shader (płynny czas, ósemka, zaokrąglenie do pikseli),
         /// więc klik trafia tam, gdzie gracz widzi rybę.
         /// </summary>
         Vector2 FishCenter(int i)
         {
             var f = fish[i];
             float period = material != null && material.HasProperty(FishPeriodId) ? material.GetFloat(FishPeriodId) : 30f;
-            float t = Mathf.Floor(Time.timeSinceLevelLoad * 10f) / 10f;
+            float t = Time.timeSinceLevelLoad;   // jak _Time.y w shaderze
             float a = 2f * Mathf.PI * Frac(t / Mathf.Max(1f, period)) + f.phase;
             float fx = Mathf.Round(f.cx + f.rx * Mathf.Sin(a));
             float fy = Mathf.Round(f.cy + f.ry * Mathf.Sin(2f * a));

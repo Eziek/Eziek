@@ -96,6 +96,8 @@ namespace Wyspa.World
         public Material swayCropGlow;
         public Material swayTree;
         public Material glow;
+        [Tooltip("Światło wolumetryczne (shader LightShafts); Island tworzy obiekt sam, gdy scena go nie ma.")]
+        public Material lightShafts;
 
         public LampDefinition Lamp(string id)
         {

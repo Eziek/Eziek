@@ -957,6 +957,20 @@ namespace Wyspa.UI
                     activity.IdleThresholdSeconds = IdleSteps[Mathf.Clamp(i + d, 0, IdleSteps.Length - 1)];
                 });
             }
+            y += OptRow;
+
+            // płynność animacji = liczba klatek na sekundę (z fokusem / w tle)
+            var perf = AppPerformance.Instance;
+            if (perf != null)
+            {
+                OptLabel("ui.options.smooth", y);
+                float x2 = OptCol;
+                for (int p = 0; p < 3; p++)
+                {
+                    int prof = p;
+                    x2 += OptButton("Smooth" + p, Loc.Get("ui.options.smooth." + p), x2, y, 24f, () => perf.Profile = prof, perf.Profile == p) + 3;
+                }
+            }
             info.text = Loc.Get("ui.options.idle_hint");
         }
 

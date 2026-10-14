@@ -1,8 +1,8 @@
 #ifndef WYSPA_SWAY_INCLUDED
 #define WYSPA_SWAY_INCLUDED
 // Kołysanie sprite'ów i kontur (GDD §5.5). Wymaga wcześniej: CBUFFER z polami poniżej oraz TEXTURE2D(_MainTex).
-// Przesuwamy całe wiersze pikseli o pełne piksele: 0 u podstawy, najwięcej u góry, skokowo 10 kl./s,
-// tak jak w prototypie (tools/pixel-proto/anim.py, sway_fn).
+// Przesuwamy całe wiersze pikseli o pełne piksele: 0 u podstawy, najwięcej u góry (jak w prototypie, anim.py, sway_fn).
+// Czas płynny (prośba gracza): wiersze przeskakują dokładnie wtedy, gdy wypada im piksel, a nie co 0.1 s.
 
 float WyspaStepTime(float fps)
 {
@@ -12,7 +12,7 @@ float WyspaStepTime(float fps)
 float2 WyspaSwayUV(float2 uv)
 {
     float h = floor(uv.y * _MainTex_TexelSize.w) * _MainTex_TexelSize.y;   // 0 = dolny wiersz tekstury
-    float t = WyspaStepTime(10.0);
+    float t = _Time.y;
     float s = sin(6.2831853 * _SwaySpeed * t + _SwayPhase);
     float shift = round(_SwayAmount * s * h);
     uv.x -= shift * _MainTex_TexelSize.x;

@@ -152,15 +152,18 @@ namespace Wyspa.Farming
             popRoutine = StartCoroutine(PopRoutine());
         }
 
-        /// <summary>Squash &amp; stretch przy zmianie fazy - nagroda za pracę. Skokowo, jak reszta animacji.</summary>
+        /// <summary>Squash &amp; stretch przy zmianie fazy - nagroda za pracę. Płynnie: wydłużenie, spłaszczenie, sprężyste wygaszenie.</summary>
         IEnumerator PopRoutine()
         {
             var t = cropRenderer.transform;
-            var wait = new WaitForSecondsRealtime(0.1f);
-            t.localScale = new Vector3(0.85f, 1.3f, 1f);
-            yield return wait;
-            t.localScale = new Vector3(1.15f, 0.85f, 1f);
-            yield return wait;
+            const float duration = 0.35f;
+            for (float time = 0f; time < duration; time += Time.unscaledDeltaTime)
+            {
+                float u = time / duration;
+                float k = Mathf.Sin(u * Mathf.PI * 2.5f) * (1f - u);   // gasnąca sprężyna
+                t.localScale = new Vector3(1f - 0.18f * k, 1f + 0.3f * k, 1f);
+                yield return null;
+            }
             t.localScale = Vector3.one;
             popRoutine = null;
         }

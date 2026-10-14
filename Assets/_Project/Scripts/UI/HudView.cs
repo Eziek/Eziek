@@ -217,11 +217,10 @@ namespace Wyspa.UI
             img.enabled = false;
             float t = -delay;
             const float duration = 0.7f;
-            const float step = 1f / 12f;   // skokowo, jak reszta animacji
-            var wait = new WaitForSecondsRealtime(step);
+            // płynnie, co klatkę (pozycja zaokrąglona do pikseli UI)
             while (t < duration)
             {
-                t += step;
+                t += Time.unscaledDeltaTime;
                 if (t >= 0f)
                 {
                     img.enabled = img.sprite != null;
@@ -231,7 +230,7 @@ namespace Wyspa.UI
                     var pos = (1 - u) * (1 - u) * start + 2 * (1 - u) * u * ctrl + u * u * end;
                     rt.anchoredPosition = new Vector2(Mathf.Round(pos.x), Mathf.Round(pos.y));
                 }
-                yield return wait;
+                yield return null;
             }
             Destroy(img.gameObject);
             pending.TryGetValue(type, out int p);

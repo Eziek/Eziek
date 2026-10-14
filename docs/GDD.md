@@ -35,7 +35,7 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 | Wykrywanie aktywności | `GetLastInputInfo` (user32.dll), czyli czas od ostatniego inputu w całym systemie. Bez globalnych hooków, więc antywirusy nie reagują. Gracz jest „aktywny”, gdy od ostatniego inputu minęło < ~60 s |
 | Okno | Zwykłe małe okno albo (opcje, Etap 6a) bez ramki / zawsze na wierzchu / w rogu ekranu / przezroczyste. **Własny kod WinAPI** (`Scripts/Platform/`), bez paczki UniWindowController |
 | Praca w tle | `Application.runInBackground = true` |
-| Wydajność (krytyczna, gra działa godzinami) | Animacje skokowe ok. **10 kl./s**, więc `targetFrameRate` 10–15 w tle i ~30 przy hoverze. `vSyncCount = 0`. Rozważyć `OnDemandRendering`. Symulacja w tickach (np. co 1 s), nie w każdym `Update` |
+| Wydajność (krytyczna, gra działa godzinami) | **Zmiana po teście (§9, 42):** opcja Płynność, domyślnie 60/30 kl./s, ruch płynny. Pierwotnie: animacje skokowe ok. **10 kl./s**, więc `targetFrameRate` 10–15 w tle i ~30 przy hoverze. `vSyncCount = 0`. Rozważyć `OnDemandRendering`. Symulacja w tickach (np. co 1 s), nie w każdym `Update` |
 | Batching | Jeden materiał dla roślin. Faza kołysania liczona z pozycji w świecie, a nie z właściwości per-renderer |
 | Zapis | JSON w `Application.persistentDataPath`, autosave co ~1 min i przy wyjściu |
 | Postęp offline | Przy starcie liczymy, ile **nocnych godzin** minęło od zamknięcia, i doliczamy wzrost roślin nocy. Rośliny dnia offline **nie** rosną |
@@ -449,6 +449,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     iskierki odbić na wodzie tam, gdzie pada światło (w kolorze lampy/słońca), płynny lot duszków po łuku i unoszenie
     w kodzie zamiast skaczących klatek, ognik zbiera na jeden kurs do 3 plonów (zbiór w chwili dolotu, niesione plony
     widać pod nim) i dopiero wtedy leci do skrzyni.
+42. Po teście: płynność wszystkich animacji (prośba gracza; zmienia wcześniejsze „skokowo ~10 kl./s” z §2 i §5.5):
+    opcja Płynność (Eko 30/12, Płynna 60/30 domyślnie, Max 60/60 kl./s z fokusem/w tle), kołysanie roślin, ryby, mgła i snopy
+    w płynnym czasie, cząsteczki, lot monet, „pyknięcie” rośliny, łódź kupca i łódź wypraw co klatkę. Klatki sprite'ów
+    (płomień, macki) i miganie piany zostają rysunkowe. Mgła w przezroczystym oknie jaśniejsza w nocy, za wodą rzadkie
+    kłęby (ok. 10 px). Poświata także wokół ogników, duszków i run; obiekt LightShafts tworzy się sam, gdy scena go nie ma.
 40. Fonty CJK: Fusion Pixel 8px (JA i zh-Hans) jako zapasowe dla `WyspaPixel` (§16.2). Log z buildu pokazywał kwadraciki
     zamiast „日本語” i „简体中文” na przyciskach języków.
 
