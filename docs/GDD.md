@@ -30,7 +30,7 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 
 | Temat | Decyzja |
 |---|---|
-| Silnik | **Unity 6.3 LTS (`6000.3.26f1`)**, szablon **Universal 2D** (URP z 2D Rendererem), Shader Graph, Input System |
+| Silnik | **Unity 6.6 (`6000.6.5f1`)**, szablon **Universal 2D** (URP z 2D Rendererem), Shader Graph, Input System |
 | Platforma | **Windows** (na start) |
 | Wykrywanie aktywności | `GetLastInputInfo` (user32.dll), czyli czas od ostatniego inputu w całym systemie. Bez globalnych hooków, więc antywirusy nie reagują. Gracz jest „aktywny”, gdy od ostatniego inputu minęło < ~60 s |
 | Okno | Na start zwykłe małe okno. Później bez ramki / zawsze na wierzchu / przezroczyste (paczka **UniWindowController**, kirurobo) |
@@ -249,7 +249,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Siatka 16 px czy 32 px (rekomendacja: 32).
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
-- [x] Wersja Unity: **6.3 LTS (6000.3.26f1)**.
+- [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
 - [ ] Liczby balansu (przychód Esencji, zużycie lamp, czasy wzrostu, ceny).
 - [ ] Zasady stawiania lamp (dowolnie czy na slotach) i jak liczyć oświetlenie pól.
 - [ ] Noc: stałe godziny, ustawiane w opcjach czy wschód i zachód z lokalizacji.
@@ -312,7 +312,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 8. Woda w warstwach: ryby pod wodą, fale morskie.
 9. Zaakceptowane: rośliny dnia i nocy, **Esencja z pracy zasila lampy**, **mgła poza wyspą na krawędziach okna**,
    zdarzenia nocne.
-10. Start kodu: **Unity 6.3 LTS**. Gracz kopiuje `Assets/_Project` do projektu z szablonu Universal 2D.
+10. Start kodu: Unity 6.3 LTS (później zmienione na 6.6, pkt 23). Gracz kopiuje `Assets/_Project` do projektu z szablonu Universal 2D.
     Etap 1 to szkielet systemów + scena budowana z menu „Wyspa”.
 11. Przyjęty **cały system ulepszeń i progresji** (§11): automatyzacja, rytm pracy (seria skupienia, bonus za przerwę,
     zmęczenie), powiększanie wyspy ze strefami, lampy z trzema kierunkami ulepszeń, mutacje i jakość, morze i wyprawy,
@@ -333,6 +333,8 @@ Obrazki referencyjne (kopie): `docs/img/`
 20. Światło świecących drzew **liczy się jak lampa** dla wzrostu (bez kosztu Esencji, tylko gdy owocują).
 21. **Lokalizacja: PL, EN, DE, JA, ZH** (§16). Font dla JA/ZH: Fusion Pixel Font (OFL 1.1).
 22. **Nazwa gry: Pockland.** Chiński: uproszczony. Rozmiar fontu sprawdzimy później.
+23. **Unity 6.6 (6000.6.5f1)** zamiast 6.3 LTS. To wydanie bez LTS, wspierane do wyjścia kolejnego:
+    aktualizujemy łatki 6000.6.x, a przejście na następne wydanie (np. kolejne LTS) robimy świadomie, z kopią na osobnej gałęzi.
 
 ---
 

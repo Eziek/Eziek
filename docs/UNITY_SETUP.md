@@ -1,14 +1,14 @@
 # Uruchomienie w Unity
 
-**Wersja:** Unity **6.3 LTS**, czyli `6000.3.26f1` (najnowsza wersja LTS z 2026-10-08, wsparcie do grudnia 2027).
-Każda nowsza łatka `6000.3.x` też będzie dobra.
+**Wersja:** Unity **6.6**, czyli `6000.6.5f1` (wydanie polecane przez Hub). Każda nowsza łatka `6000.6.x` też będzie dobra.
+To wydanie bez LTS, więc na kolejne wydanie Unity przechodzimy świadomie (kopia projektu na osobnej gałęzi).
 
 ## 0. Instalacja (raz)
 1. **Klient Gita:** GitHub Desktop (https://desktop.github.com) **albo Fork** (https://git-fork.com, ma wbudowanego Gita;
    darmowy okres próbny, potem jednorazowa licencja). W Fork: File → Accounts → dodaj konto GitHub.
 2. **Unity Hub:** https://unity.com/download. Zaloguj się (Unity ID) i aktywuj darmową licencję **Personal**
    (Hub → Preferences → Licenses → Add).
-3. W Hub: **Installs → Install Editor → 6.3 LTS** (`6000.3.26f1` lub nowsza łatka 6000.3.x). Zaznacz moduły:
+3. W Hub: **Installs → Install Editor → Unity 6.6** (`6000.6.5f1`, oznaczone „Recommended”). Zaznacz moduły:
    - **Windows Build Support (IL2CPP)**,
    - **Microsoft Visual Studio Community** (edytor kodu; jeśli masz już Rider albo VS Code, pomiń).
 
@@ -18,7 +18,7 @@ Repo jest od razu projektem Unity: `Assets/`, `Packages/` i `ProjectSettings/` w
 1. **Sklonuj repo:** GitHub Desktop → File → Clone repository → `Eziek/Eziek` → folder np. `C:\Projekty\Pockland`.
 2. **Gałąź `main`:** przełącz na `claude/unity-project-discussion-rlr9ae`, potem Branch → New branch → `main`
    (na bazie bieżącej). Na `main` będzie projekt z Unity.
-3. **Projekt tymczasowy z szablonu:** Unity Hub → New project → Unity 6.3 LTS → szablon **Universal 2D**
+3. **Projekt tymczasowy z szablonu:** Unity Hub → New project → Unity 6.6 → szablon **Universal 2D**
    → nazwa `Pockland` → lokalizacja **inna niż repo**, np. `C:\Projekty\Tmp`. Create, poczekaj na otwarcie edytora i **zamknij Unity**.
 
    Dlaczego tak: Hub nie tworzy projektu w niepustym folderze, a szablon Universal 2D ma gotowy URP z 2D Rendererem
@@ -42,7 +42,7 @@ Repo jest od razu projektem Unity: `Assets/`, `Packages/` i `ProjectSettings/` w
    (z zaznaczonym Checkout); commit w widoku Local Changes (Stage All → opis → Commit); push przyciskiem Push
    (gałąź `main` do `origin`, z opcją śledzenia).
 8. **Commit i push:** w GitHub Desktop (albo Fork) powinny być zmiany w `Assets/` (z plikami `.meta`), `Packages/` i `ProjectSettings/`,
-   a **nie** w `Library/` ani `Temp/`. Wpisz opis (np. „Projekt Unity 6.3, szablon Universal 2D”) → Commit to main →
+   a **nie** w `Library/` ani `Temp/`. Wpisz opis (np. „Projekt Unity 6.6, szablon Universal 2D”) → Commit to main →
    **Publish branch**.
 9. **Domyślna gałąź:** na GitHubie Settings → Branches → Default branch → `main`.
 
