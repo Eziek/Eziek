@@ -592,6 +592,9 @@ Obrazki referencyjne (kopie): `docs/img/`
 68. Etap 7, część 2: teren w 32 px (`IslandPainter.PaintHi`, podgląd `docs/img/art32_teren.png`): brzeg wygładzony Scale2x,
     trawa w płatach z kępkami i kwiatkami, klif z poziomymi warstwami ziemi, kamieniami, korzeniami i zwisającą trawą,
     kontur 1 px i linia piany. Logika (maska, dane wody, pozycje) zostaje w siatce 16 px.
+69. Etap 7, część 3a: woda w shaderze w 32 px (odległość od brzegu interpolowana): dno z kamieniami i wodorostami
+    z paralaksą względem kamery i załamaniem przy brzegu, światełka przy dnie (nocą świecą), fale idące do brzegu
+    i rozbijające się w pianę z rozbryzgiem i cofką, kręgi na wodzie. Ryby, potwór, połyski i odbicia lamp zostają.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
