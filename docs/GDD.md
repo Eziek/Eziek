@@ -335,6 +335,8 @@ Obrazki referencyjne (kopie): `docs/img/`
 22. **Nazwa gry: Pockland.** Chiński: uproszczony. Rozmiar fontu sprawdzimy później.
 23. **Unity 6.6 (6000.6.5f1)** zamiast 6.3 LTS. To wydanie bez LTS, wspierane do wyjścia kolejnego:
     aktualizujemy łatki 6000.6.x, a przejście na następne wydanie (np. kolejne LTS) robimy świadomie, z kopią na osobnej gałęzi.
+24. Etap 1 przetestowany w Unity (sadzenie, wzrost, zbiór działają). Start Etapu 2 w częściach: 2a waluty + ulepszenia + rytm pracy,
+    2b automatyzacja, 2c docelowe UI z lokalizacją.
 
 ---
 
@@ -355,7 +357,9 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Lighting/LampDefinition.cs`, `Lamp.cs` | lampa: Esencja na minutę, zasięg, kolor, mnożnik wzrostu, Light2D + glow (Unlit) |
 | `Scripts/Lighting/Illumination.cs` | czy punkt jest oświetlony (dzień albo lampa) |
 | `Scripts/Lighting/DayNightLighting.cs` | Global Light 2D: kolor (Gradient) i jasność (krzywa) wg godziny, `minBrightness` |
-| `Scripts/Economy/Wallet.cs` | monety (start 50) |
+| `Scripts/Economy/Currency.cs`, `Wallet.cs` | waluty (§11.2: monety, plony nocy, odłamki, łuski, dary, drewno, kamień), portfel na wszystkie, start 50 monet |
+| `Scripts/Upgrades/*` | `UpgradeDefinition` (poziomy z kosztem w wielu walutach + wartość efektu, wymagania), `UpgradeDatabase`, `UpgradeState` (posiadane poziomy, zakup), `UpgradeIds` |
+| `Scripts/Core/WorkRhythm.cs` | rytm pracy: seria skupienia, „odświeżony” po przerwie, zmęczenie; mnożnik Esencji |
 | `Scripts/Save/SaveSystem.cs` | JSON w persistentDataPath, autosave co 60 s, offline: rośliny nocy rosną za godziny nocy |
 | `Scripts/Input/ClickRouter.cs` | klik, potem Collider2D, potem `IClickable` (Input System albo stary Input) |
 | `Scripts/UI/DebugHud.cs` | tymczasowy HUD IMGUI: monety, Esencja, nasiona, pora dnia, czas x60 |
@@ -469,7 +473,8 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 
 ### 11.7 Etapy implementacji
 - **Etap 1 (gotowy):** szkielet systemów (§10).
-- **Etap 2:** fundament ulepszeń (`UpgradeDefinition`/`UpgradeState`/`Currencies`), sklep (proste UI), słój,
+- **Etap 2a (gotowy, do testu w Unity):** waluty, fundament ulepszeń (dane + zakup w HUD debugowym), słój Esencji, rytm pracy, zapis v2. Rośliny nocy dają „plony nocy”.
+- **Etap 2 (reszta):** fundament ulepszeń (`UpgradeDefinition`/`UpgradeState`/`Currencies`), sklep (proste UI), słój,
   **rytm pracy**, **ognik-ogrodnik + skrzynia + pamięć ziemi + skrzynia kupca**.
 - **Etap 3:** shadery (kołysanie, woda, mgła), cząsteczki (monety, iskierki, listki), powiększanie wyspy z cofaniem mgły.
 - **Etap 4:** rośliny nocy (grafiki), kupiec-widmo, pomost i łowienie, łódź i wyprawy, mutacje i jakość.

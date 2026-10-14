@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Wyspa.Core;
+using Wyspa.Economy;
 using Wyspa.Input;
 
 namespace Wyspa.Farming
@@ -51,6 +52,8 @@ namespace Wyspa.Farming
             if (state.IsRipe)
             {
                 game.Wallet.Add(state.crop.sellPrice);
+                if (state.crop.kind == CropKind.Night)
+                    game.Wallet.Add(CurrencyType.NightHarvest, state.crop.nightHarvestYield);
                 state.Clear();
                 RefreshVisual();
             }

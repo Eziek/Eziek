@@ -55,7 +55,7 @@ namespace UnityEngine
     public class GUIContent { public static GUIContent none; }
     public class GUISkin { public GUIStyle box; }
     public class GUIStyle { }
-    public static class GUI { public static GUISkin skin; public static Color color; public static void Box(Rect r, GUIContent c) { } public static void DrawTexture(Rect r, Texture2D t) { } }
+    public static class GUI { public static GUISkin skin; public static Color color; public static bool enabled; public static void Box(Rect r, GUIContent c) { } public static void DrawTexture(Rect r, Texture2D t) { } }
     public class GUILayoutOption { }
     public static class GUILayout { public static void BeginArea(Rect r, GUIStyle s) { } public static void EndArea() { } public static Vector2 BeginScrollView(Vector2 v, params GUILayoutOption[] o) => v; public static void EndScrollView() { } public static void Label(string s, params GUILayoutOption[] o) { } public static bool Button(string s, params GUILayoutOption[] o) => false; public static bool Toggle(bool v, string s, params GUILayoutOption[] o) => v; public static void Space(float f) { } public static void BeginHorizontal(params GUILayoutOption[] o) { } public static void EndHorizontal() { } }
     public static class GUILayoutUtility { public static Rect GetRect(float w, float h) => default; }

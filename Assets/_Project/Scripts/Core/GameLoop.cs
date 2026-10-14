@@ -4,6 +4,7 @@ using Wyspa.Economy;
 using Wyspa.Farming;
 using Wyspa.Lighting;
 using Wyspa.Save;
+using Wyspa.Upgrades;
 
 namespace Wyspa.Core
 {
@@ -22,6 +23,8 @@ namespace Wyspa.Core
         [SerializeField] Wallet wallet;
         [SerializeField] CropDatabase crops;
         [SerializeField] SaveSystem saveSystem;
+        [SerializeField] WorkRhythm rhythm;
+        [SerializeField] UpgradeState upgrades;
 
         [SerializeField] float tickInterval = 1f;
 
@@ -36,6 +39,8 @@ namespace Wyspa.Core
         public EssenceStore Essence => essence;
         public Wallet Wallet => wallet;
         public CropDatabase Crops => crops;
+        public WorkRhythm Rhythm => rhythm;
+        public UpgradeState Upgrades => upgrades;
 
         public float DebugTimeScale
         {
@@ -46,12 +51,26 @@ namespace Wyspa.Core
         void Awake()
         {
             Instance = this;
+            // starsze sceny (sprzed Etapu 2a) nie mają tych komponentów - dokładamy je w locie
+            // (bez operatora ??, bo „pusty” obiekt Unity nie jest prawdziwym null)
+            if (rhythm == null) rhythm = GetComponent<WorkRhythm>();
+            if (rhythm == null) rhythm = gameObject.AddComponent<WorkRhythm>();
+            if (upgrades == null) upgrades = GetComponent<UpgradeState>();
+            if (upgrades == null) upgrades = gameObject.AddComponent<UpgradeState>();
+            upgrades.Changed += ApplyUpgrades;
+        }
+
+        /// <summary>Przelicza efekty ulepszeń na systemy (wołane po zakupie i po wczytaniu gry).</summary>
+        public void ApplyUpgrades()
+        {
+            essence.SetCapacity(upgrades.Value(UpgradeIds.EssenceJar, essence.BaseCapacity));
         }
 
         void Start()
         {
             if (SeedSelection.Current == null && crops != null && crops.crops.Count > 0)
                 SeedSelection.Current = crops.crops[0];
+            ApplyUpgrades();
             if (saveSystem != null)
                 saveSystem.Load(this);
             foreach (var plot in FarmPlot.All)
@@ -60,6 +79,8 @@ namespace Wyspa.Core
 
         void OnDestroy()
         {
+            if (upgrades != null)
+                upgrades.Changed -= ApplyUpgrades;
             if (Instance == this)
                 Instance = null;
         }
@@ -79,8 +100,9 @@ namespace Wyspa.Core
             activity.Refresh();
             bool night = clock.IsNight;
 
+            rhythm.Tick(activity.IsActive, dt, System.DateTime.Now);
             if (activity.IsActive)
-                essence.AddActiveSeconds(dt);
+                essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier);
 
             // Najtańsze lampy dostają Esencję pierwsze - gdy jej braknie, gasną najdroższe.
             lampOrder.Clear();

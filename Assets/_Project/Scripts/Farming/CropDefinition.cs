@@ -26,6 +26,9 @@ namespace Wyspa.Farming
         public int seedPrice = 5;
         public int sellPrice = 12;
 
+        [Tooltip("Rośliny nocy: ile „plonów nocy” (waluta) daje zbiór.")]
+        public int nightHarvestYield = 1;
+
         public Sprite StageSprite(int stage)
         {
             if (stages == null || stages.Length == 0 || stage < 0)

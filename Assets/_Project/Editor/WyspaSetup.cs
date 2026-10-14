@@ -13,6 +13,7 @@ using Wyspa.Input;
 using Wyspa.Lighting;
 using Wyspa.Save;
 using Wyspa.UI;
+using Wyspa.Upgrades;
 
 namespace Wyspa.EditorTools
 {
@@ -51,6 +52,30 @@ namespace Wyspa.EditorTools
             new CropSpec { id = "moonflower", name = "Księżycowy kwiat", sprite = "crop_moonflower", kind = CropKind.Night, seconds = 4 * 3600, seed = 20, sell = 60 },
             new CropSpec { id = "ghostpumpkin", name = "Upiorna dynia", sprite = "crop_ghostpumpkin", kind = CropKind.Night, seconds = 6 * 3600, seed = 30, sell = 90 },
             new CropSpec { id = "bloodrose", name = "Krwawa róża", sprite = "crop_bloodrose", kind = CropKind.Night, seconds = 8 * 3600, seed = 50, sell = 200 },
+        };
+
+        struct UpgradeSpec
+        {
+            public string id, name;
+            public UpgradeCategory category;
+            public (float value, CurrencyAmount[] cost)[] levels;
+            public string[] requires;
+        }
+
+        static CurrencyAmount Coins(int n) => new CurrencyAmount(CurrencyType.Coins, n);
+        static CurrencyAmount Night(int n) => new CurrencyAmount(CurrencyType.NightHarvest, n);
+
+        // GDD §11.3 (wartości wstępne do balansu)
+        static readonly UpgradeSpec[] UpgradeSpecs =
+        {
+            new UpgradeSpec { id = UpgradeIds.EssenceJar, name = "Słój Esencji", category = UpgradeCategory.Essence,
+                levels = new[] { (120f, new[] { Coins(100) }), (240f, new[] { Coins(400) }), (480f, new[] { Coins(1500) }) } },
+            new UpgradeSpec { id = UpgradeIds.WispGardener, name = "Ognik-ogrodnik", category = UpgradeCategory.Automation,
+                levels = new[] { (30f, new[] { Coins(300), Night(5) }) } },
+            new UpgradeSpec { id = UpgradeIds.SoilMemory, name = "Pamięć ziemi", category = UpgradeCategory.Automation,
+                levels = new[] { (1f, new[] { Coins(500) }) }, requires = new[] { UpgradeIds.WispGardener } },
+            new UpgradeSpec { id = UpgradeIds.MerchantChest, name = "Skrzynia kupca", category = UpgradeCategory.Automation,
+                levels = new[] { (3600f, new[] { Coins(800) }) }, requires = new[] { UpgradeIds.WispGardener } },
         };
 
         static readonly Dictionary<string, LampSpec> LampSpecs = new Dictionary<string, LampSpec>
@@ -151,9 +176,43 @@ namespace Wyspa.EditorTools
                 }
             }
 
+            CreateUpgrades();
             GlowMaterial();
             AssetDatabase.SaveAssets();
             Debug.Log("[Wyspa] Dane utworzone w " + DataDir);
+        }
+
+        static UpgradeDatabase CreateUpgrades()
+        {
+            EnsureFolder(DataDir + "/Upgrades");
+            var db = LoadOrCreate<UpgradeDatabase>(DataDir + "/UpgradeDatabase.asset");
+            db.upgrades.Clear();
+            var byId = new Dictionary<string, UpgradeDefinition>();
+            foreach (var spec in UpgradeSpecs)
+            {
+                var u = LoadOrCreate<UpgradeDefinition>($"{DataDir}/Upgrades/Upgrade_{spec.id}.asset");
+                u.id = spec.id;
+                u.nameKey = $"upgrade.{spec.id}.name";
+                u.descriptionKey = $"upgrade.{spec.id}.desc";
+                u.debugName = spec.name;
+                u.category = spec.category;
+                u.levels = new List<UpgradeLevel>();
+                foreach (var (value, cost) in spec.levels)
+                    u.levels.Add(new UpgradeLevel { value = value, cost = new List<CurrencyAmount>(cost) });
+                byId[spec.id] = u;
+                db.upgrades.Add(u);
+            }
+            foreach (var spec in UpgradeSpecs)
+            {
+                var u = byId[spec.id];
+                u.requires = new List<UpgradeRequirement>();
+                if (spec.requires != null)
+                    foreach (var r in spec.requires)
+                        u.requires.Add(new UpgradeRequirement { upgrade = byId[r], minLevel = 1 });
+                EditorUtility.SetDirty(u);
+            }
+            EditorUtility.SetDirty(db);
+            return db;
         }
 
         // =====================================================================
@@ -175,6 +234,7 @@ namespace Wyspa.EditorTools
             // Assety ładujemy dopiero PO NewScene - tworzenie sceny zwalnia nieużywane obiekty
             // i wcześniejsze referencje stawały się puste (pole Crops w GameLoop było null).
             var db = AssetDatabase.LoadAssetAtPath<CropDatabase>(DataDir + "/CropDatabase.asset");
+            var upgradeDb = AssetDatabase.LoadAssetAtPath<UpgradeDatabase>(DataDir + "/UpgradeDatabase.asset");
             var glowMat = GlowMaterial();
             if (db == null)
                 Debug.LogError("[Wyspa] Nie znaleziono " + DataDir + "/CropDatabase.asset - uruchom Wyspa > 2.");
@@ -263,6 +323,8 @@ namespace Wyspa.EditorTools
             var essence = game.AddComponent<EssenceStore>();
             var wallet = game.AddComponent<Wallet>();
             var save = game.AddComponent<SaveSystem>();
+            var rhythm = game.AddComponent<WorkRhythm>();
+            var upgradeState = game.AddComponent<UpgradeState>();
             var loop = game.AddComponent<GameLoop>();
             game.AddComponent<AppPerformance>();
             var dayNight = game.AddComponent<DayNightLighting>();
@@ -270,7 +332,8 @@ namespace Wyspa.EditorTools
             game.AddComponent<DebugHud>();
 
             SetRefs(loop, ("activity", activity), ("clock", clock), ("essence", essence), ("wallet", wallet),
-                ("crops", db), ("saveSystem", save));
+                ("crops", db), ("saveSystem", save), ("rhythm", rhythm), ("upgrades", upgradeState));
+            SetRefs(upgradeState, ("database", upgradeDb));
             SetRefs(dayNight, ("clock", clock), ("globalLight", global));
             SetRefs(click, ("targetCamera", cam));
 

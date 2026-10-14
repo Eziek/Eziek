@@ -1,0 +1,15 @@
+﻿key,pl,en,de,ja,zh-Hans,uwagi
+upgrade.essence_jar.name,Słój Esencji,Essence Jar,Essenzglas,エッセンスの瓶,精华罐,
+upgrade.essence_jar.desc,Mieści więcej Esencji: {0}.,Holds more Essence: {0}.,Fasst mehr Essenz: {0}.,エッセンスの容量：{0},精华容量：{0},{0} = pojemność
+upgrade.wisp_gardener.name,Ognik-ogrodnik,Wisp Gardener,Irrlichtgärtner,鬼火の庭師,鬼火园丁,
+upgrade.wisp_gardener.desc,Co {0} s zbiera dojrzałe plony do skrzyni.,Harvests ripe crops into the crate every {0} s.,Erntet alle {0} s reife Pflanzen in die Kiste.,{0}秒ごとに実った作物を箱に収穫する。,每{0}秒将成熟作物收进箱子。,
+upgrade.soil_memory.name,Pamięć ziemi,Soil Memory,Erdgedächtnis,大地の記憶,大地之忆,
+upgrade.soil_memory.desc,Po zbiorze grządka sama sadzi to samo.,"After harvest, the plot replants the same seed.",Nach der Ernte pflanzt das Beet dasselbe erneut.,収穫後、同じ種を自動で植える。,收获后自动种下相同的种子。,
+upgrade.merchant_chest.name,Skrzynia kupca,Merchant's Chest,Händlertruhe,商人の箱,商人宝箱,
+upgrade.merchant_chest.desc,Raz na godzinę sprzedaje zawartość skrzyni (90% ceny).,Sells the crate's contents once an hour (90% price).,Verkauft stündlich den Kisteninhalt (90 % des Preises).,1時間ごとに箱の中身を売る（価格の90%）。,每小时出售箱中物品（90%价格）。,DE: spacja przed %
+rhythm.streak.status,Seria {0} min,Streak {0} min,Serie {0} Min.,連続{0}分,连续{0}分钟,
+rhythm.streak.bonus,Seria skupienia +{0}%,Focus streak +{0}%,Fokusserie +{0} %,集中の連続 +{0}%,专注连续 +{0}%,
+rhythm.refreshed.status,Odświeżony +{0}% ({1} min),Refreshed +{0}% ({1} min),Erfrischt +{0} % ({1} Min.),リフレッシュ +{0}%（{1}分）,精神焕发 +{0}%（{1}分钟）,
+rhythm.fatigue.status,Zmęczenie: Esencja ×{0},Fatigue: Essence ×{0},Erschöpfung: Essenz ×{0},疲労：エッセンス×{0},疲劳：精华×{0},
+rhythm.today,Dziś: {0} h pracy,Today: {0} h of work,Heute: {0} Std. Arbeit,今日の作業：{0}時間,今日工作：{0}小时,
+cur.night_harvest.gain,+{0} {0:plural:plon nocy|plony nocy|plonów nocy},+{0} night {0:plural:harvest|harvests},+{0} Nachternte,夜の作物 +{0},夜间作物 +{0},

@@ -74,6 +74,17 @@ Potem naciśnij **Play**.
 - **Wymuś aktywność:** do testów bez ruszania myszą.
 - **Zapis** trafia do `%USERPROFILE%/AppData/LocalLow/<firma>/<projekt>/save.json` (co minutę i przy wyjściu).
 
+## 4a. Etap 2a: waluty, ulepszenia, rytm pracy (test)
+Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (dodaje dane ulepszeń i nowe komponenty), potem Play.
+- **Ulepszenia** w HUD: Słój Esencji (pojemność 60 → 120 → 240 → 480), Ognik-ogrodnik, Pamięć ziemi, Skrzynia kupca.
+  Zakup działa i zapisuje się, a efekty automatyzacji dojdą w Etapie 2b. Szybki test: przycisk **Cheat: +500 monet**.
+- **Rytm pracy:**
+  - przy **x60** po ok. 25 s aktywności pojawia się „Seria … (+25%)”, a Esencja rośnie szybciej;
+  - **przerwa:** odznacz „Wymuś aktywność” i nie ruszaj myszą. Po ok. 5–30 s (przy x60) wróć, a pojawi się „odświeżony”;
+  - **zmęczenie** po 8 h pracy w dobie (przy x60 ok. 8 min).
+- **Rośliny nocy** dają przy zbiorze **plony nocy** (waluta do ulepszeń).
+- Stary zapis gry wczyta się bez utraty monet (zapis v2).
+
 ## 4b. UI i font (przygotowane, jeszcze niepodpięte w kodzie)
 - Sprite'y UI: `Assets/_Project/Art/Sprites/UI/Kit` (9-slice ustawiony automatycznie) i `UI/Icons`.
 - Font: `Assets/_Project/Art/Fonts/WyspaPixel.ttf`. W **Window → TextMeshPro → Font Asset Creator** ustaw:

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Wyspa.Core;
+using Wyspa.Economy;
+using Wyspa.Upgrades;
 using Wyspa.Farming;
 
 namespace Wyspa.Save
@@ -10,12 +12,16 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 1;
+        public int version = 2;
         public long savedAtUtcTicks;
-        public int coins;
+        public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
-        public float essenceCapacity;
+        public float essenceCapacity;           // v1 (v2 liczy pojemność z ulepszeń)
         public List<PlotSave> plots = new List<PlotSave>();
+        public List<CurrencyAmount> currencies = new List<CurrencyAmount>();
+        public List<UpgradeSave> upgrades = new List<UpgradeSave>();
+        public long rhythmDayTicks;
+        public float rhythmDailySeconds;
     }
 
     [Serializable]
@@ -73,6 +79,10 @@ namespace Wyspa.Save
                 coins = game.Wallet.Coins,
                 essence = game.Essence.Amount,
                 essenceCapacity = game.Essence.Capacity,
+                currencies = game.Wallet.Snapshot(),
+                upgrades = game.Upgrades.Snapshot(),
+                rhythmDayTicks = game.Rhythm.SaveDayTicks,
+                rhythmDailySeconds = game.Rhythm.SaveDailySeconds,
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth });
@@ -106,10 +116,14 @@ namespace Wyspa.Save
             if (data == null)
                 return;
 
-            game.Wallet.Set(data.coins);
-            if (data.essenceCapacity > 0f)
-                game.Essence.SetCapacity(data.essenceCapacity);
+            if (data.version >= 2 && data.currencies != null && data.currencies.Count > 0)
+                game.Wallet.Restore(data.currencies);
+            else
+                game.Wallet.Set(data.coins);
+            game.Upgrades.Restore(data.upgrades);
+            game.ApplyUpgrades();                // pojemność słoja przed ustawieniem Esencji
             game.Essence.Set(data.essence);
+            game.Rhythm.Restore(data.rhythmDayTicks, data.rhythmDailySeconds, DateTime.Now);
 
             var savedAt = new DateTime(data.savedAtUtcTicks, DateTimeKind.Utc).ToLocalTime();
             float offlineNight = game.Clock.NightSecondsBetween(savedAt, DateTime.Now);
