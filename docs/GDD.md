@@ -589,6 +589,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     paleta dark fantasy, poświaty liczone od nowa). Świat w tych samych jednostkach (kafelek = 1), importer PPU 32 dla grafik
     z "hd": 2, kamera PPU 32 i kadr x2; skala okna parzysta (Opcje: x1-x3 w pikselach 32 px). Kołysanie x2 (piksele tekstury).
     Teren, woda i mgła jeszcze w 16 px (części 2-3).
+68. Etap 7, część 2: teren w 32 px (`IslandPainter.PaintHi`, podgląd `docs/img/art32_teren.png`): brzeg wygładzony Scale2x,
+    trawa w płatach z kępkami i kwiatkami, klif z poziomymi warstwami ziemi, kamieniami, korzeniami i zwisającą trawą,
+    kontur 1 px i linia piany. Logika (maska, dane wody, pozycje) zostaje w siatce 16 px.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
