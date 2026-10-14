@@ -336,7 +336,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] HUD (Etap 6d, wybór gracza): **jeden pasek nad wyspą** (waluty i Esencja u góry, rytm, tempo i zegar pod spodem),
   idzie za lądem, chowa się po 5 s bez ruchu myszy, w mini-trybie go nie ma. Toasty w prawym górnym rogu okna.
 - [x] Wprowadzenie (Etap 6d, wybór gracza): **tablica ogłoszeń** na czwartym kafelku nowej wyspy (zamiast dekoracji startowej),
-  5 zadań (posadź, pracuj, zbierz, kup lampę, dokup kafelek) i karteczka „gotowe”. Karteczka z zadaniem wisi pod wyspą,
+  5 zadań (posadź, pracuj, zbierz, dokup kafelek, kup lampę) i karteczka „gotowe”. Karteczka z zadaniem wisi pod wyspą,
   złota strzałka unosi się nad celem. Rozbiórka tablicy kończy wprowadzenie (3 drewna). Stare zapisy: bez wprowadzenia.
 - [x] Mgła w przezroczystym oknie (po teście 6d): **gęsty wał przyklejony do wody** (zachodzi 3 px na pas wody, 14-30 px
   szerokości, postrzępiona krawędź z dryfującymi kłębami), zamiast osobnych kłębów dalej od wyspy.
@@ -499,6 +499,9 @@ Obrazki referencyjne (kopie): `docs/img/`
 48. Prośba gracza: **menu główne** z 3 slotami zapisu (nazwa do 10 znaków, data i godzina zapisu, usuwanie), wyspa w tle,
     język i wyjście w menu, „Menu główne” w pierścieniu akcji. Stary `save.json` → slot 1.
 49. Prośba gracza: **mgła w stylu „chibi”** - bulwiaste kłęby z obrysem, płaskie kolory, w obu trybach okna.
+50. Po teście: we wprowadzeniu kafelek przed lampą (na starcie nie było miejsca na lampę), karteczka z większym marginesem
+    i szersza (mniej linii). **Grządki przycięte do lądu** (SpriteMask z maski lądu, 2 px trawy od brzegu), więc na skrajnych
+    kafelkach nie wystają poza zaokrąglony, nierówny brzeg.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -789,8 +792,9 @@ Karteczki przybite do skrzyni i tablicy na wyspie, 3–4 kroki: posadź, pracuj 
 Cel jest podświetlony pulsem.
 
 **Stan (Etap 6d):** `UI/IntroNotes.cs` + `UI/NoticeBoard.cs`. Tablica stoi na nowej wyspie (Island.SpawnBoard), kroki:
-1. posadź (strzałka nad pustą grządką), 2. pracuj, aż urośnie (strzałka nad rośliną), 3. zbierz, 4. kup lampę
-(prawy klik → Sklep → Lampy; ten krok uczy też pierścienia akcji), 5. dokup kafelek (Rozbudowa), 6. „gotowe” (strzałka nad tablicą).
+1. posadź (strzałka nad pustą grządką), 2. pracuj, aż urośnie (strzałka nad rośliną), 3. zbierz, 4. dokup kafelek
+(prawy klik → Rozbudowa; ten krok uczy pierścienia akcji), 5. kup lampę i postaw ją na nowym kafelku, 6. „gotowe”
+(strzałka nad tablicą). Kafelek przed lampą (po teście): na wyspie 2x2 (2 grządki, tablica, latarnia) nie ma wolnego miejsca.
 Po wykonanym kroku karteczka odpada (iskierki) i przybija się nowa. Karteczka z treścią wisi pod wyspą (pasek HUD jest nad nią)
 i chowa się razem z HUD-em. Klik w tablicę: treść + „Rozbierz” (koniec wprowadzenia w każdej chwili, 3 drewna).
 Krok zapisany w `SaveData.intro` (v8); zapisy sprzed v8 kończą wprowadzenie od razu.

@@ -17,6 +17,8 @@ namespace Wyspa.World
         public byte[] island;      // ląd: kontur, klif, trawa
         public byte[] waterBase;   // statyczna woda (gdy shader nie działa)
         public byte[] data;        // R = odległość od brzegu x4, G = klasa x32 (opis w Water.shader)
+        /// <summary>Maska lądu dla grządek (trawa bez 2 px przy brzegu, bez konturu i klifu), RGBA jak island: alfa 255 = ląd.</summary>
+        public byte[] landMask;
         public readonly List<FishPath> fish = new List<FishPath>();
         public bool hasBeast;
         public int beastX, beastY;
@@ -107,6 +109,16 @@ namespace Wyspa.World
                 }
             var land = Erode(Dilate(m2, R, 1), R, 1);
             bool Land(int x, int y) => R.Contains(x, y) && land[R.I(x, y)];
+            // grządki kończą się 2 px przed brzegiem: od strony wody zostaje pasek trawy
+            var plotLand = Erode(land, R, 2);
+            pic.landMask = new byte[W * H * 4];
+            for (int y = R.y; y < R.y + R.h; y++)
+                for (int x = R.x; x < R.x + R.w; x++)
+                    if (plotLand[R.I(x, y)])
+                    {
+                        int i = ((H - 1 - y) * W + x) * 4;
+                        pic.landMask[i] = pic.landMask[i + 1] = pic.landMask[i + 2] = pic.landMask[i + 3] = 255;
+                    }
 
             var island = new byte[W * H * 4];
             void Put(byte[] img, int x, int y, byte[] c)

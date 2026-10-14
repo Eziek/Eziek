@@ -350,6 +350,12 @@ Po pobraniu: Play (sam shader, bez Wyspa → 2).
 2. Zwykłe okno: dalej od wyspy jednolita mgła z bulwiastym brzegiem (`docs/img/mgla_chibi_okno.png`); w nocy podchodzi bliżej.
 3. Jeśli mgła wygląda na zbyt jasną/ciemną: kolory są w materiale Fog (Light rim, Outline, b3, fo).
 
+## 4v. Wprowadzenie: kafelek przed lampą, grządki przy brzegu (test)
+1. Nowa gra: po „zbierz” karteczka każe dokupić kafelek (prawy klik → Rozbudowa), dopiero potem kupić lampę i postawić ją
+   na nowym kafelku. Tekst karteczki nie jest ucięty u góry, licznik „4/5” widać w całości.
+2. Grządki na brzegu wyspy kończą się 2 px przed brzegiem (pasek trawy), nic nie wystaje nad wodę.
+   Jeśli grządki zniknęły całkiem: maska lądu (obiekt LandMask pod sprite'em wyspy) nie działa - napisz.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

@@ -82,6 +82,8 @@ namespace Wyspa.World
         Texture2D islandTex, waterTex, dataTex;
         Transform plotsRoot, decoRoot;
         IslandPicture picture;
+        Texture2D landMaskTex;
+        SpriteMask landMask;
 
         public IslandMap Map => map;
         public IslandArt Art => art;
@@ -816,7 +818,19 @@ namespace Wyspa.World
                 if (islandRenderer != null) islandRenderer.sprite = Sprite.Create(islandTex, rect, pivot, Ppu, 0, SpriteMeshType.FullRect);
                 if (waterRenderer != null) waterRenderer.sprite = Sprite.Create(waterTex, rect, pivot, Ppu, 0, SpriteMeshType.FullRect);
                 if (fogRenderer != null) fogRenderer.sprite = Sprite.Create(dataTex, rect, pivot, Ppu, 0, SpriteMeshType.FullRect);
+                // maska lądu: grządki na brzegu nie wystają poza zaokrąglony, nierówny brzeg wyspy
+                landMaskTex = NewTexture(s, false, "IslandLandMask");
+                if (islandRenderer != null)
+                {
+                    var go = new GameObject("LandMask");
+                    go.transform.SetParent(islandRenderer.transform, false);
+                    landMask = go.AddComponent<SpriteMask>();
+                    landMask.sprite = Sprite.Create(landMaskTex, rect, pivot, Ppu, 0, SpriteMeshType.FullRect);
+                    landMask.alphaCutoff = 0.5f;
+                }
             }
+            landMaskTex.LoadRawTextureData(picture.landMask);
+            landMaskTex.Apply(false);
             islandTex.LoadRawTextureData(picture.island);
             islandTex.Apply(false);
             waterTex.LoadRawTextureData(picture.waterBase);
@@ -857,6 +871,7 @@ namespace Wyspa.World
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = art != null ? art.plotTile : null;
             sr.sortingOrder = -1500;
+            sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;   // przycięta do lądu (maska LandMask)
             var plot = go.AddComponent<FarmPlot>();   // dokłada BoxCollider2D (RequireComponent)
             var col = go.GetComponent<BoxCollider2D>();
             if (col != null)

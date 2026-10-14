@@ -23,7 +23,9 @@ namespace UnityEngine
     public enum KeyCode { Escape, F1, LeftControl, RightControl }
     public class Renderer : Component { public Bounds bounds; public int sortingOrder; public Material sharedMaterial; public Material material; public bool enabled; public void GetPropertyBlock(MaterialPropertyBlock b) { } public void SetPropertyBlock(MaterialPropertyBlock b) { } }
     public class MaterialPropertyBlock { public void SetFloat(int id, float v) { } public void SetColor(int id, Color c) { } }
-    public class SpriteRenderer : Renderer { public Sprite sprite; public Color color; public bool flipX, flipY; }
+    public class SpriteRenderer : Renderer { public Sprite sprite; public Color color; public bool flipX, flipY; public SpriteMaskInteraction maskInteraction { get; set; } }
+    public enum SpriteMaskInteraction { None = 0, VisibleInsideMask = 1, VisibleOutsideMask = 2 }
+    public class SpriteMask : Renderer { public Sprite sprite { get; set; } public float alphaCutoff { get; set; } }
     public class Sprite : Object { public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu, uint extrude, SpriteMeshType mesh) => null; public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu) => null; public Bounds bounds; public Vector2 pivot; public Texture2D texture; }
     public struct Bounds { public Vector3 size, center, max, min; }
     public class Material : Object { public Material(Shader s) { } public Material(Material m) { } public Shader shader; public void SetFloat(int id, float v) { } public void SetFloat(string n, float v) { } public bool HasProperty(int id) => false; public float GetFloat(int id) => 0; public void SetColor(string n, Color c) { } public void SetColor(int id, Color c) { } public void SetTexture(string n, Texture t) { } public void SetTexture(int id, Texture t) { } public void SetVector(int id, Vector4 v) { } public void SetVectorArray(int id, Vector4[] v) { } }

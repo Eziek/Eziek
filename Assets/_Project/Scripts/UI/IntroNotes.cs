@@ -10,15 +10,16 @@ namespace Wyspa.UI
     /// <summary>
     /// Wprowadzenie bez postaci (Etap 6d, GDD §12.8): kroki z tablicy ogłoszeń. Karteczka z bieżącym zadaniem wisi pod wyspą
     /// (pokazuje się i chowa razem z paskiem HUD), a nad celem unosi się złota strzałka. Kroki: posadź, pracuj, zbierz,
-    /// kup lampę, dokup kafelek; na końcu karteczka „gotowe”. Rozebranie tablicy kończy wprowadzenie w każdej chwili.
+    /// dokup kafelek, kup lampę (najpierw kafelek: na wyspie 2x2 nie ma wolnego miejsca na lampę); na końcu karteczka „gotowe”.
+    /// Rozebranie tablicy kończy wprowadzenie w każdej chwili.
     /// </summary>
     public class IntroNotes : MonoBehaviour
     {
         public const int Done = 6;
         const int Steps = 5;   // zadania; szósta karteczka to „gotowe”
         const float Ppu = 16f;
-        const float MaxWidth = 128f;
-        static readonly string[] Keys = { "intro.plant", "intro.grow", "intro.harvest", "intro.lamp", "intro.expand", "intro.done" };
+        const float MaxWidth = 200f;
+        static readonly string[] Keys = { "intro.plant", "intro.grow", "intro.harvest", "intro.expand", "intro.lamp", "intro.done" };
 
         public static IntroNotes Instance { get; private set; }
 
@@ -119,9 +120,9 @@ namespace Wyspa.UI
                 case 2:
                     return harvests > 0;
                 case 3:
-                    return island.CountLamps() >= 2;   // startowa latarnia + kupiona (także kupiona wcześniej)
-                case 4:
                     return island.Map.Purchased >= 1;
+                case 4:
+                    return island.CountLamps() >= 2;   // startowa latarnia + kupiona (także kupiona wcześniej)
                 default:
                     return false;   // „gotowe” wisi do rozbiórki tablicy
             }
@@ -141,12 +142,13 @@ namespace Wyspa.UI
             text.text = Loc.Get(CurrentKey);
             counter.text = Finished ? "" : Loc.Get("ui.intro.counter", Step + 1, Steps);
             float cw = counter.text.Length > 0 ? Ui.Width(counter) : 0f;
-            float maxW = Mathf.Max(60f, Mathf.Min(MaxWidth, root.rect.width - 24f));
+            // pergamin ma grube brzegi (9-slice): tekst z zapasem 8 px, licznik w prawym górnym rogu obok tekstu
+            float maxW = Mathf.Max(60f, Mathf.Min(MaxWidth, root.rect.width - 28f - (cw > 0 ? cw + 6 : 0)));
             float w = Mathf.Min(maxW, Ui.Width(text));
             float h = Mathf.Ceil(text.GetPreferredValues(text.text, w, 0f).y);
-            Ui.Place(text.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(6, -5), new Vector2(w, h));
-            Ui.Place(counter.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-6, -5), new Vector2(cw, 10));
-            note.sizeDelta = new Vector2(Mathf.Ceil(w + 12 + (cw > 0 ? cw + 6 : 0)), h + 10);
+            Ui.Place(text.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(8, -7), new Vector2(w, h));
+            Ui.Place(counter.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-8, -7), new Vector2(cw, 10));
+            note.sizeDelta = new Vector2(Mathf.Ceil(w + 16 + (cw > 0 ? cw + 6 : 0)), h + 14);
         }
 
         /// <summary>Karteczka pod środkiem lądu (pasek HUD jest nad wyspą), w granicach okna.</summary>
