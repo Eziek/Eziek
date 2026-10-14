@@ -28,6 +28,7 @@ namespace Wyspa.World
         public List<int> zonesFound = new List<int>();   // Etap 5a: odkryte strefy (toast tylko raz)
         public bool pier;
         public int pierC, pierR;
+        public int pierDir;   // +1 deski w prawo, -1 w lewo (0 w starszych zapisach = z lądu)
         public bool nets;
         public bool boat;
     }
@@ -239,9 +240,20 @@ namespace Wyspa.World
                 foreach (var z in save.zonesFound)
                     zonesFound.Add((ZoneKind)z);
             RefreshCritters();
+            var pierTile = new TilePos(save.pierC, save.pierR);
+            int savedDir = save.pierDir != 0 ? save.pierDir : (map.Owns(new TilePos(pierTile.c - 1, pierTile.r)) ? 1 : -1);
+            if (save.pier && map.Owns(new TilePos(pierTile.c + savedDir, pierTile.r)))
+            {
+                // zapis sprzed poprawki: ląd zabudował deski pomostu - rozbieramy go i oddajemy koszt (też sieci i łodzi)
+                refund.Add(new CurrencyAmount(CurrencyType.Coins, 300));
+                refund.Add(new CurrencyAmount(CurrencyType.Wood, 10));
+                if (save.nets) { refund.Add(new CurrencyAmount(CurrencyType.Coins, 150)); refund.Add(new CurrencyAmount(CurrencyType.Wood, 5)); }
+                if (save.boat) { refund.Add(new CurrencyAmount(CurrencyType.Coins, 600)); refund.Add(new CurrencyAmount(CurrencyType.Wood, 15)); }
+                save.pier = false;
+            }
             if (save.pier)
             {
-                BuildPier(new TilePos(save.pierC, save.pierR));
+                RestorePier(pierTile, save.pierDir);
                 if (save.nets)
                     BuildNets();
                 if (save.boat && BuildBoat())
@@ -268,6 +280,7 @@ namespace Wyspa.World
                 s.pier = true;
                 s.pierC = pier.Tile.c;
                 s.pierR = pier.Tile.r;
+                s.pierDir = pier.Dir;
                 s.nets = nets != null;
             }
             s.boat = boat != null;
@@ -727,7 +740,7 @@ namespace Wyspa.World
         {
             if (pier == null || boat != null)
                 return false;
-            bool landLeft = map.Owns(new TilePos(pier.Tile.c - 1, pier.Tile.r));
+            bool landLeft = pier.Dir > 0;
             var at = (Vector3)pier.Tip + new Vector3((landLeft ? -4f : 4f) / Ppu, -10f / Ppu, 0f);
             var go = new GameObject("Boat");
             go.transform.SetParent(decoRoot, false);
@@ -750,19 +763,42 @@ namespace Wyspa.World
             return true;
         }
 
-        /// <summary>Kafelek wody zajęty przez pomost - nie da się go kupić.</summary>
-        public bool SeaBlocked(TilePos p) => pier != null && pier.Tile == p;
+        /// <summary>
+        /// Woda zajęta przez pomost i to, co przy nim stoi (deski na 2 kafelki, łódź i sieci przy końcu):
+        /// 3 kafelki w stronę morza, w rzędzie pomostu i pod nim. Tych kafelków nie da się kupić, żeby ląd nie zabudował pomostu.
+        /// </summary>
+        public bool SeaBlocked(TilePos p)
+        {
+            if (pier == null)
+                return false;
+            int dir = PierDir(pier.Tile);
+            for (int k = 0; k < 3; k++)
+                if ((p.c == pier.Tile.c + k * dir) && (p.r == pier.Tile.r || p.r == pier.Tile.r + 1))
+                    return true;
+            return false;
+        }
 
-        /// <summary>Pomost: kafelek wody z lądem z lewej albo z prawej (deski idą w bok od brzegu).</summary>
-        public bool PierValid(TilePos p) =>
-            pier == null && WorldGenerator.InWorld(p) && !map.Owns(p)
-            && (map.Owns(new TilePos(p.c - 1, p.r)) || map.Owns(new TilePos(p.c + 1, p.r)));
+        /// <summary>Kierunek desek: od lądu w stronę morza (+1 w prawo, -1 w lewo).</summary>
+        int PierDir(TilePos p) => pierDirOverride != 0 ? pierDirOverride
+            : pier != null && pier.Tile == p ? pier.Dir : (map.Owns(new TilePos(p.c - 1, p.r)) ? 1 : -1);
+
+        /// <summary>Pomost: kafelek wody z lądem z lewej albo z prawej; dwa kafelki desek muszą leżeć na wodzie.</summary>
+        public bool PierValid(TilePos p)
+        {
+            if (pier != null || !WorldGenerator.InWorld(p) || map.Owns(p))
+                return false;
+            bool left = map.Owns(new TilePos(p.c - 1, p.r)), right = map.Owns(new TilePos(p.c + 1, p.r));
+            if (!left && !right)
+                return false;
+            var next = new TilePos(p.c + (left ? 1 : -1), p.r);
+            return WorldGenerator.InWorld(next) && !map.Owns(next);
+        }
 
         /// <summary>Podstawa pomostu przy brzegu; sprite odwrócony, gdy ląd jest po prawej. Zwraca też koniec pomostu.</summary>
         public (Vector3 pos, bool flip) PierPlacement(TilePos p, out Vector3 tipWorld, out int order)
         {
             var (x0, y0) = IslandPainter.TileOrigin(p);
-            bool landLeft = map.Owns(new TilePos(p.c - 1, p.r));
+            bool landLeft = PierDir(p) > 0;
             int baseX = landLeft ? x0 - 1 : x0 + IslandPainter.Tile;
             int tipX = landLeft ? baseX + 33 : baseX - 33;
             order = y0 + 9;
@@ -770,10 +806,40 @@ namespace Wyspa.World
             return (AnchorWorld(baseX, y0 + 9), !landLeft);
         }
 
+        /// <summary>Pomost z zapisu: bez sprawdzania miejsca (ląd mógł urosnąć obok w starszych wersjach).</summary>
+        void RestorePier(TilePos p, int dir)
+        {
+            if (dir == 0)
+                dir = map.Owns(new TilePos(p.c - 1, p.r)) ? 1 : -1;
+            pierDirOverride = dir;
+            CreatePier(p);
+            pierDirOverride = 0;
+        }
+
+        int pierDirOverride;
+        readonly List<CurrencyAmount> refund = new List<CurrencyAmount>();
+
+        /// <summary>Zwrot za pomost rozebrany przy wczytaniu (woła GameLoop po przywróceniu portfela).</summary>
+        public void FlushRefunds(Wallet wallet)
+        {
+            if (refund.Count == 0 || wallet == null)
+                return;
+            foreach (var c in refund)
+                wallet.Add(c.type, c.amount);
+            refund.Clear();
+            GameEvents.RaiseToast("toast.pier.refund");
+        }
+
         public bool BuildPier(TilePos p)
         {
             if (!PierValid(p))
                 return false;
+            CreatePier(p);
+            return true;
+        }
+
+        void CreatePier(TilePos p)
+        {
             var (pos, flip) = PierPlacement(p, out var tip, out int order);
             var sr = NewSprite("Pier", decoRoot, pos, order);
             sr.sprite = art != null ? art.pier : null;
@@ -781,17 +847,17 @@ namespace Wyspa.World
             var area = sr.gameObject.AddComponent<BoxCollider2D>();
             area.size = new Vector2(10f, 8f);   // łowisko (Pier.Range = 5 kafelków)
             area.offset = (Vector2)(tip - pos);
+            int dir = PierDir(p);
             pier = sr.gameObject.AddComponent<Sea.Pier>();
-            pier.Init(this, water, p, tip);
+            pier.Init(this, water, p, tip, dir);
             Changed?.Invoke();
-            return true;
         }
 
         public bool BuildNets()
         {
             if (pier == null || nets != null)
                 return false;
-            bool landLeft = map.Owns(new TilePos(pier.Tile.c - 1, pier.Tile.r));
+            bool landLeft = pier.Dir > 0;
             var at = (Vector3)pier.Tip + new Vector3((landLeft ? 14f : -14f) / Ppu, -8f / Ppu, 0f);
             var sr = NewSprite("FishingNets", decoRoot, at, 2000);
             sr.sprite = art != null ? art.netBuoy : null;
@@ -1000,6 +1066,7 @@ namespace Wyspa.World
             for (int i = 0; i < count; i++)
             {
                 var c = map.Candidates();
+                c.RemoveAll(SeaBlocked);
                 if (c.Count == 0)
                     break;
                 map.Buy(c[rnd.Next(c.Count)]);

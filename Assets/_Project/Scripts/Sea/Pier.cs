@@ -23,10 +23,13 @@ namespace Wyspa.Sea
         Vector2 tip;
 
         public TilePos Tile { get; private set; }
+        /// <summary>Kierunek desek od lądu (+1 w prawo, -1 w lewo), ustalony przy budowie.</summary>
+        public int Dir { get; private set; } = 1;
         public Vector2 Tip => tip;
 
-        public void Init(Island owner, WaterAnimator waterAnimator, TilePos tile, Vector2 tipWorld)
+        public void Init(Island owner, WaterAnimator waterAnimator, TilePos tile, Vector2 tipWorld, int dir)
         {
+            Dir = dir >= 0 ? 1 : -1;
             island = owner;
             water = waterAnimator;
             Tile = tile;

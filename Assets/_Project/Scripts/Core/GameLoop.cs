@@ -144,6 +144,8 @@ namespace Wyspa.Core
                 saveSystem.Load(this);
             if (island != null && !island.Ready)
                 island.NewWorld(NewSeed());   // pierwszy start: wyspa 2x2 z losowego ziarna
+            if (island != null)
+                island.FlushRefunds(wallet);
             foreach (var plot in FarmPlot.All)
                 plot.RefreshVisual();
         }
