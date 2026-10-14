@@ -481,7 +481,15 @@ namespace Wyspa.UI
             if (s.IsEmpty)
                 return Loc.Get("ui.plot.empty");
             string name = Loc.Get("crop." + s.crop.id);
-            string quality = s.Quality > 1 ? "\n" + Loc.Get("ui.plot.quality", s.Quality) : "";
+            string quality = "";
+            if (s.Quality > 1)
+            {
+                // skąd jakość: światło ognika (połowa wzrostu w klatce z ognikiem) i nawóz
+                var why = new System.Collections.Generic.List<string>();
+                if (s.crop != null && s.boostSeconds >= s.crop.growSeconds * 0.5f) why.Add(Loc.Get("ui.plot.quality_light"));
+                if (s.fertilized) why.Add(Loc.Get("ui.plot.quality_fertilizer"));
+                quality = "\n" + Loc.Get("ui.plot.quality", s.Quality) + (why.Count > 0 ? " (" + string.Join(", ", why) + ")" : "");
+            }
             if (s.IsRipe)
                 return Loc.Get("ui.plot.ripe", name) + quality;
             bool night = game.Clock.IsNight;

@@ -12,6 +12,11 @@ namespace Wyspa.Farming
         public float multiplier;
         /// <summary>Pełnia księżyca: rośliny nocy rosną 2x szybciej, krwawa róża rośnie tylko wtedy.</summary>
         public bool fullMoon;
+        /// <summary>
+        /// Przyspieszenie od samego światła lampy (klatka z ognikiem, nocą). Tylko ono liczy się do jakości: inne premie
+        /// w multiplier (tempo pracy, deszcz, ulepszenia, dary) przyspieszają wzrost, ale jakości nie podnoszą.
+        /// </summary>
+        public float lightBoost;
     }
 
     /// <summary>Stan pola - czyste dane, bez MonoBehaviour (łatwe do zapisu i testów).</summary>
@@ -75,8 +80,8 @@ namespace Wyspa.Farming
             float mult = ctx.multiplier > 0f ? ctx.multiplier : 1f;
             if (crop.kind == CropKind.Night && ctx.fullMoon)
                 mult *= 2f;
-            if (ctx.multiplier > 1f)
-                boostSeconds += dt * mult;
+            if (ctx.lightBoost > 1f)
+                boostSeconds += dt * mult;   // światło ognika (połowa wzrostu = +1 jakości)
             growth = Mathf.Min(crop.growSeconds, growth + dt * mult);
             return Stage != before;
         }

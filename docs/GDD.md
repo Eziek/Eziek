@@ -729,6 +729,11 @@ Obrazki referencyjne (kopie): `docs/img/`
 91. Poprawki po zrzutach: tabliczka „Rejs nr N” ze scenki przypłynięcia znika w całości (wcześniej zostawał tytuł na stałe)
     i pokazuje się dopiero, gdy mgła się rozstąpi. Pasek HUD wisi wyżej: nad górnym rzędem kafelków jest zapas 1,4 jednostki
     na wysokie obiekty (dynie, latarnie, runy, gniazda), w granicach okna.
+92. **Błąd jakości plonów** (zgłoszenie gracza: wszystkie dynie 2/3): punkt „światła ognika” liczył się z całego mnożnika
+    wzrostu, a ten od dawna zawiera też tempo pracy, deszcz, ulepszenia i dary, więc niemal każda roślina dnia dostawała +1.
+    Teraz liczy się tylko światło lampy z mnożnikiem wzrostu (klatka z ognikiem, nocą; `GrowthContext.lightBoost`).
+    Zasady jakości bez zmian: baza 1, +1 za co najmniej połowę wzrostu w świetle ognika, +1 za nawóz; cena x1 / x1,5 / x2,5.
+    Dymek grządki pokazuje powód jakości („światło ognika”, „nawóz”). Rośliny posadzone przed poprawką mają już naliczone.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

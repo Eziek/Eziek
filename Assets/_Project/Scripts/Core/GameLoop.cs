@@ -357,6 +357,7 @@ namespace Wyspa.Core
                 multiplier = (night ? Illumination.GrowthMultiplier(p) : 1f) * (island != null ? island.ZoneBonus(plot) : 1f) * dayBonus
                            * Economy.Prestige.GrowthMultiplier,   // Zielone ręce (dar mgły)
                 fullMoon = clock.IsFullMoon,
+                lightBoost = night ? Illumination.GrowthMultiplier(p) : 1f,   // tylko to podnosi jakość
             };
         }
 

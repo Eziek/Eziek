@@ -278,3 +278,9 @@ Najpierw **Wyspa → 2** (grafiki czapek).
 ## 20. Pasek HUD nad wyspą
 1. Wysokie obiekty w górnym rzędzie (dynia, latarnia, runa, gniazdo): pasek HUD wisi nad nimi, nie zasłania ich.
 2. Duża wyspa albo małe okno: pasek dalej mieści się w oknie (przy górnej krawędzi).
+
+## 21. Jakość plonów
+1. Dynia posadzona w dzień, rośnie przy pisaniu (Tempo x1,3+), bez nawozu i bez klatki z ognikiem: dojrzała ma jakość 1
+   (dymek bez „Jakość”).
+2. Z nawozem (kupiec-widmo albo dar „Nawóz z mgły”): „Jakość: 2/3 (nawóz)”.
+3. Roślina dnia rosnąca nocą głównie w świetle klatki z ognikiem: „Jakość: 2/3 (światło ognika)”, z nawozem 3/3.
