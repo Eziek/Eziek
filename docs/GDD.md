@@ -601,6 +601,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     w przezroczystym oknie twardy limit zasięgu 18 px za pasem wody, więc obrys zamyka się przed krawędzią okna.
 72. Etap 7, część 4 (prośba gracza: więcej animacji): ćmy krążą nocą wokół zapalonych lamp, ryba co 18-45 s wyskakuje
     z wody przy brzegu z pluskiem (`Visual/AmbientLife`), świecące rośliny pulsują nocą każda w swoim rytmie.
+73. Ocena gracza po zrzutach Etapu 7: „za bardzo wygładzone, nijakie, wcześniej lepiej wyglądało”. Decyzja, czy wracamy do
+    16 px, czy robimy 32 px bez wygładzania, czeka na nową sesję (opcje w `docs/HANDOFF.md`).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

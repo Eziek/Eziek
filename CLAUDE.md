@@ -4,6 +4,7 @@
 a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wyspę w nocy (pora dnia z cyklu gry: 1 h = 40 min dnia + 20 min nocy).
 
 ## Zanim cokolwiek zrobisz
+- **Przeczytaj `docs/HANDOFF.md`**: stan po ostatniej sesji i otwarte decyzje (m.in. grafika 32 px, której gracz nie zaakceptował).
 - **Przeczytaj `docs/GDD.md`.** To źródło prawdy o projekcie: koncept, systemy, styl graficzny, paleta, otwarte decyzje,
   historia ustaleń. Po każdej nowej decyzji projektowej **zaktualizuj GDD** (sekcje 7 i 9).
 - Obrazki z prototypu są w `docs/img/`, a skrypty, które je generują, w `tools/pixel-proto/` (Python + Pillow, opis w GDD §8).
