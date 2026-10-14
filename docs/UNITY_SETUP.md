@@ -4,7 +4,8 @@
 Każda nowsza łatka `6000.3.x` też będzie dobra.
 
 ## 0. Instalacja (raz)
-1. **Git + GitHub Desktop:** https://desktop.github.com (ma w sobie Git i Git LFS). Zaloguj się kontem GitHub.
+1. **Klient Gita:** GitHub Desktop (https://desktop.github.com) **albo Fork** (https://git-fork.com, ma wbudowanego Gita;
+   darmowy okres próbny, potem jednorazowa licencja). W Fork: File → Accounts → dodaj konto GitHub.
 2. **Unity Hub:** https://unity.com/download. Zaloguj się (Unity ID) i aktywuj darmową licencję **Personal**
    (Hub → Preferences → Licenses → Add).
 3. W Hub: **Installs → Install Editor → 6.3 LTS** (`6000.3.26f1` lub nowsza łatka 6000.3.x). Zaznacz moduły:
@@ -36,7 +37,11 @@ Repo jest od razu projektem Unity: `Assets/`, `Packages/` i `ProjectSettings/` w
 
    Oba są domyślne w Unity 6, ale warto sprawdzić.
 7. Zrób kroki z punktu 3 poniżej (menu „Wyspa”) i naciśnij Play.
-8. **Commit i push:** w GitHub Desktop powinny być zmiany w `Assets/` (z plikami `.meta`), `Packages/` i `ProjectSettings/`,
+   *Fork zamiast GitHub Desktop:* klon przez File → Clone (URL `https://github.com/Eziek/Eziek.git`); gałąź:
+   w panelu Remotes → origin dwuklik `claude/unity-project-discussion-rlr9ae`, potem prawy klik → New Branch `main`
+   (z zaznaczonym Checkout); commit w widoku Local Changes (Stage All → opis → Commit); push przyciskiem Push
+   (gałąź `main` do `origin`, z opcją śledzenia).
+8. **Commit i push:** w GitHub Desktop (albo Fork) powinny być zmiany w `Assets/` (z plikami `.meta`), `Packages/` i `ProjectSettings/`,
    a **nie** w `Library/` ani `Temp/`. Wpisz opis (np. „Projekt Unity 6.3, szablon Universal 2D”) → Commit to main →
    **Publish branch**.
 9. **Domyślna gałąź:** na GitHubie Settings → Branches → Default branch → `main`.
