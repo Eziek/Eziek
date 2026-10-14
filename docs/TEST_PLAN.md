@@ -263,3 +263,5 @@ Najpierw **Wyspa → 2** (grafiki czapek).
    Czapka siedzi na czubku głowy, obraca się z ognikiem, dymek pogaduszek pojawia się nad czapką.
 4. Świeca, aureola, korona, wianek, dynia: w nocy świecące piksele.
 5. Zapis i wczytanie: czapki na ognikach zostają. Rejs we mgłę: kupione czapki zostają w sklepie („Masz”) na nowej wyspie.
+6. Czapki są małe i siedzą na czubku głowy (oczy widoczne), także gdy ognik leci w lewo. Dwa ogniki blisko siebie:
+   jeden rysuje się w całości przed drugim (narzędzie i czapka nie wchodzą na ciało sąsiada), odsuwają się wyraźniej.

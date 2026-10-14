@@ -716,6 +716,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     posiadana czapka albo bez); dymek pogaduszek wędruje nad czapkę. Świeca, aureola, korona, wianek i dynia mają piksele
     emisyjne. Grafika `tools/pixel-proto/wisp_hats.py` + `export_unity_hats.py`, podgląd `docs/img/czapki_ognikow.png`.
     Kod: `Economy/Hats.cs`, `Wisp.SetHat`, `WispSave.hat`.
+89. Ogniki po zrzucie gracza („słabo wygląda”, „czapki za duże, nie pasują do głów”): czapki narysowane od nowa, do 8 px
+    szerokości (10 z obrysem), nasunięte na czubek płomyka (dół 12 px nad dołem sprite'a, środek głowy). Każdy ognik rysuje
+    się w całości (SortingGroup: ciało, narzędzie, czapka razem), niższy na ekranie przed wyższym, więc narzędzia i czapki
+    sąsiadów się nie przeplatają. Ocieranie od 0,9 kafelka (odsunięcie do 0,45), miejsca przy gnieździe co 0,6, rozmówcy
+    0,92 od siebie. Dymki pogaduszek nad wszystkimi ognikami (osobny obiekt, kolejność 4510).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

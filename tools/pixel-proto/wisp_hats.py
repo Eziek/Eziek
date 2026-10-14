@@ -1,26 +1,26 @@
 """Czapki ogników (sklep z czapkami, GDD §9 p. 88): mapy w kluczach ui_kit.KEY, obrys dokłada from_map.
 
-Pivot: środek dolnej krawędzi (rondo leży na czubku głowy ognika). Szerokość do 12 px, wysokość do 9 px.
+Pivot: środek dolnej krawędzi. Czapka jest nasunięta na czubek płomyka (dół na wysokości 12 px od dołu sprite'a ognika,\ngłowa ma tam 8 px szerokości): treść do 8 px szerokości i 5 px wysokości, z obrysem 10 x 7.
 Klucze: o kontur, 1 2 3 śliwka, c r g w czerwień, pomarańcz, złoto, kość, e f h j ziemia i drewno, k m n q zieleń,
 a b d s woda, z mgła, F X płomień, W L ognik, U M fiolet.
 """
 
 HATS = {
-    'straw':    ["...gggg...", "..grggrg..", "gggggggggg"],
-    'beanie':   ["....ww....", "...cwc....", "..cccccc..", ".cwcwcwcw.", ".wwwwwwww."],
-    'nightcap': [".....ww...", "....dd....", "...ddd....", "..dddd....", ".ddsdddd..", "wwwwwwwww."],
-    'flower':   [".c.M.F.c..", "nqnqnqnqn."],
-    'mushroom': ["...cccc...", "..cwcccw..", ".ccccwccc.", "cwcccccwcc", "...wwww..."],
-    'tophat':   ["..111111..", "..122221..", "..111111..", "..1cccc1..", "1111111111"],
-    'witch':    ["......12..", ".....11...", "....111...", "...1U11...", "..11111...", "1111111111"],
-    'pumpkin':  ["....m.....", "..rrmrr...", ".rXrrrXr..", ".rrrXrrr..", "..rrrrr..."],
-    'horns':    ["w........w", "ww......ww", ".ww....ww.", "..wwhhww..", "...hhhh..."],
-    'feather':  [".......c..", "......cc..", ".....cc...", "..UUUUU...", ".UUUUUUU..", "..hhhhh..."],
-    'tricorne': ["..111111..", ".11gggg11.", "1111111111", ".1......1."],
-    'crown':    ["g..g..g..g", "gg.gFg.gg.", "gggggggggg", "gcgggWggcg", "gggggggggg"],
-    'candle':   ["....F.....", "...FXF....", "....w.....", "...www....", "...www....", ".hhhhhhh.."],
-    'halo':     [".LLLLLLL..", "L.......L.", ".LLLLLLL.."],
-    'skull':    ["..wwwwww..", ".wwwwwwww.", ".w11ww11w.", ".wwwwwwww.", "..w1w1w..."],
+    'straw':    ["..gggg..", "..grrg..", "gggggggg"],
+    'beanie':   ["...w....", "..cccc..", ".cwcwcw.", ".wwwwww."],
+    'nightcap': ["......w.", ".....d..", "...ddd..", "..dddd..", "wwwwwww."],
+    'flower':   ["c.M.F.c.", "nqnqnqnq"],
+    'mushroom': ["..cccc..", ".cwcccw.", "cccwcccc", "..wwww.."],
+    'feather':  [".....c..", "....cc..", ".UUUUU..", "UUUUUUU."],
+    'tophat':   ["..1111..", "..1221..", "..1cc1..", "11111111"],
+    'witch':    [".....12.", "....11..", "...1U1..", "..1111..", "11111111"],
+    'pumpkin':  ["...m....", ".rrmrrr.", "rXrrrXrr", ".rrrrrr."],
+    'horns':    ["w......w", "ww....ww", ".wwhhww.", "..hhhh.."],
+    'tricorne': [".111111.", "11gggg11", "11111111"],
+    'skull':    [".wwwwww.", "ww1ww1ww", ".wwwwww.", "..w1w1.."],
+    'candle':   ["..F..", ".FXF.", "..w..", "..w..", "hhhhh"],
+    'crown':    ["g..g..g.", "gg.g.gg.", "gggggggg", "gcggWgcg"],
+    'halo':     [".LLLLLL.", "L......L", ".LLLLLL.", "........", "........"],   # unosi się nad głową
 }
 
 # cena: monety albo perły mgły (kolejność = kolejność w sklepie)

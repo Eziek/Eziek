@@ -140,7 +140,7 @@ namespace Wyspa.Automation
         const float RuneStep = 0.15f;    // sylaba co tyle sekund
         const float Hold = 1.0f;
         const float Fade = 0.25f;
-        const int Order = 4410;          // nad ognikami (4400)
+        const int Order = 4510;          // nad ognikami (4400-4499), pod ptakami (4600)
 
         Transform anchor;
         float headHeight;

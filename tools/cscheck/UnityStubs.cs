@@ -106,7 +106,7 @@ namespace UnityEngine
 }
 namespace UnityEngine.SceneManagement { public struct Scene { public int buildIndex => 0; public string name => ""; } public static class SceneManager { public static Scene GetActiveScene() => default; public static void LoadScene(int buildIndex) { } } }
 namespace AOT { [System.AttributeUsage(System.AttributeTargets.Method)] public class MonoPInvokeCallbackAttribute : System.Attribute { public MonoPInvokeCallbackAttribute(System.Type t) { } } }
-namespace UnityEngine.Rendering { public class RenderPipelineAsset : UnityEngine.Object { } public static class GraphicsSettings { public static RenderPipelineAsset defaultRenderPipeline; } }
+namespace UnityEngine.Rendering { public class SortingGroup : UnityEngine.Behaviour { public int sortingOrder; public string sortingLayerName; } public class RenderPipelineAsset : UnityEngine.Object { } public static class GraphicsSettings { public static RenderPipelineAsset defaultRenderPipeline; } }
 namespace UnityEngine.Rendering.Universal
 {
     // UWAGA: klasa Renderer2D jest w URP 17 wewnętrzna (internal), więc nie ma jej w atrapach.

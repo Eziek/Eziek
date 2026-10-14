@@ -66,10 +66,10 @@ namespace Wyspa.Automation
     {
         public const int Radius = 3;
         public const int NameCount = 12;
-        const float Personal = 0.6f;       // bliżej niż tyle ogniki się rozpychają (ognik ma ok. 10 px szerokości)
-        const float MaxNudge = 0.3f;       // najdalej o tyle sprite odsuwa się od toru lotu
+        const float Personal = 0.9f;       // bliżej niż tyle ogniki się rozpychają (ognik z narzędziem i czapką ok. 14 px)
+        const float MaxNudge = 0.45f;      // najdalej o tyle sprite odsuwa się od toru lotu
         const float ChatRange = 3.5f;      // jak daleko szuka rozmówcy
-        const float ChatGap = 0.38f;       // pół odstępu między rozmówcami
+        const float ChatGap = 0.46f;       // pół odstępu między rozmówcami (dalej niż Personal: bez rozpychania w rozmowie)
         const float HeadHeight = 1.05f;    // dymek nad głową (od punktu zaczepienia sprite'a)
         const int MaxChats = 2;            // tyle rozmów naraz na całej wyspie
         static int activeChats;
@@ -102,7 +102,8 @@ namespace Wyspa.Automation
         SpriteRenderer tool, toolFront, toolGlow;   // narzędzie zawodu (koszyk: tył + przód, rzeczy między nimi)
         SpriteRenderer hatSr, hatGlow;              // czapka (sklep z czapkami)
         string hat;
-        const float HatY = 14f / 16f;               // rondo na czubku głowy
+        const float HatY = 12f / 16f;               // czapka nasunięta na czubek płomyka (głowa ma tam 8 px)
+        UnityEngine.Rendering.SortingGroup group;   // każdy ognik rysuje się w całości (ciało, narzędzie, czapka) przed albo za sąsiadem
         Sprite[] toolFrames, toolGlowFrames;
         int toolPose;
         float toolPoseUntil;
@@ -176,13 +177,22 @@ namespace Wyspa.Automation
             shinyTimer = Random.Range(120f, 300f);
             chatCooldown = Random.Range(10f, 45f);
             visual = body != null && body.transform != transform ? body.transform : null;
+            if (group == null)
+                group = gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>();
+            // dymek poza grupą ognika (inaczej sąsiad rysowałby się na nim); znika razem z ognikiem (OnDestroy)
             if (bubble == null)
-                bubble = WispBubble.Create(transform, visual, HeadHeight);
+                bubble = WispBubble.Create(transform.parent != null ? transform.parent : transform, visual, HeadHeight);
             transform.position = Home;
             ApplyLevelLook();
         }
 
         void OnEnable() => All.Add(this);
+
+        void OnDestroy()
+        {
+            if (bubble != null)
+                Destroy(bubble.gameObject);
+        }
 
         void OnDisable()
         {
@@ -205,7 +215,7 @@ namespace Wyspa.Automation
             get
             {
                 var n = nest != null ? nest.transform.position : transform.position;
-                return n + new Vector3((slot - 1) * 0.45f, 1.15f + (slot == 1 ? 0.25f : 0f), 0f);
+                return n + new Vector3((slot - 1) * 0.6f, 1.15f + (slot == 1 ? 0.25f : 0f), 0f);   // odstęp na narzędzia i czapki
             }
         }
 
@@ -279,15 +289,15 @@ namespace Wyspa.Automation
             if (hatSr == null)
                 return;
             bool flip = body != null && body.flipX;
-            var at = new Vector3(flip ? -0.5f / 16f : 0.5f / 16f, HatY, 0f);
+            var at = new Vector3(flip ? 0.5f / 16f : -0.5f / 16f, HatY, 0f);   // środek głowy: 0,5 px od pivota
             hatSr.flipX = flip;
             hatSr.transform.localPosition = at;
-            hatSr.sortingOrder = 4406;
+            hatSr.sortingOrder = 6;
             if (hatGlow != null)
             {
                 hatGlow.flipX = flip;
                 hatGlow.transform.localPosition = at;
-                hatGlow.sortingOrder = 4407;
+                hatGlow.sortingOrder = 7;
             }
         }
 
@@ -366,12 +376,12 @@ namespace Wyspa.Automation
                     if (c != null && c.enabled)
                         c.transform.localPosition = new Vector3(at.x + (n++ - (count - 1) / 2f) * 2.5f / 16f, HandY - 4.5f / 16f, 0f);
             }
-            tool.sortingOrder = 4402;
+            tool.sortingOrder = 2;
             if (toolFront != null)
-                toolFront.sortingOrder = 4404;
+                toolFront.sortingOrder = 4;
             if (toolGlow != null)
             {
-                toolGlow.sortingOrder = 4405;
+                toolGlow.sortingOrder = 5;
                 toolGlow.sprite = toolGlowFrames != null && f < toolGlowFrames.Length ? toolGlowFrames[f] : null;
             }
         }
@@ -429,10 +439,13 @@ namespace Wyspa.Automation
                 if (body != null) body.sprite = frames[f];
                 if (glow != null && glowFrames != null && f < glowFrames.Length) glow.sprite = glowFrames[f];
             }
-            if (body != null) body.sortingOrder = 4400;   // ogniki latają nad wyspą
-            if (glow != null) glow.sortingOrder = 4401;
+            // ogniki latają nad wyspą (4400-4499); niższy na ekranie rysuje się przed wyższym, każdy w całości (SortingGroup)
+            if (group != null)
+                group.sortingOrder = 4400 + Mathf.Clamp(Mathf.RoundToInt(50f - transform.position.y * 4f), 0, 99);
+            if (body != null) body.sortingOrder = 0;
+            if (glow != null) glow.sortingOrder = 1;
             foreach (var c in carriedSprites)
-                if (c != null) c.sortingOrder = HasBasket ? 4403 : 4399;   // w koszyku: między tyłem a przodem
+                if (c != null) c.sortingOrder = HasBasket ? 3 : -1;   // w koszyku: między tyłem a przodem, inaczej pod ognikiem
             UpdateTool();
             UpdateHat();
             chatCooldown -= Time.unscaledDeltaTime;
