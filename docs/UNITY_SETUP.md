@@ -3,17 +3,48 @@
 **Wersja:** Unity **6.3 LTS**, czyli `6000.3.26f1` (najnowsza wersja LTS z 2026-10-08, wsparcie do grudnia 2027).
 Każda nowsza łatka `6000.3.x` też będzie dobra.
 
-## 1. Nowy projekt
-1. Unity Hub, zakładka **Installs**, zainstaluj `6000.3.26f1` z modułem **Windows Build Support**.
-2. **New project**, szablon **Universal 2D** (URP z 2D Rendererem i Input System już skonfigurowanymi).
+## 0. Instalacja (raz)
+1. **Git + GitHub Desktop:** https://desktop.github.com (ma w sobie Git i Git LFS). Zaloguj się kontem GitHub.
+2. **Unity Hub:** https://unity.com/download. Zaloguj się (Unity ID) i aktywuj darmową licencję **Personal**
+   (Hub → Preferences → Licenses → Add).
+3. W Hub: **Installs → Install Editor → 6.3 LTS** (`6000.3.26f1` lub nowsza łatka 6000.3.x). Zaznacz moduły:
+   - **Windows Build Support (IL2CPP)**,
+   - **Microsoft Visual Studio Community** (edytor kodu; jeśli masz już Rider albo VS Code, pomiń).
 
-## 2. Skopiuj pliki z repo
-Skopiuj cały folder **`Assets/_Project`** z tego repo do folderu `Assets/` w nowym projekcie.
-Unity sam zaimportuje pliki, a skrypt `PixelArtImporter` ustawi sprite'om:
-- PPU 16,
-- filtr Point,
-- brak kompresji,
-- pivot w punkcie styku z ziemią.
+## 1. Repozytorium = projekt Unity
+Repo jest od razu projektem Unity: `Assets/`, `Packages/` i `ProjectSettings/` w katalogu głównym, obok `docs/` i `tools/`.
+
+1. **Sklonuj repo:** GitHub Desktop → File → Clone repository → `Eziek/Eziek` → folder np. `C:\Projekty\Pockland`.
+2. **Gałąź `main`:** przełącz na `claude/unity-project-discussion-rlr9ae`, potem Branch → New branch → `main`
+   (na bazie bieżącej). Na `main` będzie projekt z Unity.
+3. **Projekt tymczasowy z szablonu:** Unity Hub → New project → Unity 6.3 LTS → szablon **Universal 2D**
+   → nazwa `Pockland` → lokalizacja **inna niż repo**, np. `C:\Projekty\Tmp`. Create, poczekaj na otwarcie edytora i **zamknij Unity**.
+
+   Dlaczego tak: Hub nie tworzy projektu w niepustym folderze, a szablon Universal 2D ma gotowy URP z 2D Rendererem
+   (`Assets/Settings`), którego nie chcemy robić ręcznie.
+4. **Przenieś pliki projektu do repo:** z `C:\Projekty\Tmp\Pockland` skopiuj do `C:\Projekty\Pockland` foldery:
+   - `Assets` (scal z istniejącym, czyli `_Project` zostaje obok `Scenes`, `Settings` z szablonu),
+   - `Packages`,
+   - `ProjectSettings`.
+
+   **Nie** kopiuj `Library`, `Temp`, `Logs`, `UserSettings` (są w `.gitignore`). Folder tymczasowy możesz potem usunąć.
+5. **Dodaj projekt w Hub:** Projects → Add → Add project from disk → wybierz `C:\Projekty\Pockland`. Otwórz
+   (pierwszy import potrwa kilka minut).
+6. **Sprawdź ustawienia pod Gita:** Edit → Project Settings → Editor:
+   - Version Control → Mode: **Visible Meta Files**,
+   - Asset Serialization → Mode: **Force Text**.
+
+   Oba są domyślne w Unity 6, ale warto sprawdzić.
+7. Zrób kroki z punktu 3 poniżej (menu „Wyspa”) i naciśnij Play.
+8. **Commit i push:** w GitHub Desktop powinny być zmiany w `Assets/` (z plikami `.meta`), `Packages/` i `ProjectSettings/`,
+   a **nie** w `Library/` ani `Temp/`. Wpisz opis (np. „Projekt Unity 6.3, szablon Universal 2D”) → Commit to main →
+   **Publish branch**.
+9. **Domyślna gałąź:** na GitHubie Settings → Branches → Default branch → `main`.
+
+## 2. (Stary sposób) Kopiowanie do osobnego projektu
+Jeśli nie chcesz trzymać projektu w repo: utwórz projekt z szablonu **Universal 2D** i skopiuj do niego folder
+`Assets/_Project`. Unity sam zaimportuje pliki, a `PixelArtImporter` ustawi sprite'om PPU 16, filtr Point, brak kompresji
+i pivoty.
 
 ## 3. Menu „Wyspa” (pasek u góry edytora)
 1. **Wyspa → 1. Ustawienia projektu**: okno 816×600, praca w tle, sprawdzenie, czy jest URP.

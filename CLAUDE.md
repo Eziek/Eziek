@@ -10,8 +10,9 @@ a lampy zasilane Esencją oświetlają wyspę w nocy (pora dnia z zegara kompute
 
 ## Współpraca
 - Rozmowa po **polsku**.
-- Silnik: **Unity 6.3 LTS (6000.3.26f1)**, szablon Universal 2D. Gracz kopiuje `Assets/_Project` do swojego projektu
-  (instrukcja: `docs/UNITY_SETUP.md`). Kod gry piszemy tylko w `Assets/_Project/` (namespace `Wyspa.*`).
+- Silnik: **Unity 6.3 LTS (6000.3.26f1)**, szablon Universal 2D. **Repo jest projektem Unity** (`Assets/`, `Packages/`,
+  `ProjectSettings/` w katalogu głównym; instrukcja: `docs/UNITY_SETUP.md`). Gałąź główna `main` pochodzi z pusha z Unity.
+  Kod gry piszemy tylko w `Assets/_Project/` (namespace `Wyspa.*`). Nie ruszaj `ProjectSettings/` ani plików szablonu bez potrzeby.
 - Unity nie ma w kontenerze. Przed commitem kodu C# skompiluj go na atrapach:
   `dotnet build tools/cscheck -p:ExtraDefines="ENABLE_INPUT_SYSTEM%3BUNITY_STANDALONE_WIN%3BUNITY_EDITOR_WIN"`
   (.NET SDK doinstaluj skryptem `dotnet-install.sh` do scratchpada). Nowe API Unity dopisuj do `tools/cscheck/UnityStubs.cs`
