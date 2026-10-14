@@ -152,3 +152,8 @@ npc.monk,Mnich z ruin,Ruin Monk,Ruinenmönch,廃墟の修道士,废墟修士,zam
 npc.fisher,Ślepy rybak,Blind Fisher,Blinder Fischer,盲目の漁師,盲眼渔夫,zamawiający
 bld.cauldron,Kocioł alchemiczny,Alchemy Cauldron,Alchemiekessel,錬金釜,炼金釜,warzy mikstury ze składników ze skrzyń
 term.potion,Mikstura,Potion,Trank,薬,药剂,działa przez 2 cykle gry
+term.familiar,Chowaniec,Familiar,Vertrauter,使い魔,使魔,zwierzę na wyspie z małym bonusem
+familiar.cat,Czarny kot,Black Cat,Schwarze Katze,黒猫,黑猫,chowaniec
+familiar.raven,Kruk,Raven,Rabe,ワタリガラス,渡鸦,chowaniec
+familiar.toad,Ropucha,Toad,Kröte,ヒキガエル,蟾蜍,chowaniec
+familiar.bat,Nietoperz,Bat,Fledermaus,コウモリ,蝙蝠,chowaniec

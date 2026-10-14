@@ -58,7 +58,9 @@ namespace Wyspa.Lighting
         public void Tick(float dt, bool night, EssenceStore essence)
         {
             // mikstura „Płynne światło”: lampy świecą bez Esencji
-            float burn = Alchemy.Potions.LampsFree ? 0f : definition != null ? definition.essencePerMinute * ConsumptionMultiplier * dt / 60f : 0f;
+            // nietoperz: o 20% mniej
+            float burn = Alchemy.Potions.LampsFree ? 0f : definition != null
+                ? definition.essencePerMinute * ConsumptionMultiplier * Familiars.FamiliarSystem.LampBurn * dt / 60f : 0f;
             bool on = !DebugAllOff && night && definition != null && essence.TryConsume(burn);
             SetOn(on);
         }

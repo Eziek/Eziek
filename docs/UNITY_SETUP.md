@@ -375,6 +375,15 @@ Po pobraniu: **Wyspa → 2** (sprite'y kotła w `IslandArt`), potem Play. Potrze
    Panel kotła pokazuje „Działa: Wywar wzrostu (1:59:..)”, dymek grządki pokazuje szybszy wzrost.
 4. Płynne światło: w nocy lampy świecą, a Esencja nie spada. Wabik: najbliższej nocy przypływa kupiec-widmo.
 
+## 4y. Chowańce (test)
+Po pobraniu: **Wyspa → 2** (sprite'y chowańców w `IslandArt`), potem Play.
+1. Warunki: kot - 10 kupionych kafelków i skrzynia; kruk - dorosłe drzewo owocowe (F1 → dojrzałe drzewa); ropucha - 20 zebranych
+   roślin nocy; nietoperz - 3 lampy na wyspie. Po spełnieniu (w ciągu ok. 5 s): toast „Na wyspę przybył chowaniec”, iskierki.
+2. Kot chodzi i siada (w nocy czasem śpi zwinięty), kruk przelatuje między drzewami/tablicą/lampami, ropucha skacze przy
+   grządkach, nietoperz w nocy krąży wokół lamp, w dzień wisi pod koroną.
+3. Kursor obok chowańca: iskierki i dymek z bonusem. Kot raz na cykl gry przynosi kilka monet (toast, monety lecą).
+4. Zapis: po wczytaniu chowańce wracają.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

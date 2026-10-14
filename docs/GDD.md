@@ -258,6 +258,12 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
+- [x] **Chowańce** (wybór gracza): przychodzą same, gdy wyspa spełni warunek, i zostają na zawsze (bez postaci gracza, tylko
+  zwierzęta): **czarny kot** (10 kupionych kafelków i skrzynia; mutacje x2, raz na cykl przynosi kilka monet; chodzi po
+  lądzie, siada, w nocy drzemie), **kruk** (dorosłe drzewo owocowe; drzewa rosną i owocują o 25% szybciej; przelatuje między
+  koronami drzew, tablicą i lampami), **ropucha** (20 zebranych roślin nocy; rośliny nocy +15%; skacze przy grządkach),
+  **nietoperz** (3 lampy; lampy -20% Esencji; w nocy krąży wokół lamp, w dzień wisi pod drzewem). Kursor obok: iskierki
+  i dymek z nazwą i bonusem. `Familiars/*`, zapis v11.
 - [x] **Kocioł alchemiczny** (wybór gracza): budowla w Sklep → Budowle (300 monet + 6 kamienia, wymaga ognika, kolejne x1.6).
   Składniki bierze **ze skrzyń na plony** (skrzynia = spiżarnia; uwaga: duszek-handlarz sprzedaje pełną skrzynię razem
   ze składnikami). Warzenie 5-10 min gry (ogień i bąble), potem wywar świeci na fioletowo, klik „Wypij” włącza miksturę
@@ -521,6 +527,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 51. Tańsze pierwsze 20 kafelków (prośba gracza). Wybór dalszej zabawy: zamówienia, kocioł alchemiczny, chowańce i pogoda,
     dźwięk i zasobnik. Zrobione zamówienia na tablicy; wskaźnik pisania i myszy w HUD, tempo z 15 s.
 52. Kocioł alchemiczny: 6 mikstur ze składników ze skrzyń, działanie 2 cykle, zapis v10.
+53. Chowańce: kot, kruk, ropucha, nietoperz - przychodzą po spełnieniu warunku, małe bonusy, zapis v11.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

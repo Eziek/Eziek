@@ -108,3 +108,9 @@ potion.focus.short,Esencja +50%,Essence +50%,Essenz +50 %,エッセンス+50%,�
 potion.light.short,lampy za darmo,free lamps,Lampen gratis,ランプ無料,灯免费,
 potion.lure.short,kupiec-widmo,Ghost Merchant,Geisterhändler,幽霊商人,幽灵商人,
 potion.fog.short,zdarzenia x2,events x2,Ereignisse x2,出来事x2,事件x2,
+familiar.cat.bonus,"Mutacje dwa razy częściej, czasem przynosi monety","Mutations twice as often, sometimes brings coins","Mutationen doppelt so oft, bringt manchmal Münzen",突然変異が2倍、時々コインを持ってくる,变异几率翻倍，有时会叼来金币,bonus chowańca
+familiar.raven.bonus,Drzewa rosną i owocują o 25% szybciej,Trees grow and fruit 25% faster,Bäume wachsen und tragen 25 % schneller,木の成長と実りが25%速い,树木生长和结果加快25%,
+familiar.toad.bonus,Rośliny nocy rosną o 15% szybciej,Night crops grow 15% faster,Nachtpflanzen wachsen 15 % schneller,夜の作物が15%速く育つ,夜间作物生长加快15%,
+familiar.bat.bonus,Lampy palą o 20% mniej Esencji,Lamps burn 20% less Essence,Lampen verbrauchen 20 % weniger Essenz,ランプのエッセンス消費が20%減る,灯消耗的精华减少20%,
+toast.familiar.arrived,Na wyspę przybył chowaniec - {0}! {1},A familiar has come to the island - {0}! {1},Ein Vertrauter ist auf die Insel gekommen - {0}! {1},使い魔が島に来た：{0}！{1},一只使魔来到了岛上：{0}！{1},"{0} = chowaniec, {1} = bonus"
+toast.familiar.gift,Kot przyniósł coś błyszczącego: +{0} {0:plural:moneta|monety|monet},The cat brought something shiny: +{0} {0:plural:coin|coins},Die Katze hat etwas Glänzendes gebracht: +{0} {0:plural:Münze|Münzen},猫が光る物を持ってきた：+{0}コイン,猫叼来了闪亮的东西：+{0}金币,raz na cykl

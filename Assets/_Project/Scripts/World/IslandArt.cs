@@ -85,6 +85,15 @@ namespace Wyspa.World
         public Sprite[] birdCrow;
         public Sprite[] birdFinch;
 
+        [Header("Chowańce: kot (sit0 sit1 walk0 walk1 sleep), kruk (sit0 sit1 fly0 fly1), ropucha (sit jump), nietoperz (fly0 fly1 hang)")]
+        public Sprite[] familiarCat;
+        public Sprite[] familiarCatGlow;
+        public Sprite[] familiarRaven;
+        public Sprite[] familiarRavenGlow;
+        public Sprite[] familiarToad;
+        public Sprite[] familiarBat;
+        public Sprite[] familiarBatGlow;
+
         [Header("Kocioł alchemiczny")]
         public Sprite cauldronIdle;
         public Sprite[] cauldronBrew;

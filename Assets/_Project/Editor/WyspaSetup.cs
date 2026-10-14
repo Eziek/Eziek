@@ -451,6 +451,21 @@ namespace Wyspa.EditorTools
             // kocioł alchemiczny: zimny, warzenie (3 klatki), gotowy (2 klatki) + piksele emisyjne
             Sprite Obj(string n) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Objects/{n}.png");
             art.cauldronIdle = LoadSprite("Objects/cauldron_idle");
+            // chowańce: klatki i piksele emisyjne (oczy)
+            Sprite[] Fam(string kind, string suffix, params string[] poses)
+            {
+                var list = new Sprite[poses.Length];
+                for (int i = 0; i < poses.Length; i++)
+                    list[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Critters/familiar_{kind}_{poses[i]}{suffix}.png");
+                return list;
+            }
+            art.familiarCat = Fam("cat", "", "sit0", "sit1", "walk0", "walk1", "sleep");
+            art.familiarCatGlow = Fam("cat", "_glow", "sit0", "sit1", "walk0", "walk1", "sleep");
+            art.familiarRaven = Fam("raven", "", "sit0", "sit1", "fly0", "fly1");
+            art.familiarRavenGlow = Fam("raven", "_glow", "sit0", "sit1", "fly0", "fly1");
+            art.familiarToad = Fam("toad", "", "sit", "jump");
+            art.familiarBat = Fam("bat", "", "fly0", "fly1", "hang");
+            art.familiarBatGlow = Fam("bat", "_glow", "fly0", "fly1", "hang");
             art.cauldronBrew = new[] { Obj("cauldron_brew_0"), Obj("cauldron_brew_1"), Obj("cauldron_brew_2") };
             art.cauldronBrewGlow = new[] { Obj("cauldron_brew_0_glow"), Obj("cauldron_brew_1_glow"), Obj("cauldron_brew_2_glow") };
             art.cauldronReady = new[] { Obj("cauldron_ready_0"), Obj("cauldron_ready_1") };

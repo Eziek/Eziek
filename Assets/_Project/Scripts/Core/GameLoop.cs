@@ -127,6 +127,7 @@ namespace Wyspa.Core
             if (upgrades == null) upgrades = GetComponent<UpgradeState>();
             if (upgrades == null) upgrades = gameObject.AddComponent<UpgradeState>();
             if (GetComponent<Orders.OrderBook>() == null) gameObject.AddComponent<Orders.OrderBook>();   // zamówienia z tablicy
+            if (GetComponent<Familiars.FamiliarSystem>() == null) gameObject.AddComponent<Familiars.FamiliarSystem>();   // chowańce
             upgrades.Changed += ApplyUpgrades;
         }
 
@@ -173,7 +174,7 @@ namespace Wyspa.Core
                 {
                     if (h == null || !h.IsParentPair(crop.id, other.id))
                         continue;
-                    if (!DebugAlwaysMutate && Random.value >= MutationChance)
+                    if (!DebugAlwaysMutate && Random.value >= MutationChance * Familiars.FamiliarSystem.MutationMultiplier)   // kot: x2
                         return;   // jedna próba na zbiór
                     seeds.Add(h.id);
                     GameEvents.RaiseToast("toast.mutation", Localization.Loc.Get("crop." + h.id));
@@ -249,7 +250,7 @@ namespace Wyspa.Core
             for (int i = FruitTree.All.Count - 1; i >= 0; i--)
             {
                 var tree = FruitTree.All[i];
-                float mult = activity.TempoMultiplier * (island != null ? island.TreeZoneBonus(tree) : 1f);
+                float mult = activity.TempoMultiplier * (island != null ? island.TreeZoneBonus(tree) : 1f) * Familiars.FamiliarSystem.TreeSpeed;   // kruk
                 tree.Tick(dt, activity.IsActive, night, clock.IsFullMoon, mult);
             }
 
@@ -273,7 +274,7 @@ namespace Wyspa.Core
             float dayBonus = crop != null && crop.kind == CropKind.Day ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth : 1f;
             // mikstury z kotła: wywar wzrostu (rośliny dnia), eliksir nocy (rośliny nocy)
             if (crop != null && crop.kind == CropKind.Night)
-                dayBonus = Alchemy.Potions.NightGrowth;
+                dayBonus = Alchemy.Potions.NightGrowth * Familiars.FamiliarSystem.NightGrowth;   // eliksir nocy, ropucha
             return new GrowthContext
             {
                 playerActive = activity.IsActive,

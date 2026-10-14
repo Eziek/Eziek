@@ -277,3 +277,98 @@ def cauldron(state='idle', f=0):
         for x, y in [((6, 2), (9, 1), (7, 0)), ((7, 2), (8, 1), (10, 0))][f % 2]:
             s.set(x, y, 'ml')
     return s.outline()
+
+
+# ---------- chowańce (po Etapie 6d): kot, kruk, ropucha, nietoperz ----------
+CAT_POSES = ('sit0', 'sit1', 'walk0', 'walk1', 'sleep')
+
+
+def cat(pose):
+    """Czarny kot ze świecącymi oczami, patrzy w prawo (lewo: flipX w kodzie)."""
+    s = Sprite(12, 10, 6, 9)
+    body = ['o', 'p0', 'p1']
+    if pose == 'sleep':
+        s.blob(6, 7, 4.2, 2.2, body)                          # zwinięty w kłębek
+        s.line(2, 8, 5, 9, 'p0'); s.set(9, 6, 'p0'); s.set(10, 5, 'p0')   # ogon, ucho
+        s.outline()
+        s.set(8, 7, 'p2'); s.set(9, 7, 'p2')                  # zamknięte oczy
+        return s
+    if pose.startswith('sit'):
+        s.blob(5.5, 6.5, 2.6, 2.6, body)                      # tułów
+        s.blob(7.5, 3.2, 2.0, 1.8, body)                      # głowa
+        s.set(6, 1, 'p0'); s.set(9, 1, 'p0')                  # uszy
+        tail = [(3, 8), (2, 7), (1, 6), (1, 5)] if pose == 'sit0' else [(3, 8), (2, 8), (1, 7), (0, 7)]
+        for x, y in tail:
+            s.set(x, y, 'p0')
+        s.set(5, 9, 'p0'); s.set(7, 9, 'p0')                  # łapki
+        s.outline()
+        s.set(7, 3, 'fl'); s.set(9, 3, 'fl')                  # oczy
+        return s
+    # chód: tułów poziomo, łapki na przemian
+    s.blob(5.5, 6, 3.6, 1.8, body)
+    s.blob(9, 4, 1.8, 1.7, body)
+    s.set(8, 2, 'p0'); s.set(10, 2, 'p0')
+    for x, y in [(1, 4), (1, 5), (2, 5)]:
+        s.set(x, y, 'p0')
+    legs = [(3, 8), (7, 8)] if pose == 'walk0' else [(4, 8), (8, 8)]
+    for x, y in legs:
+        s.set(x, y, 'p0'); s.set(x, y + 1, 'p0')
+    s.outline()
+    s.set(9, 4, 'fl'); s.set(10, 4, 'fl')
+    return s
+
+
+def raven(pose):
+    """Kruk-chowaniec: jak wrona, ale z fioletowym, świecącym okiem i srebrnym piórkiem."""
+    s = bird('crow', pose)
+    for p, k in list(s.px.items()):
+        if k == 'fl':
+            s.px[p] = 'ml'
+    s.set(5, 6 if not pose.startswith('fly') else 5, 'b3')
+    return s
+
+
+TOAD_POSES = ('sit', 'jump')
+
+
+def toad(pose):
+    """Ropucha z brodawkami i złotymi oczami."""
+    s = Sprite(12, 9, 6, 8)
+    ramp = ['g0', 'g1', 'e2']
+    if pose == 'sit':
+        s.blob(6, 5.5, 4.2, 2.6, ramp)
+        s.set(3, 8, 'g0'); s.set(9, 8, 'g0')
+    else:
+        s.blob(6, 4, 3.6, 2.4, ramp)
+        s.line(2, 6, 1, 8, 'g0'); s.line(10, 6, 11, 8, 'g0')    # wyprostowane łapy
+    for x, y in [(5, 5), (7, 6), (4, 6)]:
+        s.set(x, y if pose == 'sit' else y - 1, 'g3')          # brodawki
+    s.outline()
+    ey = 3 if pose == 'sit' else 2
+    s.set(4, ey, 'go'); s.set(8, ey, 'go')
+    return s
+
+
+BAT_POSES = ('fly0', 'fly1', 'hang')
+
+
+def bat(pose):
+    """Nietoperz z czerwonymi oczkami (emisyjne). hang: wisi głową w dół."""
+    s = Sprite(12, 8, 6, 7)
+    if pose == 'hang':
+        s.blob(6, 3.5, 1.6, 2.6, ['o', 'p0', 'p1'])
+        s.set(5, 0, 'p0'); s.set(7, 0, 'p0')                   # pazurki u góry
+        s.outline()
+        s.set(5, 5, 'fx'); s.set(7, 5, 'fx')
+        return s
+    s.blob(6, 4, 1.6, 1.6, ['o', 'p0', 'p1'])
+    if pose == 'fly0':
+        wing = [(4, 3), (3, 2), (2, 1), (1, 2), (8, 3), (9, 2), (10, 1), (11, 2), (3, 3), (9, 3)]
+    else:
+        wing = [(4, 4), (3, 5), (2, 6), (1, 5), (8, 4), (9, 5), (10, 6), (11, 5), (3, 4), (9, 4)]
+    for x, y in wing:
+        s.set(x, y, 'p0')
+    s.set(5, 2, 'p0'); s.set(7, 2, 'p0')                       # uszy
+    s.outline()
+    s.set(5, 4, 'fx'); s.set(7, 4, 'fx')
+    return s
