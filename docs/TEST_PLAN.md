@@ -202,6 +202,8 @@ Najpierw **Wyspa → 2** (motyw UI wczytuje nowe ikony `icon_gift_*`; bez tego d
 3. „Losuj dar”: ikony zlatują się w krąg, kręcą się i zacieśniają, po kolei wylatują na boki i szarzeją, ostatnia z grzmotem;
    zwycięzca x2 na środku w rozbłysku koloru rzadkości, napis „Nowy dar: ...” albo „...: poziom 2/3”, potem wszystkie
    wracają na miejsca, a nowy dar mruga i jest w kolorze z kropką poziomu. Klik w trakcie przyspiesza. Perły -1.
+   Przy wygranej fanfara (epicki i legendarny: dłuższa, z gongiem) i fajerwerki w kolorze rzadkości (więcej rakiet przy rzadszych
+   darach), z wystrzałem i trzaskiem; fajerwerki dogasają także po powrocie ikon i nie blokują przycisków.
 4. Kilka losowań pod rząd: ten sam dar wchodzi na wyższy poziom; dar z jednym poziomem po zdobyciu już nie walczy.
    Bez pereł przycisk „Brak pereł” (nieaktywny). Dymek przycisku: szanse rzadkości.
 5. Zamknij grę w Przystani i uruchom ponownie: slot w menu „We mgle: czeka w przystani”, „Graj” wraca do Przystani,

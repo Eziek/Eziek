@@ -669,6 +669,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     **27 nowych** (razem 37), kolekcja: zdobyte w kolorze, niezdobyte wyszarzałe. Zakup darów w Księdze usunięty (Księga
     pokazuje kolekcję). Zapis v16. Gałąź główna repozytorium to teraz `main`.
     Każdy z 37 darów ma własną ikonę 12 px w palecie mrocznej (`gift_icons.py`, podgląd `docs/img/ikony_darow.png`).
+    Wygrana w losowaniu: fanfara (dłuższa z gongiem dla epickich i legendarnych) i fajerwerki w kolorze rzadkości.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -955,8 +956,11 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
   Ten sam dar drugi raz: poziom wyżej. Dar na najwyższym poziomie już nie wypada. Każde losowanie od razu trafia do zapisu.
 - **Walka darów** (animacja losowania): ikony wszystkich darów, które mogą wypaść, zlatują się w krąg na środku, krąg kręci
   się coraz szybciej i zacieśnia, ikony rzucają się na siebie i po kolei wylatują na boki (szarzeją), ostatni cios z grzmotem.
-  Zwycięzca rośnie x2 na środku w rozbłysku koloru rzadkości, napis z nazwą i poziomem, potem wszystkie wracają na swoje
-  miejsca w kolekcji, a nowy dar mruga obwódką. Klik w trakcie przyspiesza. Ok. 5 s.
+  Zwycięzca rośnie x2 na środku w rozbłysku koloru rzadkości, napis z nazwą i poziomem, **fanfara z dzwonków** (przy epickim
+  i legendarnym dłuższa, z gongiem) i **fajerwerki**: rakiety z dołu okna pękają na iskry w kolorze rzadkości, złota i bieli
+  (zwykły 2 rakiety, niezwykły 3, rzadki 4, epicki 6, legendarny 9), z wystrzałem i trzaskiem. Potem wszystkie ikony wracają
+  na swoje miejsca w kolekcji, a nowy dar mruga obwódką. Klik w trakcie przyspiesza. Ok. 5 s.
+  Dźwięki: `tools/audio/gen_harbor.py` (`sfx_fanfare`, `sfx_fanfare_big`, `sfx_firework`).
 - **Kolekcja** (Przystań i zakładka Rejs w Księdze): kratka 37 darów w ramkach koloru rzadkości (kamień, mech, błękit,
   fiolet, stare złoto). Zdobyte w pełnym kolorze z kropkami poziomów, niezdobyte wyszarzałe; dymek: nazwa, rzadkość,
   efekt, poziom. Podgląd: `docs/img/przystan_mgly.png`.

@@ -297,7 +297,9 @@ namespace Wyspa.UI
             var rc = Prestige.RarityColor(winner.rarity);
             Ui.Place(glow.rectTransform, Ui.Center, Ui.Center, center, new Vector2(Burst().rect.width, Burst().rect.height) * 2f);
             glow.transform.SetSiblingIndex(champ.cell.rect.GetSiblingIndex());
-            GameEvents.PlaySound("magic");
+            bool big = winner.rarity >= GiftRarity.Epic;
+            GameEvents.PlaySound(big ? "fanfare_big" : "fanfare", 0.8f);   // fanfara wygranej, przy epickim i legendarnym z gongiem
+            StartCoroutine(Fireworks(winner.rarity, center));
             int lvl = Prestige.Level(winner.id);
             resultLine.color = rc;
             resultLine.text = lvl <= 1
@@ -357,6 +359,129 @@ namespace Wyspa.UI
                 GiftGrid.Paint(s, 1f);
                 yield return new WaitForSecondsRealtime(0.12f);
             }
+        }
+
+        // ------------------------------------------------------------ fajerwerki
+
+        class Spark
+        {
+            public Image img;
+            public Vector2 pos, vel;
+            public float life, age;
+            public Color color;
+            public bool rocket;
+        }
+
+        /// <summary>Ile rakiet na wygraną: zwykły 2, niezwykły 3, rzadki 4, epicki 6, legendarny 9.</summary>
+        static int Rockets(GiftRarity r) => r == GiftRarity.Legendary ? 9 : r == GiftRarity.Epic ? 6 : 2 + (int)r;
+
+        /// <summary>
+        /// Fajerwerki nad Przystanią: rakiety (2 px ze smugą) wylatują z dołu okna i pękają w górnej połowie na iskry
+        /// w kolorze rzadkości, złota i bieli; iskry opadają i gasną. Osobna warstwa nad wszystkim, bez klikania,
+        /// więc gra dalej także w trakcie powrotu ikon.
+        /// </summary>
+        IEnumerator Fireworks(GiftRarity rarity, Vector2 center)
+        {
+            var layer = Ui.Stretch(Ui.Rect("Fireworks", root));
+            layer.SetAsLastSibling();
+            var sparks = new List<Spark>();
+            var rc = Prestige.RarityColor(rarity);
+            var gold = (Color)Ui.Theme.textGold;
+            var half = layer.rect.size * 0.5f;
+            int rockets = Rockets(rarity);
+            float[] launchAt = new float[rockets];
+            for (int i = 0; i < rockets; i++)
+                launchAt[i] = i * (rarity >= GiftRarity.Epic ? 0.28f : 0.4f) + Random.Range(0f, 0.12f);
+            int launched = 0;
+            for (float t = 0f; launched < rockets || sparks.Count > 0; t += Time.unscaledDeltaTime)
+            {
+                while (launched < rockets && t >= launchAt[launched])
+                {
+                    // rakieta: z dołu, w stronę górnej połowy, rozrzucona na boki od środka walki
+                    float x = Mathf.Clamp(center.x + Random.Range(-half.x * 0.8f, half.x * 0.8f), -half.x + 10f, half.x - 10f);
+                    float apex = Random.Range(half.y * 0.15f, half.y * 0.75f);
+                    var r = NewSpark(layer, sparks, new Vector2(x, -half.y), new Vector2(Random.Range(-15f, 15f), 0f), 2, gold);
+                    r.rocket = true;
+                    r.vel.y = Mathf.Sqrt(2f * 220f * (apex + half.y));   // dolatuje mniej więcej do apex przy grawitacji 220
+                    r.life = r.vel.y / 220f;
+                    launched++;
+                }
+                float dt = Time.unscaledDeltaTime;
+                for (int i = sparks.Count - 1; i >= 0; i--)
+                {
+                    var p = sparks[i];
+                    p.age += dt;
+                    if (p.rocket)
+                    {
+                        p.vel.y -= 220f * dt;
+                        p.pos += p.vel * dt;
+                        if (p.age >= p.life || p.vel.y <= 0f)
+                        {
+                            Explode(layer, sparks, p.pos, rc, gold, rarity);
+                            Kill(sparks, i);
+                            continue;
+                        }
+                        // smuga: co klatkę krótka, gasnąca iskra za rakietą
+                        var trail = NewSpark(layer, sparks, p.pos, Vector2.zero, 1, new Color(gold.r, gold.g, gold.b, 0.6f));
+                        trail.life = 0.25f;
+                    }
+                    else
+                    {
+                        p.vel.y -= 70f * dt;
+                        p.vel *= Mathf.Exp(-1.6f * dt);
+                        p.pos += p.vel * dt;
+                        if (p.age >= p.life)
+                        {
+                            Kill(sparks, i);
+                            continue;
+                        }
+                        float u = p.age / p.life;
+                        // migotanie pod koniec życia, potem znika
+                        bool on = u < 0.6f || Mathf.Repeat(p.age * 18f + i, 2f) < 1.2f;
+                        p.img.color = on ? new Color(p.color.r, p.color.g, p.color.b, p.color.a * (1f - u * u)) : Color.clear;
+                        if (u > 0.5f)
+                            p.img.rectTransform.sizeDelta = Vector2.one;
+                    }
+                    p.img.rectTransform.anchoredPosition = new Vector2(Mathf.Round(p.pos.x), Mathf.Round(p.pos.y));
+                }
+                yield return null;
+            }
+            Destroy(layer.gameObject);
+        }
+
+        void Explode(RectTransform layer, List<Spark> sparks, Vector2 at, Color rarityColor, Color gold, GiftRarity rarity)
+        {
+            GameEvents.PlaySound("firework", 0.5f);
+            int n = 26 + 6 * (int)rarity;
+            float speed = Random.Range(55f, 80f) + 8f * (int)rarity;
+            for (int i = 0; i < n; i++)
+            {
+                float a = i * Mathf.PI * 2f / n + Random.Range(-0.1f, 0.1f);
+                float v = speed * Random.Range(0.75f, 1.05f);
+                var c = i % 3 == 0 ? gold : i % 7 == 0 ? Color.white : rarityColor;
+                var p = NewSpark(layer, sparks, at, new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * v, 2, c);
+                p.life = Random.Range(0.8f, 1.3f);
+            }
+            // błysk w środku wybuchu
+            var flash = NewSpark(layer, sparks, at, Vector2.zero, 4, Color.white);
+            flash.life = 0.08f;
+        }
+
+        static Spark NewSpark(RectTransform layer, List<Spark> sparks, Vector2 pos, Vector2 vel, int size, Color c)
+        {
+            var img = Ui.Img(layer, "Spark", GiftGrid.White(), false);
+            Ui.Place(img.rectTransform, Ui.Center, Ui.Center, pos, new Vector2(size, size));
+            img.color = c;
+            var p = new Spark { img = img, pos = pos, vel = vel, color = c, life = 1f };
+            sparks.Add(p);
+            return p;
+        }
+
+        static void Kill(List<Spark> sparks, int i)
+        {
+            if (sparks[i].img != null)
+                Destroy(sparks[i].img.gameObject);
+            sparks.RemoveAt(i);
         }
 
         static float Weight(int k, int count) => 0.35f + 1.3f * Mathf.Pow(count > 1 ? k / (float)(count - 1) : 1f, 2f);
