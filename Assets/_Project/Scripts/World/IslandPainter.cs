@@ -15,7 +15,6 @@ namespace Wyspa.World
     {
         public int width, height;
         public byte[] island;      // ląd: kontur, klif, trawa
-        public byte[] islandHi;    // Etap 7: ląd w 32 px na kafelek (HiScale x rozdzielczość), szczegółowy
         public byte[] waterBase;   // statyczna woda (gdy shader nie działa)
         public byte[] data;        // R = odległość od brzegu x4, G = klasa x32 (opis w Water.shader)
         /// <summary>Maska lądu dla grządek (trawa bez 2 px przy brzegu, bez konturu i klifu), RGBA jak island: alfa 255 = ląd.</summary>
@@ -42,10 +41,7 @@ namespace Wyspa.World
         static readonly byte[] O = Hex("0f0a10"), G1 = Hex("21342c"), G2 = Hex("344a3b"), E0 = Hex("20171c"),
             E1 = Hex("352629"), E2 = Hex("523b35"), P0 = Hex("1c1520"), P1 = Hex("33263a"),
             B0 = Hex("121c27"), B1 = Hex("1f3044"), B2 = Hex("30485f"), FO = Hex("848e9b"),
-            G0 = Hex("141f1c"), B3 = Hex("56697a"),
-            G3 = Hex("566d52"), E3 = Hex("715444"), CR = Hex("d8ccab"), GO = Hex("c49a55"), ML = Hex("8f6aa8");
-        /// <summary>Etap 7: teren rysowany w 32 px na kafelek (dwa razy gęściej niż siatka logiki i danych wody).</summary>
-        public const int HiScale = 2;
+            G0 = Hex("141f1c"), B3 = Hex("56697a");
         static readonly byte[][] Cliff = { G1, E2, E2, E2, E1, E1, P1, P1, P0 };
         static readonly int[] Bayer = { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5 };
 
@@ -245,176 +241,12 @@ namespace Wyspa.World
                 }
 
             pic.island = island;
-            pic.islandHi = PaintHi(map, R, land, cliffCol, outline, W, H, seed);
             pic.waterBase = waterBase;
             pic.data = data;
             pic.minX = minX; pic.minY = minY; pic.maxX = maxX; pic.maxY = maxY;
             PlaceFish(pic, dist, seed);
             PlaceBeast(pic, dist);
             return pic;
-        }
-
-        // ------------------------------------------------------------ teren 32 px (Etap 7, styl zaakceptowany na próbce)
-
-        /// <summary>
-        /// Ląd w podwójnej rozdzielczości: brzeg wygładzony Scale2x (bez schodków 2x2), trawa w płatach z kępkami i kwiatkami,
-        /// klif z warstwami ziemi, kamieniami i korzeniami, cienki kontur. Siatka logiki (maska, klif, kontur) zostaje 16 px,
-        /// więc woda, grządki i obiekty pasują do niego bez zmian.
-        /// </summary>
-        static byte[] PaintHi(IslandMap map, Region R, bool[] land, byte[][] cliffCol, bool[] outline, int width, int height, int seed)
-        {
-            int S = HiScale, W2 = width * S, H2 = height * S;
-            var img = new byte[W2 * H2 * 4];
-            int X0 = R.x * S, Y0 = R.y * S, X1 = (R.x + R.w) * S, Y1 = (R.y + R.h) * S;
-            bool L(int x, int y) => R.Contains(x, y) && land[R.I(x, y)];
-            bool CliffCell(int x, int y) => R.Contains(x, y) && cliffCol[R.I(x, y)] != null && !land[R.I(x, y)];
-            bool OutlineCell(int x, int y) => R.Contains(x, y) && outline[R.I(x, y)];
-
-            // ląd 2x z wygładzeniem skosów (EPX na masce)
-            var land2 = new bool[(X1 - X0) * (Y1 - Y0)];
-            int I2(int x, int y) => (y - Y0) * (X1 - X0) + (x - X0);
-            bool In2(int x, int y) => x >= X0 && y >= Y0 && x < X1 && y < Y1;
-            for (int y = R.y; y < R.y + R.h; y++)
-                for (int x = R.x; x < R.x + R.w; x++)
-                {
-                    bool p = L(x, y), a = L(x, y - 1), b = L(x + 1, y), c = L(x - 1, y), d = L(x, y + 1);
-                    bool e0 = c == a && c != d && a != b ? a : p;
-                    bool e1 = a == b && a != c && b != d ? b : p;
-                    bool e2 = d == c && d != b && c != a ? c : p;
-                    bool e3 = b == d && b != a && d != c ? d : p;
-                    // EPX nie dokłada lądu na komórkach klifu (klif ma zostać pod lądem)
-                    int X = x * S, Y = y * S;
-                    land2[I2(X, Y)] = e0 && !CliffCell(x, y);
-                    land2[I2(X + 1, Y)] = e1 && !CliffCell(x, y);
-                    land2[I2(X, Y + 1)] = e2 && !CliffCell(x, y);
-                    land2[I2(X + 1, Y + 1)] = e3 && !CliffCell(x, y);
-                }
-            bool L2(int x, int y) => In2(x, y) && land2[I2(x, y)];
-            // strefa i jej podłoże raz na komórkę logiki (zamiast na każdy piksel 32 px - malowanie jest wtedy kilka razy szybsze)
-            var zoneOf = new ZoneKind[R.w * R.h];
-            var zoneCol = new byte[R.w * R.h][];
-            for (int y = R.y; y < R.y + R.h; y++)
-                for (int x = R.x; x < R.x + R.w; x++)
-                    if (land[R.I(x, y)])
-                    {
-                        var z = ZoneOfPixel(map, x, y);
-                        zoneOf[R.I(x, y)] = z;
-                        if (z != ZoneKind.None)
-                            zoneCol[R.I(x, y)] = Surface(map, x, y);
-                    }
-            ZoneKind Zone(int x, int y) => R.Contains(x, y) ? zoneOf[R.I(x, y)] : ZoneKind.None;
-            bool C2(int x, int y) => In2(x, y) && !L2(x, y) && CliffCell(x / S, y / S);
-            void Put(int x, int y, byte[] c)
-            {
-                int i = ((H2 - 1 - y) * W2 + x) * 4;
-                img[i] = c[0]; img[i + 1] = c[1]; img[i + 2] = c[2]; img[i + 3] = 255;
-            }
-
-            // trawa (podłoża stref z siatki logiki, z drobnym ditheringiem)
-            for (int y = Y0; y < Y1; y++)
-                for (int x = X0; x < X1; x++)
-                {
-                    if (!L2(x, y))
-                        continue;
-                    int lx = x / S, ly = y / S;
-                    byte[] k;
-                    if (R.Contains(lx, ly) && zoneCol[R.I(lx, ly)] != null)
-                        k = zoneCol[R.I(lx, ly)];
-                    else
-                    {
-                        double n = VNoise(x, y, 10, seed * 3 + 51) + (Bayer[(y & 3) * 4 + (x & 3)] / 16.0 - 0.5) * 0.12;
-                        k = n < 0.38 ? G1 : n > 0.66 ? G3 : G2;
-                    }
-                    bool edge = !L2(x + 1, y) || !L2(x - 1, y) || !L2(x, y - 1) || !L2(x, y + 1);
-                    if (edge && !C2(x, y + 1))
-                        k = G1;   // ciemniejszy rąbek trawy przy wodzie
-                    Put(x, y, k);
-                }
-            // kępki trawy i kwiatki (poza strefami)
-            for (int y = Y0 + 2; y < Y1 - 3; y++)
-                for (int x = X0 + 2; x < X1 - 2; x++)
-                {
-                    if (!L2(x, y) || !L2(x, y + 3) || !L2(x - 2, y) || !L2(x + 2, y) || Zone(x / S, y / S) != ZoneKind.None)
-                        continue;
-                    double h = H(x, y, seed * 5 + 53);
-                    if (h < 1.0 / 70.0)
-                    {
-                        Put(x, y, G3); Put(x - 1, y + 1, G3); Put(x + 1, y + 1, G3);
-                        Put(x, y + 1, G1); Put(x - 1, y + 2, G1); Put(x + 1, y + 2, G1);
-                        if (h < 1.0 / 180.0) { Put(x, y - 1, G3); Put(x + 2, y, G2); }
-                    }
-                    else if (h > 1.0 - 1.0 / 600.0)
-                    {
-                        double c = H(x, y, seed * 5 + 57);
-                        Put(x, y, c < 0.4 ? CR : c < 0.7 ? GO : ML);
-                        Put(x, y + 1, G1);
-                    }
-                }
-
-            // klif: kolumna po kolumnie od górnej krawędzi w dół
-            for (int x = X0; x < X1; x++)
-            {
-                int y = Y0;
-                while (y < Y1)
-                {
-                    if (!C2(x, y) || C2(x, y - 1))   // początek pasa klifu w kolumnie (nad nim ląd albo róg ścięty przez EPX)
-                    {
-                        y++;
-                        continue;
-                    }
-                    int top = y, h = 0;
-                    while (C2(x, top + h)) h++;
-                    bool root = H(x, top, seed * 7 + 41) < 0.04;
-                    int rootLen = 4 + (int)(H(x, top, seed * 7 + 42) * 8);
-                    bool drip = H(x, top, seed * 7 + 43) < 0.2;
-                    int dripLen = 1 + (int)(H(x, top, seed * 7 + 44) * 3);
-                    for (int k = 0; k < h; k++)
-                    {
-                        int yy = top + k;
-                        int fromBottom = h - 1 - k;
-                        byte[] c;
-                        if (k < 2) c = k == 0 ? G1 : G0;
-                        else if (k == 2) c = E3;
-                        else if (fromBottom <= 2) c = fromBottom == 0 ? O : P0;
-                        else if (fromBottom <= 4) c = P1;
-                        else
-                        {
-                            // warstwy ziemi poziomo w świecie (od stałej wysokości, nie od góry kolumny): bez pionowych pasów
-                            double st = VNoise(x, yy, 9, seed * 7 + 45);
-                            int row = yy + (int)(st * 3);
-                            int band = (row / 5) % 2;
-                            c = band == 0 ? E2 : E1;
-                            if (row % 5 == 0) c = band == 0 ? E1 : E0;
-                            double sn = VNoise(x, yy, 3, seed * 7 + 46);   // kamienie w ścianie
-                            if (k > 4)
-                            {
-                                if (sn > 0.86) c = B2;
-                                else if (sn > 0.8) c = B1;
-                                else if (sn > 0.77) c = P0;
-                            }
-                        }
-                        if (root && k >= 3 && k < 3 + rootLen && fromBottom > 3) c = (k % 3 == 0) ? P1 : E0;
-                        if (drip && k < 2 + dripLen) c = k < 2 ? G2 : G1;   // zwisająca trawa
-                        Put(x, yy, c);
-                    }
-                    y = top + h;
-                }
-            }
-
-            // kontur 1 px: komórki konturu z siatki logiki (i kąty ścięte przez EPX) - przy lądzie ciemny, dalej woda przy brzegu
-            for (int y = Y0; y < Y1; y++)
-                for (int x = X0; x < X1; x++)
-                {
-                    if (L2(x, y) || C2(x, y))
-                        continue;
-                    int lx = x / S, ly = y / S;
-                    if (!OutlineCell(lx, ly) && !L(lx, ly) && !CliffCell(lx, ly))
-                        continue;
-                    bool touch = L2(x + 1, y) || L2(x - 1, y) || L2(x, y + 1) || L2(x, y - 1)
-                              || C2(x + 1, y) || C2(x - 1, y) || C2(x, y + 1) || C2(x, y - 1);
-                    Put(x, y, touch ? O : FO);   // dalej od lądu: linia piany
-                }
-            return img;
         }
 
         // ------------------------------------------------------------ podłoża stref (port sprites4.py: ground)

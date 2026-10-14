@@ -851,15 +851,14 @@ namespace Wyspa.World
         {
             picture = IslandPainter.Paint(map, rising, grow);
             int s = picture.width;
-            int hs = s * IslandPainter.HiScale;   // Etap 7: teren w 32 px na kafelek
             if (islandTex == null)
             {
-                islandTex = NewTexture(hs, false, "IslandLand");
+                islandTex = NewTexture(s, false, "IslandLand");
                 waterTex = NewTexture(s, false, "IslandWater");
                 dataTex = NewTexture(s, true, "IslandWaterData");
                 var rect = new Rect(0, 0, s, s);
                 var pivot = new Vector2(0.5f, 0.5f);
-                if (islandRenderer != null) islandRenderer.sprite = Sprite.Create(islandTex, new Rect(0, 0, hs, hs), pivot, Ppu * IslandPainter.HiScale, 0, SpriteMeshType.FullRect);
+                if (islandRenderer != null) islandRenderer.sprite = Sprite.Create(islandTex, rect, pivot, Ppu, 0, SpriteMeshType.FullRect);
                 if (waterRenderer != null) waterRenderer.sprite = Sprite.Create(waterTex, rect, pivot, Ppu, 0, SpriteMeshType.FullRect);
                 if (fogRenderer != null) fogRenderer.sprite = Sprite.Create(dataTex, rect, pivot, Ppu, 0, SpriteMeshType.FullRect);
                 // maska lądu: grządki na brzegu nie wystają poza zaokrąglony, nierówny brzeg wyspy
@@ -875,7 +874,7 @@ namespace Wyspa.World
             }
             landMaskTex.LoadRawTextureData(picture.landMask);
             landMaskTex.Apply(false);
-            islandTex.LoadRawTextureData(picture.islandHi);
+            islandTex.LoadRawTextureData(picture.island);
             islandTex.Apply(false);
             waterTex.LoadRawTextureData(picture.waterBase);
             waterTex.Apply(false);

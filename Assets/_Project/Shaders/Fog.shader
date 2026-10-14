@@ -92,23 +92,13 @@ Shader "Wyspa/Fog"
                 return data.r * 255.0 / 4.0;
             }
 
-            // odległość od brzegu interpolowana (Etap 7: mgła liczona w 32 px, gładki brzeg kłębów)
-            float FogDistSmooth(float2 p, float2 size)
-            {
-                float2 tp = p - 0.5;
-                float2 i0 = floor(tp), fr = tp - i0;
-                float a = FogDist(i0, size), b = FogDist(i0 + float2(1, 0), size);
-                float c = FogDist(i0 + float2(0, 1), size), e = FogDist(i0 + float2(1, 1), size);
-                return lerp(lerp(a, b, fr.x), lerp(c, e, fr.x), fr.y);
-            }
-
             // przezroczyste okno: mgła kończy się najdalej tyle pikseli za pasem wody (zawsze w kadrze, bez ucięcia oknem)
             #define FOG_REACH 18.0
 
             // band = przezroczyste okno (wał przy wodzie), inaczej mgła zakrywa morze dalej od wyspy
             float FogSdf(float2 p, float2 size, bool band, float edge, float T)
             {
-                float d = FogDistSmooth(p, size);
+                float d = FogDist(p, size);
                 float s = band ? d - (edge + 5.0) : (edge + 14.0) - d;
                 float lo = band ? edge + 2.0 : edge + 4.0;
                 float hi = band ? edge + 13.0 : edge + 14.0;
@@ -133,11 +123,10 @@ Shader "Wyspa/Fog"
             half4 FogFragment(Varyings input) : SV_Target
             {
                 float2 size = _MainTex_TexelSize.zw;
-                // Etap 7: siatka 32 px (pół piksela danych), dane wody dalej w 16 px
-                float2 pix = floor(input.uv * size * 2.0) * 0.5 + 0.25;
-                half4 data = SAMPLE_TEXTURE2D_LOD(_MainTex, sampler_MainTex, (floor(pix) + 0.5) * _MainTex_TexelSize.xy, 0);
+                float2 pix = floor(input.uv * size);
+                half4 data = SAMPLE_TEXTURE2D_LOD(_MainTex, sampler_MainTex, (pix + 0.5) * _MainTex_TexelSize.xy, 0);
                 bool water = data.g > 0.06;
-                float d = FogDistSmooth(pix, size);   // odległość od brzegu w pikselach danych (do ok. 64), gładko
+                float d = data.r * 255.0 / 4.0;      // odległość od brzegu w pikselach (do ok. 64)
                 float T = 6.2831853 * frac(_Time.y / _FogPeriod);   // płynny dryf kłębów
                 bool band = _FogOuter > 0.0;
                 // gęstsza mgła (noc, zgaszone lampy) podchodzi bliżej brzegu; w przezroczystym oknie zaczyna się przy wodzie
@@ -147,7 +136,7 @@ Shader "Wyspa/Fog"
                 float sShadow = FogSdf(pix + float2(2.0, -2.0), size, band, edge, T);   // przy dolno-prawej krawędzi: cień
                 float sLight = FogSdf(pix + float2(-1.0, 2.0), size, band, edge, T);    // przy górnej-lewej: jasny brzeg
                 bool inside = s < 0.0;
-                bool outline = s >= 0.0 && s < 0.6;   // obrys 1 px w 32 px (ciemniejszy, prośba gracza)
+                bool outline = s >= 0.0 && s < 1.2;   // obrys 1 px (kolor ciemniejszy, prośba gracza)
                 if (band)
                 {
                     inside = inside && d > _FogOuter - 3.0;     // zachodzi 3 px na pas wody, bez przerwy i bez obrysu od wody

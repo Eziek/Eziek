@@ -208,7 +208,10 @@ Gracz odrzucił wersję „cukierkową”.
 Wcześniejsza jasna paleta („cukierkowa”) została odrzucona. Jest w `tools/pixel-proto/sprites.py` (`PAL`) jako baza
 kluczy, a wersję mroczną nakłada `run_dark_palette.py`.
 
-### 5.4 Rozdzielczość: 32 px (decyzja gracza, przesiadka jako osobny etap)
+### 5.4 Rozdzielczość: 16 px, woda w 32 px (decyzja gracza po teście Etapu 7, §9 p. 74)
+- Stan obecny: sprite'y i teren w **16 px** (ostre, mocny kontrast), woda liczona w shaderze w **32 px**, kamera PPU 32.
+  Próba przerobienia wszystkiego na 32 px (Scale2x, paleta dark fantasy) została odrzucona jako „wygładzona i nijaka”.
+  Poniżej pierwotne ustalenia z testu 32 px (historia).
 - Prototyp: **siatka 16 px** (rośliny ok. 18×24, drzewa ok. 32×40), kadr 272×200 (×3 = 816×600).
 - Test **32 px** (rośliny ok. 32–40, drzewo ok. 64–80): poziom detalu jak gołąb z referencji. Patrz `docs/img/porownanie_16_vs_32.png`.
 - Rekomendacja Claude: **32 px**. Obiekty 128 px odradzane (okno byłoby ogromne, a 4× więcej pracy na asset).
@@ -254,8 +257,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   w miarę projektowania, animacje wynurzenia potwora w pełnej sekwencji.
 
 ## 7. Otwarte decyzje
-- [x] Siatka **32 px** (wybór gracza). Docelowe assety rysowane ręcznie w 32 px; placeholdery zostają 16 px do przesiadki
-  (PPU 32, kafelki, okno, generator), którą robimy jako osobny etap razem z fontem 12 px.
+- [x] Siatka: **16 px dla sprite'ów i terenu, woda w 32 px** (decyzja gracza po teście Etapu 7, §9 p. 74; wcześniejszy
+  wybór „wszystko w 32 px” wycofany, bo przerobione grafiki wyszły „wygładzone i nijakie”). Font 12 px osobnym etapem.
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [x] Nazwa energii: **Żar** (wybór gracza; EN Ember, DE Glut, JA 熾火, ZH 余火). W kodzie i starszych częściach GDD
   nadal „Essence/Esencja”. Imię ognika „Żarek” zmienione na „Węgielek” (EN Cinder), żeby nie myliło się z walutą.
@@ -603,6 +606,12 @@ Obrazki referencyjne (kopie): `docs/img/`
     z wody przy brzegu z pluskiem (`Visual/AmbientLife`), świecące rośliny pulsują nocą każda w swoim rytmie.
 73. Ocena gracza po zrzutach Etapu 7: „za bardzo wygładzone, nijakie, wcześniej lepiej wyglądało”. Decyzja, czy wracamy do
     16 px, czy robimy 32 px bez wygładzania, czeka na nową sesję (opcje w `docs/HANDOFF.md`).
+74. Decyzja gracza po teście Etapu 7: **powrót do grafiki 16 px** („ostrzejsza, z większym kontrastem, przyjemniejsza”),
+    **woda zostaje w 32 px** („woda jest świetna”). Sprite'y świata i teren wracają do stanu sprzed Etapu 7 (PNG 16 px
+    z `export_unity*.py` + `pad_sway.py`, bez `convert32.py`; `IslandPainter` bez `PaintHi`, ląd PPU 16), kołysanie x1.
+    Mgła znów liczona w siatce 16 px (z p. 71 zostają ciemniejsza obwódka i limit zasięgu 18 px w przezroczystym oknie).
+    Zostają: shader wody z p. 69, kamera PPU 32 z kadrem x2 (bez niej woda straciłaby detal), więc skala okna jest parzysta
+    (Opcje: x2, x4, x6), oraz animacje z p. 72 (ryba w 16 px). Narzędzia `tools/art32/` zostają jako archiwum.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

@@ -16,9 +16,9 @@ namespace Wyspa.World
 
         const float Ppu = 16f;
         /// <summary>
-        /// Etap 7: grafiki 32 px na kafelek. Cała logika kadru zostaje w pikselach 16 px (jak dotąd), a kamera dostaje
-        /// PPU 32 i dwukrotnie większy kadr. Skala okna (piksele ekranu na piksel 16) musi być parzysta, żeby piksel 32 px
-        /// był całym pikselem ekranu (x2 = x1 w nowych pikselach, x4 = x2, x6 = x3).
+        /// Grafiki są w 16 px, ale woda (shader) liczy obraz w 32 px na kafelek. Cała logika kadru zostaje w pikselach 16 px,
+        /// a kamera dostaje PPU 32 i dwukrotnie większy kadr. Skala okna (piksele ekranu na piksel 16) musi być parzysta,
+        /// żeby piksel wody 32 px był całym pikselem ekranu (x2, x4, x6).
         /// </summary>
         public const int ArtScale = 2;
         static int Even(int s) => Mathf.Clamp(s + (s & 1), 2, 6);

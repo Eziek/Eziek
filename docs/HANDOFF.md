@@ -30,40 +30,24 @@ Funkcje gry:
 - **Wiatr.** Margines 6 px dla kołyszących się sprite'ów (`tools/pixel-proto/pad_sway.py`), bez pionowej kreski.
 - **Księga.** Przewijanie i przesuwanie treści (ScrollRect).
 
-### Etap 7 (32 px): zrobiony, ale gracz go **nie akceptuje**
+### Etap 7 (32 px): odrzucony, wróciliśmy do 16 px, woda została
 
-Ocena gracza po zrzutach: *„za bardzo wygładzone wszystko, takie nijakie, wcześniej lepiej wyglądało”*.
-Wcześniej zaakceptował próbki: wodę i teren z `tools/art32/probka32.py` (`docs/img/art32_woda.gif`) i rośliny „crisp + dark fantasy”
-(`docs/img/art32_rosliny.png`). Efekt w grze (Scale2x, wygładzone brzegi) uznał za gorszy od starego 16 px.
+Ocena gracza: *„za bardzo wygładzone, nijakie, wcześniej było ostrzej i z większym kontrastem; woda jest świetna”*.
+Decyzja (GDD §9 p. 74, wariant C):
+- sprite'y świata: znów 16 px (PNG i `pivots.json` ze stanu `07d4a72` + ryba z `export_unity_auto.py`, potem `pad_sway.py`);
+- teren: `Island.cs` i `IslandPainter.cs` jak przed `386864d` (bez `PaintHi`, ląd PPU 16);
+- kołysanie: `_SwayAmount` 1 (WyspaSetup);
+- mgła: siatka 16 px, ale zostają ciemniejsza obwódka i limit zasięgu 18 px w przezroczystym oknie;
+- **zostaje**: `Water.shader` w 32 px, kamera PPU 32 z kadrem x2 (`ViewController.ArtScale`), parzysta skala okna (x2, x4, x6),
+  `AmbientLife` (ćmy, ryba), pulsowanie roślin, obsługa pola `"hd"` w importerze (nieużywana);
+- `tools/art32/` zostaje jako archiwum, `convert32.py` nie uruchamiać.
 
-Commity Etapu 7, od najstarszego:
-
-| Commit | Co |
-|---|---|
-| `9979804` | próbka stylu (`tools/art32/probka32.py`, `px.py`) |
-| `a8f3ec9`, `617b2b1` | `tools/art32/hd2x.py` (Scale2x + detal, tryb crisp, paleta DARK_FANTASY), arkusz porównania |
-| `f39f5c1` | **część 1**: `convert32.py` przerobił 255 PNG na 32 px; importer PPU z pola `"hd"` w `pivots.json`; kamera PPU 32 i kadr x2 (`ViewController.ArtScale`), skala okna parzysta; kołysanie x2 |
-| `386864d` | **część 2**: teren 32 px (`IslandPainter.PaintHi`, EPX na brzegu); `Island` ładuje `islandHi` z PPU 32 |
-| `1fc2f3d` | **część 3a**: `Water.shader` w 32 px (paralaksa dna, światełka, łamiące się fale, kręgi) |
-| `e71c827` | **część 3b**: `Fog.shader` w 32 px, ciemniejsza obwódka, limit zasięgu w przezroczystym oknie |
-| `364ae2c` | poprawka: poświaty tylko tam, gdzie były |
-| `e2da7f0` | **część 4**: `Visual/AmbientLife` (ćmy przy lampach, skacząca ryba), pulsowanie świecących roślin |
-
-Wcześniejsze commity z tego samego czasu nie należą do Etapu 7 i mają zostać: `d45457d` (przewijanie Księgi), `07d4a72` (Skład),
-`cc01b12` (podmiana roślin), `0df4923` (margines kołysania).
+**Gracz jeszcze nie widział tego połączenia w Unity** (potrzebne: import PNG, **Wyspa → 2**). Ryzyko do sprawdzenia:
+grafiki 16 px obok wody z pikselem o połowę mniejszym. Jeśli będzie zgrzytać, można dać wodzie siatkę 16 px w shaderze.
 
 ## Do decyzji z graczem na start nowej sesji
 
-1. **Co z grafiką 32 px?** Możliwe drogi:
-   - **A. Powrót do starej grafiki 16 px.** Sprite'y: uruchomić `export_unity*.py` i `pad_sway.py` **bez** `convert32.py`.
-     Eksport nadpisze PNG wersjami 16 px i usunie z `pivots.json` pola `"hd"`, a importer da PPU 16. Teren: w `Island.Rebuild` wrócić do
-     `picture.island` i PPU 16 (albo dodać przełącznik zamiast `HiScale`). Kamera z `ArtScale = 2` działa też z grafikami 16 px,
-     ale można wrócić do `ArtScale = 1` i dawnych skal okna x2-x6. Woda i mgła: shadery z `1fc2f3d` i `e71c827` liczą w 32 px,
-     do starego wyglądu trzeba je cofnąć (`git revert` tych dwóch commitów) albo zostawić same efekty (dno, światełka, fale).
-   - **B. Zostać przy 32 px, ale bez wygładzania.** Zamiast Scale2x zwykłe x2 (najbliższy sąsiad) i ręcznie dodany detal,
-     teren bez EPX (kanciasty brzeg jak w 16 px). Podejrzenie: „nijakość” to głównie Scale2x i paleta DARK_FANTASY.
-   - **C. Mieszanka.** Stare sprite'y 16 px, nowa woda z efektami (gracz chwalił próbkę wody) i stary teren.
-   Najpierw zapytać gracza, co konkretnie było lepiej „wcześniej”. Warto pokazać obok siebie zrzut starego 16 px i nowego 32 px.
+1. **Wygląd 16 px + woda 32 px** po teście w Unity (sekcja 4d w `docs/TEST_PLAN.md`).
 2. **Progi rytmu pracy** (seria 25 min, przerwa 5-30 min, zmęczenie 8/10 h). Propozycja: zostawić do balansu na końcu.
    Gracz nie odpowiedział.
 3. **Font 12 px i ikony UI**: osobny etap, nic nie zaczęte.
@@ -75,4 +59,4 @@ Wcześniejsze commity z tego samego czasu nie należą do Etapu 7 i mają zosta�
 - Gracz lubi mroczną, stonowaną estetykę i „pixel art, a nie anime”. Nie znosi „klusek” (kształtów z kulek).
 - Każdy tekst w 5 językach (PL, EN, DE, JA, ZH) w CSV. Czcionka `WyspaPixel` nie ma „ ” „ – …, więc w PL/EN/DE używać `"` i `-`.
 - Po zmianach: GDD §7 i §9, `docs/TEST_PLAN.md`, kompilacja na atrapach (oba warianty define), shadery, commit ze stopką, push.
-- Grafiki: eksport → `pad_sway.py` → (Etap 7) `convert32.py`. Placeholdery i próbki rysuje kod w `tools/pixel-proto` i `tools/art32`.
+- Grafiki: eksport → `pad_sway.py` (bez `convert32.py`). Placeholdery i próbki rysuje kod w `tools/pixel-proto` i `tools/art32`.

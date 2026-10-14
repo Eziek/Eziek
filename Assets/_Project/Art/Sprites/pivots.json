@@ -3,165 +3,138 @@
     {
       "name": "altar",
       "x": 0.51923,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "altar_glow",
       "x": 0.51923,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "bird_crow_fly0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "bird_crow_fly1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "bird_crow_sit0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "bird_crow_sit1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "bird_finch_fly0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "bird_finch_fly1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "bird_finch_sit0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "bird_finch_sit1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "boat",
       "x": 0.51667,
-      "y": 0.0625,
-      "hd": 2
+      "y": 0.0625
     },
     {
       "name": "boat_glow",
       "x": 0.51667,
-      "y": 0.0625,
-      "hd": 2
+      "y": 0.0625
     },
     {
       "name": "broken_pillar",
       "x": 0.53571,
-      "y": 0.03571,
-      "hd": 2
+      "y": 0.03571
     },
     {
       "name": "bubble",
       "x": 0.5,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "bush",
       "x": 0.51667,
       "y": 0.07143,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "bush_cut",
       "x": 0.52778,
-      "y": 0.1,
-      "hd": 2
+      "y": 0.1
     },
     {
       "name": "cauldron_brew_0",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_brew_0_glow",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_brew_1",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_brew_1_glow",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_brew_2",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_brew_2_glow",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_idle",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_ready_0",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_ready_0_glow",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_ready_1",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cauldron_ready_1_glow",
       "x": 0.53125,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "cemetery_candles",
@@ -236,863 +209,734 @@
     {
       "name": "compost",
       "x": 0.52273,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "crate",
       "x": 0.525,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "crop_ashwheat_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ashwheat_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ashwheat_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ashwheat_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ashwheat_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_belladonna_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_belladonna_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_belladonna_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_belladonna_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_belladonna_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodrose_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodrose_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodrose_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodrose_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodwormwood_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodwormwood_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodwormwood_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodwormwood_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_bloodwormwood_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_carrot_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_carrot_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_carrot_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_carrot_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_corpseshroom_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_corpseshroom_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_corpseshroom_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_corpseshroom_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_garlic_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_garlic_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_garlic_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_garlic_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ghostpumpkin_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ghostpumpkin_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ghostpumpkin_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ghostpumpkin_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_ghostpumpkin_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_graveivy_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_graveivy_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_graveivy_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_graveivy_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_graveivy_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_hybridpumpkin_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_hybridpumpkin_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_hybridpumpkin_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_hybridpumpkin_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_hybridpumpkin_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_mandrake_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_mandrake_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_mandrake_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_mandrake_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_mandrake_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonflower_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonflower_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonflower_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonflower_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonflower_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonpoppy_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonpoppy_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonpoppy_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonpoppy_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_moonpoppy_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_poppy_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_poppy_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_poppy_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_poppy_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_pumpkin_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_pumpkin_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_pumpkin_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_pumpkin_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_screamgarlic_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_screamgarlic_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_screamgarlic_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_screamgarlic_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_screamgarlic_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wheat_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wheat_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wheat_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wheat_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wolfcarrot_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wolfcarrot_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wolfcarrot_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wolfcarrot_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wolfcarrot_3_glow",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wormwood_0",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wormwood_1",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wormwood_2",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "crop_wormwood_3",
       "x": 0.51471,
       "y": 0.11538,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "dead_tree",
       "x": 0.51667,
-      "y": 0.02381,
-      "hd": 2
+      "y": 0.02381
     },
     {
       "name": "essence_jar_l",
       "x": 0.52778,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "essence_jar_l_glow",
       "x": 0.52778,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "essence_jar_m",
       "x": 0.53571,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "essence_jar_m_glow",
       "x": 0.53571,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "essence_jar_s",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "essence_jar_s_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "falling_star_0",
       "x": 0.025,
-      "y": 0.95,
-      "hd": 2
+      "y": 0.95
     },
     {
       "name": "falling_star_0_glow",
       "x": 0.025,
-      "y": 0.95,
-      "hd": 2
+      "y": 0.95
     },
     {
       "name": "falling_star_1",
       "x": 0.025,
-      "y": 0.95,
-      "hd": 2
+      "y": 0.95
     },
     {
       "name": "falling_star_1_glow",
       "x": 0.025,
-      "y": 0.95,
-      "hd": 2
+      "y": 0.95
     },
     {
       "name": "falling_star_2",
       "x": 0.025,
-      "y": 0.95,
-      "hd": 2
+      "y": 0.95
     },
     {
       "name": "falling_star_2_glow",
       "x": 0.025,
-      "y": 0.95,
-      "hd": 2
+      "y": 0.95
     },
     {
       "name": "familiar_bat_fly0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_bat_fly0_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_bat_fly1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_bat_fly1_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_bat_hang",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_bat_hang_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_sit0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_sit0_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_sit1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_sit1_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_sleep",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_walk0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_walk0_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_walk1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_cat_walk1_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_raven_fly0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_raven_fly0_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_raven_fly1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_raven_fly1_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_raven_sit0",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_raven_sit0_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_raven_sit1",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_raven_sit1_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_toad_jump",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "familiar_toad_sit",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "fish_jump_down",
       "x": 0.53571,
-      "y": 0.4,
-      "hd": 2
+      "y": 0.4
     },
     {
       "name": "fish_jump_up",
       "x": 0.53571,
-      "y": 0.4,
-      "hd": 2
+      "y": 0.4
     },
     {
       "name": "frame_buy",
@@ -1117,146 +961,122 @@
     {
       "name": "fx_dust_0",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_dust_1",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_dust_2",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_firefly_0",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_firefly_1",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_foam_0",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_foam_1",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_leaf",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_leaf_0",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_leaf_1",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_leaf_fall",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_soil_0",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_soil_1",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_sparkle_0",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_sparkle_1",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_sparkle_2",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_stonechip",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "fx_woodchip",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "ghost_merchant",
       "x": 0.51471,
-      "y": 0.02941,
-      "hd": 2
+      "y": 0.02941
     },
     {
       "name": "ghost_merchant_glow",
       "x": 0.51471,
-      "y": 0.02941,
-      "hd": 2
+      "y": 0.02941
     },
     {
       "name": "gravestone_0",
       "x": 0.53571,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "gravestone_1",
       "x": 0.53571,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "gravestone_2",
       "x": 0.53571,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "gravestone_broken",
       "x": 0.53571,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "ground_cemetery_0",
@@ -1306,20 +1126,17 @@
     {
       "name": "harvest_crate_0",
       "x": 0.53125,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "harvest_crate_1",
       "x": 0.53125,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "harvest_crate_2",
       "x": 0.53125,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "icon_bestiary",
@@ -1634,8 +1451,7 @@
     {
       "name": "iron_fence",
       "x": 0.52778,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "island",
@@ -1645,8 +1461,7 @@
     {
       "name": "lamp_lantern",
       "x": 0.36111,
-      "y": 0.02941,
-      "hd": 2
+      "y": 0.02941
     },
     {
       "name": "lamp_lantern_glow",
@@ -1656,20 +1471,17 @@
     {
       "name": "lamp_mushrooms",
       "x": 0.525,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "lamp_mushrooms_glow",
       "x": 0.525,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "lamp_skull",
       "x": 0.53571,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "lamp_skull_glow",
@@ -1679,8 +1491,7 @@
     {
       "name": "lamp_wisp",
       "x": 0.53125,
-      "y": 0.03333,
-      "hd": 2
+      "y": 0.03333
     },
     {
       "name": "lamp_wisp_glow",
@@ -1690,188 +1501,157 @@
     {
       "name": "lighthouse",
       "x": 0.51923,
-      "y": 0.01724,
-      "hd": 2
+      "y": 0.01724
     },
     {
       "name": "lighthouse_glow",
       "x": 0.51923,
-      "y": 0.01724,
-      "hd": 2
+      "y": 0.01724
     },
     {
       "name": "merchant_chest",
       "x": 0.52273,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "merchant_chest_glow",
       "x": 0.52273,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "merchant_chest_open",
       "x": 0.52273,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "merchant_chest_open_glow",
       "x": 0.52273,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "merchant_spirit_0",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "merchant_spirit_0_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "merchant_spirit_1",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "merchant_spirit_1_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "merchant_spirit_2",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "merchant_spirit_2_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "merchant_spirit_3",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "merchant_spirit_3_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "monster_eye_0",
       "x": 0.52273,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "monster_eye_1",
       "x": 0.52273,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "monster_eye_2",
       "x": 0.52273,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "monster_eye_2_glow",
       "x": 0.52273,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "moth_0",
       "x": 0.5,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "moth_1",
       "x": 0.5,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "net_buoy",
       "x": 0.53125,
-      "y": 0.14286,
-      "hd": 2
+      "y": 0.14286
     },
     {
       "name": "notice_board",
       "x": 0.53125,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "notice_board_empty",
       "x": 0.53125,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "pier",
       "x": 0.06579,
-      "y": 0.34615,
-      "hd": 2
+      "y": 0.34615
     },
     {
       "name": "plot",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "plot_tile",
       "x": 0.5,
-      "y": 0.5,
-      "hd": 2
+      "y": 0.5
     },
     {
       "name": "reeds",
       "x": 0.53571,
-      "y": 0.05556,
-      "hd": 2
+      "y": 0.05556
     },
     {
       "name": "rock",
       "x": 0.52778,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "rock_cracked",
       "x": 0.52778,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "rubble",
       "x": 0.52778,
-      "y": 0.1,
-      "hd": 2
+      "y": 0.1
     },
     {
       "name": "ruined_arch",
       "x": 0.51389,
-      "y": 0.03125,
-      "hd": 2
+      "y": 0.03125
     },
     {
       "name": "ruins_brazier",
@@ -1926,50 +1706,42 @@
     {
       "name": "rune_stone",
       "x": 0.53571,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "rune_stone_glow",
       "x": 0.53571,
-      "y": 0.05,
-      "hd": 2
+      "y": 0.05
     },
     {
       "name": "star_shard",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "star_shard_glow",
       "x": 0.54167,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "storehouse",
       "x": 0.53125,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "stump_dead",
       "x": 0.53125,
-      "y": 0.08333,
-      "hd": 2
+      "y": 0.08333
     },
     {
       "name": "stump_round",
       "x": 0.53125,
-      "y": 0.08333,
-      "hd": 2
+      "y": 0.08333
     },
     {
       "name": "stump_spruce",
       "x": 0.53125,
-      "y": 0.08333,
-      "hd": 2
+      "y": 0.08333
     },
     {
       "name": "swamp_bog_bubbles_0",
@@ -2029,8 +1801,7 @@
     {
       "name": "swamp_pool",
       "x": 0.51667,
-      "y": 0.07143,
-      "hd": 2
+      "y": 0.07143
     },
     {
       "name": "swamp_rotten_log",
@@ -2045,352 +1816,301 @@
     {
       "name": "tentacle_0",
       "x": 0.53125,
-      "y": 0.02941,
-      "hd": 2
+      "y": 0.02941
     },
     {
       "name": "tentacle_1",
       "x": 0.53125,
-      "y": 0.02941,
-      "hd": 2
+      "y": 0.02941
     },
     {
       "name": "tentacle_2",
       "x": 0.53125,
-      "y": 0.02941,
-      "hd": 2
+      "y": 0.02941
     },
     {
       "name": "tree_apple_0",
       "x": 0.51923,
       "y": 0.0625,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_apple_1",
       "x": 0.51389,
       "y": 0.03333,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_apple_2",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_apple_3",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_apple_fall_0",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_apple_fall_1",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_apple_fall_2",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_apple_fall_3",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_elder_0",
       "x": 0.51923,
       "y": 0.0625,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_elder_1",
       "x": 0.51389,
       "y": 0.03333,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_elder_2",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_elder_3",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_elder_fall_0",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_elder_fall_1",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_elder_fall_2",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_elder_fall_3",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_0",
       "x": 0.51923,
       "y": 0.0625,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_1",
       "x": 0.51389,
       "y": 0.03333,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_2",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_3",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_3_glow",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_fall_0",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_fall_1",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_fall_2",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_ghostpear_fall_3",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_0",
       "x": 0.51923,
       "y": 0.0625,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_1",
       "x": 0.51389,
       "y": 0.03333,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_2",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_3",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_3_glow",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_fall_0",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_fall_1",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_fall_2",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_moon_fall_3",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_round",
       "x": 0.51136,
       "y": 0.025,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_round_fall_0",
       "x": 0.50694,
-      "y": 0.22,
-      "hd": 2
+      "y": 0.22
     },
     {
       "name": "tree_round_fall_1",
       "x": 0.50694,
-      "y": 0.22,
-      "hd": 2
+      "y": 0.22
     },
     {
       "name": "tree_round_fall_2",
       "x": 0.50694,
-      "y": 0.22,
-      "hd": 2
+      "y": 0.22
     },
     {
       "name": "tree_round_fall_3",
       "x": 0.50694,
-      "y": 0.22,
-      "hd": 2
+      "y": 0.22
     },
     {
       "name": "tree_rowan_0",
       "x": 0.51923,
       "y": 0.0625,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_rowan_1",
       "x": 0.51389,
       "y": 0.03333,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_rowan_2",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_rowan_3",
       "x": 0.51087,
       "y": 0.02381,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_rowan_fall_0",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_rowan_fall_1",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_rowan_fall_2",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_rowan_fall_3",
       "x": 0.50582,
       "y": 0.21154,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "tree_spruce",
       "x": 0.51471,
       "y": 0.025,
-      "pad": 6,
-      "hd": 2
+      "pad": 6
     },
     {
       "name": "ui_bar_fill_essence",
@@ -2589,314 +2309,262 @@
     {
       "name": "wisp_alchemist_0",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_alchemist_0_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_alchemist_1",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_alchemist_1_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_alchemist_2",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_alchemist_2_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_alchemist_3",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_alchemist_3_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gardener_0",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gardener_0_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gardener_1",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gardener_1_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gardener_2",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gardener_2_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gardener_3",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gardener_3_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gatherer_0",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gatherer_0_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gatherer_1",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gatherer_1_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gatherer_2",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gatherer_2_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gatherer_3",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_gatherer_3_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_lamplighter_0",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_lamplighter_0_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_lamplighter_1",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_lamplighter_1_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_lamplighter_2",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_lamplighter_2_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_lamplighter_3",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_lamplighter_3_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_nest_0",
       "x": 0.53125,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "wisp_nest_0_glow",
       "x": 0.53125,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "wisp_nest_1",
       "x": 0.53125,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "wisp_nest_1_glow",
       "x": 0.53125,
-      "y": 0.04545,
-      "hd": 2
+      "y": 0.04545
     },
     {
       "name": "wisp_sower_0",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_sower_0_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_sower_1",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_sower_1_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_sower_2",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_sower_2_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_sower_3",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_sower_3_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_woodcutter_0",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_woodcutter_0_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_woodcutter_1",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_woodcutter_1_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_woodcutter_2",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_woodcutter_2_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_woodcutter_3",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     },
     {
       "name": "wisp_woodcutter_3_glow",
       "x": 0.53125,
-      "y": 0.0,
-      "hd": 2
+      "y": 0.0
     }
   ]
 }
