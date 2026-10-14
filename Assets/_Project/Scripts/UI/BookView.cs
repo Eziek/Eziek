@@ -1149,6 +1149,11 @@ namespace Wyspa.UI
                    v => Wyspa.Platform.Autostart.Enabled = v);
             y += OptRow;
 
+            OptLabel("ui.options.notify", y);
+            Toggle(OptCol, y, Wyspa.Platform.TrayIcon.NotificationsEnabled, Wyspa.Platform.WinApi.Supported,
+                   v => Wyspa.Platform.TrayIcon.NotificationsEnabled = v);
+            y += OptRow;
+
             OptLabel("ui.options.reset", y);
             bool armed = Time.unscaledTime < resetArmedUntil;
             var b = OptButtonRef("Reset", Loc.Get(armed ? "ui.options.reset_confirm" : "ui.options.reset_button"), OptCol, y, 40f, () =>

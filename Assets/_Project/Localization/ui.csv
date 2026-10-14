@@ -246,3 +246,9 @@ ui.options.vol_ambient,"Tło (fale, noc, deszcz)","Ambience (waves, night, rain)
 ui.options.vol_sfx,Efekty,Effects,Effekte,効果音,音效,
 ui.options.mute_bg,"Cisza, gdy okno nieaktywne",Mute when window inactive,"Stumm, wenn Fenster inaktiv",非アクティブ時は無音,窗口未激活时静音,
 ui.options.sound_hint,"Dźwięki są tymczasowe (generowane), docelowe przyjdą później.",The sounds are temporary (generated); final ones will come later.,"Die Töne sind vorläufig (generiert), endgültige kommen später.",音は仮のもの（自動生成）。本番の音は後で入る。,声音为临时生成，正式音效稍后加入。,pasek opisu w opcjach dźwięku
+ui.tray.show,Pokaż wyspę,Show the island,Insel zeigen,島を表示,显示岛屿,menu ikony w zasobniku
+ui.tray.hide,Schowaj wyspę,Hide the island,Insel verbergen,島を隠す,隐藏岛屿,
+ui.tray.topmost,Zawsze na wierzchu,Always on top,Immer im Vordergrund,常に最前面,始终置顶,
+ui.tray.mini,Mini-tryb,Mini mode,Minimodus,ミニモード,迷你模式,
+ui.tray.ripe,Plony czekają na zbiór: {0},Crops waiting for harvest: {0},Ernte wartet: {0},収穫待ちの作物：{0},待收获的作物：{0},powiadomienie Windows
+ui.options.notify,Powiadomienia Windows,Windows notifications,Windows-Benachrichtigungen,Windowsの通知,Windows 通知,opcje → system

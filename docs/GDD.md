@@ -258,6 +258,10 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
+- [x] **Ikona w zasobniku Windows** (Etap 6c, tylko build): lewy klik pokazuje / chowa okno, prawy klik: menu (pokaż/schowaj,
+  zawsze na wierzchu, mini-tryb, wyjście). Powiadomienia Windows, gdy okno schowane albo nieaktywne (najwyżej co minutę):
+  kupiec-widmo, potwór, nowe/wykonane zamówienie, chowaniec, gotowa mikstura, co najmniej 3 dojrzałe plony. Opcje → System →
+  „Powiadomienia Windows”. Ikona z pliku gry (Player Settings), komunikaty przez osobne okno HWND_MESSAGE. `Platform/TrayIcon.cs`.
 - [x] **Dźwięk** (Etap 6c): tło dnia (fale, wiatr, rzadkie ptaki), nocy (świerszcze, pomruk głębin, fale) i deszczu (ponad tłem,
   burza głośniej), przenikanie przy zmianie pory; efekty: sadzenie, zbiór, moneta, kopanie, ścinanie/usuwanie, stawianie,
   klik, Księga, powiadomienie, grzmot, magia (kocioł, zamówienie, chowaniec), nowy kafelek, bąbel. Placeholdery syntezowane
@@ -540,6 +544,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 53. Chowańce: kot, kruk, ropucha, nietoperz - przychodzą po spełnieniu warunku, małe bonusy, zapis v11.
 54. Pogoda: deszcz, burza z piorunami, nocna mgła, losowana na każde 20 min cyklu gry.
 55. Etap 6c, część 1: dźwięk (tła, efekty, głośność w Opcjach), placeholdery z syntezy.
+56. Etap 6c, część 2: ikona w zasobniku Windows z menu i powiadomieniami.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -762,7 +767,7 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
   start z Windows, godziny nocy, próg bezczynności, reset zapisu.
 - **Etap 6b (gotowy, do testu w Unity):** 6 nowych nasion do odblokowania, automatyka w wielu egzemplarzach (ogniki 5x5, runy
   siewu 3x3 z wyborem nasion, duszki-handlarze, skrzynie), Sklep: Nasiona / Lampy / Budowle / Morze, mgła w przezroczystym oknie.
-- **Etap 6c:** dźwięk (ambient, efekty, głośność), ikona w zasobniku i powiadomienia (plony dojrzały, kupiec, potwór).
+- **Etap 6c (gotowy, do testu w Unity i w buildzie):** dźwięk (tła, efekty, głośność), ikona w zasobniku i powiadomienia Windows.
 - **Etap 6d (gotowy, do testu w Unity):** HUD jako pasek nad wyspą (§12.2), wprowadzenie z tablicą ogłoszeń (§12.8), balans
   (symulacja `tools/balance/sim.py`, tempo szybkie), ogniki zbierają owoce, duszek-handlarz przy skrzyni, gęstsza mgła, wiatr falą. Zapis v8.
 

@@ -401,6 +401,16 @@ Po pobraniu: Unity zaimportuje `Assets/_Project/Resources/Audio/*.ogg`. Play.
 3. Opcje → Dźwięk: tło i efekty (0-100%), „Cisza, gdy okno nieaktywne”. Brak dźwięku: sprawdź, czy kamera ma AudioListener
    (gra dokłada go sama) i czy w Project Settings → Audio nie jest wyłączony dźwięk.
 
+## 4zb. Ikona w zasobniku i powiadomienia (test w buildzie Windows)
+W edytorze ikony nie ma (celowo). Zbuduj grę (File → Build Profiles → Windows → Build) i uruchom.
+1. Przy zegarze Windows pojawia się ikona gry (ikona z Player Settings; bez niej - domyślna ikona aplikacji).
+   Najedź: podpowiedź „Pockland”.
+2. Lewy klik na ikonę: okno gry znika (gra działa dalej), drugi klik: wraca na wierzch.
+3. Prawy klik: menu „Pokaż/Schowaj wyspę”, „Zawsze na wierzchu” (z ptaszkiem), „Mini-tryb”, „Wyjdź z gry”.
+4. Schowaj okno albo kliknij w inną aplikację: przy kupcu-widmie, potworze, zamówieniu, chowańcu, gotowej miksturze
+   albo 3+ dojrzałych plonach przychodzi powiadomienie Windows (najwyżej raz na minutę). Opcje → System → „Powiadomienia Windows”.
+5. Po wyjściu z gry ikona znika (jeśli zostaje „duch” ikony, najedź na nią - to zachowanie Windows po twardym zamknięciu).
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 
