@@ -83,6 +83,7 @@ namespace Wyspa.Platform
             topMost = PlayerPrefs.GetInt("winTop", 0) == 1;
             transparent = PlayerPrefs.GetInt("winTransparent", 0) == 1;
             corner = (ScreenCorner)Mathf.Clamp(PlayerPrefs.GetInt("winCorner", 0), 0, 4);
+            Autostart.MigrateOldName();
         }
 
         void OnDestroy()
@@ -346,7 +347,24 @@ namespace Wyspa.Platform
     public static class Autostart
     {
         const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
-        const string ValueName = "Pockland";
+        const string ValueName = "Misty Packland";
+        const string OldValueName = "Pockland";   // nazwa robocza gry (do 2026-10) i stary plik .exe
+
+        /// <summary>
+        /// Wpis autostartu sprzed zmiany nazwy wskazuje stary plik .exe (nazwa pliku = nazwa produktu), więc przenosimy go
+        /// na nową nazwę i bieżący plik. Raz na start, tylko build.
+        /// </summary>
+        public static void MigrateOldName()
+        {
+            if (!Supported)
+                return;
+            var sb = new System.Text.StringBuilder(1024);
+            uint size = (uint)sb.Capacity * 2;
+            if (WinApi.RegGetValueW(WinApi.HKEY_CURRENT_USER, RunKey, OldValueName, WinApi.RRF_RT_REG_SZ, IntPtr.Zero, sb, ref size) != 0)
+                return;
+            WinApi.RegDeleteKeyValueW(WinApi.HKEY_CURRENT_USER, RunKey, OldValueName);
+            Enabled = true;
+        }
 
         public static bool Supported => WinApi.Supported;
 

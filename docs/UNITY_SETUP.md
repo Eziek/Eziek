@@ -226,7 +226,7 @@ Po pobraniu zmian: **Wyspa → 1** (wyłącza „DXGI flip model”, potrzebne d
 6. Przezroczyste tło: wyspa z pasem wody przy brzegu na pulpicie; klik w puste miejsce trafia w pulpit/okno pod spodem, w ląd i UI w grę.
    Jeśli zamiast przezroczystości widać czarne tło: sprawdź, czy Wyspa → 1 wyłączyło flip model (Player Settings →
    Resolution and Presentation → „Use DXGI flip model swapchain for D3D11” odznaczone) i czy kamera nie ma HDR w URP Asset.
-7. Start z Windows: wpis „Pockland” w Menedżerze zadań → Aplikacje autostartu. Wył. usuwa wpis.
+7. Start z Windows: wpis „Misty Packland” w Menedżerze zadań → Aplikacje autostartu. Wył. usuwa wpis.
 
 ## 4k. Etap 6b: nowe nasiona i automatyka (test)
 Po pobraniu zmian: **Wyspa → 2** (nowe rośliny, sprite'y budowli w `IslandArt`), potem **Wyspa → 3** (scena bez starej skrzyni,
@@ -404,7 +404,7 @@ Po pobraniu: Unity zaimportuje `Assets/_Project/Resources/Audio/*.ogg`. Play.
 ## 4zb. Ikona w zasobniku i powiadomienia (test w buildzie Windows)
 W edytorze ikony nie ma (celowo). Zbuduj grę (File → Build Profiles → Windows → Build) i uruchom.
 1. Przy zegarze Windows pojawia się ikona gry (ikona z Player Settings; bez niej - domyślna ikona aplikacji).
-   Najedź: podpowiedź „Pockland”.
+   Najedź: podpowiedź „Misty Packland”.
 2. Lewy klik na ikonę: okno gry znika (gra działa dalej), drugi klik: wraca na wierzch.
 3. Prawy klik: menu „Pokaż/Schowaj wyspę”, „Zawsze na wierzchu” (z ptaszkiem), „Mini-tryb”, „Wyjdź z gry”.
 4. Schowaj okno albo kliknij w inną aplikację: przy kupcu-widmie, potworze, zamówieniu, chowańcu, gotowej miksturze

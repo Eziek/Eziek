@@ -1,4 +1,4 @@
-# Pockland: test całościowy (po Etapie 6d, dodatkach i roju ogników)
+# Misty Packland: test całościowy (po Etapie 6d, dodatkach i roju ogników)
 
 Jeden scenariusz zamiast sekcji 4s–4zb z `UNITY_SETUP.md`. Około 30–45 minut. Przy każdym punkcie: **OK** albo krótki opis,
 co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera HUD debugowy.

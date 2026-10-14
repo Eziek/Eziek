@@ -26,7 +26,7 @@ namespace UnityEngine
     public class SpriteRenderer : Renderer { public Sprite sprite; public Color color; public bool flipX, flipY; public SpriteMaskInteraction maskInteraction { get; set; } }
     public enum SpriteMaskInteraction { None = 0, VisibleInsideMask = 1, VisibleOutsideMask = 2 }
     public class SpriteMask : Renderer { public Sprite sprite { get; set; } public float alphaCutoff { get; set; } }
-    public class Sprite : Object { public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu, uint extrude, SpriteMeshType mesh) => null; public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu) => null; public Bounds bounds; public Vector2 pivot; public Texture2D texture; }
+    public class Sprite : Object { public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu, uint extrude, SpriteMeshType mesh) => null; public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu) => null; public Bounds bounds; public Vector2 pivot; public Texture2D texture; public Rect rect; }
     public struct Bounds { public Vector3 size, center, max, min; }
     public class Material : Object { public Material(Shader s) { } public Material(Material m) { } public Shader shader; public void SetFloat(int id, float v) { } public void SetFloat(string n, float v) { } public bool HasProperty(int id) => false; public float GetFloat(int id) => 0; public void SetColor(string n, Color c) { } public void SetColor(int id, Color c) { } public void SetTexture(string n, Texture t) { } public void SetTexture(int id, Texture t) { } public void SetVector(int id, Vector4 v) { } public void SetVectorArray(int id, Vector4[] v) { } }
     public class Shader : Object { public static Shader Find(string n) => null; public static void SetGlobalFloat(int id, float v) { } public static int PropertyToID(string n) => 0; public bool isSupported; }
@@ -51,7 +51,7 @@ namespace UnityEngine
     public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; public float xMin => x; public float yMin => y; public float xMax => x + width; public float yMax => y + height; public Vector2 size => default; public Vector2 center => default; public static Rect MinMaxRect(float a, float b, float c, float d) => default; }
     public static class Mathf { public static float Sqrt(float f) => f; public static float Exp(float f) => f; public static float Pow(float f, float p) => f; public static float Atan2(float y, float x) => y; public static float Lerp(float a, float b, float t) => a; public const float PI = 3.14159265f; public static float Ceil(float f) => f; public static int CeilToInt(float f) => 0; public static float Round(float f) => f; public static float Cos(float f) => f; public static float MoveTowards(float c, float t, float d) => c; public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
     public static class Random { public static float value; public static float Range(float a, float b) => a; public static int Range(int a, int b) => a; }
-    public static class Application { public static void Quit() { } public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath; public static event Action<bool> focusChanged; }
+    public static class Application { public static void Quit() { } public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath, version; public static event Action<bool> focusChanged; }
     public static class QualitySettings { public static int vSyncCount; }
     public static class Time { public static float unscaledDeltaTime, unscaledTime, timeSinceLevelLoad; public static int frameCount; }
     public static class Screen { public static int width, height; public static FullScreenMode fullScreenMode; public static Resolution currentResolution; public static void SetResolution(int w, int h, FullScreenMode m) { } }
@@ -125,23 +125,54 @@ namespace UnityEngine.InputSystem
 namespace UnityEditor
 {
     using UnityEngine;
-    public static class EditorApplication { public static bool isPlaying; }
-    public class AssetImporter : UnityEngine.Object { }
-    public class TextureImporter : AssetImporter { public bool sRGBTexture; public TextureImporterType textureType; public SpriteImportMode spriteImportMode; public float spritePixelsPerUnit; public FilterMode filterMode; public TextureImporterCompression textureCompression; public bool mipmapEnabled, alphaIsTransparency; public TextureWrapMode wrapMode; public void ReadTextureSettings(TextureImporterSettings s) { } public void SetTextureSettings(TextureImporterSettings s) { } }
+    public static class EditorApplication { public static bool isPlaying; public static void Exit(int code) { } }
+    public class AssetImporter : UnityEngine.Object { public static AssetImporter GetAtPath(string path) => null; public void SaveAndReimport() { } }
+    public class TextureImporter : AssetImporter { public bool sRGBTexture; public TextureImporterType textureType; public SpriteImportMode spriteImportMode; public float spritePixelsPerUnit; public FilterMode filterMode; public TextureImporterNPOTScale npotScale; public TextureImporterCompression textureCompression; public bool mipmapEnabled, alphaIsTransparency; public TextureWrapMode wrapMode; public void ReadTextureSettings(TextureImporterSettings s) { } public void SetTextureSettings(TextureImporterSettings s) { } }
     public class TextureImporterSettings { public float spritePixelsPerUnit; public SpriteMeshType spriteMeshType; public uint spriteExtrude; public int spriteAlignment; public Vector2 spritePivot; public Vector4 spriteBorder; }
-    public enum TextureImporterType { Sprite }
+    public enum TextureImporterType { Default, Sprite }
+    public enum TextureImporterNPOTScale { None, ToNearest, ToLarger, ToSmaller }
     public enum SpriteImportMode { Single }
     public enum TextureImporterCompression { Uncompressed }
     public class AssetPostprocessor { public string assetPath; public AssetImporter assetImporter; }
     public enum ImportAssetOptions { ForceUpdate }
     public static class AssetDatabase { public static T LoadAssetAtPath<T>(string p) where T : UnityEngine.Object => default; public static void CreateAsset(UnityEngine.Object o, string p) { } public static void SaveAssets() { } public static void Refresh() { } public static bool IsValidFolder(string p) => true; public static string CreateFolder(string a, string b) => ""; public static string[] FindAssets(string f, string[] d) => null; public static string GUIDToAssetPath(string g) => ""; public static void ImportAsset(string p, ImportAssetOptions o) { } }
     public class MenuItem : Attribute { public MenuItem(string s) { } public int priority; }
-    public static class EditorUtility { public static void SetDirty(UnityEngine.Object o) { } }
-    public static class PlayerSettings { public static FullScreenMode fullScreenMode; public static int defaultScreenWidth, defaultScreenHeight; public static bool useFlipModelSwapchain; public static bool resizableWindow, runInBackground, visibleInBackground; }
+    public static class EditorUtility { public static void SetDirty(UnityEngine.Object o) { } public static void RevealInFinder(string path) { } }
+    public enum IconKind { Any = -1, Application = 0, Settings = 1, Notification = 2, Spotlight = 3, Store = 4 }
+    public static class PlayerSettings
+    {
+        public static FullScreenMode fullScreenMode; public static int defaultScreenWidth, defaultScreenHeight; public static bool useFlipModelSwapchain; public static bool resizableWindow, runInBackground, visibleInBackground;
+        public static string productName, companyName, bundleVersion; public static bool forceSingleInstance;
+        public static void SetApplicationIdentifier(UnityEditor.Build.NamedBuildTarget buildTarget, string identifier) { }
+        public static int[] GetIconSizes(UnityEditor.Build.NamedBuildTarget buildTarget, IconKind kind) => null;
+        public static void SetIcons(UnityEditor.Build.NamedBuildTarget buildTarget, Texture2D[] icons, IconKind kind) { }
+        public struct SplashScreenLogo { public static SplashScreenLogo Create(float duration = 2f, Sprite logo = null) => default; }
+        public sealed class SplashScreen
+        {
+            public enum AnimationMode { Static, Dolly, Custom }
+            public enum DrawMode { UnityLogoBelow, AllSequential }
+            public static bool show, showUnityLogo; public static Color backgroundColor; public static float overlayOpacity;
+            public static AnimationMode animationMode; public static DrawMode drawMode; public static SplashScreenLogo[] logos;
+        }
+    }
+    public enum BuildTarget { StandaloneWindows = 5, StandaloneWindows64 = 19 }
+    [Flags] public enum BuildOptions { None = 0, Development = 1 }
+    public struct BuildPlayerOptions { public string[] scenes; public string locationPathName; public BuildTarget target; public BuildOptions options; }
+    public static class BuildPipeline { public static UnityEditor.Build.Reporting.BuildReport BuildPlayer(BuildPlayerOptions o) => null; }
     public class SerializedObject { public SerializedObject(UnityEngine.Object o) { } public SerializedProperty FindProperty(string n) => null; public bool ApplyModifiedPropertiesWithoutUndo() => true; }
     public class SerializedProperty { public UnityEngine.Object objectReferenceValue; public bool isArray; public int arraySize; public int intValue; public SerializedProperty GetArrayElementAtIndex(int i) => null; public void InsertArrayElementAtIndex(int i) { } }
-    public class EditorBuildSettingsScene { public EditorBuildSettingsScene(string p, bool e) { } }
+    public class EditorBuildSettingsScene { public EditorBuildSettingsScene(string p, bool e) { } public string path; public bool enabled; }
     public static class EditorBuildSettings { public static EditorBuildSettingsScene[] scenes; }
+}
+namespace UnityEditor.Build
+{
+    public struct NamedBuildTarget { public static readonly NamedBuildTarget Unknown, Standalone; }
+}
+namespace UnityEditor.Build.Reporting
+{
+    public enum BuildResult { Unknown, Succeeded, Failed, Cancelled }
+    public struct BuildSummary { public BuildResult result; public int totalErrors; public ulong totalSize; }
+    public class BuildReport : UnityEngine.Object { public BuildSummary summary; }
 }
 namespace UnityEditor.SceneManagement
 {

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-**Pockland**: gra w Unity, idle w okienku na pulpicie, wyspa w klimacie dark fantasy. Rośliny rosną od pracy gracza przy komputerze,
+**Misty Packland** (do 2026-10 nazwa robocza Pockland): gra w Unity, idle w okienku na pulpicie, wyspa w klimacie dark fantasy. Rośliny rosną od pracy gracza przy komputerze,
 a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wyspę w nocy (pora dnia z cyklu gry: 1 h = 40 min dnia + 20 min nocy).
 
 ## Zanim cokolwiek zrobisz

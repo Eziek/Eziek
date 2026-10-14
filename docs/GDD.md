@@ -1,4 +1,4 @@
-# GDD: Pockland
+# GDD: Misty Packland
 
 > **Status:** Etap 1: szkielet systemów w C# (`Assets/_Project/`) gotowy do skopiowania do Unity,
 > instrukcja w `docs/UNITY_SETUP.md`. Prototyp wizualny: `tools/pixel-proto/` i `docs/img/`.
@@ -259,7 +259,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 ## 7. Otwarte decyzje
 - [x] Siatka: **16 px dla sprite'ów i terenu, woda w 32 px** (decyzja gracza po teście Etapu 7, §9 p. 74; wcześniejszy
   wybór „wszystko w 32 px” wycofany, bo przerobione grafiki wyszły „wygładzone i nijakie”). Font 12 px osobnym etapem.
-- [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
+- [x] Nazwa gry: **Misty Packland** (decyzja gracza 2026-10-14; wcześniej robocza „Pockland”, ryzyko zbieżności z „Pokéland”, §16.5).
 - [x] Nazwa energii: **Żar** (wybór gracza; EN Ember, DE Glut, JA 熾火, ZH 余火). W kodzie i starszych częściach GDD
   nadal „Essence/Esencja”. Imię ognika „Żarek” zmienione na „Węgielek” (EN Cinder), żeby nie myliło się z walutą.
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
@@ -1257,11 +1257,14 @@ języka gry (`UiRoot.OrderCjkFallbacks`). Wszystkie znaki z kolumn JA i ZH w CSV
 - **Tłumaczenia:** tłumacz pracuje wprost na plikach CSV (ten sam format co `strings_sample.csv`).
 - **Lore** (dłuższe teksty) w osobnej tabeli, żeby tłumacz mógł pracować nad nim osobno.
 
-### 16.5 Nazwa gry: Pockland
-- **Jedna marka we wszystkich językach.** Logo i tytuł zawsze łacinką „Pockland”.
-  - JA: na stronie sklepu można dodać czytanie ポックランド.
-  - ZH: nie tłumaczymy fonetycznie (np. „波克兰” myli się z „波兰”, czyli Polską). Zostaje „Pockland”,
-    ewentualnie z opisowym podtytułem do ustalenia z native speakerem.
+### 16.5 Nazwa gry: Misty Packland
+- **Nazwa ostateczna: „Misty Packland”** (decyzja gracza 2026-10-14). Wcześniej robocza „Pockland” (niżej, historia).
+- **Jedna marka we wszystkich językach.** Logo i tytuł zawsze łacinką „Misty Packland”.
+  - JA: na stronie sklepu można dodać czytanie ミスティ・パックランド.
+  - ZH: nie tłumaczymy fonetycznie. Zostaje „Misty Packland”, ewentualnie z opisowym podtytułem do ustalenia z native speakerem.
+- Wyszukiwanie z 2026-10-14 nie znalazło gry o nazwie „Misty Packland”. Przed wydaniem i tak sprawdzić bazy znaków
+  towarowych (EUIPO, USPTO, WIPO) i Steam (`docs/RELEASE.md`).
+- Historia, nazwa robocza „Pockland”:
 - **Ryzyko do sprawdzenia przed publikacją:** nazwa brzmi podobnie do **„Pokéland”**, gry mobilnej The Pokémon Company
   zapowiedzianej w 2017 roku (o wyspach). The Pokémon Company pilnuje swoich znaków towarowych.
   Przed wydaniem trzeba sprawdzić bazy znaków towarowych (EUIPO, USPTO, WIPO) i Steam. Najlepiej skonsultować to

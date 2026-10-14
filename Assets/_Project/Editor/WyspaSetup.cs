@@ -565,6 +565,7 @@ namespace Wyspa.EditorTools
             Sprite Kit(string n) => LoadSprite("UI/Kit/ui_" + n);
             theme.panel = Kit("panel");
             theme.panelPage = Kit("panel_page");
+            theme.logo = AssetDatabase.LoadAssetAtPath<Sprite>(Sprites + "UI/logo.png");   // logo w menu głównym (release_art.py)
             theme.buttonNormal = Kit("button_normal");
             theme.buttonHover = Kit("button_hover");
             theme.buttonPressed = Kit("button_pressed");

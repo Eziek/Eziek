@@ -128,8 +128,48 @@ namespace Wyspa.Save
             return list;
         }
 
+        // folder zapisów sprzed nadania nazwy gry (Application.persistentDataPath = LocalLow/<firma>/<produkt>)
+        static readonly string[] OldDataDirs = { Path.Combine("DefaultCompany", "My project (5)") };
+        static bool oldDirChecked;
+
+        /// <summary>
+        /// Po nadaniu nazwy (Misty Packland) Unity zapisuje gdzie indziej. Gdy w nowym folderze nie ma zapisów,
+        /// kopiujemy pliki JSON ze starego (stary folder zostaje jako kopia zapasowa). Raz na uruchomienie.
+        /// </summary>
+        static void MigrateOldDataDir()
+        {
+            if (oldDirChecked)
+                return;
+            oldDirChecked = true;
+            try
+            {
+                string dir = Application.persistentDataPath;
+                if (Directory.Exists(dir) && Directory.GetFiles(dir, "save*.json").Length > 0)
+                    return;
+                var localLow = Directory.GetParent(dir)?.Parent;
+                if (localLow == null)
+                    return;
+                foreach (var rel in OldDataDirs)
+                {
+                    string old = Path.Combine(localLow.FullName, rel);
+                    if (old == dir || !Directory.Exists(old) || Directory.GetFiles(old, "save*.json").Length == 0)
+                        continue;
+                    Directory.CreateDirectory(dir);
+                    foreach (var f in Directory.GetFiles(old, "*.json"))
+                        File.Copy(f, Path.Combine(dir, Path.GetFileName(f)), false);
+                    Debug.Log($"[Wyspa] Zapisy przeniesione z {old}");
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Wyspa] Nie udało się przenieść zapisów ze starego folderu: {e.Message}");
+            }
+        }
+
         static void MigrateLegacy()
         {
+            MigrateOldDataDir();
             try
             {
                 string legacy = Path.Combine(Application.persistentDataPath, LegacyFile);

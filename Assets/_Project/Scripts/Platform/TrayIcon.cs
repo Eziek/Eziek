@@ -131,12 +131,12 @@ namespace Wyspa.Platform
                 cbSize = (uint)Marshal.SizeOf<WNDCLASSEXW>(),
                 lpfnWndProc = Marshal.GetFunctionPointerForDelegate(procKeep),
                 hInstance = inst,
-                lpszClassName = "PocklandTray",
+                lpszClassName = "MistyPacklandTray",
             };
             RegisterClassExW(ref cls);   // przy drugim uruchomieniu w tym samym procesie klasa już jest - to nie błąd
             taskbarCreated = RegisterWindowMessageW("TaskbarCreated");
             // zwykłe, nigdy niepokazywane okno (nie HWND_MESSAGE): tylko takie dostaje rozgłaszany „TaskbarCreated”
-            msgWindow = CreateWindowExW(0, "PocklandTray", "Pockland tray", 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, inst, IntPtr.Zero);
+            msgWindow = CreateWindowExW(0, "MistyPacklandTray", "Misty Packland tray", 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, inst, IntPtr.Zero);
             if (msgWindow == IntPtr.Zero)
                 return;
             // ikona z pliku gry (ikona ustawiona w Player Settings), inaczej domyślna ikona aplikacji

@@ -17,6 +17,7 @@ namespace Wyspa.UI
         const float W = 204f;
         const float RowH = 28f, RowGap = 3f;
         const float TopBand = 18f, BottomBand = 24f;
+        const float LogoGap = 6f;   // logo: margines nad i pod (pasek tytułu rośnie o wysokość logo)
 
         RectTransform root, panel;
         int editing = -1;
@@ -58,17 +59,28 @@ namespace Wyspa.UI
             if (panel != null)
                 Destroy(panel.gameObject);
             var t = Ui.Theme;
-            float h = TopBand + SaveSystem.Slots * (RowH + RowGap) + 6f + BottomBand;
+            // logo gry (ten sam napis we wszystkich językach, GDD §16.5) albo tytuł tekstem, gdy logo nie ma
+            var logoSize = t.logo != null ? t.logo.rect.size : Vector2.zero;
+            float top = t.logo != null ? logoSize.y + 2f * LogoGap : TopBand;
+            float h = top + SaveSystem.Slots * (RowH + RowGap) + 6f + BottomBand;
             var p = Ui.Img(root, "Panel", t.panel, true, true);
             panel = Ui.Place(p.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(W, h));
 
-            var title = Ui.Txt(panel, "Title", t.textGold, TextAlignmentOptions.Top);
-            title.text = Loc.Get("game.title");
-            Ui.Place(title.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -5), new Vector2(W, 10));
+            if (t.logo != null)
+            {
+                var logo = Ui.Img(panel, "Logo", t.logo, false);
+                Ui.Place(logo.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -LogoGap), logoSize);
+            }
+            else
+            {
+                var title = Ui.Txt(panel, "Title", t.textGold, TextAlignmentOptions.Top);
+                title.text = Loc.Get("game.title");
+                Ui.Place(title.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -5), new Vector2(W, 10));
+            }
 
             var page = Ui.Img(panel, "Page", t.panelPage != null ? t.panelPage : t.tooltip, true);
             float pageH = SaveSystem.Slots * (RowH + RowGap) + 3f;
-            Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(6, -TopBand), new Vector2(W - 12, pageH));
+            Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(6, -top), new Vector2(W - 12, pageH));
             for (int i = 0; i < SaveSystem.Slots; i++)
                 BuildSlot(page.rectTransform, slots[i], 3f + i * (RowH + RowGap));
 
@@ -85,6 +97,10 @@ namespace Wyspa.UI
             var quit = TextButton(panel, "Quit", Loc.Get("act.quit"), Vector2.zero, UiRoot.QuitGame);
             var qrt = (RectTransform)quit.transform;
             Ui.Place(qrt, Ui.TopRight, Ui.TopRight, new Vector2(-8, y), qrt.sizeDelta);
+            // numer wersji (Player Settings, Wyspa → Wydanie) między przyciskami; sam numer, bez tekstu do tłumaczenia
+            var ver = Ui.Txt(panel, "Version", t.textMuted, TextAlignmentOptions.Top);
+            ver.text = "v" + Application.version;
+            Ui.Place(ver.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, y - 5f), new Vector2(W, 10));
         }
 
         void BuildSlot(RectTransform page, SlotInfo info, float top)

@@ -30,6 +30,8 @@ namespace Wyspa.UI
         public Sprite tooltip, toast, barFrame;
         public Sprite barFillEssence, barFillGrowth, barFillRhythm;
         public Sprite wheel;
+        [Tooltip("Logo gry w menu głównym (tools/release/release_art.py). Brak = tytuł tekstem.")]
+        public Sprite logo;
 
         [Header("Ikony (nazwa bez przedrostka icon_)")]
         public List<NamedSprite> icons = new List<NamedSprite>();
