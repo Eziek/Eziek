@@ -742,6 +742,12 @@ Obrazki referencyjne (kopie): `docs/img/`
     malują się równolegle w tle (`Task.Run`, `IslandMap.Snapshot`, ok. 95 ms razem na 4 rdzeniach), gra tylko wgrywa
     gotowe tekstury; gdy malowanie w tle się nie uda, malowanie jak dawniej. Wczytanie i darmowy kafelek pod budowlę
     malują dalej od razu (rzadkie).
+95. **Panele z zakładkami (QoL, zgłoszenie gracza: „ściana tekstu”, okno zamyka się przy wyborze czapki)**: panel
+    kontekstowy obsługuje zakładki (rząd pod tytułem, wybrana złotym napisem, pamiętana dla tego samego obiektu;
+    `ContextInfo.Tab`) i przyciski, które nie zamykają panelu, tylko go odświeżają (`keepOpen`: przełączniki, czapki,
+    przywołanie). Gniazdo ogników: zakładki Ogniki (zasięg, lista z poziomami), Czapki (gdy jakąś masz; klik = następna
+    czapka, można klikać dalej), Siewca (gdy jest siewca: nasiona dnia i nocy, podmiana), Przywołaj; Przenieś i Rozbierz
+    pod każdą zakładką.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

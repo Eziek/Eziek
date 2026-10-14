@@ -23,6 +23,8 @@ namespace Wyspa.UI
         Action<TileObject> startMove;
 
         public bool IsOpen => blocker != null && blocker.activeSelf;
+        int selectedTab;
+        IContextActions tabOwner;   // wybrana zakładka zostaje, dopóki panel dotyczy tego samego obiektu
 
         public static ContextPanel Create(RectTransform canvasRoot, Action<TileObject> moveObject)
         {
@@ -79,8 +81,20 @@ namespace Wyspa.UI
                 return;
             if (!ReferenceEquals(what, armedDismantle))
                 armedDismantle = null;
-            var info = new ContextInfo();
+            if (!ReferenceEquals(what, tabOwner))
+            {
+                tabOwner = what;
+                selectedTab = 0;
+            }
+            var info = new ContextInfo { tab = selectedTab };
             what.FillContext(info);
+            if (info.tabs.Count > 0 && selectedTab >= info.tabs.Count)
+            {
+                // zakładka zniknęła (np. ostatni siewca odleciał): pierwsza
+                selectedTab = 0;
+                info = new ContextInfo { tab = 0 };
+                what.FillContext(info);
+            }
             if (what is TileObject obj && obj.NeedsTile && obj.Placed && startMove != null)
                 info.Button(Loc.Get("act.move"), () => startMove(obj));
             AddDismantle(what, info);
@@ -121,15 +135,40 @@ namespace Wyspa.UI
                 return tx;
             }
 
+            TextMeshProUGUI titleText = null;
             if (!string.IsNullOrEmpty(info.title))
-                texts.Add(Measure(Ui.Txt(panel, "Title", t.textGold), info.title, 0));
+                texts.Add(titleText = Measure(Ui.Txt(panel, "Title", t.textGold), info.title, 0));
+            // zakładki: rząd przycisków pod tytułem, wybrana złotym napisem
+            var tabButtons = new List<(Button b, float w)>();
+            float tabsW = -4;
+            for (int i = 0; i < info.tabs.Count; i++)
+            {
+                int index = i;
+                var tb = Ui.Btn(panel, "Tab", () => { selectedTab = index; if (target != null) Show(target); });
+                var tl = Ui.Txt(tb.transform, "Text", i == info.tab ? t.textGold : t.textMuted, TextAlignmentOptions.Center);
+                tl.text = info.tabs[i];
+                tl.ForceMeshUpdate();
+                Ui.Stretch(tl.rectTransform);
+                float tw = Mathf.Max(24f, Ui.Width(tl) + 10f);
+                tabButtons.Add((tb, tw));
+                tabsW += tw + 4;
+            }
+            if (tabButtons.Count > 0)
+                w = Mathf.Max(w, Mathf.Min(maxW, tabsW));
             foreach (var l in info.lines)
                 texts.Add(Measure(Ui.Txt(panel, "Line", t.textLight), l, 0));
             float rowW = -4;
             foreach (var cb in info.buttons)
             {
                 var c = cb;
-                var b = Ui.Btn(panel, "Button", () => { c.action?.Invoke(); Close(); });
+                var b = Ui.Btn(panel, "Button", () =>
+                {
+                    c.action?.Invoke();
+                    if (c.keepOpen && target != null && IsOpen)
+                        Show(target);   // zostaje otwarty, z nowym stanem
+                    else
+                        Close();
+                });
                 var label = Ui.Txt(b.transform, "Text", t.textLight, TextAlignmentOptions.Center);
                 label.text = c.label;
                 label.ForceMeshUpdate();
@@ -152,8 +191,30 @@ namespace Wyspa.UI
 
             // układ z góry na dół; teksty szersze niż panel łamią się (wysokość z TextMeshPro)
             float y = 4;
+            tabsPlaced = false;
+            void PlaceTabs()
+            {
+                // zakładki w rzędach (gdy się nie mieszczą, kolejny rząd)
+                tabsPlaced = true;
+                float tx0 = 5;
+                y += 2;
+                foreach (var (tb, tw) in tabButtons)
+                {
+                    float width = Mathf.Min(tw, w);
+                    if (tx0 > 5 && tx0 + width > w + 5)
+                    {
+                        tx0 = 5;
+                        y += 16;
+                    }
+                    Ui.Place((RectTransform)tb.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(tx0, -y), new Vector2(width, 14));
+                    tx0 += width + 4;
+                }
+                y += 18;
+            }
             foreach (var tx in texts)
             {
+                if (tx != titleText && tabButtons.Count > 0 && !tabsPlaced)
+                    PlaceTabs();
                 float h = 10;
                 if (Ui.Width(tx) > w)
                 {
@@ -163,6 +224,8 @@ namespace Wyspa.UI
                 Ui.Place(tx.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -y), new Vector2(w, h));
                 y += h;
             }
+            if (tabButtons.Count > 0 && !tabsPlaced)
+                PlaceTabs();
             if (buttons.Count > 0)
                 y += 2;
             float x = 5;
@@ -191,6 +254,8 @@ namespace Wyspa.UI
                 y += 14;
             Ui.Place(panel, Ui.BottomLeft, new Vector2(0.5f, 0f), Vector2.zero, new Vector2(w + 10, y + 4));
         }
+
+        bool tabsPlaced;
 
         void Update()
         {

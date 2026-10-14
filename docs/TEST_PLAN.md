@@ -294,3 +294,11 @@ Najpierw **Wyspa → 2** (grafiki czapek).
    kafelek wynurza się w 3 krokach jak wcześniej (piana od razu, ląd po chwili).
 2. Kilka zakupów szybko pod rząd: każdy kafelek pojawia się, nic nie znika i nie miga stary obraz.
 3. Kupno „Ognik-ogrodnik” na pełnej wyspie zaraz po zakupie kafelka: darmowy kafelek pod budowlę jest widoczny.
+
+## 24. Panel gniazda z zakładkami
+1. Klik w gniazdo: pod tytułem zakładki Ogniki / Czapki / Siewca / Przywołaj (Czapki tylko z kupioną czapką, Siewca tylko
+   z siewcą). Ogniki: zasięg i lista ogników. Przenieś i Rozbierz pod każdą zakładką.
+2. Czapki: klik w wiersz ognika zmienia czapkę, panel zostaje otwarty, można klikać dalej (aż do „bez czapki”).
+3. Siewca: „Podmiana o świcie i zmroku” przełącza się bez zamykania; wybór nasion otwiera koło nasion (panel się zamyka).
+4. Przywołaj: przywołany ognik od razu widać w zakładce Ogniki po przełączeniu; panel zostaje otwarty; pełne gniazdo = napis.
+5. Zamknij panel i otwórz to samo gniazdo: ta sama zakładka; inne gniazdo: pierwsza zakładka.

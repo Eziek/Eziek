@@ -315,8 +315,13 @@ ui.nest.wisp,"{0} ({1}), poz. {2}: {3}/{4} dośw.","{0} ({1}), lv. {2}: {3}/{4} 
 ui.nest.wisp_max,"{0} ({1}), poz. {2} (najwyższy)","{0} ({1}), lv. {2} (max)","{0} ({1}), Stufe {2} (max.)",{0}（{1}）Lv.{2}（最大）,{0}（{1}）{2}级（满级）,
 ui.nest.sower,Siewca sieje: {0},Sower plants: {0},Säer sät: {0},種まき：{0},播种者种植：{0},"przycisk, otwiera koło nasion"
 ui.nest.full,Gniazdo pełne ({0} {0:plural:ognik|ogniki|ogników}),Nest full ({0} {0:plural:wisp|wisps}),Nest voll ({0} {0:plural:Irrlicht|Irrlichter}),巣は満員（{0}体）,巢已满（{0}只）,
-ui.nest.hat,Czapka – {0}: {1},Hat – {0}: {1},Mütze – {0}: {1},帽子 – {0}：{1},帽子 – {0}：{1},panel gniazda: klik = następna czapka
+ui.nest.hat,{0}: {1},{0}: {1},{0}: {1},{0}：{1},{0}：{1},zakładka Czapki w panelu gniazda: klik = następna czapka
 ui.nest.no_hat,bez czapki,no hat,ohne Mütze,なし,无,
+ui.nest.tab_wisps,Ogniki,Wisps,Irrlichter,鬼火,鬼火,zakładka panelu gniazda
+ui.nest.tab_hats,Czapki,Hats,Mützen,帽子,帽子,
+ui.nest.tab_sower,Siewca,Sower,Säer,種まき,播种,
+ui.nest.tab_summon,Przywołaj,Summon,Rufen,呼ぶ,召唤,
+ui.nest.empty,Gniazdo jest puste,The nest is empty,Das Nest ist leer,巣は空っぽ,巢穴是空的,
 ui.nest.summon,Przywołaj: {0} ({1}),Summon: {0} ({1}),Rufen: {0} ({1}),呼ぶ：{0}（{1}）,召唤：{0}（{1}）,"{0} zawód, {1} koszt"
 ui.cauldron.auto,Ognik-alchemik warzy: {0},Alchemist wisp brews: {0},Alchemie-Irrlicht braut: {0},錬金術師の鬼火：{0},炼金鬼火酿造：{0},przycisk przełącza przepis
 ui.cauldron.auto_none,nic,nothing,nichts,なし,无,

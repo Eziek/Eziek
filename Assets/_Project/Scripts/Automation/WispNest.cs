@@ -243,20 +243,32 @@ namespace Wyspa.Automation
 
         // ------------------------------------------------------------ panel
 
+        /// <summary>
+        /// Panel gniazda w zakładkach (zamiast ściany tekstu): Ogniki (lista z poziomami), Czapki (gdy jakąś masz),
+        /// Siewca (gdy jest siewca), Przywołaj. Przełączniki i przywołanie nie zamykają panelu.
+        /// </summary>
         public void FillContext(ContextInfo info)
         {
             info.verticalButtons = true;
-            info.lines.Add(Loc.Get("ui.nest.range", Wisp.Radius * 2 + 1));
             wisps.RemoveAll(w => w == null);
-            foreach (var w in wisps)
+            var game = GameLoop.Instance;
+
+            if (info.Tab(Loc.Get("ui.nest.tab_wisps")))
             {
-                int next = w.NextLevelXp;
-                info.lines.Add(next < 0
-                    ? Loc.Get("ui.nest.wisp_max", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level)
-                    : Loc.Get("ui.nest.wisp", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level, w.Xp, next));
+                info.lines.Add(Loc.Get("ui.nest.range", Wisp.Radius * 2 + 1));
+                foreach (var w in wisps)
+                {
+                    int next = w.NextLevelXp;
+                    info.lines.Add(next < 0
+                        ? Loc.Get("ui.nest.wisp_max", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level)
+                        : Loc.Get("ui.nest.wisp", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level, w.Xp, next));
+                }
+                if (wisps.Count == 0)
+                    info.lines.Add(Loc.Get("ui.nest.empty"));
             }
-            // czapki: każdy ognik osobno, klik = następna posiadana czapka (albo bez)
-            if (Economy.Hats.AnyOwned)
+
+            // czapki: klik = następna posiadana czapka (albo bez); panel zostaje otwarty, można klikać dalej
+            if (Economy.Hats.AnyOwned && wisps.Count > 0 && info.Tab(Loc.Get("ui.nest.tab_hats")))
                 foreach (var w in wisps)
                 {
                     var wisp = w;
@@ -265,10 +277,10 @@ namespace Wyspa.Automation
                     {
                         wisp.SetHat(Economy.Hats.Next(wisp.Hat));
                         GameEvents.PlaySound("click", 0.5f);
-                        GameEvents.RequestContext(this);
-                    });
+                    }, true, true);
                 }
-            if (wisps.Exists(w => w.Kind == WispKind.Sower))
+
+            if (wisps.Exists(w => w.Kind == WispKind.Sower) && info.Tab(Loc.Get("ui.nest.tab_sower")))
             {
                 foreach (bool night in new[] { false, true })
                 {
@@ -280,29 +292,26 @@ namespace Wyspa.Automation
                     {
                         var ui = UI.UiRoot.Instance;
                         if (ui != null)
-                            ui.Wheel.OpenPicker(slot, slot.night);
+                            ui.Wheel.OpenPicker(slot, slot.night);   // koło nasion zamiast panelu
                     });
                 }
-                info.Button(Loc.Get("ui.nest.swap", Loc.Get(swap ? "ui.on" : "ui.off")), () =>
-                {
-                    swap = !swap;
-                    GameEvents.RequestContext(this);
-                });
+                info.Button(Loc.Get("ui.nest.swap", Loc.Get(swap ? "ui.on" : "ui.off")), () => swap = !swap, true, true);
             }
-            if (wisps.Count >= Capacity)
+
+            if (info.Tab(Loc.Get("ui.nest.tab_summon")))
             {
-                info.lines.Add(Loc.Get("ui.nest.full", Capacity));
-                return;
-            }
-            var game = GameLoop.Instance;
-            foreach (WispKind k in Enum.GetValues(typeof(WispKind)))
-            {
-                if (!KindUnlocked(k, game))
-                    continue;
-                var kind = k;
-                var cost = Cost(k);
-                info.Button(Loc.Get("ui.nest.summon", Loc.Get(Wisp.KindKey(k)), UI.PlacementMode.CostText(cost)),
-                            () => Summon(kind), game != null && game.Wallet.CanAfford(cost));
+                if (wisps.Count >= Capacity)
+                    info.lines.Add(Loc.Get("ui.nest.full", Capacity));
+                else
+                    foreach (WispKind k in Enum.GetValues(typeof(WispKind)))
+                    {
+                        if (!KindUnlocked(k, game))
+                            continue;
+                        var kind = k;
+                        var cost = Cost(k);
+                        info.Button(Loc.Get("ui.nest.summon", Loc.Get(Wisp.KindKey(k)), UI.PlacementMode.CostText(cost)),
+                                    () => Summon(kind), game != null && game.Wallet.CanAfford(cost), true);
+                    }
             }
         }
 
