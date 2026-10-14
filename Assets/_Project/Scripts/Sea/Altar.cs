@@ -14,6 +14,42 @@ namespace Wyspa.Sea
     {
         const int SummonCost = 3;
 
+        static List<CurrencyAmount> FinaleCost => new List<CurrencyAmount>
+        {
+            new CurrencyAmount(CurrencyType.NightHarvest, Lore.Story.NightCost), new CurrencyAmount(CurrencyType.StarShard, Lore.Story.ShardCost),
+        };
+
+        /// <summary>Zakończenie historii: w noc pełni zapal na ołtarzu Światło Opiekunów (Lore.Story).</summary>
+        void FillFinale(ContextInfo info, GameLoop game, NightEvents events)
+        {
+            info.lines.Add(Loc.Get("ui.altar.finale_hint"));
+            var clock = game.Clock;
+            bool ready = clock.IsNight && clock.IsFullMoon;
+            if (!ready)
+            {
+                // pełnia co 8 nocy (cykl 1 h): ile godzin do najbliższej nocy pełni
+                float cycles = Mathf.Repeat(0.5f - clock.MoonPhase, 1f) * GameClock.MoonCycleNights;
+                info.lines.Add(Loc.Get("ui.altar.finale_wait", Mathf.Max(0.1f, cycles)));
+            }
+            var cost = FinaleCost;
+            info.Button(Loc.Get("ui.altar.finale", UI.PlacementMode.CostText(cost)), () =>
+            {
+                if (!Lore.Story.Ready || !game.Clock.IsNight || !game.Clock.IsFullMoon || !game.Wallet.CanAfford(FinaleCost))
+                    return;
+                if (events.Monster != null || !events.SpawnMonster(true))
+                    return;   // zwykły potwór jeszcze w wodzie: najpierw musi odejść
+                game.Wallet.TrySpend(FinaleCost);
+                Lore.Story.Finish();
+                foreach (var lamp in Lighting.Lamp.All)
+                    if (lamp != null) Visual.IslandFx.FindPopped(lamp.transform.position + new Vector3(0f, 1f, 0f));
+                Visual.IslandFx.FindPopped(transform.position + new Vector3(0f, 1f, 0f));
+                GameEvents.PlaySound("magic", 1f);
+                GameEvents.RaiseToast("toast.finale");
+                if (events.Monster != null)
+                    GameEvents.RequestContext(events.Monster);
+            }, ready && game.Wallet.CanAfford(cost));
+        }
+
         public void FillContext(ContextInfo info)
         {
             var game = GameLoop.Instance;
@@ -21,6 +57,10 @@ namespace Wyspa.Sea
             info.lines.Add(Loc.Get("ui.altar.desc"));
             if (game == null || events == null)
                 return;
+            if (Lore.Story.Finished)
+                info.lines.Add(Loc.Get("ui.altar.finale_done"));
+            else if (Lore.Story.Ready)
+                FillFinale(info, game, events);
             bool night = game.Clock.IsNight;
             string key = game.Clock.NightKey;
             bool used = events.MonsterNight == key;

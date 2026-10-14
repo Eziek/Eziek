@@ -21,10 +21,13 @@ namespace Wyspa.Sea
         SpriteRenderer eye, eyeGlow;
         Sprite[] tentacleFrames, eyeFrames;
         bool leaving;
+        bool finale;
+        int page;
         float age;
 
-        public void Setup(Sprite[] tentacle, Sprite[] eyeSprites, Sprite eyeGlowSprite, Material glowMaterial)
+        public void Setup(Sprite[] tentacle, Sprite[] eyeSprites, Sprite eyeGlowSprite, Material glowMaterial, bool finaleMode = false)
         {
+            finale = finaleMode;
             tentacleFrames = tentacle;
             eyeFrames = eyeSprites;
             foreach (var dx in new[] { -22, 22 })
@@ -76,7 +79,7 @@ namespace Wyspa.Sea
         void Update()
         {
             age += Time.unscaledDeltaTime;
-            if (!leaving && age > Stay)
+            if (!leaving && !finale && age > Stay)
                 Leave();
             // oko mruga: klatki 0-1, rzadko 2 (świecąca źrenica)
             if (eyeFrames == null || eyeFrames.Length == 0 || leaving)
@@ -84,7 +87,7 @@ namespace Wyspa.Sea
             int f = Mathf.FloorToInt(age * 2f) % 12 == 0 ? Mathf.Min(2, eyeFrames.Length - 1) : Mathf.FloorToInt(age) % 2;
             eye.sprite = eyeFrames[Mathf.Min(f, eyeFrames.Length - 1)];
             if (eyeGlow != null)
-                eyeGlow.enabled = f == 2;
+                eyeGlow.enabled = f == 2 || finale;   // w finale oko świeci cały czas
         }
 
         void Leave()
@@ -106,10 +109,22 @@ namespace Wyspa.Sea
         public void FillContext(ContextInfo info)
         {
             var game = GameLoop.Instance;
-            info.title = Loc.Get("term.monster");
+            info.title = Loc.Get(finale || Lore.Story.Finished ? "term.first_keeper" : "term.monster");
             info.worldAnchor = transform.position + new Vector3(0f, 2.5f, 0f);
             info.verticalButtons = true;
-            info.lines.Add(Loc.Get("lore.monster"));
+            if (finale)
+            {
+                // epilog: trzy zapiski po kolei, na końcu pożegnanie
+                var ending = Lore.Story.Ending;
+                page = Mathf.Clamp(page, 0, ending.Length - 1);
+                info.lines.Add(Loc.Get(ending[page]));
+                if (page < ending.Length - 1)
+                    info.Button(Loc.Get("ui.monster.next"), () => { page++; GameEvents.RequestContext(this); });
+                else
+                    info.Button(Loc.Get("ui.monster.farewell"), Leave);
+                return;
+            }
+            info.lines.Add(Loc.Get(Lore.Story.Finished ? "lore.monster.after" : "lore.monster"));
             bool can = game != null && game.Wallet.Get(CurrencyType.NightHarvest) >= OfferingNight;
             info.Button(Loc.Get("ui.monster.offer", OfferingNight), Offer, can);
         }

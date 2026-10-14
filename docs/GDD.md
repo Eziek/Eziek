@@ -575,6 +575,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     ognik „Żarek” → „Węgielek”).
 62. Drzewko ulepszeń (prośba gracza): strona Ulepszenia jako odkrywane drzewko z ognikiem-ogrodnikiem w środku,
     18 ulepszeń w 4 gałęziach (rój, Żar, ziemia, handel), 14 nowych. Słój Żaru wymaga teraz ognika-ogrodnika (100 monet).
+63. Zakończenie historii: Światło Opiekunów na ołtarzu w noc pełni, ostatnie wynurzenie oka z epilogiem, stałe nagrody.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -798,7 +799,12 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
   Na końcu okazuje się, że potwór-oko to **Pierwszy Opiekun**: od stu lat trzyma mgłę na dnie. Lampy dają mu siłę, a ofiary
   na ołtarzu są dla niego łykiem powietrza. Poprzedni Opiekun został z nim („Pal światło, a my utrzymamy resztę”).
   Źródła (w każdym zapiski po kolei): Opiekun 8 (znaleziska na kafelkach, nagrobki), zabytki 3 i oko 1,
-  wrak 4, rafa 4, zatopiona latarnia 4, cmentarzysko 4, Serce mgły 5. Razem 33 na stronie Zapiski w bestiariuszu.
+  wrak 4, rafa 4, zatopiona latarnia 4, cmentarzysko 4, Serce mgły 5, epilog 3. Razem 36 na stronie Zapiski w bestiariuszu.
+  **Zakończenie** (`Lore/Story.cs`): po ostatnim zapisku z Serca mgły toast wskazuje ołtarz. W noc pełni na ołtarzu:
+  „Zapal Światło Opiekunów” (10 plonów nocy + 3 odłamki). Oko wynurza się po raz ostatni jako Pierwszy Opiekun,
+  świeci cały czas, panel pokazuje epilog (3 zapiski, „Dalej”, „Pożegnaj”). Nagroda stała: lampy -20% Żaru,
+  rośliny nocy +10%, mgła rzadsza (×0,7). Potem potwór przy zwykłych wynurzeniach nazywa się Pierwszym Opiekunem
+  i ma łagodny opis. Gra toczy się dalej (idle bez końca); stan w kronice („story:finale”).
 
 **I. Wygoda (opcje, nie sklep)**
 - Okno: przezroczyste, zawsze na wierzchu, przyklejone do rogu ekranu, mini-tryb.

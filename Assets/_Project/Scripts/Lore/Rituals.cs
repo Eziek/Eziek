@@ -36,6 +36,7 @@ namespace Wyspa.Lore
             GameLoop.DayGrowthMultiplier = Has("deep_roots") ? 1.1f : 1f;
             Sea.GhostMerchant.StayMultiplier = Has("fog_whisper") ? 2f : 1f;
             Sea.Expedition.DurationMultiplier = Has("tide_memory") ? 0.75f : 1f;
+            Story.Refresh(c);   // zakończenie historii: stałe nagrody
         }
     }
 }

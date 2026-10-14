@@ -229,6 +229,10 @@ namespace Wyspa.UI
                 if (GUILayout.Button("Wyprawy +3 (cele)")) boat.DebugAddTrips(3);
                 GUILayout.EndHorizontal();
             }
+            if (!Wyspa.Lore.Story.Finished && GUILayout.Button("Historia: odkryj zapiski (finał przy ołtarzu)"))
+                foreach (var k in Wyspa.Lore.LoreBook.All)
+                    if (System.Array.IndexOf(Wyspa.Lore.Story.Ending, k) < 0)
+                        Wyspa.Lore.Chronicle.Note("lore:" + k);
 
             var island = game.Island;
             if (island != null && island.Ready)

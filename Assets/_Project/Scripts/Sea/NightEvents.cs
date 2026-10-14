@@ -35,6 +35,7 @@ namespace Wyspa.Sea
         string monsterNight = "";
         MonsterEvent monster;
 
+        public MonsterEvent Monster => monster;
         public string MonsterNight { get => monsterNight; set => monsterNight = value ?? ""; }
 
         public void Setup(Sprite[] wispBody, Sprite[] wispGlowFrames, Sprite[] star, Sprite[] starGlowFrames, Sprite shardSprite,
@@ -135,7 +136,8 @@ namespace Wyspa.Sea
             go.AddComponent<StarPickup>().Setup(target, order, starFrames, starGlow, shard, shardGlow, glowMaterial);
         }
 
-        public bool SpawnMonster()
+        /// <summary>finale: ostatnie wynurzenie w zakończeniu historii (epilog zamiast ofiary).</summary>
+        public bool SpawnMonster(bool finale = false)
         {
             var island = Island.Instance;
             var game = GameLoop.Instance;
@@ -147,8 +149,9 @@ namespace Wyspa.Sea
             go.transform.SetParent(transform, false);
             go.transform.position = island.WaterBelow(30) + new Vector3(Random.Range(-2f, 2f), 0f, 0f);
             monster = go.AddComponent<MonsterEvent>();
-            monster.Setup(tentacle, eye, eyeGlow, glowMaterial);
-            GameEvents.RaiseToast("toast.monster.rises");
+            monster.Setup(tentacle, eye, eyeGlow, glowMaterial, finale);
+            if (!finale)
+                GameEvents.RaiseToast("toast.monster.rises");
             return true;
         }
     }

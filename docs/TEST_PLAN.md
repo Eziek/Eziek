@@ -73,6 +73,14 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
    zapiski Opiekuna po kolei (1, 2, 3...).
 6. Stary zapis z łodzią w drodze: po wczytaniu wyprawa trwa dalej (cel: wrak albo cmentarzysko dla dawnej długiej).
 
+## 4c. Zakończenie historii
+1. Postaw ołtarz (Sklep → Morze). F1 → „Historia: odkryj zapiski”. Klik w ołtarz: napis o świetle w noc pełni,
+   linia „Najbliższa noc pełni za ok. ... h”, przycisk „Zapal Światło Opiekunów (...)” nieaktywny.
+2. F1 → 23:30 i „Wymuś pełnię”, F1 → monety/plony nocy, odłamki (gwiazda). Klik w przycisk: iskry nad lampami,
+   dźwięk, toast, wynurza się oko (świeci cały czas), panel „Pierwszy Opiekun” z epilogiem: „Dalej” x2, „Pożegnaj”.
+3. Po finale: ołtarz pokazuje nagrody, mgła w nocy rzadsza, w bestiariuszu 3 zapiski epilogu.
+   Zapis i wczytanie: finał zostaje (nie da się go powtórzyć), zwykłe wynurzenia oka mają nowy opis.
+
 ## 5. Zamówienia i chowańce
 1. Przy karteczce „gotowe” zaczynają przychodzić zamówienia (toast „Nowa karteczka na tablicy”); po ok. 20 s karteczka
    wprowadzenia znika. Klik w tablicę: lista (kto, czego ile, cykle, nagroda). F1 → „Zamówienie teraz” dokłada kolejną.

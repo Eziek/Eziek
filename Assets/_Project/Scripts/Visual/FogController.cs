@@ -59,7 +59,7 @@ namespace Wyspa.Visual
                 return;
             timer = 0.5f;
             // latarnia morska rozświetla mgłę (GDD §11.3 C): odsuwa ją o ćwierć
-            float target = Target() * (Sea.NightEvents.LighthouseLit ? 0.75f : 1f) * Weather.WeatherSystem.FogMultiplier;   // mgła nocna, deszcz
+            float target = Target() * (Sea.NightEvents.LighthouseLit ? 0.75f : 1f) * Weather.WeatherSystem.FogMultiplier * Lore.Story.Fog;   // po finale historii mgła rzadsza   // mgła nocna, deszcz
             density = density < 0f ? target : Mathf.MoveTowards(density, target, speed * 0.5f);
             Apply();
         }

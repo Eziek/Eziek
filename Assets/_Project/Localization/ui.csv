@@ -279,3 +279,9 @@ ui.upgrade.hidden,Ukryte we mgle. Najpierw: {0},Hidden in the fog. First: {0},Im
 ui.upgrade.cost,Koszt: {0},Cost: {0},Kosten: {0},コスト：{0},花费：{0},
 ui.upgrade.click_buy,"Kliknij, aby kupić",Click to buy,Klicken zum Kaufen,クリックで購入,点击购买,
 ui.upgrade.cant_afford,Za mało środków,Not enough resources,Nicht genug Mittel,資源が足りない,资源不足,
+ui.altar.finale_hint,Na ołtarzu pojawił się świeży napis: zapal tu światło w noc pełni.,Fresh words have appeared on the altar: light the flame here on a full-moon night.,Auf dem Altar steht eine frische Inschrift: Entzünde hier das Licht in einer Vollmondnacht.,祭壇に新しい文字が現れた。満月の夜、ここに灯をともせ。,祭坛上出现了新刻的字：在满月之夜，于此点亮光芒。,
+ui.altar.finale,Zapal Światło Opiekunów ({0}),Light the Keepers' Light ({0}),Entzünde das Licht der Hüter ({0}),守り人の光をともす（{0}）,点亮守护人之光（{0}）,{0} = koszt
+ui.altar.finale_wait,Najbliższa noc pełni za ok. {0:0.#} h.,Next full-moon night in about {0:0.#} h.,Nächste Vollmondnacht in etwa {0:0.#} Std.,次の満月の夜まで約{0:0.#}時間,距下一个满月之夜约{0:0.#}小时,1 noc = 1 h cyklu gry
+ui.altar.finale_done,"Światło Opiekunów płonie: lampy palą o 20% mniej Żaru, rośliny nocy rosną o 10% szybciej, mgła jest rzadsza.","The Keepers' Light burns: lamps use 20% less Ember, night crops grow 10% faster, the fog is thinner.","Das Licht der Hüter brennt: Lampen verbrauchen 20 % weniger Glut, Nachtpflanzen wachsen 10 % schneller, der Nebel ist dünner.",守り人の光が燃えている：ランプの熾火消費-20%、夜の作物の成長+10%、霧が薄くなった,守护人之光正在燃烧：灯消耗的余火-20%，夜间作物生长+10%，雾变淡了,
+ui.monster.next,Dalej,Next,Weiter,次へ,继续,
+ui.monster.farewell,Pożegnaj,Say farewell,Abschied nehmen,別れを告げる,告别,

@@ -211,6 +211,8 @@ namespace Wyspa.Sea
             {
                 Lore.Chronicle.Note("lore:" + lore);
                 summary.lines.Add(Loc.Get("ui.loot.lore", Loc.Get(lore)));
+                if (lore == Lore.Story.LastFragment)
+                    GameEvents.RaiseToast("toast.finale_ready");   // zakończenie historii czeka przy ołtarzu
             }
             int rolls = rnd.Next(d.rollsMin, d.rollsMax + 1);
             for (int i = 0; i < rolls; i++)

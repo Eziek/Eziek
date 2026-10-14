@@ -281,7 +281,7 @@ namespace Wyspa.Core
                 ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth * UpgradeEffects.DayGrowth : 1f;   // deszcz +20%
             // mikstury z kotła: wywar wzrostu (rośliny dnia), eliksir nocy (rośliny nocy)
             if (crop != null && crop.kind == CropKind.Night)
-                dayBonus = Alchemy.Potions.NightGrowth * Familiars.FamiliarSystem.NightGrowth * UpgradeEffects.NightGrowth;   // eliksir nocy, ropucha
+                dayBonus = Alchemy.Potions.NightGrowth * Familiars.FamiliarSystem.NightGrowth * UpgradeEffects.NightGrowth * Lore.Story.NightGrowth;   // + Światło Opiekunów   // eliksir nocy, ropucha
             return new GrowthContext
             {
                 playerActive = activity.IsActive,
