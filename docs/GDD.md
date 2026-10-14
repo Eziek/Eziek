@@ -410,6 +410,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     dopracowanie UI i balans. 6a: Opcje w Księdze mają sekcje Ogólne (język, jasność nocy, godziny nocy, rytm pracy, próg
     bezczynności), Okno (skala ×2–×4, mini-tryb, ramka, zawsze na wierzchu, przezroczyste tło, róg ekranu) i System (start
     z Windows przez HKCU\Run, reset zapisu). Okno obsługuje własny kod WinAPI.
+35. Poprawka buildu: brak UI, bo build wycinał shader fontu TMP (font tworzony w locie). Wyspa → 1 dołącza go na stałe,
+    a bez niego UI startuje z domyślnym fontem TMP.
 
 ---
 

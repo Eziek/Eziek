@@ -68,8 +68,24 @@ namespace Wyspa.UI
         {
             if (font == null)
                 return null;
+            // TMP tworzy materiał z shaderem „TextMeshPro/Mobile/Bitmap” (Shader.Find). Gdy build go wyciął (brak Wyspa > 1),
+            // zostaje domyślny font TMP - UI działa, tylko bez pikselowego fontu.
+            if (Shader.Find("TextMeshPro/Mobile/Bitmap") == null)
+            {
+                Debug.LogError("[Wyspa] Brak shadera TextMeshPro/Mobile/Bitmap w buildzie: uruchom Wyspa > 1 i zbuduj grę ponownie.");
+                return null;
+            }
             // RASTER = bez wygładzania, filtr Point = ostre piksele (GDD §12.9)
-            var fa = TMP_FontAsset.CreateFontAsset(font, 8, 1, GlyphRenderMode.RASTER, 256, 256, AtlasPopulationMode.Dynamic, false);
+            TMP_FontAsset fa;
+            try
+            {
+                fa = TMP_FontAsset.CreateFontAsset(font, 8, 1, GlyphRenderMode.RASTER, 256, 256, AtlasPopulationMode.Dynamic, false);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[Wyspa] Nie udało się utworzyć fontu UI: {e.Message}");
+                return null;
+            }
             if (fa != null && fa.atlasTexture != null)
                 fa.atlasTexture.filterMode = FilterMode.Point;
             return fa;

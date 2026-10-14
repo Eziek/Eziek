@@ -119,6 +119,8 @@ namespace Wyspa.EditorTools
             PlayerSettings.visibleInBackground = true;
             // przezroczyste okno (DWM, opcja gracza) wymaga łańcucha wymiany bez „flip model” (GDD §12.7)
             PlayerSettings.useFlipModelSwapchain = false;
+            // font UI powstaje w locie (UiRoot), a TMP szuka wtedy shadera przez Shader.Find - w buildzie musi być dołączony
+            AlwaysIncludeShader("TextMeshPro/Mobile/Bitmap");
 
             var rp = GraphicsSettings.defaultRenderPipeline as UniversalRenderPipelineAsset;
             if (rp == null)
@@ -135,6 +137,31 @@ namespace Wyspa.EditorTools
         }
 
         /// <summary>Czy domyślny renderer URP to 2D Renderer (czyta pola assetu - klasa Renderer2D jest wewnętrzna).</summary>
+        /// <summary>Dopisuje shader do Graphics Settings → Always Included Shaders (Unity nie wytnie go z buildu).</summary>
+        static void AlwaysIncludeShader(string shaderName)
+        {
+            var shader = Shader.Find(shaderName);
+            if (shader == null)
+            {
+                Debug.LogWarning($"[Wyspa] Brak shadera '{shaderName}': Window > TextMeshPro > Import TMP Essential Resources, potem Wyspa > 1 jeszcze raz.");
+                return;
+            }
+            var settings = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>("ProjectSettings/GraphicsSettings.asset");
+            if (settings == null)
+                return;
+            var so = new SerializedObject(settings);
+            var list = so.FindProperty("m_AlwaysIncludedShaders");
+            if (list == null || !list.isArray)
+                return;
+            for (int i = 0; i < list.arraySize; i++)
+                if (list.GetArrayElementAtIndex(i).objectReferenceValue == shader)
+                    return;
+            list.InsertArrayElementAtIndex(list.arraySize);
+            list.GetArrayElementAtIndex(list.arraySize - 1).objectReferenceValue = shader;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            Debug.Log($"[Wyspa] Shader '{shaderName}' dodany do Always Included Shaders.");
+        }
+
         static bool Uses2DRenderer(UniversalRenderPipelineAsset rp)
         {
             var so = new SerializedObject(rp);

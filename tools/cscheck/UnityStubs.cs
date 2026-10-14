@@ -117,7 +117,7 @@ namespace UnityEditor
     public static class EditorUtility { public static void SetDirty(UnityEngine.Object o) { } }
     public static class PlayerSettings { public static FullScreenMode fullScreenMode; public static int defaultScreenWidth, defaultScreenHeight; public static bool useFlipModelSwapchain; public static bool resizableWindow, runInBackground, visibleInBackground; }
     public class SerializedObject { public SerializedObject(UnityEngine.Object o) { } public SerializedProperty FindProperty(string n) => null; public bool ApplyModifiedPropertiesWithoutUndo() => true; }
-    public class SerializedProperty { public UnityEngine.Object objectReferenceValue; public bool isArray; public int arraySize; public int intValue; public SerializedProperty GetArrayElementAtIndex(int i) => null; }
+    public class SerializedProperty { public UnityEngine.Object objectReferenceValue; public bool isArray; public int arraySize; public int intValue; public SerializedProperty GetArrayElementAtIndex(int i) => null; public void InsertArrayElementAtIndex(int i) { } }
     public class EditorBuildSettingsScene { public EditorBuildSettingsScene(string p, bool e) { } }
     public static class EditorBuildSettings { public static EditorBuildSettingsScene[] scenes; }
 }

@@ -242,6 +242,7 @@ Unity 6: **File → Build Profiles → Windows → Build**.
 | Brak napisów w UI, w konsoli „Brak zasobów TextMeshPro” | **Window → TextMeshPro → Import TMP Essential Resources**, potem Play |
 | Różowa woda, mgła albo rośliny | Shader się nie skompilował. Kliknij plik w `Assets/_Project/Shaders` i wklej mi błędy z Inspectora. F1 → „Shadery efektów” wyłącza efekty |
 | Woda bez ryb i fal, w kolorach „tęczy” | Brak `water_data.png` jako tekstury bez sRGB. **Wyspa → Narzędzia → Reimportuj sprite'y**, potem Wyspa → 3 |
+| W buildzie brak UI, w `Player.log` „ArgumentNullException … shader” przy `UiRoot.CreateFont` | Build wyciął shader fontu TMP. **Wyspa → 1** (dopisuje `TextMeshPro/Mobile/Bitmap` do Always Included Shaders), potem zbuduj ponownie. Log buildu: `%USERPROFILE%\AppData\LocalLow\<firma>\<gra>\Player.log` |
 | Brak UI, w konsoli „UiRoot: brak motywu UI” | **Wyspa → 3** (tworzy `Data/UiTheme.asset` i podpina go do obiektu `UI`) |
 | Księga nie mieści się w oknie | W buildzie okno samo rośnie na czas Księgi; w edytorze UI się zmniejsza. Ustaw większe okno Game |
 | Brak wyspy, w konsoli NullReference w `Island` | Scena sprzed 3b: uruchom **Wyspa → 3** (tworzy `Data/IslandArt.asset` i nową scenę) |
