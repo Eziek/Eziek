@@ -297,11 +297,35 @@ namespace Wyspa.UI
 
         readonly List<(LampDefinition def, Button buy, TextMeshProUGUI price)> shopRows = new List<(LampDefinition, Button, TextMeshProUGUI)>();
 
+        int shopSection;   // 0 lampy, 1 morze (GDD §12.4: podzakładki sklepu)
+
         void BuildShop()
         {
             shopRows.Clear();
+            seaItems.Clear();
             float y = 0;
-            Header("ui.shop.lamps", ref y);
+            // podzakładki: Lampy / Morze (Budowle przyjdą później)
+            float x = 0;
+            foreach (var (section, key) in new[] { (0, "ui.shop.lamps"), (1, "ui.shop.sea") })
+            {
+                int sec = section;
+                var b = Ui.Btn(content, "Section", () => { shopSection = sec; Show(Tab.Shop); });
+                var label = Ui.Txt(b.transform, "Text", sec == shopSection ? Ui.Theme.textGold : Ui.Theme.textLight, TextAlignmentOptions.Center);
+                label.text = Loc.Get(key);
+                float bw = Mathf.Max(40f, Ui.Width(label) + 12f);
+                Ui.Stretch(label.rectTransform);
+                Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, 0), new Vector2(bw, 14));
+                x += bw + 4;
+            }
+            y = 20;
+            info.text = Loc.Get("ui.shop.hint");
+            if (shopSection == 1)
+            {
+                info.text = Loc.Get("ui.shop.sea_hint");
+                BuildSeaShop(ref y);
+                RefreshShop();
+                return;
+            }
             var island = Island.Instance;
             var lamps = island != null && island.Art != null ? island.Art.lamps : null;
             if (lamps != null)
@@ -338,17 +362,125 @@ namespace Wyspa.UI
                     shopRows.Add((def, buy, price));
                     y += 28;
                 }
-            var more = Ui.Txt(content, "More", Ui.Theme.textMuted);
-            more.textWrappingMode = TextWrappingModes.Normal;
-            LocText.On(more, "ui.shop.more");
-            Ui.Place(more.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y - 4), new Vector2(W - 70, 30));
-            info.text = Loc.Get("ui.shop.hint");
+            RefreshShop();
+        }
+
+        // ---- Morze (Etap 4): pomost, sieci, łódź. Koszty w monetach i drewnie (§11.2: drewno na budowle)
+
+        class SeaItem
+        {
+            public string nameKey, descKey;
+            public Sprite sprite;
+            public List<CurrencyAmount> cost;
+            public System.Func<Island, string> blockedKey;   // null = można kupić, inaczej klucz powodu
+            public System.Action<Island> buy;
+            public Button button;
+            public TextMeshProUGUI status;
+        }
+
+        readonly List<SeaItem> seaItems = new List<SeaItem>();
+
+        static List<CurrencyAmount> Cost(int coins, int wood) => new List<CurrencyAmount>
+        {
+            new CurrencyAmount(CurrencyType.Coins, coins), new CurrencyAmount(CurrencyType.Wood, wood),
+        };
+
+        void BuildSeaShop(ref float y)
+        {
+            var island = Island.Instance;
+            var art = island != null ? island.Art : null;
+            seaItems.Add(new SeaItem
+            {
+                nameKey = "bld.pier", descKey = "ui.shop.pier.desc", sprite = art != null ? art.pier : null, cost = Cost(300, 10),
+                blockedKey = i => i.HasPier ? "ui.shop.built" : null,
+                buy = i => StartPier(i, Cost(300, 10)),
+            });
+            seaItems.Add(new SeaItem
+            {
+                nameKey = "bld.nets", descKey = "ui.shop.nets.desc", sprite = art != null ? art.netBuoy : null, cost = Cost(150, 5),
+                blockedKey = i => i.HasNets ? "ui.shop.built" : (!i.HasPier ? "ui.shop.needs_pier" : null),
+                buy = i => BuyDirect(i, Cost(150, 5), i.BuildNets, "bld.nets"),
+            });
+            seaItems.Add(new SeaItem
+            {
+                nameKey = "bld.boat", descKey = "ui.shop.boat.desc", sprite = art != null ? art.boat : null, cost = Cost(600, 15),
+                blockedKey = i => i.HasBoat ? "ui.shop.built" : (!i.HasPier ? "ui.shop.needs_pier" : null),
+                buy = i => BuyDirect(i, Cost(600, 15), i.BuildBoat, "bld.boat"),
+            });
+            foreach (var it in seaItems)
+            {
+                var row = Ui.Place(Ui.Rect("Sea_" + it.nameKey, content), Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 64, 26));
+                var slot = Ui.Img(row, "Slot", Ui.Theme.slot, true);
+                Ui.Place(slot.rectTransform, Ui.TopLeft, Ui.TopLeft, Vector2.zero, new Vector2(22, 26));
+                var pic = Ui.Img(slot.transform, "Pic", it.sprite, false);
+                pic.preserveAspect = true;
+                Ui.Place(pic.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(18, 22));
+                var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
+                LocText.On(name, it.nameKey);
+                Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -3), new Vector2(160, 10));
+                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
+                desc.text = Loc.Get(it.descKey) + " - " + PlacementMode.CostText(it.cost);
+                Ui.Place(desc.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -13), new Vector2(240, 10));
+                var item = it;
+                it.button = Ui.Btn(row, "Buy", () => { if (Island.Instance != null) item.buy(Island.Instance); });
+                Ui.Place((RectTransform)it.button.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -5), new Vector2(40, 16));
+                var bt = Ui.Txt(it.button.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
+                Ui.Stretch(bt.rectTransform);
+                LocText.On(bt, "ui.upgrade.buy");
+                it.status = Ui.Txt(row, "Status", Ui.Theme.textMuted, TextAlignmentOptions.TopRight);
+                Ui.Place(it.status.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -8), new Vector2(90, 10));
+                y += 28;
+            }
+        }
+
+        void StartPier(Island island, List<CurrencyAmount> cost)
+        {
+            if (UiRoot.Instance == null)
+                return;
+            UiRoot.Instance.StartPlacement(new PlacementMode.Request
+            {
+                nameKey = "bld.pier",
+                sprite = island.Art != null ? island.Art.pier : null,
+                cost = cost,
+                valid = island.PierValid,
+                ghostAt = t => island.PierPlacement(t, out _, out _),
+                confirm = t =>
+                {
+                    if (!island.BuildPier(t))
+                        return false;
+                    GameEvents.RaiseToast("ui.toast.placed", Loc.Get("bld.pier"));
+                    return true;
+                },
+            });
+        }
+
+        void BuyDirect(Island island, List<CurrencyAmount> cost, System.Func<bool> build, string nameKey)
+        {
+            var game = GameLoop.Instance;
+            if (game == null || !game.Wallet.TrySpend(cost))
+                return;
+            if (!build())
+            {
+                foreach (var c in cost)
+                    game.Wallet.Add(c.type, c.amount);
+                return;
+            }
+            GameEvents.RaiseToast("ui.toast.placed", Loc.Get(nameKey));
             RefreshShop();
         }
 
         void RefreshShop()
         {
             var game = GameLoop.Instance;
+            var island = Island.Instance;
+            foreach (var it in seaItems)
+            {
+                string blocked = island != null ? it.blockedKey(island) : "ui.shop.needs_pier";
+                bool afford = game != null && game.Wallet.CanAfford(it.cost);
+                it.button.gameObject.SetActive(blocked == null);
+                it.button.interactable = afford;
+                it.status.text = blocked != null ? Loc.Get(blocked) : "";
+            }
             foreach (var (def, buy, price) in shopRows)
             {
                 bool afford = game != null && game.Wallet.Coins >= def.price;

@@ -266,7 +266,10 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Krzywa cen kafelków do balansu (obecnie kwadratowa, §13.2).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
 - [ ] Progi rytmu pracy (seria 25 min, przerwa 5 min, zmęczenie 8 h/10 h) do sprawdzenia w praktyce.
-- [ ] Mutacje: które pary roślin dają które hybrydy.
+- [ ] Mutacje: które pary roślin dają które hybrydy. Na razie jedna para: dynia + upiorna dynia = dynia-upiór (dane w `CropDefinition.parentA/B`).
+- [x] Nasiona spoza sklepu (hybrydy, kupiec-widmo, wyprawy) trafiają do **worka nasion**; koło nasion najpierw bierze z worka.
+- [x] Nawóz (+1 jakości) na razie tylko od kupca-widma i z wypraw, zużywany automatycznie przy sadzeniu. Kompostownik później.
+- [x] Budowle morskie kosztują monety + drewno: pomost 300 + 10, sieci 150 + 5, łódź 600 + 15 (do balansu).
 - [ ] Tabela łupów wypraw łodzią.
 - [ ] Treść lore (historia wyspy, mgły, potwora).
 - [x] Chiński: **uproszczony (zh-Hans)**.
@@ -371,6 +374,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     „Oświetli: N grządek”), przenoszenie obiektów, panel kontekstowy przy obiektach, usuwanie dekoracji z animacjami
     i pozostałościami (§14), dekoracje na 25% nowych kafelków, ląd wynurza się w 3 klatkach. Latarnia startowa
     jest stawiana w kodzie jak każda kupiona lampa.
+30. Etap 3c przetestowany. **Etap 4** w częściach: 4a jakość (1-3, światło ognika, nawóz), mutacje (worek nasion, dynia-upiór),
+    pełnia z prawdziwej fazy księżyca; 4b kupiec-widmo (raz na noc 21-3, 10 min, nasiona, nawóz, hybryda, skup skrzyni 150%);
+    4c pomost (woda przy brzegu, ląd z boku), łowienie ryb z shadera wody (te same obliczenia na CPU), sieci; 4d łódź
+    i wyprawy na 2 albo 4 h aktywnej pracy z losowym łupem. Sklep w Księdze ma podzakładki Lampy i Morze.
 
 ---
 
@@ -416,6 +423,10 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/World/WorldTypes.cs`, `WorldGenerator.cs`, `IslandMap.cs`, `IslandPainter.cs` | czyste C# (testowalne poza Unity): kafelki, ziarno, generator świata (port `world_proto.py`), mapa i ceny (§13.2), malowanie lądu, wody i mapy danych (port `tiles_proto.py`, morfologia przez transformatę odległości) |
 | `Scripts/World/Island.cs`, `IslandArt.cs`, `TileObject.cs` | wyspa w scenie: tekstury w locie, grządki i dekoracje na kafelkach, zakup, przekopywanie, znaleziska, samoczynne stawianie obiektów, zapis |
 | `Scripts/World/ViewController.cs` | kadr i okno rosną z wyspą (Pixel Perfect Camera, `Screen.SetResolution` w buildzie), przewijanie PPM |
+| `Scripts/Farming/SeedBag.cs` | worek nasion (hybrydy, kupiec, wyprawy); jakość i mutacje w `PlotState`, `CropDefinition`, `GameLoop.TryMutate` |
+| `Scripts/Sea/GhostMerchant.cs` | kupiec-widmo: harmonogram nocy, oferta, skup skrzyni |
+| `Scripts/Sea/Pier.cs`, `FishingNets.cs` | pomost i łowisko (ryby liczone tak jak w `Water.shader`), sieci co godzinę |
+| `Scripts/Sea/Expedition.cs` | łódź i wyprawy (postęp z aktywnej pracy, łup) |
 | `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |
 | `Scripts/UI/PlacementMode.cs` | tryb stawiania: duch na kafelku, okrąg zasięgu światła, licznik oświetlonych grządek, kupno lampy, przenoszenie |
@@ -545,7 +556,8 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Etap 3c (gotowy, do testu w Unity):** sklep lamp (Księga → Sklep), tryb stawiania i przenoszenie obiektów,
   panel kontekstowy, usuwanie dekoracji z nagrodami (drewno, kamień, bonusy), dekoracje na 25% nowych kafelków,
   wynurzanie lądu. Pasma światła Bayera (§4.4) później.
-- **Etap 4:** rośliny nocy (grafiki), kupiec-widmo, pomost i łowienie, łódź i wyprawy, mutacje i jakość.
+- **Etap 4 (gotowy, do testu w Unity):** jakość i mutacje (dynia-upiór), pełnia (rośliny nocy x2, krwawa róża),
+  worek nasion i nawóz, kupiec-widmo, pomost i łowienie, sieci, łódź i wyprawy. Grafiki roślin nocy były gotowe wcześniej.
 - **Etap 5:** strefy, latarnia morska, Księga rytuałów i cykle księżyca, bestiariusz, lore, potwór.
 - **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.
 

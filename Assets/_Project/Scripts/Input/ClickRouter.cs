@@ -25,9 +25,21 @@ namespace Wyspa.Input
                 return;
 
             Vector2 world = cam.ScreenToWorldPoint(screenPos);
-            var hit = Physics2D.OverlapPoint(world);
+            var hit = Pick(world);
             if (hit != null && hit.TryGetComponent(out IClickable clickable))
                 clickable.OnClick();
+        }
+
+        /// <summary>Collider pod punktem: zwykłe obiekty mają pierwszeństwo przed obszarami o niskim priorytecie (łowisko).</summary>
+        public static Collider2D Pick(Vector2 world)
+        {
+            var hits = Physics2D.OverlapPointAll(world);
+            if (hits == null || hits.Length == 0)
+                return null;
+            foreach (var h in hits)
+                if (h != null && !h.TryGetComponent(out ILowPriorityClick _))
+                    return h;
+            return hits[0];
         }
 
         static bool PointerPressed(out Vector2 screenPos)

@@ -161,6 +161,24 @@ Po pobraniu zmian: **Wyspa → 3**, potem Play. Zapis z 3b zostaje (wyspa, lampa
 4. **Nowe kafelki:** kupiony kafelek wysuwa się z lądu w 3 klatkach, a na co czwartym rośnie dekoracja.
 5. Brak Esencji na usunięcie: przycisk jest wyszarzony (F1 → +30 Esencji do testów).
 
+## 4f. Etap 4: rośliny, kupiec-widmo, morze (test)
+Po pobraniu zmian: **Wyspa → 3**, potem Play. Zapis z 3c zostaje (zapis v4 dokłada worek nasion, nawóz i morze).
+Przydatne w F1: **x60**, **23:30**, **Wymuś pełnię**, **Mutacje zawsze**, **Przywołaj kupca-widmo**, cheaty.
+1. **Jakość:** roślina dnia rosnąca w nocy w świetle klatki z ognikiem (lampa ze sklepu) dostaje jakość 2/3 (dymek nad grządką),
+   a zbiór daje x1.5 monet. Nawóz od kupca daje +1 (jakość 3/3 = x2.5).
+2. **Mutacje:** posadź dynię i upiorną dynię na sąsiednich grządkach (obok siebie, nie po skosie). Zbiór jednej z nich daje
+   3% szansy (F1: zawsze) na nasiono **dyni-upiora**: toast i nowe nasiono w kole nasion z licznikiem.
+3. **Pełnia:** F1 → „Wymuś pełnię”, potem 23:30: toast o pełni, rośliny nocy rosną 2x szybciej, krwawa róża rośnie tylko wtedy
+   (poza pełnią dymek mówi „czeka na pełnię”).
+4. **Kupiec-widmo:** F1 → „Przywołaj kupca-widmo” (normalnie raz na noc, losowo 21:00-3:00). Łódź wynurza się z mgły pod wyspą.
+   Klik: paczki nasion nocy (do worka), nawóz, czasem nasiono hybrydy, skup skrzyni za 150%. Po 10 min odpływa.
+5. **Pomost:** Księga → Sklep → **Morze** → Pomost (300 monet + 10 drewna; drewno z usuwania drzew). Stawia się na wodzie
+   przy brzegu, gdzie ląd jest z lewej albo z prawej. Najedź na rybę blisko pomostu: dymek „LPM: złów”. Złowiona ryba daje łuski
+   i monety, świecąca (w nocy) więcej, i wraca po 1,5 min.
+6. **Sieci:** Sklep → Morze → Sieci: co godzinę gry łuski (F1 x60 = co minutę).
+7. **Łódź:** Sklep → Morze → Łódź. Klik w łódź: krótka (2 h pracy) albo długa (4 h) wyprawa. Liczy się tylko aktywna praca
+   (F1: x60 i „Wymuś aktywność”). Po powrocie klik → **Rozładuj**: panel z łupem.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

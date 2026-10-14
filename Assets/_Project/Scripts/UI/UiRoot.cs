@@ -162,6 +162,14 @@ namespace Wyspa.UI
             Placement.StartBuy(def);
         }
 
+        /// <summary>Stawianie z innego miejsca (np. pomost ze sklepu).</summary>
+        public void StartPlacement(PlacementMode.Request request)
+        {
+            CloseAll();
+            Book.Close();
+            Placement.Begin(request);
+        }
+
         public void StartMove(TileObject obj)
         {
             CloseAll();
@@ -190,7 +198,14 @@ namespace Wyspa.UI
                 return;
             }
             Vector2 world = cam.ScreenToWorldPoint(UiInput.MousePosition);
-            var hit = Physics2D.OverlapPoint(world);
+            var hit = Wyspa.Input.ClickRouter.Pick(world);
+            if (hit != null && hit.TryGetComponent(out Wyspa.Sea.Pier pier))
+            {
+                string tip = pier.HoverText(world);
+                if (tip != null) Tooltip.Show(plotHoverOwner, tip);
+                else Tooltip.Hide(plotHoverOwner);
+                return;
+            }
             if (hit != null && hit.TryGetComponent(out Decoration deco) && !deco.Removing)
             {
                 Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + "\n" + Loc.Get("ui.deco.hint"));

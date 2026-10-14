@@ -23,6 +23,12 @@ namespace Wyspa.World
         public List<TileSave> tiles = new List<TileSave>();
         public List<DecoSave> decorations = new List<DecoSave>();
         public List<ObjectSave> objects = new List<ObjectSave>();
+        // Etap 4: morze
+        public Sea.ExpeditionSave expedition;
+        public bool pier;
+        public int pierC, pierR;
+        public bool nets;
+        public bool boat;
     }
 
     /// <summary>
@@ -51,6 +57,9 @@ namespace Wyspa.World
         readonly List<TileObject> spawned = new List<TileObject>();   // lampy postawione w trakcie gry
         int lampCounter;
         bool claiming;
+        Sea.Pier pier;
+        GameObject nets;
+        Sea.Expedition boat;
         readonly Dictionary<TilePos, TileObject> occupied = new Dictionary<TilePos, TileObject>();
         readonly Dictionary<string, TilePos> savedObjectTiles = new Dictionary<string, TilePos>();
         Texture2D islandTex, waterTex, dataTex;
@@ -222,6 +231,14 @@ namespace Wyspa.World
                     savedObjectTiles[o.id] = new TilePos(o.c, o.r);
             Rebuild();
             SyncPlots();
+            if (save.pier)
+            {
+                BuildPier(new TilePos(save.pierC, save.pierR));
+                if (save.nets)
+                    BuildNets();
+                if (save.boat && BuildBoat())
+                    boat.Restore(save.expedition);
+            }
             foreach (var o in save.objects)
             {
                 // lampy: kupione (lamp = id definicji) albo startowa latarnia z zapisu 3b (id lamp_lantern)
@@ -238,6 +255,16 @@ namespace Wyspa.World
         public IslandSave Snapshot()
         {
             var s = new IslandSave { seed = map.Seed, purchased = map.Purchased };
+            if (pier != null)
+            {
+                s.pier = true;
+                s.pierC = pier.Tile.c;
+                s.pierR = pier.Tile.r;
+                s.nets = nets != null;
+            }
+            s.boat = boat != null;
+            if (boat != null)
+                s.expedition = boat.Snapshot();
             foreach (var kv in map.Tiles)
                 s.tiles.Add(new TileSave { c = kv.Key.c, r = kv.Key.r, kind = kv.Value });
             foreach (var kv in decorations)
@@ -261,6 +288,12 @@ namespace Wyspa.World
             foreach (var o in spawned)
                 if (o != null) { o.gameObject.SetActive(false); Destroy(o.gameObject); }
             spawned.Clear();
+            if (pier != null) { pier.gameObject.SetActive(false); Destroy(pier.gameObject); }
+            pier = null;
+            if (nets != null) { nets.SetActive(false); Destroy(nets); }
+            nets = null;
+            if (boat != null) { boat.gameObject.SetActive(false); Destroy(boat.gameObject); }
+            boat = null;
             lampCounter = 0;
             claiming = false;
             StopAllCoroutines();
@@ -294,7 +327,7 @@ namespace Wyspa.World
         /// <summary>Kupno kafelka: monety + Esencja (GDD §13.2). Po zakupie mgła się rozstępuje i wypada znalezisko.</summary>
         public bool TryBuy(TilePos p, Wallet wallet, EssenceStore essence)
         {
-            if (claiming || !map.CanBuy(p) || !CanAffordTile(wallet, essence))
+            if (claiming || SeaBlocked(p) || !map.CanBuy(p) || !CanAffordTile(wallet, essence))
                 return false;
             int coins = NextTileCoins, ess = NextTileEssence;
             if (!wallet.TrySpend(coins))
@@ -533,6 +566,93 @@ namespace Wyspa.World
                 AddDecoration(tile, a.remains);
             PlacePending();
             Changed?.Invoke();
+        }
+
+        // ================================================================ morze: pomost i sieci (Etap 4c)
+
+        public bool HasPier => pier != null;
+        public Sea.Pier PierObject => pier;
+        public bool HasNets => nets != null;
+        public bool HasBoat => boat != null;
+
+        /// <summary>Łódź przy końcu pomostu (wyprawy, Etap 4d).</summary>
+        public bool BuildBoat()
+        {
+            if (pier == null || boat != null)
+                return false;
+            bool landLeft = map.Owns(new TilePos(pier.Tile.c - 1, pier.Tile.r));
+            var at = (Vector3)pier.Tip + new Vector3((landLeft ? -4f : 4f) / Ppu, -10f / Ppu, 0f);
+            var go = new GameObject("Boat");
+            go.transform.SetParent(decoRoot, false);
+            go.transform.position = at;
+            var body = go.AddComponent<SpriteRenderer>();
+            body.sprite = art != null ? art.boat : null;
+            body.flipX = !landLeft;
+            body.sortingOrder = pier.GetComponent<SpriteRenderer>().sortingOrder + 2;
+            var glowSr = NewSprite("Glow", go.transform, at, body.sortingOrder + 1);
+            glowSr.sprite = art != null ? art.boatGlow : null;
+            glowSr.flipX = !landLeft;
+            if (art != null && art.glow != null)
+                glowSr.sharedMaterial = art.glow;
+            var col = go.AddComponent<BoxCollider2D>();
+            col.size = new Vector2(30f / Ppu, 16f / Ppu);
+            col.offset = new Vector2(0f, 8f / Ppu);
+            boat = go.AddComponent<Sea.Expedition>();
+            boat.Init(body, glowSr, col);
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>Kafelek wody zajęty przez pomost - nie da się go kupić.</summary>
+        public bool SeaBlocked(TilePos p) => pier != null && pier.Tile == p;
+
+        /// <summary>Pomost: kafelek wody z lądem z lewej albo z prawej (deski idą w bok od brzegu).</summary>
+        public bool PierValid(TilePos p) =>
+            pier == null && WorldGenerator.InWorld(p) && !map.Owns(p)
+            && (map.Owns(new TilePos(p.c - 1, p.r)) || map.Owns(new TilePos(p.c + 1, p.r)));
+
+        /// <summary>Podstawa pomostu przy brzegu; sprite odwrócony, gdy ląd jest po prawej. Zwraca też koniec pomostu.</summary>
+        public (Vector3 pos, bool flip) PierPlacement(TilePos p, out Vector3 tipWorld, out int order)
+        {
+            var (x0, y0) = IslandPainter.TileOrigin(p);
+            bool landLeft = map.Owns(new TilePos(p.c - 1, p.r));
+            int baseX = landLeft ? x0 - 1 : x0 + IslandPainter.Tile;
+            int tipX = landLeft ? baseX + 33 : baseX - 33;
+            order = y0 + 9;
+            tipWorld = AnchorWorld(tipX, y0 + 6);
+            return (AnchorWorld(baseX, y0 + 9), !landLeft);
+        }
+
+        public bool BuildPier(TilePos p)
+        {
+            if (!PierValid(p))
+                return false;
+            var (pos, flip) = PierPlacement(p, out var tip, out int order);
+            var sr = NewSprite("Pier", decoRoot, pos, order);
+            sr.sprite = art != null ? art.pier : null;
+            sr.flipX = flip;
+            var area = sr.gameObject.AddComponent<BoxCollider2D>();
+            area.size = new Vector2(10f, 8f);   // łowisko (Pier.Range = 5 kafelków)
+            area.offset = (Vector2)(tip - pos);
+            pier = sr.gameObject.AddComponent<Sea.Pier>();
+            pier.Init(this, water, p, tip);
+            Changed?.Invoke();
+            return true;
+        }
+
+        public bool BuildNets()
+        {
+            if (pier == null || nets != null)
+                return false;
+            bool landLeft = map.Owns(new TilePos(pier.Tile.c - 1, pier.Tile.r));
+            var at = (Vector3)pier.Tip + new Vector3((landLeft ? 14f : -14f) / Ppu, -8f / Ppu, 0f);
+            var sr = NewSprite("FishingNets", decoRoot, at, 2000);
+            sr.sprite = art != null ? art.netBuoy : null;
+            sr.sortingOrder = pier.GetComponent<SpriteRenderer>().sortingOrder + 1;
+            sr.gameObject.AddComponent<Sea.FishingNets>();
+            nets = sr.gameObject;
+            Changed?.Invoke();
+            return true;
         }
 
         // ================================================================ lampy (sklep, tryb stawiania)

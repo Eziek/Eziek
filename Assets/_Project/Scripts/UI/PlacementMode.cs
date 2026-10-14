@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Wyspa.Core;
+using Wyspa.Economy;
 using Wyspa.Farming;
 using Wyspa.Lighting;
 using Wyspa.Localization;
@@ -25,11 +27,22 @@ namespace Wyspa.UI
         static readonly Color Bad = new Color(1f, 0.35f, 0.3f, 0.6f);
         static readonly Color RingColor = new Color32(0xd2, 0xff, 0xf0, 0xff);
 
+        /// <summary>Co i jak stawiamy: duch, warunek miejsca, pozycja ducha, koszt, akcja po LPM.</summary>
+        public class Request
+        {
+            public string nameKey;
+            public Sprite sprite;
+            public LampDefinition light;
+            public List<CurrencyAmount> cost;                  // null = za darmo (przenoszenie)
+            public Func<TilePos, bool> valid;
+            public Func<TilePos, (Vector3 pos, bool flip)> ghostAt;
+            public Func<TilePos, bool> confirm;                // true = postawione
+        }
+
         TooltipView tooltip;
         SpriteRenderer ghost;
         SpriteRenderer ring;
-        LampDefinition buying;
-        TileObject moving;
+        Request request;
         readonly Dictionary<int, Sprite> rings = new Dictionary<int, Sprite>();
         bool hasTile;
         TilePos tile;
@@ -55,36 +68,58 @@ namespace Wyspa.UI
             return sr;
         }
 
+        static (Vector3, bool) OnLand(TilePos t) => (Island.TileAnchor(t, 13, out _), false);
+
         /// <summary>Lampa ze sklepu: płaci się dopiero przy postawieniu.</summary>
         public void StartBuy(LampDefinition def)
         {
-            if (def == null)
+            var island = Island.Instance;
+            if (def == null || island == null)
                 return;
-            Begin(def, null, def.sprite);
+            Begin(new Request
+            {
+                nameKey = def.NameKey, sprite = def.sprite, light = def,
+                cost = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, def.price) },
+                valid = island.IsFree, ghostAt = OnLand,
+                confirm = t =>
+                {
+                    if (island.SpawnLamp(def, t) == null)
+                        return false;
+                    GameEvents.RaiseToast("ui.toast.placed", Loc.Get(def.NameKey));
+                    return true;
+                },
+            });
         }
 
         public void StartMove(TileObject obj)
         {
-            if (obj == null || !obj.NeedsTile)
+            var island = Island.Instance;
+            if (obj == null || !obj.NeedsTile || island == null)
                 return;
             var sr = obj.GetComponent<SpriteRenderer>();
             var lamp = obj.GetComponent<Lamp>();
-            Begin(lamp != null ? lamp.Definition : null, obj, sr != null ? sr.sprite : null);
+            Begin(new Request
+            {
+                nameKey = obj.NameKey, sprite = sr != null ? sr.sprite : null, light = lamp != null ? lamp.Definition : null,
+                valid = t => island.IsFree(t) || (obj.Placed && obj.Tile == t),
+                ghostAt = OnLand,
+                confirm = t => island.MoveObject(obj, t),
+            });
         }
 
-        void Begin(LampDefinition lamp, TileObject move, Sprite sprite)
+        public void Begin(Request r)
         {
-            buying = move == null ? lamp : null;
-            moving = move;
+            if (r == null || r.valid == null || r.confirm == null)
+                return;
+            request = r;
             var art = Island.Instance != null ? Island.Instance.Art : null;
             if (art != null && art.glow != null)
             {
                 ghost.sharedMaterial = art.glow;   // duch i okrąg widać także w nocy
                 ring.sharedMaterial = art.glow;
             }
-            ghost.sprite = sprite;
-            var def = lamp;
-            ring.sprite = def != null ? Ring(Mathf.RoundToInt(def.radius * Ppu)) : null;
+            ghost.sprite = r.sprite;
+            ring.sprite = r.light != null ? Ring(Mathf.RoundToInt(r.light.radius * Ppu)) : null;
             ring.color = RingColor;
             ghost.transform.parent.gameObject.SetActive(true);
             Active = true;
@@ -95,8 +130,7 @@ namespace Wyspa.UI
         public void Cancel()
         {
             Active = false;
-            buying = null;
-            moving = null;
+            request = null;
             if (ghost != null)
                 ghost.transform.parent.gameObject.SetActive(false);
             tooltip.Hide(this);
@@ -104,11 +138,9 @@ namespace Wyspa.UI
 
         void OnDisable() => Cancel();
 
-        LampDefinition Lamp => buying != null ? buying : (moving != null && moving.GetComponent<Lamp>() != null ? moving.GetComponent<Lamp>().Definition : null);
-
         void Update()
         {
-            if (!Active)
+            if (!Active || request == null)
                 return;
             var island = Island.Instance;
             var cam = Camera.main;
@@ -127,12 +159,13 @@ namespace Wyspa.UI
             Vector2 world = cam.ScreenToWorldPoint(UiInput.MousePosition);
             tile = Island.WorldToTile(world);
             hasTile = true;
-            bool valid = island.IsFree(tile) || (moving != null && moving.Placed && moving.Tile == tile);
-            var at = Island.TileAnchor(tile, 13, out _);
+            bool valid = request.valid(tile);
+            var (at, flip) = (request.ghostAt ?? OnLand)(tile);
             ghost.transform.position = at;
+            ghost.flipX = flip;
             ghost.color = valid ? Ok : Bad;
 
-            var def = Lamp;
+            var def = request.light;
             int lit = 0;
             if (def != null)
             {
@@ -156,10 +189,9 @@ namespace Wyspa.UI
 
         string Describe(LampDefinition def, int lit, bool valid)
         {
-            string name = buying != null ? Loc.Get(buying.NameKey) : (moving != null ? Loc.Get(moving.NameKey) : "");
-            string s = name;
-            if (buying != null)
-                s += "\n" + Loc.Get("ui.place.cost", buying.price);
+            string s = string.IsNullOrEmpty(request.nameKey) ? "" : Loc.Get(request.nameKey);
+            if (request.cost != null)
+                s += "\n" + Loc.Get("ui.place.cost_any", CostText(request.cost));
             if (def != null)
                 s += "\n" + Loc.Get("ui.place.lights", lit);
             if (!valid)
@@ -167,28 +199,32 @@ namespace Wyspa.UI
             return s + "\n" + Loc.Get("ui.place.click");
         }
 
+        /// <summary>Koszt w kilku walutach jako tekst: „30 monet, 10 drewna”.</summary>
+        public static string CostText(List<CurrencyAmount> cost)
+        {
+            var parts = new List<string>();
+            foreach (var c in cost)
+                parts.Add(Loc.Get("cost." + c.type.ToString().ToLowerInvariant(), c.amount));
+            return string.Join(", ", parts);
+        }
+
         void Confirm(bool valid)
         {
-            var island = Island.Instance;
             var game = GameLoop.Instance;
-            if (!valid || island == null || game == null || !hasTile)
+            if (!valid || game == null || !hasTile || request == null)
                 return;
-            if (buying != null)
+            if (request.cost != null && !game.Wallet.TrySpend(request.cost))
             {
-                if (!game.Wallet.TrySpend(buying.price))
-                {
-                    GameEvents.RaiseToast("ui.dig.need", buying.price);
-                    return;
-                }
-                if (island.SpawnLamp(buying, tile) == null)
-                {
-                    game.Wallet.Add(buying.price);
-                    return;
-                }
-                GameEvents.RaiseToast("ui.toast.placed", Loc.Get(buying.NameKey));
+                GameEvents.RaiseToast("ui.place.need", CostText(request.cost));
+                return;
             }
-            else if (moving != null)
-                island.MoveObject(moving, tile);
+            if (!request.confirm(tile))
+            {
+                if (request.cost != null)
+                    foreach (var c in request.cost)
+                        game.Wallet.Add(c.type, c.amount);
+                return;
+            }
             Cancel();
         }
 

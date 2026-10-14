@@ -83,3 +83,6 @@ deco.rubble,Gruz,Rubble,Geröll,瓦礫,碎石,
 term.seed_bag,Worek nasion,Seed bag,Saatbeutel,種袋,种子袋,"hybrydy, kupiec, wyprawy"
 term.mutation,Mutacja,Mutation,Mutation,突然変異,变异,sąsiednie grządki
 term.fertilizer,Nawóz,Fertilizer,Dünger,肥料,肥料,+1 jakości
+bld.nets,Sieci rybackie,Fishing Nets,Fischernetze,漁網,渔网,przy pomoście
+term.fish,Ryba,Fish,Fisch,魚,鱼,
+term.glowing_fish,Świecąca ryba,Glowing fish,Leuchtfisch,光る魚,发光鱼,tylko w nocy

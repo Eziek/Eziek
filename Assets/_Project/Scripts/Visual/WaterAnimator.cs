@@ -23,8 +23,13 @@ namespace Wyspa.Visual
         [SerializeField] SpriteRenderer water;
         [SerializeField] GameClock clock;
 
+        static readonly int FishPeriodId = Shader.PropertyToID("_FishPeriod");
+
         Material material;
         float timer;
+        readonly List<FishPath> fish = new List<FishPath>();
+        float[] hiddenUntil = new float[0];
+        bool anyHidden;
 
         public void Setup(SpriteRenderer waterRenderer, GameClock gameClock)
         {
@@ -53,28 +58,105 @@ namespace Wyspa.Visual
             if (m == null)
                 return;
             m.SetTexture(DataTexId, data);
-            var fish = new Vector4[MaxFish];
-            var fishB = new Vector4[MaxFish];
-            int count = 0;
+            fish.Clear();
             if (picture != null)
                 foreach (var f in picture.fish)
-                {
-                    if (count >= MaxFish)
-                        break;
-                    fish[count] = new Vector4(f.cx, f.cy, f.rx, f.ry);
-                    fishB[count] = new Vector4(f.phase, f.glow ? 1f : 0f, 0f, 0f);
-                    count++;
-                }
-            m.SetVectorArray(FishId, fish);
-            m.SetVectorArray(FishBId, fishB);
-            m.SetFloat(FishCountId, count);
+                    if (fish.Count < MaxFish)
+                        fish.Add(f);
+            hiddenUntil = new float[fish.Count];
+            PushFish();
             m.SetVector(BeastId, picture != null && picture.hasBeast
                 ? new Vector4(picture.beastX, picture.beastY, 1f, 0f) : Vector4.zero);
             UpdateNight();
         }
 
+        /// <summary>Ryby do shadera; złowione (ukryte) odpływają poza obraz, aż wrócą.</summary>
+        void PushFish()
+        {
+            if (material == null)
+                return;
+            var a = new Vector4[MaxFish];
+            var b = new Vector4[MaxFish];
+            float now = Time.timeSinceLevelLoad;
+            anyHidden = false;
+            for (int i = 0; i < fish.Count; i++)
+            {
+                var f = fish[i];
+                bool hidden = hiddenUntil[i] > now;
+                anyHidden |= hidden;
+                a[i] = new Vector4(hidden ? -1000f : f.cx, f.cy, f.rx, f.ry);
+                b[i] = new Vector4(f.phase, f.glow ? 1f : 0f, 0f, 0f);
+            }
+            material.SetVectorArray(FishId, a);
+            material.SetVectorArray(FishBId, b);
+            material.SetFloat(FishCountId, fish.Count);
+        }
+
+        /// <summary>
+        /// Środek ryby w świecie - ta sama rachuba co w Water.shader (klatki 10/s, ósemka, zaokrąglenie do pikseli),
+        /// więc klik trafia tam, gdzie gracz widzi rybę.
+        /// </summary>
+        Vector2 FishCenter(int i)
+        {
+            var f = fish[i];
+            float period = material != null && material.HasProperty(FishPeriodId) ? material.GetFloat(FishPeriodId) : 30f;
+            float t = Mathf.Floor(Time.timeSinceLevelLoad * 10f) / 10f;
+            float a = 2f * Mathf.PI * Frac(t / Mathf.Max(1f, period)) + f.phase;
+            float fx = Mathf.Round(f.cx + f.rx * Mathf.Sin(a));
+            float fy = Mathf.Round(f.cy + f.ry * Mathf.Sin(2f * a));
+            return Island.PixelToWorld(fx + 5f, fy + 2f);
+        }
+
+        static float Frac(float x) => x - Mathf.Floor(x);
+
+        /// <summary>Najbliższa widoczna ryba przy punkcie (do 10 px) i w zasięgu od środka łowiska. -1 = brak.</summary>
+        public int FishAt(Vector2 world, Vector2 center, float range)
+        {
+            int best = -1;
+            float bestD = 10f / 16f;
+            float now = Time.timeSinceLevelLoad;
+            for (int i = 0; i < fish.Count; i++)
+            {
+                if (hiddenUntil[i] > now)
+                    continue;
+                var c = FishCenter(i);
+                float d = Vector2.Distance(c, world);
+                if (d <= bestD && Vector2.Distance(c, center) <= range)
+                {
+                    bestD = d;
+                    best = i;
+                }
+            }
+            return best;
+        }
+
+        public bool IsGlowing(int i) => i >= 0 && i < fish.Count && fish[i].glow;
+        public Vector2 FishPosition(int i) => FishCenter(i);
+
+        /// <summary>Złowiona ryba znika na chwilę (wraca po seconds).</summary>
+        public void Hide(int i, float seconds)
+        {
+            if (i < 0 || i >= fish.Count)
+                return;
+            hiddenUntil[i] = Time.timeSinceLevelLoad + seconds;
+            PushFish();
+        }
+
         void Update()
         {
+            if (anyHidden)
+            {
+                float now = Time.timeSinceLevelLoad;
+                bool expired = false;
+                for (int i = 0; i < hiddenUntil.Length; i++)
+                    if (hiddenUntil[i] > 0f && hiddenUntil[i] <= now)
+                    {
+                        hiddenUntil[i] = 0f;
+                        expired = true;
+                    }
+                if (expired)
+                    PushFish();
+            }
             timer -= Time.unscaledDeltaTime;
             if (timer > 0f)
                 return;

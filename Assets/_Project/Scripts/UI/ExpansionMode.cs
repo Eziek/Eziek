@@ -102,6 +102,8 @@ namespace Wyspa.UI
             var art = island.Art;
             foreach (var p in island.Map.Candidates())
             {
+                if (island.SeaBlocked(p))
+                    continue;   // pod pomostem
                 MakeFrame(p, true, art);
                 var label = Ui.Txt(labelsRoot, "Price", Ui.Theme.textLight, TextAlignmentOptions.Center);
                 Ui.Place(label.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(24, 10));
@@ -199,7 +201,7 @@ namespace Wyspa.UI
             if (cam != null && (ui == null || !ui.PointerOverUi))
             {
                 Vector2 world = cam.ScreenToWorldPoint(UiInput.MousePosition);
-                var hit = Physics2D.OverlapPoint(world);
+                var hit = Wyspa.Input.ClickRouter.Pick(world);
                 if (hit != null)
                     hit.TryGetComponent(out now);
             }

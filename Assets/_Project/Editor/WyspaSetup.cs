@@ -293,6 +293,10 @@ namespace Wyspa.EditorTools
                     essenceCost = 2, reward = CurrencyType.Stone, rewardAmount = 1, anim = RemoveAnim.Poof, chips = stone },
             };
             art.dust = new[] { R("fx_dust_0"), R("fx_dust_1"), R("fx_dust_2") };
+            art.pier = LoadSprite("Sea/pier");
+            art.netBuoy = LoadSprite("Sea/net_buoy");
+            art.boat = LoadSprite("Sea/boat");
+            art.boatGlow = LoadSprite("Sea/boat_glow");
             art.lamps = new List<LampDefinition>();
             foreach (var id in new[] { "lantern", "skull", "wisp", "mushrooms" })
             {

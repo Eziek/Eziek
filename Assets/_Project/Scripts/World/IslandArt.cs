@@ -50,6 +50,12 @@ namespace Wyspa.World
         public List<LampDefinition> lamps = new List<LampDefinition>();
         public Sprite[] dust;
 
+        [Header("Morze (Etap 4)")]
+        public Sprite pier;
+        public Sprite netBuoy;
+        public Sprite boat;
+        public Sprite boatGlow;
+
         [Header("Tryb rozbudowy")]
         public Sprite frameBuy;
         public Sprite frameBuyHover;
