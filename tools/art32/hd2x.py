@@ -22,6 +22,17 @@ RAMPS = [
     ['wi', 'wl'],
     ['fx', 'fl'],
 ]
+# paleta dark fantasy dla roślin i obiektów (uwaga gracza: kolory bardziej mroczne): chłodniej, mniej nasycenia,
+# zieleń w stronę oliwki i szarości, pomarańcz w rdzę, jasne szczyty przygaszone
+DARK_FANTASY = {
+    'o': '#0b080c', 'gs': '#121a1b',
+    'g0': '#121a19', 'g1': '#1c2a25', 'g2': '#2a3a30', 'g3': '#3e4d3a', 'g4': '#536147',
+    'e0': '#1a1215', 'e1': '#2b1e21', 'e2': '#432f2b', 'e3': '#5c4234', 'e4': '#735540',
+    'p0': '#17111a', 'p1': '#2a1f2e', 'p2': '#46263a',
+    'co': '#6e3234', 'or': '#8a4630', 'go': '#a06d3f', 'cr': '#b8a684',
+    'b0': '#0f151d', 'b1': '#1a2633', 'b2': '#29394a', 'b3': '#465564', 'fo': '#68727e', 'b4': '#868e98',
+    'mu': '#4f3364', 'ml': '#8f6aa8', 'wi': '#4fae9c', 'wl': '#b4e3d6', 'fx': '#c8702f', 'fl': '#e8c071',
+}
 EXTRA_COLORS = {'g4': '#7d955e', 'e4': '#8d6c55', 'b4': '#b6bec7', 'gs': '#1b2a2c'}
 
 
@@ -69,8 +80,10 @@ def lum(rgb, k):
     return 0.3 * r + 0.59 * g + 0.11 * b
 
 
-def hd2x(spr, rgb, seed=1, texture=True):
-    """Zwraca siatkę kluczy 2x z detalem (lista wierszy, None = przezroczysty)."""
+def hd2x(spr, rgb, seed=1, texture=True, crisp=False):
+    """Zwraca siatkę kluczy 2x z detalem (lista wierszy, None = przezroczysty).
+    crisp=True (uwaga gracza: „bardziej pixel art niż anime”): bez ditheringu przejść, bez losowych plamek i odblasków,
+    czarny kontur bez selout, liście jako równe łuski - czyste plamy koloru."""
     rnd = np.random.default_rng(seed)
     up, down = build_steps(rgb)
     g = scale2x(grid_of(spr))
@@ -104,6 +117,12 @@ def hd2x(spr, rgb, seed=1, texture=True):
                 continue
             ul = [get(x - 1, y), get(x, y - 1)]
             dr = [get(x + 1, y), get(x, y + 1)]
+            if crisp:
+                if (get(x, y - 1) is None or get(x, y - 1) in OUT) and get(x, y + 1) not in (None,) + OUT:
+                    g3[y][x] = up.get(k, k)
+                elif (get(x, y + 1) is None or get(x, y + 1) in OUT) and get(x, y - 1) not in (None,) + OUT:
+                    g3[y][x] = down.get(k, k)
+                continue
             if any(n is None or n in OUT for n in ul) and not any(n is None or n in OUT for n in dr):
                 g3[y][x] = up.get(k, k)
             elif any(n is None or n in OUT for n in dr) and not any(n is None or n in OUT for n in ul):
@@ -119,7 +138,7 @@ def hd2x(spr, rgb, seed=1, texture=True):
                 continue
             for dx, dy in ((1, 0), (0, 1)):
                 n = get(x + dx, y + dy)
-                if n and n != k and up.get(n) == k and (x + y) % 2 == 0:
+                if not crisp and n and n != k and up.get(n) == k and (x + y) % 2 == 0:
                     g4[y][x] = n
                     break
     g = g4
@@ -135,13 +154,13 @@ def hd2x(spr, rgb, seed=1, texture=True):
                     continue
                 off = 2 if (y // 3) % 2 else 0
                 u, v = (x + off) % 5, y % 3
-                if v == 0 and u in (1, 2, 3) and rnd.random() < 0.85:
+                if v == 0 and u in (1, 2, 3) and (crisp or rnd.random() < 0.85):
                     g[y][x] = up[k]
                 elif v == 2 and u in (0, 4):
                     g[y][x] = down[k]
 
     # 5. faktura
-    if texture:
+    if texture and not crisp:
         greens = {'g1', 'g2', 'g3'}
         woods = {'e1', 'e2', 'e3'}
         stones = {'b1', 'b2', 'b3', 'p1'}
@@ -164,6 +183,8 @@ def hd2x(spr, rgb, seed=1, texture=True):
                 if k in fruit and g[y - 1][x] in ('o', None) and g[y][x - 1] in ('o', None) and up.get(k, k) != k:
                     g[y + 1][x + 1] = up[up[k]] if up.get(up[k]) else up[k]
     # 6. kontur zależny od światła: od lewej-góry ciemny kolor rampy zamiast czerni (selout), od prawej-dołu czerń
+    if crisp:
+        return g
     g6 = [row[:] for row in g]
     for y in range(h):
         for x in range(w):

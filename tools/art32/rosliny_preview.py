@@ -1,27 +1,25 @@
-"""Przed / po: obecne rośliny i obiekty 16 px (powiększone x2), wersja 32 px z hd2x i ta sama w żywszych kolorach.
+"""Rośliny i obiekty 32 px na trawie z próbki terenu: obecne 16 px (powiększone) | 32 px, pixel art, paleta dark fantasy.
 Uruchom:  python3 tools/art32/rosliny_preview.py  → docs/img/art32_rosliny.png
 """
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, "..", "pixel-proto"))
-from PIL import Image, ImageDraw
+import numpy as np
+from PIL import Image
 import sprites
 import sprites3 as S3
 import sprites6 as S6
-from hd2x import hd2x, to_image, EXTRA_COLORS, hexrgb
+from hd2x import hd2x, to_image, grid_of, EXTRA_COLORS, DARK_FANTASY, hexrgb
+from px import value_noise, bayer
 
 RGB = dict(sprites.RGB)
 for k, v in EXTRA_COLORS.items():
     RGB[k] = hexrgb(v)
+DF = dict(RGB)
+for k, v in DARK_FANTASY.items():
+    DF[k] = hexrgb(v)
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-import colorsys
-VIVID = {}
-for k, (r, g, b) in RGB.items():   # żywsze rośliny: więcej nasycenia i jasności poza konturem i najciemniejszymi tonami
-    hh, ss, vv = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
-    if k not in ('o',) and vv > 0.12:
-        ss, vv = min(1, ss * 1.22), min(1, vv * 1.14 + 0.02)
-    VIVID[k] = tuple(int(round(c * 255)) for c in colorsys.hsv_to_rgb(hh, ss, vv))
 
 items = [
     ("marchew", lambda: sprites.carrot(3)), ("zboże", lambda: sprites.wheat(3)), ("dynia", lambda: sprites.pumpkin(3)),
@@ -31,25 +29,41 @@ items = [
     ("drzewo", sprites.round_tree), ("świerk", sprites.spruce), ("krzak", sprites.bush), ("kamień", sprites.rock),
 ]
 SC = 3
-tiles = []
+
+
+def grass(w, h, seed):
+    """Trawa jak w próbce terenu (g1/g2/g3 w płatach + kępki), w kolorach gry."""
+    n = value_noise(h, w, 10, seed)
+    bay = bayer(h, w)
+    keys = np.where(n + (bay - 0.5) * 0.12 < 0.38, 'g1', np.where(n + (bay - 0.5) * 0.12 > 0.66, 'g3', 'g2'))
+    arr = np.zeros((h, w, 3), np.uint8)
+    for k in ('g1', 'g2', 'g3'):
+        arr[keys == k] = RGB[k]
+    rng = np.random.default_rng(seed)
+    for _ in range(w * h // 60):
+        x, y = rng.integers(1, w - 1), rng.integers(0, h - 3)
+        arr[y, x] = RGB['g3']; arr[y + 1, x - 1] = RGB['g3']; arr[y + 1, x + 1] = RGB['g3']
+        arr[y + 1, x] = RGB['g1']; arr[y + 2, x] = RGB['g1']
+    return Image.fromarray(arr, 'RGB').convert('RGBA')
+
+
+cells = []
 for i, (name, fn) in enumerate(items):
     spr = fn()
-    from hd2x import grid_of
-    before = to_image(grid_of(spr), RGB).resize((spr.w * 2 * SC, spr.h * 2 * SC), Image.NEAREST)
-    after = to_image(hd2x(spr, RGB, seed=i + 1), RGB, SC)
-    tiles.append((before, after, to_image(hd2x(spr, VIVID, seed=i + 1), VIVID, SC)))
+    before = to_image(grid_of(spr), RGB)
+    before = before.resize((before.width * 2, before.height * 2), Image.NEAREST)
+    after = to_image(hd2x(spr, DF, seed=i + 1, crisp=True), DF)
+    cells.append((before, after))
 cols = 4
-cw = max(b.width + a.width + v.width + 24 for b, a, v in tiles) + 16
-ch = max(max(b.height, a.height) for b, a, v in tiles) + 16
-rows = (len(tiles) + cols - 1) // cols
-sheet = Image.new('RGBA', (cols * cw, rows * ch), (52, 74, 60, 255))   # tło jak trawa
-d = ImageDraw.Draw(sheet)
-for i, (b, a, v) in enumerate(tiles):
-    x, y = (i % cols) * cw + 8, (i // cols) * ch + 8
-    sheet.alpha_composite(b, (x, y + ch - 16 - b.height))
-    sheet.alpha_composite(a, (x + b.width + 12, y + ch - 16 - a.height))
-    sheet.alpha_composite(v, (x + b.width + a.width + 24, y + ch - 16 - v.height))
-    d.line([(x + b.width + 6, y + 4), (x + b.width + 6, y + ch - 20)], fill=(40, 58, 47), width=2)
+cw = max(b.width + a.width for b, a in cells) + 30
+ch = max(max(b.height, a.height) for b, a in cells) + 12
+rows = (len(cells) + cols - 1) // cols
+bg = grass(cols * cw, rows * ch, 5)
+for i, (b, a) in enumerate(cells):
+    x, y = (i % cols) * cw + 6, (i // cols) * ch + 4
+    bg.alpha_composite(b, (x, y + ch - 8 - b.height))
+    bg.alpha_composite(a, (x + b.width + 14, y + ch - 8 - a.height))
+sheet = bg.resize((bg.width * SC, bg.height * SC), Image.NEAREST)
 out = os.path.join(ROOT, 'docs', 'img', 'art32_rosliny.png')
 sheet.save(out)
 print('ok', sheet.size)
