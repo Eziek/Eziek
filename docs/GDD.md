@@ -260,6 +260,11 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Siatka: **16 px dla sprite'ów i terenu, woda w 32 px** (decyzja gracza po teście Etapu 7, §9 p. 74; wcześniejszy
   wybór „wszystko w 32 px” wycofany, bo przerobione grafiki wyszły „wygładzone i nijakie”). Font 12 px osobnym etapem.
 - [x] Nazwa gry: **Misty Packland** (decyzja gracza 2026-10-14; wcześniej robocza „Pockland”, ryzyko zbieżności z „Pokéland”, §16.5).
+- [x] **Pakiet do wydania** (prośba gracza): ikona (pixel art, plakietka: nocne morze, wyspa z latarnią, księżyc, chmury
+  mgły; 32 px i uproszczona 16 px), logo własnym krojem pikselowym (w menu głównym, na ekranie startowym, w sklepie),
+  obrazy Steam i itch.io z prawdziwych sprite'ów gry, menu Wyspa → Wydanie (ustawienia gracza, build Windows + zip),
+  README, prywatność, licencje, teksty sklepu w 5 językach, press kit. Firma w Unity „Eziek”, wersja 0.9.0.
+  Instrukcja: `docs/RELEASE.md`. Do zrobienia przez gracza: zrzuty ekranu, zwiastun, konto Steamworks, sprawdzenie nazwy.
 - [x] Nazwa energii: **Żar** (wybór gracza; EN Ember, DE Glut, JA 熾火, ZH 余火). W kodzie i starszych częściach GDD
   nadal „Essence/Esencja”. Imię ognika „Żarek” zmienione na „Węgielek” (EN Cinder), żeby nie myliło się z walutą.
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
@@ -622,6 +627,10 @@ Obrazki referencyjne (kopie): `docs/img/`
 76. Po teście mgły (prośba gracza: „więcej mgły, grubsza, dalej widoczna przy przesuwaniu, nie tylko mały pasek”):
     przesuwanie PPM sięga 96 x 80 px dalej w mgłę (kadr nie wychodzi poza mapę), w przezroczystym oknie wał chmur grubszy
     (chmury 0,8 zamiast 0,6, środki 4-20 px za pasem wody, limit zasięgu 34 px zamiast 18), okno ma o 16 px więcej zapasu.
+77. Nazwa gry **Misty Packland** i pakiet do wydania (§7, `docs/RELEASE.md`): `tools/release/` (ikona, logo, obrazy
+    sklepowe), `Editor/ReleaseBuild.cs` (Wyspa → Wydanie), `release/` (README, PRIVACY, THIRD_PARTY_NOTICES, teksty sklepu,
+    press kit). Logo w menu głównym i numer wersji. Zapisy kopiowane ze starego folderu (`DefaultCompany/My project (5)`),
+    wpis autostartu „Pockland” przenoszony na nowy plik. Jedna kopia gry naraz.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

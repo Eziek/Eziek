@@ -1,0 +1,41 @@
+MISTY PACKLAND - PRIVACY / PRYWATNOŚĆ
+
+== English ==
+
+What the game reads
+  To make day plants grow while you work, the game asks Windows how long ago the last mouse or keyboard input
+  happened (the GetLastInputInfo function). It reads only this time. It does NOT read which keys you press,
+  what you type, what you click, which programs you use or what is on your screen. It installs no keyboard
+  or mouse hooks.
+
+What the game stores
+  Saves (your island) in %USERPROFILE%\AppData\LocalLow\Eziek\Misty Packland\
+  Settings (language, window position, options) in the Windows registry:
+    HKEY_CURRENT_USER\Software\Eziek\Misty Packland
+  If you turn on "Start with Windows": one entry "Misty Packland" in
+    HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+  Turning the option off removes it.
+
+What the game sends
+  Nothing. The game has no network code, no analytics, no ads and no accounts. It works fully offline.
+  (If you play through a store such as Steam, that store's own client and privacy policy apply.)
+
+== Polski ==
+
+Co gra odczytuje
+  Żeby rośliny dnia rosły podczas pracy, gra pyta Windows, ile czasu minęło od ostatniego ruchu myszy lub
+  naciśnięcia klawisza (funkcja GetLastInputInfo). Odczytuje tylko ten czas. NIE odczytuje, jakie klawisze
+  naciskasz, co piszesz, w co klikasz, jakich programów używasz ani co jest na ekranie. Nie instaluje
+  żadnych przechwytywaczy klawiatury ani myszy.
+
+Co gra zapisuje
+  Zapisy (Twoja wyspa) w %USERPROFILE%\AppData\LocalLow\Eziek\Misty Packland\
+  Ustawienia (język, położenie okna, opcje) w rejestrze Windows:
+    HKEY_CURRENT_USER\Software\Eziek\Misty Packland
+  Po włączeniu „Start z Windows”: jeden wpis „Misty Packland” w
+    HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+  Wyłączenie opcji usuwa ten wpis.
+
+Co gra wysyła
+  Nic. Gra nie ma kodu sieciowego, analityki, reklam ani kont. Działa w pełni offline.
+  (Jeśli grasz przez sklep, np. Steam, obowiązuje też klient i polityka prywatności tego sklepu.)

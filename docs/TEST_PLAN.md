@@ -134,6 +134,17 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
 1. File → Build Profiles → Windows → Build, uruchom.
 2. Ikona przy zegarze: lewy klik chowa/pokazuje okno, prawy klik: menu (pokaż/schowaj, na wierzchu, mini-tryb, wyjście).
 3. Kliknij w inną aplikację i poczekaj na zdarzenie (np. F1 → kupiec-widmo): powiadomienie Windows (najwyżej raz na minutę).
-4. Przezroczyste okno: mgła „chibi” wokół wody, deszcz nie pada na pulpit.
+4. Przezroczyste okno: wał chmur mgły wokół wody, deszcz nie pada na pulpit.
 5. Restart Eksploratora (Menedżer zadań → Eksplorator Windows → Uruchom ponownie): ikona wraca sama.
-6. Po wyjściu ikona znika. Przy problemach: `%USERPROFILE%\AppData\LocalLow\<firma>\<gra>\Player.log`.
+6. Po wyjściu ikona znika. Przy problemach: `%USERPROFILE%\AppData\LocalLow\Eziek\Misty Packland\Player.log`.
+
+## 8. Wydanie: Misty Packland (nazwa, ikona, build)
+1. **Wyspa → 2**, potem **Wyspa → Wydanie → 1**: w konsoli „Ustawienia wydania: Misty Packland 0.9.0 (Eziek)”.
+   Project Settings → Player: nazwa, firma, wersja, ikony (podgląd 16-1024), Splash Image: logo na granacie, bez logo Unity.
+2. Menu główne: logo „MISTY PACKLAND” zamiast napisu, ostre piksele; na dole „v0.9.0”. Zmiana języka: logo bez zmian.
+3. **Wyspa → Wydanie → 2**: powstaje `Builds/MistyPackland-0.9.0-win64/` (exe, README.txt, PRIVACY.txt,
+   THIRD_PARTY_NOTICES.txt), obok `.zip` i `-symbols` (foldery DoNotShip poza paczką).
+4. Build: ekran startowy z logo, ikona okna i paska zadań, ikona w zasobniku = ikona gry, podpowiedź „Misty Packland”.
+5. Stare zapisy (z czasu „My project (5)”) pojawiają się w menu w nowym buildzie. Autostart włączony w starym buildzie
+   po pierwszym uruchomieniu nowego wskazuje nowy plik (Menedżer zadań → Autostart: „Misty Packland”, bez „Pockland”).
+6. Druga kopia gry się nie uruchamia (jedna kopia naraz).

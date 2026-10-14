@@ -29,4 +29,6 @@ a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wysp�
 - **Lokalizacja (PL, EN, DE, JA, ZH):** żadnego tekstu w sprite'ach ani w kodzie na sztywno. Każdy napis to klucz z tabeli CSV
   w `Assets/_Project/Localization/` (`game.csv`, `ui.csv`; własna warstwa `Wyspa.Localization.Loc`, format `{0:plural:...}`),
   a nowe terminy najpierw trafiają do `Assets/_Project/Localization/glossary.csv`. Zasady w GDD §16.
+- Wydanie: `docs/RELEASE.md`. Ikona, logo i obrazy sklepowe generuje `tools/release/release_art.py`, ustawienia gracza
+  i build: menu Wyspa → Wydanie (`Editor/ReleaseBuild.cs`), pliki dla gracza w `release/`.
 - UI budujemy z kodu (`Scripts/UI/`, `UiRoot`). HUD debugowy (`DebugHud`, F1) może mieć napisy na sztywno, bo nie trafia do gry.

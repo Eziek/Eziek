@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-14)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-72), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-77), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -9,7 +9,9 @@ Historia decyzji jest w GDD §9 (punkty 1-72), a lista testów w `docs/TEST_PLAN
 - Wersja zapisu: **v14**.
 - Gracz testuje w Unity 6.6 i w buildzie Windows, odsyła zrzuty i uwagi.
 - Kod kompiluje się na atrapach (`tools/cscheck`), shadery przez `tools/shadercheck`.
-- **Ostatnich zmian (Etap 7) gracz nie widział jeszcze w Unity.**
+- **Gra nazywa się Misty Packland** (GDD §16.5). Pakiet do wydania: `docs/RELEASE.md`.
+- **Gracz nie widział jeszcze w Unity:** powrotu do 16 px z wodą 32 px, nowej mgły (chmury, GDD §9 p. 75-76),
+  logo w menu, menu Wyspa → Wydanie i buildu z nową nazwą (TEST_PLAN 4d i 8).
 
 ### Zrobione w ostatniej serii (od GDD §9 p. 58)
 
@@ -47,11 +49,13 @@ grafiki 16 px obok wody z pikselem o połowę mniejszym. Jeśli będzie zgrzyta�
 
 ## Do decyzji z graczem na start nowej sesji
 
-1. **Wygląd 16 px + woda 32 px** po teście w Unity (sekcja 4d w `docs/TEST_PLAN.md`).
-2. **Progi rytmu pracy** (seria 25 min, przerwa 5-30 min, zmęczenie 8/10 h). Propozycja: zostawić do balansu na końcu.
+1. **Wygląd 16 px + woda 32 px i nowa mgła** po teście w Unity (sekcja 4d w `docs/TEST_PLAN.md`).
+2. **Wydanie:** gracz ocenia ikonę, logo i obrazy sklepowe (`release/store/`, `docs/img/ikona_podglad.png`);
+   do ustalenia: nazwa firmy w sklepie (w Unity „Eziek”), wersja (0.9.0), cena, data, Steam czy najpierw itch.io.
+3. **Progi rytmu pracy** (seria 25 min, przerwa 5-30 min, zmęczenie 8/10 h). Propozycja: zostawić do balansu na końcu.
    Gracz nie odpowiedział.
-3. **Font 12 px i ikony UI**: osobny etap, nic nie zaczęte.
-4. **Balans** na samym końcu (decyzja gracza).
+4. **Font 12 px i ikony UI**: osobny etap, nic nie zaczęte.
+5. **Balans** na samym końcu (decyzja gracza).
 
 ## Ważne zasady pracy (skrót z CLAUDE.md i rozmów)
 
