@@ -22,7 +22,8 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
 5. Grządki na brzegu wyspy nie wystają nad wodę (pasek trawy przy brzegu).
 
 ## 3. Pasek HUD, cykl gry, pogoda, dźwięk
-1. Pasek nad wyspą: waluty, Esencja, rytm, tempo, zegar gry. Znika po 5 s bez ruchu myszy.
+1. Pasek nad wyspą: waluty, Esencja, rytm, tempo; trzeci wiersz: słońce/księżyc, godzina gry, „noc za 23:40” / „świt za 6:12”
+   (odliczanie co sekundę). Znika po 5 s bez ruchu myszy.
 2. F1 → 19:30 / 23:30 / 12:00: zmierzch, noc (ciemniej, lampy, świerszcze), dzień (fale). Przenikanie dźwięku.
 3. F1 → „+1 cykl” (po poprawkach): cykl przeskakuje (pogoda i zamówienia się zmieniają).
 4. F1 → Deszcz / Burza / Mgła / Pogoda z cyklu: krople tylko nad wyspą, błyski i grzmot, gęsta mgła nocą.

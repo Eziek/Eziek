@@ -252,3 +252,5 @@ ui.tray.topmost,Zawsze na wierzchu,Always on top,Immer im Vordergrund,常に最�
 ui.tray.mini,Mini-tryb,Mini mode,Minimodus,ミニモード,迷你模式,
 ui.tray.ripe,Plony czekają na zbiór: {0},Crops waiting for harvest: {0},Ernte wartet: {0},収穫待ちの作物：{0},待收获的作物：{0},powiadomienie Windows
 ui.options.notify,Powiadomienia Windows,Windows notifications,Windows-Benachrichtigungen,Windowsの通知,Windows 通知,opcje → system
+ui.hud.to_night,{0}  noc za {1},{0}  night in {1},{0}  Nacht in {1},{0}  夜まで {1},{0}  距夜晚 {1},"pasek HUD: {0} = godzina gry, {1} = mm:ss do nocy"
+ui.hud.to_day,{0}  świt za {1},{0}  dawn in {1},{0}  Morgen in {1},{0}  夜明けまで {1},{0}  距黎明 {1},"pasek HUD: {0} = godzina gry, {1} = mm:ss do świtu"

@@ -36,7 +36,8 @@ namespace Wyspa.UI
         RectTransform essenceFill;
         Image rhythmIcon;
         TextMeshProUGUI rhythmText, clockText, tempoText;
-        Image keysIcon, mouseIcon;   // wskaźnik: gra widzi pisanie / ruch myszy (zapala się na chwilę)
+        Image keysIcon, mouseIcon;
+        Image dayIcon;   // trzeci wiersz: słońce / księżyc, godzina gry, ile do nocy albo świtu   // wskaźnik: gra widzi pisanie / ruch myszy (zapala się na chwilę)
         RectTransform rhythmFill;
         Vector2 lastMouse;
         float lastMove;
@@ -77,7 +78,7 @@ namespace Wyspa.UI
             this.root = root;
             var t = Ui.Theme;
             var barImg = Ui.Img(root, "IslandBar", t.tooltip, true);
-            bar = Ui.Place(barImg.rectTransform, Ui.BottomLeft, new Vector2(0.5f, 0f), Vector2.zero, new Vector2(120, 2 * RowH + Pad + 2));
+            bar = Ui.Place(barImg.rectTransform, Ui.BottomLeft, new Vector2(0.5f, 0f), Vector2.zero, new Vector2(120, 3 * RowH + Pad + 2));
             // --- górny wiersz: waluty ---
             items.Add(MakeItem("coin", CurrencyType.Coins));
             essenceItem = MakeItem("essence", null);
@@ -95,7 +96,8 @@ namespace Wyspa.UI
             tempoText = Ui.Txt(bar, "Tempo", t.textGold);
             keysIcon = Ui.Img(bar, "Keys", t.Icon("keys"), false);
             mouseIcon = Ui.Img(bar, "Mouse", t.Icon("mouse"), false);
-            clockText = Ui.Txt(bar, "Clock", t.textMuted);
+            dayIcon = Ui.Img(bar, "DayNight", t.Icon("sun"), false);
+            clockText = Ui.Txt(bar, "Clock", t.textLight);
         }
 
         Item MakeItem(string icon, CurrencyType? currency)
@@ -203,7 +205,13 @@ namespace Wyspa.UI
             else
                 rhythmText.text = Loc.Get("ui.rhythm.normal", r.StreakMinutes);
             Ui.SetBar(rhythmFill, r.StreakMinutes / 25f);
-            clockText.text = game.Clock.Now.ToString("HH:mm");
+            // czas gry (prośba gracza): godzina na zegarze gry i odliczanie w prawdziwym czasie do nocy / świtu
+            var clock = game.Clock;
+            int left = Mathf.CeilToInt(clock.IsNight ? GameClock.CycleSeconds - clock.Second : GameClock.DaySeconds - clock.Second);
+            string countdown = $"{left / 60}:{left % 60:00}";
+            clockText.text = Loc.Get(clock.IsNight ? "ui.hud.to_day" : "ui.hud.to_night", clock.Now.ToString("HH:mm"), countdown);
+            dayIcon.sprite = Ui.Theme.Icon(clock.IsNight ? "moon" : "sun");
+            dayIcon.enabled = dayIcon.sprite != null;
             float tempo = game.Activity.TempoMultiplier;
             tempoText.text = tempo > 1.05f ? Loc.Get("ui.rhythm.tempo", tempo) : "";
 
@@ -233,12 +241,15 @@ namespace Wyspa.UI
             bx += 12;
             Ui.Place(mouseIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2), new Vector2(12, 12));
             bx += 14;
+            float bottomWidth = bx - 2 + Pad;
+            // trzeci wiersz: ikona pory i „14:05 noc za 23:40”
+            float y3 = y2 - RowH;
             float cw = Ui.Width(clockText);
-            float bottomWidth = bx + cw + Pad;
-            float width2 = Mathf.Ceil(Mathf.Max(topWidth, bottomWidth));
-            // zegar przy prawej krawędzi paska
-            Ui.Place(clockText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(width2 - Pad - cw, y2 - 2), new Vector2(cw, 10));
-            bar.sizeDelta = new Vector2(width2, 2 * RowH + Pad + 2);
+            Ui.Place(dayIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad, y3), new Vector2(12, 12));
+            Ui.Place(clockText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad + 14, y3 - 2), new Vector2(cw, 10));
+            float timeWidth = Pad + 14 + cw + Pad;
+            float width2 = Mathf.Ceil(Mathf.Max(topWidth, Mathf.Max(bottomWidth, timeWidth)));
+            bar.sizeDelta = new Vector2(width2, 3 * RowH + Pad + 2);
         }
             // ------------------------------------------------------------ monety lecą łukiem do licznika (GDD §5.5)
 

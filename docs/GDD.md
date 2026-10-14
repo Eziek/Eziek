@@ -294,6 +294,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   (40 monet + 3 drewna). `Orders/OrderBook.cs`, zapis v9.
 - [x] **Wskaźnik pracy** (prośba gracza): w pasku HUD ikonki klawiatury i myszy zapalają się, gdy gra widzi input.
   Tempo pracy liczone z ostatnich **15 s** (wcześniej 60 s), więc reaguje szybciej.
+- [x] **Czas gry w pasku HUD** (prośba gracza): trzeci wiersz paska: ikona słońca/księżyca, godzina gry i odliczanie
+  w prawdziwym czasie, np. „14:05 noc za 23:40” albo „21:17 świt za 6:12”.
 - [x] **Szerszy pas wody w przezroczystym oknie** (po teście): 46 px zamiast 18 px, żeby mieścił pomost (33 px od brzegu)
   i łódź; mgła zaczyna się za nim, okno ma więcej zapasu wokół lądu (72 px).
 - [x] **Mgła „chibi”** (prośba gracza): bulwiaste kłęby jak z kreskówki zamiast miękkiego rozmycia: koła na siatce 11 px
