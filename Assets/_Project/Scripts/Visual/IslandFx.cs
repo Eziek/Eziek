@@ -280,7 +280,7 @@ namespace Wyspa.Visual
                 gustTimer -= dt;   // nowy podmuch dopiero po poprzednim (inaczej rośliny przeskoczyłyby w pół drgania)
             if (gustTimer <= 0f)
             {
-                gustTimer = Random.Range(3f, 8f);
+                gustTimer = Random.Range(3f, 8f) / Weather.WeatherSystem.WindMultiplier;   // w deszcz i burzę wieje częściej
                 if (streakSprite == null)
                     streakSprite = MakeSprite(10, true);
                 var area = Area();
@@ -310,7 +310,7 @@ namespace Wyspa.Visual
                 // czoło podmuchu startuje za lewym brzegiem; koniec, gdy ostatnie rośliny przestaną się bujać (ok. 4 szerokości fali)
                 gustFront = (area.xMin - 1.5f) * Ppu;
                 gustEnd = (area.xMax + 1f) * Ppu + 160f;
-                gustPower = Random.Range(0.6f, 1f);
+                gustPower = Mathf.Min(1.3f, Random.Range(0.6f, 1f) * (Weather.WeatherSystem.Current == Weather.WeatherKind.Storm ? 1.3f : 1f));
                 gusting = true;
             }
             if (gusting)

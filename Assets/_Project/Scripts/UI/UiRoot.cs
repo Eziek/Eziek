@@ -401,6 +401,8 @@ namespace Wyspa.UI
                 moon += "\n" + Loc.Get("ui.plot.zone_bonus");
             if (s.crop.kind == CropKind.Day && game.Activity.TempoMultiplier > 1.05f)
                 moon += "\n" + Loc.Get("ui.plot.tempo", game.Activity.TempoMultiplier);
+            if (s.crop.kind == CropKind.Day && Weather.WeatherSystem.Raining)
+                moon += "\n" + Loc.Get("ui.plot.rain");
             return state + "\n" + Loc.Get("ui.plot.progress", pct) + quality + moon;
         }
     }

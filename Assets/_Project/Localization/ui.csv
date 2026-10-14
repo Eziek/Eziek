@@ -240,3 +240,4 @@ ui.cauldron.drink,Wypij: {0},Drink: {0},Trinken: {0},飲む：{0},饮用：{0},
 ui.cauldron.active,Działa: {0} ({1}),Active: {0} ({1}),Wirkt: {0} ({1}),効果中：{0}（{1}）,生效中：{0}（{1}）,{1} = pozostały czas
 ui.cauldron.active_until_use,Działa: {0} (do użycia),Active: {0} (until used),Wirkt: {0} (bis verbraucht),効果中：{0}（使うまで）,生效中：{0}（直到使用）,
 ui.cauldron.recipe,{0} ({1}): {2},{0} ({1}): {2},{0} ({1}): {2},{0}（{1}）：{2},{0}（{1}）：{2},przycisk przepisu: nazwa (działanie): składniki
+ui.plot.rain,Deszcz: +20%,Rain: +20%,Regen: +20 %,雨：+20%,雨：+20%,dymek grządki

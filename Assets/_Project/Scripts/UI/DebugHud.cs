@@ -70,7 +70,13 @@ namespace Wyspa.UI
             GUILayout.Label($"Godzina: {clock.Now:HH:mm}  {(clock.IsNight ? "NOC" : "dzień")}");
             GUILayout.Label($"Aktywny: {(game.Activity.IsActive ? "tak" : "nie")} ({game.Activity.SecondsSinceInput:0}s / próg {game.Activity.IdleThresholdSeconds:0}s, czas rzeczywisty)");
             GUILayout.Label(PlotUnderMouse(game));
-            GUILayout.Label($"Księżyc: {clock.MoonPhase:0.00}{(clock.IsFullMoon ? "  PEŁNIA" : "")}");
+            GUILayout.Label($"Księżyc: {clock.MoonPhase:0.00}{(clock.IsFullMoon ? "  PEŁNIA" : "")}   Pogoda: {Weather.WeatherSystem.Current}");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Pogoda: z cyklu")) Weather.WeatherSystem.DebugForce = null;
+            if (GUILayout.Button("Deszcz")) Weather.WeatherSystem.DebugForce = Weather.WeatherKind.Rain;
+            if (GUILayout.Button("Burza")) Weather.WeatherSystem.DebugForce = Weather.WeatherKind.Storm;
+            if (GUILayout.Button("Mgła")) Weather.WeatherSystem.DebugForce = Weather.WeatherKind.Mist;
+            GUILayout.EndHorizontal();
 
             var ups = game.Upgrades;
 

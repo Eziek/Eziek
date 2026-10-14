@@ -4,7 +4,7 @@ using Wyspa.Core;
 
 namespace Wyspa.Lighting
 {
-    /// <summary>Kolor i jasność Global Light 2D wg pory dnia (zegar komputera).</summary>
+    /// <summary>Kolor i jasność Global Light 2D wg pory dnia (cykl gry) i pogody (deszcz, błyski burzy).</summary>
     public class DayNightLighting : MonoBehaviour
     {
         [SerializeField] GameClock clock;
@@ -29,8 +29,10 @@ namespace Wyspa.Lighting
             if (clock == null || globalLight == null)
                 return;
             float t = clock.Hour / 24f;
-            globalLight.color = ambientColor.Evaluate(t);
-            globalLight.intensity = Mathf.Max(minBrightness, ambientIntensity.Evaluate(t));
+            // pogoda: deszcz przyciemnia, piorun na chwilę rozjaśnia wszystko na biało
+            float flash = Weather.WeatherSystem.Flash;
+            globalLight.color = Color.Lerp(ambientColor.Evaluate(t), new Color(0.85f, 0.9f, 1f), flash);
+            globalLight.intensity = Mathf.Max(minBrightness, ambientIntensity.Evaluate(t)) * Weather.WeatherSystem.LightMultiplier + flash;
         }
 
         static Gradient DefaultColor()

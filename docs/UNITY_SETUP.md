@@ -384,6 +384,14 @@ Po pobraniu: **Wyspa → 2** (sprite'y chowańców w `IslandArt`), potem Play.
 3. Kursor obok chowańca: iskierki i dymek z bonusem. Kot raz na cykl gry przynosi kilka monet (toast, monety lecą).
 4. Zapis: po wczytaniu chowańce wracają.
 
+## 4z. Pogoda (test)
+Po pobraniu: Play (bez Wyspa → 2). F1 → przyciski „Deszcz”, „Burza”, „Mgła”, „Pogoda: z cyklu”.
+1. Deszcz: ukośne krople tylko nad wyspą z rozpryskami na ziemi, trochę ciemniej, podmuchy wiatru częściej.
+   Dymek grządki z rośliną dnia: „Deszcz: +20%”.
+2. Burza: gęstsza ulewa, ciemniej, co kilkanaście sekund podwójny biały błysk; czasem spada odłamek gwiazdy (klik zbiera).
+3. Mgła (w nocy, F1 → 23:30): mgła gęstsza, częściej błędne ogniki.
+4. Przezroczyste okno: krople nie lecą nad pulpitem.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

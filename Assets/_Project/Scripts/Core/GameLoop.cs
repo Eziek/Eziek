@@ -128,6 +128,7 @@ namespace Wyspa.Core
             if (upgrades == null) upgrades = gameObject.AddComponent<UpgradeState>();
             if (GetComponent<Orders.OrderBook>() == null) gameObject.AddComponent<Orders.OrderBook>();   // zamówienia z tablicy
             if (GetComponent<Familiars.FamiliarSystem>() == null) gameObject.AddComponent<Familiars.FamiliarSystem>();   // chowańce
+            if (GetComponent<Weather.WeatherSystem>() == null) gameObject.AddComponent<Weather.WeatherSystem>();   // pogoda
             upgrades.Changed += ApplyUpgrades;
         }
 
@@ -271,7 +272,8 @@ namespace Wyspa.Core
             if (!night && DuskGrowth && crop != null && crop.kind == CropKind.Night && clock.IsDusk)
                 night = true;   // zmierzch liczy się roślinom nocy jak noc
             // rośliny dnia: rytuał „Głębokie korzenie” i tempo pracy (pisanie, mysz)
-            float dayBonus = crop != null && crop.kind == CropKind.Day ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth : 1f;
+            float dayBonus = crop != null && crop.kind == CropKind.Day
+                ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth : 1f;   // deszcz +20%
             // mikstury z kotła: wywar wzrostu (rośliny dnia), eliksir nocy (rośliny nocy)
             if (crop != null && crop.kind == CropKind.Night)
                 dayBonus = Alchemy.Potions.NightGrowth * Familiars.FamiliarSystem.NightGrowth;   // eliksir nocy, ropucha

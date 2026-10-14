@@ -86,7 +86,7 @@ namespace Wyspa.Sea
                 return;
             wisps.RemoveAll(w => w == null);
             float mult = (LighthouseLit ? 2f : 1f) * Alchemy.Potions.Events;   // „Mgła w butelce”: zdarzenia częściej
-            if (wisps.Count < 2 && Random.value < WispPerMinute / 60f * mult)
+            if (wisps.Count < 2 && Random.value < WispPerMinute / 60f * mult * Weather.WeatherSystem.WispMultiplier)   // mgła: ogniki częściej
                 SpawnWisp();
             if (Random.value < StarPerMinute / 60f * mult)
                 SpawnStar();
