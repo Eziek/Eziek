@@ -103,7 +103,7 @@ namespace Wyspa.EditorTools
         // GDD §11.3 (wartości wstępne do balansu)
         static readonly UpgradeSpec[] UpgradeSpecs =
         {
-            new UpgradeSpec { id = UpgradeIds.EssenceJar, name = "Słój Esencji", category = UpgradeCategory.Essence,
+            new UpgradeSpec { id = UpgradeIds.EssenceJar, name = "Słój Żaru", category = UpgradeCategory.Essence,
                 levels = new[] { (120f, new[] { Coins(200) }), (240f, new[] { Coins(800) }), (480f, new[] { Coins(3000) }) } },
             new UpgradeSpec { id = UpgradeIds.WispGardener, name = "Ognik-ogrodnik", category = UpgradeCategory.Automation,
                 levels = new[] { (30f, new[] { Coins(100) }) } },   // 6d: pierwszy ognik w ciągu ok. 1-3 h pracy
