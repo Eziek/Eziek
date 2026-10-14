@@ -74,6 +74,18 @@ namespace Wyspa.World
         [Tooltip("Latarnia morska (Etap 5b): lampa spoza sklepu lamp, stawiana z Morza.")]
         public LampDefinition lighthouse;
 
+        [Header("Drzewa owocowe (GDD §15.1)")]
+        public List<Farming.TreeArt> trees = new List<Farming.TreeArt>();
+        public Sprite sapling;
+
+        public Farming.TreeArt Tree(string id)
+        {
+            foreach (var t in trees)
+                if (t != null && t.id == id)
+                    return t;
+            return null;
+        }
+
         [Header("Automatyka (Etap 6b): budowle w wielu egzemplarzach")]
         [Tooltip("Skrzynia na plony: pusta, do połowy, pełna.")]
         public Sprite[] crateFill;
@@ -96,8 +108,6 @@ namespace Wyspa.World
         public Material swayCropGlow;
         public Material swayTree;
         public Material glow;
-        [Tooltip("Światło wolumetryczne (shader LightShafts); Island tworzy obiekt sam, gdy scena go nie ma.")]
-        public Material lightShafts;
 
         public LampDefinition Lamp(string id)
         {

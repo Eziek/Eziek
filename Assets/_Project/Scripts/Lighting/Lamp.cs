@@ -43,6 +43,12 @@ namespace Wyspa.Lighting
             definition = def;
             light2D = light;
             glowRenderer = glow;
+            if (light2D != null)
+            {
+                // wolumetria (prośba gracza): poświata lampy widoczna w powietrzu, jak w mgle
+                light2D.volumeIntensityEnabled = true;
+                light2D.volumeIntensity = 0.12f;
+            }
             // lampa stawiana w trakcie gry: Awake było przed Setup, więc gasimy ją jeszcze raz już z referencjami
             initialized = false;
             SetOn(false);

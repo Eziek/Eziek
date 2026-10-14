@@ -12,6 +12,10 @@ namespace Wyspa.Lighting
             foreach (var lamp in Lamp.All)
                 if (lamp.Illuminates(point))
                     return true;
+            // świecące owoce drzew (GDD §15.1): liczą się jak lampa, bez zużycia Esencji
+            foreach (var tree in Farming.FruitTree.All)
+                if (tree.Illuminates(point))
+                    return true;
             return false;
         }
 

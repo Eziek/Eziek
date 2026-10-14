@@ -21,6 +21,8 @@ namespace Wyspa.World
         public string building;
         public List<Automation.CrateEntry> crate;   // v6: zawartość skrzyni na plony
         public string seed;                        // v6: tryb runy siewu ("" pamięć, "-" nic, id rośliny)
+        public string tree;                        // v7: gatunek drzewa owocowego
+        public float growth, fruit;                // v7: wzrost drzewa i odrastanie owoców (sekundy)
     }
 
     [Serializable]
@@ -101,24 +103,15 @@ namespace Wyspa.World
         void Start() => EnsureLightShafts();
 
         /// <summary>
-        /// Światło wolumetryczne (LightShafts): scena sprzed tej zmiany go nie ma (bez Wyspa → 3), więc tworzymy obiekt sami,
-        /// na tej samej mapie danych co mgła (materiał z IslandArt, Wyspa → 2).
+        /// Snopy światła (LightShafts, Light 2D): scena może go nie mieć (bez Wyspa → 3), więc tworzymy obiekt sami.
         /// </summary>
         void EnsureLightShafts()
         {
-            if (FindAnyObjectByType<LightShafts>() != null || art == null || art.lightShafts == null || fogRenderer == null)
+            if (FindAnyObjectByType<LightShafts>() != null)
                 return;
             var go = new GameObject("LightShafts");
-            go.transform.SetParent(fogRenderer.transform.parent, false);
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sortingOrder = 4800;
-            sr.sharedMaterial = art.lightShafts;
-            sr.sprite = fogRenderer.sprite;
-            var shafts = go.AddComponent<LightShafts>();
-            shafts.Setup(sr, fogRenderer, FindAnyObjectByType<GameClock>());
-            var desk = Platform.DesktopWindow.Instance;
-            if (desk != null && desk.Transparent)
-                shafts.SetMask(Platform.DesktopWindow.ShoreWaterPixels);
+            go.transform.SetParent(transform.parent, false);
+            go.AddComponent<LightShafts>().Setup(null, null, FindAnyObjectByType<GameClock>());
         }
 
         void Awake()
@@ -303,6 +296,8 @@ namespace Wyspa.World
                     SpawnLamp(def, tile, o.id);
                 else if (o.building == "altar" && IsFree(tile))
                     SpawnAltar(tile, o.id);
+                else if (o.building == TreeBuilding && IsFree(tile))
+                    SpawnTree(Farming.TreeSpecies.Find(o.tree), tile, o.id, o.growth, o.fruit);
                 else if (LegacyBuilding(o) is string kind && IsFree(tile))
                 {
                     // budowle automatyki (Etap 6b); zapisy sprzed 6b miały jedną skrzynię, skrzynię kupca i kamień runiczny ze sceny
@@ -347,6 +342,12 @@ namespace Wyspa.World
                     os.crate = crate.Snapshot();
                 if (o.TryGetComponent(out Automation.SeedRune rune))
                     os.seed = rune.Seed;
+                if (o.TryGetComponent(out Farming.FruitTree tree) && tree.Species != null)
+                {
+                    os.tree = tree.Species.id;
+                    os.growth = tree.Growth;
+                    os.fruit = tree.FruitProgress;
+                }
                 s.objects.Add(os);
             }
             return s;
@@ -632,24 +633,76 @@ namespace Wyspa.World
                 if (sold > 0)
                     GameEvents.RaiseCurrencyGained(obj.transform.position, CurrencyType.Coins, sold);
             }
-            if (obj.Placed && occupied.TryGetValue(obj.Tile, out var o) && o == obj)
-                occupied.Remove(obj.Tile);
-            savedObjectTiles.Remove(obj.Id);
-            spawned.Remove(obj);
             if (refund > 0 && wallet != null)
             {
                 wallet.Add(refund);
                 GameEvents.RaiseCurrencyGained(obj.transform.position, CurrencyType.Coins, refund);
             }
             IslandFx.Planted(obj.transform.position, 0);
-            obj.gameObject.SetActive(false);
-            Destroy(obj.gameObject);
-            Changed?.Invoke();
+            RemoveObject(obj);
             return true;
         }
 
-        /// <summary>Czy obiekt można rozebrać (kupiony w grze, nie ze sceny).</summary>
-        public bool CanDismantle(TileObject obj) => obj != null && spawned.Contains(obj) && obj.NeedsTile;
+        /// <summary>Usunięcie obiektu kupionego w grze (rozbiórka, ścięte drzewo): kafelek wolny, obiekt znika.</summary>
+        public void RemoveObject(TileObject obj)
+        {
+            if (obj == null)
+                return;
+            if (obj.Placed && occupied.TryGetValue(obj.Tile, out var o) && o == obj)
+                occupied.Remove(obj.Tile);
+            savedObjectTiles.Remove(obj.Id);
+            spawned.Remove(obj);
+            obj.gameObject.SetActive(false);
+            Destroy(obj.gameObject);
+            Changed?.Invoke();
+        }
+
+        /// <summary>Czy obiekt można rozebrać (kupiony w grze, nie ze sceny). Drzewa się ścina, nie rozbiera.</summary>
+        public bool CanDismantle(TileObject obj) => obj != null && spawned.Contains(obj) && obj.NeedsTile && obj.BuildingId != TreeBuilding;
+
+        // ================================================================ drzewa owocowe (GDD §15.1)
+
+        public const string TreeBuilding = "tree";
+
+        /// <summary>Drzewo owocowe na kafelku (sklep, tryb stawiania, zapis): sprite fazy, świecenie owoców, kołysanie.</summary>
+        public TileObject SpawnTree(Farming.TreeSpecies species, TilePos tile, string id = null, float growth = 0f, float fruit = 0f)
+        {
+            if (species == null || art == null || !IsFree(tile))
+                return null;
+            var treeArt = art.Tree(species.id);
+            var go = new GameObject("Tree_" + species.id);
+            go.transform.SetParent(decoRoot, false);
+            var body = go.AddComponent<SpriteRenderer>();
+            body.sprite = treeArt != null && treeArt.stages != null && treeArt.stages.Length > 0 ? treeArt.stages[0] : null;
+            UseFx(body, art.swayTree);
+            var glow = NewSprite("Glow", go.transform, Vector3.zero, 1);
+            glow.transform.localPosition = Vector3.zero;
+            if (art.glow != null)
+                glow.sharedMaterial = art.glow;
+            glow.enabled = false;
+            var tree = go.AddComponent<Farming.FruitTree>();
+            AddTileCollider(go);
+            var obj = go.AddComponent<TileObject>();
+            if (string.IsNullOrEmpty(id) || BuildingIdTaken(id))
+                id = NewBuildingId(TreeBuilding);
+            obj.Setup(id, species.NameKey);
+            obj.BuildingId = TreeBuilding;
+            obj.Wanted = true;
+            spawned.Add(obj);
+            PutOnTile(obj, tile);
+            tree.Setup(species, treeArt, body, glow, growth, fruit);
+            Changed?.Invoke();
+            return obj;
+        }
+
+        /// <summary>Strefa kafelka pod drzewem (krwawa jarzębina rośnie lepiej na cmentarzu).</summary>
+        public float TreeZoneBonus(Farming.FruitTree tree)
+        {
+            if (tree == null || tree.Species == null || !tree.Species.cemeteryBonus)
+                return 1f;
+            var obj = tree.GetComponent<TileObject>();
+            return obj != null && obj.Placed && ZoneAt(obj.Tile) == ZoneKind.Cemetery ? 1.5f : 1f;
+        }
 
         void GrantFind(TilePos p, FindKind find, Wallet wallet)
         {
@@ -1095,16 +1148,19 @@ namespace Wyspa.World
                 case Automation.AutomationSystem.Wisp:
                     body.sprite = First(art.wispFrames);
                     go.AddComponent<Automation.WispGardener>().Setup(body, Glow(First(art.wispGlow)), art.wispFrames, art.wispGlow);
+                    NightGlow.Add(go, new Vector2(0f, 0.6f), new Color(0.37f, 0.81f, 0.72f), 1.6f, 0.7f);
                     break;
                 case Automation.AutomationSystem.Merchant:
                     body.sprite = First(art.merchantFrames);
                     go.AddComponent<Automation.MerchantSpirit>().Setup(body, Glow(First(art.merchantGlow)), art.merchantFrames, art.merchantGlow);
+                    NightGlow.Add(go, new Vector2(0f, 0.7f), new Color(0.95f, 0.75f, 0.4f), 1.6f, 0.7f);
                     break;
                 case Automation.AutomationSystem.Rune:
                     body.sprite = art.rune;
                     if (art.runeGlow != null)
                         Glow(art.runeGlow);
                     go.AddComponent<Automation.SeedRune>();
+                    NightGlow.Add(go, new Vector2(0f, 0.6f), new Color(0.37f, 0.81f, 0.72f), 1.1f, 0.45f);
                     break;
                 default:
                     Destroy(go);

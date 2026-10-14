@@ -45,7 +45,14 @@ namespace Wyspa.World
             baseRow = row;
         }
 
-        public void OnClick() => GameEvents.RequestContext(this);
+        public void OnClick()
+        {
+            // np. drzewo z owocami: klik od razu zbiera, panel dopiero przy kolejnym kliknięciu
+            var shortcut = GetComponent<Farming.IClickShortcut>();
+            if (shortcut != null && shortcut.TryClick())
+                return;
+            GameEvents.RequestContext(this);
+        }
 
         /// <summary>Panel kontekstowy: nazwa + to, co dopiszą inne komponenty (skrzynia: sprzedaż, lampa: zasięg). „Przenieś” dodaje UI.</summary>
         public void FillContext(ContextInfo info)

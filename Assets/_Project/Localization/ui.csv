@@ -195,3 +195,15 @@ ui.options.smooth,Płynność,Smoothness,Flüssigkeit,なめらかさ,流畅度,
 ui.options.smooth.0,Eko,Eco,Eco,省電力,节能,30 / 12 kl./s
 ui.options.smooth.1,Płynna,Smooth,Flüssig,なめらか,流畅,60 / 30 kl./s (domyślnie)
 ui.options.smooth.2,Max,Max,Max,最大,最高,60 / 60 kl./s
+ui.shop.trees,Drzewa,Trees,Bäume,木,树木,
+ui.shop.trees_hint,"Sadzonka rośnie od pracy, potem owocuje co jakiś czas. Klik w owoce = zbiór.","Saplings grow while you work, then bear fruit again and again. Click the fruit to pick it.",Setzlinge wachsen beim Arbeiten und tragen dann immer wieder Früchte. Klick = ernten.,苗木は作業中に育ち、その後くり返し実をつける。クリックで収穫。,树苗在你工作时生长，之后反复结果。点击即可采摘。,
+ui.shop.tree.desc,{0}x {1} po {2},{0}x {1} at {2},{0}x {1} je {2},{1}x{0}・各{2},{0}个{1}，每个{2},"{0} = owoce, {1} = nazwa, {2} = cena"
+ui.tree.growing,Rośnie: {0}% (od pracy),Growing: {0}% (while you work),Wächst: {0}% (beim Arbeiten),成長：{0}%（作業中）,生长：{0}%（工作时）,
+ui.tree.fruiting,"Owoce: {0}x {1}, kliknij, żeby zebrać","Fruit: {0}x {1}, click to pick","Früchte: {0}x {1}, klicken zum Ernten",実：{1}x{0}、クリックで収穫,果实：{0}个{1}，点击采摘,
+ui.tree.fruit_progress,Owoce: {0}%,Fruit: {0}%,Früchte: {0}%,実：{0}%,果实：{0}%,
+ui.tree.when_work,(rosną od pracy),(grow while you work),(wachsen beim Arbeiten),（作業中に育つ）,（工作时生长）,
+ui.tree.when_night,(dojrzewają nocą),(ripen at night),(reifen nachts),（夜に熟す）,（夜间成熟）,
+ui.tree.when_fullmoon,(tylko w pełnię),(only at full moon),(nur bei Vollmond),（満月の夜だけ）,（仅在满月）,
+ui.tree.harvest,Zbierz (+{0}),Pick (+{0}),Ernten (+{0}),収穫（+{0}）,采摘（+{0}）,{0} = monety
+ui.tree.chop,Zetnij (+{0} drewna),Chop (+{0} wood),Fällen (+{0} Holz),伐採（木材+{0}）,砍伐（木材+{0}）,
+ui.tree.chop_confirm,Na pewno ściąć? (+{0} drewna),Really chop? (+{0} wood),Wirklich fällen? (+{0} Holz),本当に伐採する？（木材+{0}）,确定砍伐？（木材+{0}）,

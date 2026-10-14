@@ -281,6 +281,20 @@ Po pobraniu: **Wyspa → 2** (materiał `LightShafts`, nowe klatki ognika i dusz
 7. Płynność: Opcje → Ogólne → Płynność (Eko / Płynna / Max). Rośliny kołyszą się, ryby pływają, cząsteczki i monety lecą płynnie.
 8. Przezroczyste okno w nocy: mgła nad pasem wody jaśniejsza (blada poświata), za wodą rzadkie kłęby; ogniki i runy świecą poświatą.
 
+## 4p. Światło Light 2D, miękka mgła, wiatr, drzewa owocowe (test)
+Po pobraniu: **Wyspa → 2** (sprite'y drzew w `IslandArt`), potem Play (scena nie wymaga przebudowy; obiekt snopów tworzy się sam).
+Stary materiał `Data/Materials/LightShafts.mat` można usunąć (shader nakładkowy usunięty).
+1. Dzień: ukośne, ciepłe snopy światła rozjaśniają wyspę i widać je w powietrzu (wolumetria Light 2D). Noc: blade promienie
+   księżyca (w pełnię wyraźniejsze). Lampy mają poświatę w powietrzu, ogniki/duszki/runy świecą w nocy.
+   Przezroczyste okno: snopy tylko oświetlają wyspę (bez poświaty nad pulpitem).
+2. Mgła w przezroczystym oknie: miękka, półprzezroczysta otoczka wokół wody, kłęby rozpływają się nad pulpitem.
+3. Co kilka sekund przez wyspę przelatują smugi wiatru; w dzień w powietrzu unoszą się pyłki, w nocy turkusowe zarodniki.
+4. Księga → Sklep → **Drzewa**: kup jabłoń i postaw ją jak lampę. Sadzonka rośnie od pracy (F1 → czas x60 albo
+   „Drzewa: dorosłe z owocami”). Owocujące drzewo: klik = zbiór (toast, monety). Klik w drzewo bez owoców: panel
+   ze stanem i „Zetnij” (drugi klik potwierdza): drzewo się przewraca, dostajesz drewno.
+5. Upiorna grusza / drzewo księżyca z owocami w nocy świecą i oświetlają grządki w zasięgu (rośliny dnia rosną jak przy lampie).
+6. Zapis: drzewa (wzrost, owoce) wracają po ponownym uruchomieniu.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

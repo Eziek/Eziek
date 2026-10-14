@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 6;
+        public int version = 7;   // v7: drzewa owocowe w obiektach wyspy
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;

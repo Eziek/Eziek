@@ -102,23 +102,21 @@ Shader "Wyspa/Fog"
                 else if (v > 0.55) { col = th < (v - 0.55) / 0.3 ? _ColFo.rgb : _ColB3.rgb; a = 1; }
                 else if (v > 0.25 && th < (v - 0.25) / 0.3) { col = _ColB3.rgb; a = 1; }
                 // przezroczyste okno: nad pasem wody mgła gęstnieje ku jego krawędzi, a za nią (nad pulpitem) zostają
-                // tylko rzadkie, dryfujące kłęby, które rozpływają się w ciągu ok. 10 px. Próg Bayera > 0 (bez siatki kropek).
+                // miękkie, dryfujące kłęby, które rozpływają się w ciągu ok. 16 px.
                 bool band = _FogOuter > 0.0;
                 if (band)
                 {
                     float drift = 0.25 * sin(x / 9.0 + T) * sin(y / 7.0) + 0.15 * sin(6.2831853 * (x / 45.0 + y / 90.0) - 2.0 * T);
+                    // duże, wolne kłęby (prośba gracza: mniej „pikselozy”): miękka przezroczystość zamiast szachownicy
+                    float cloud = saturate(0.55 + 0.45 * sin(x / 17.0 + T) * sin(y / 11.0 - T * 0.7) + drift);
                     float c;
                     if (d <= _FogOuter)
-                        c = saturate((d - _FogFrom) / max(1.0, _FogOuter - _FogFrom) + drift) * 0.6;
+                        c = saturate((d - _FogFrom) / max(1.0, _FogOuter - _FogFrom)) * (0.35 + 0.4 * cloud);
                     else
-                    {
-                        float patch = saturate(0.5 + 0.5 * sin(x / 13.0 + T) * sin(y / 9.0 - T) + drift);
-                        c = saturate(1.0 - (d - _FogOuter) / 10.0) * patch * 0.45;
-                    }
-                    c *= clamp(_Density, 0.7, 1.3);
-                    float tb = th + 1.0 / 32.0;
-                    a = tb < c ? 1 : 0;
-                    col = tb < c * 0.35 ? _ColFo.rgb : _ColB3.rgb;
+                        c = saturate(1.0 - (d - _FogOuter) / 16.0) * cloud * 0.75;   // nad pulpitem rozpływa się w ok. 16 px
+                    c = saturate(c * clamp(_Density, 0.7, 1.3));
+                    a = floor(c * 6.0) / 6.0 * 0.8;   // 6 stopni przezroczystości: miękko, ale dalej pikselowo
+                    col = lerp(_ColB3.rgb, _ColFo.rgb, saturate(c * 1.4));
                 }
                 if (!water) a = 0;
 

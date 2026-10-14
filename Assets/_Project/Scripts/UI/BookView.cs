@@ -308,7 +308,7 @@ namespace Wyspa.UI
             float y = 0;
             // podzakładki: Nasiona / Lampy / Budowle / Morze
             float x = 0;
-            foreach (var (section, key) in new[] { (0, "ui.shop.seeds"), (1, "ui.shop.lamps"), (2, "ui.shop.buildings"), (3, "ui.shop.sea") })
+            foreach (var (section, key) in new[] { (0, "ui.shop.seeds"), (4, "ui.shop.trees"), (1, "ui.shop.lamps"), (2, "ui.shop.buildings"), (3, "ui.shop.sea") })
             {
                 int sec = section;
                 var b = Ui.Btn(content, "Section", () => { shopSection = sec; Show(Tab.Shop); });
@@ -334,6 +334,14 @@ namespace Wyspa.UI
                 info.text = Loc.Get("ui.shop.seeds_hint");
                 BuildSeedShop();
                 BuildItems(ref y, 24f);
+                RefreshShop();
+                return;
+            }
+            if (shopSection == 4)
+            {
+                info.text = Loc.Get("ui.shop.trees_hint");
+                BuildTreeShop();
+                BuildItems(ref y, 28f);
                 RefreshShop();
                 return;
             }
@@ -509,6 +517,40 @@ namespace Wyspa.UI
                     cost = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, c.unlockPrice) },
                     blockedKey = _ => game.IsUnlocked(crop) ? "ui.shop.unlocked" : null,
                     buy = _ => { if (game.TryUnlock(crop)) Show(Tab.Shop); },
+                });
+            }
+        }
+
+        // ---- Drzewa owocowe (GDD §15.1): sadzonka stawiana jak lampa, rośnie od pracy, owocuje cyklicznie
+
+        void BuildTreeShop()
+        {
+            var island = Island.Instance;
+            if (island == null)
+                return;
+            foreach (var sp in Farming.TreeSpecies.All)
+            {
+                var species = sp;
+                var treeArt = island.Art != null ? island.Art.Tree(sp.id) : null;
+                Sprite pic = treeArt != null && treeArt.stages != null && treeArt.stages.Length > 2 ? treeArt.stages[2] : null;
+                var cost = sp.Cost();
+                seaItems.Add(new ShopItem
+                {
+                    nameKey = sp.NameKey, sprite = pic, cost = cost,
+                    desc = Loc.Get("ui.shop.tree.desc", sp.fruitCount, Loc.Get(sp.FruitKey), sp.fruitPrice),
+                    buy = i => UiRoot.Instance?.StartPlacement(new PlacementMode.Request
+                    {
+                        nameKey = species.NameKey, sprite = pic, cost = cost,
+                        valid = i.IsFree,
+                        ghostAt = t => (Island.TileAnchor(t, 13, out _), false),
+                        confirm = t =>
+                        {
+                            if (i.SpawnTree(species, t) == null)
+                                return false;
+                            GameEvents.RaiseToast("ui.toast.placed", Loc.Get(species.NameKey));
+                            return true;
+                        },
+                    }),
                 });
             }
         }

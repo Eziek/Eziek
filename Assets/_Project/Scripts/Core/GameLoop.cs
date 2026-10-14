@@ -238,6 +238,14 @@ namespace Wyspa.Core
             foreach (var plot in FarmPlot.All)
                 plot.Tick(dt, ContextFor(plot, night));
 
+            // drzewa owocowe: rosną od pracy (z tempem pracy), owoce wg gatunku (praca / noc / pełnia)
+            for (int i = FruitTree.All.Count - 1; i >= 0; i--)
+            {
+                var tree = FruitTree.All[i];
+                float mult = activity.TempoMultiplier * (island != null ? island.TreeZoneBonus(tree) : 1f);
+                tree.Tick(dt, activity.IsActive, night, clock.IsFullMoon, mult);
+            }
+
             if (automation != null)
             {
                 autoHarvested.Clear();

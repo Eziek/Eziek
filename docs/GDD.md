@@ -444,6 +444,11 @@ Obrazki referencyjne (kopie): `docs/img/`
 39. Uwagi gracza po teście: zasypywanie grządek i rozbiórka budowli, „Wyjdź z gry” (brak X w oknie bez ramki), powiększenie
     x2..x6 + Ctrl + kółko, koło nasion z podziałem dzień / noc, mgła tylko nad pasem wody, **tempo pracy** (pisanie i mysz
     przyspieszają rośliny dnia do x1.5, §4.1).
+43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
+    do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
+    i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
+    (`NightGlow`). Shader nakładkowy `LightShafts.shader` usunięty. Nowe cząsteczki: podmuchy wiatru (smugi), pyłki w dzień,
+    zarodniki w nocy, płynne świetliki. **Drzewa owocowe** (§15.1). Zapis v7.
 41. Upiększanie („cozy”, prośba gracza): światło „wolumetryczne” w pikselach (`LightShafts`: snopy słońca w dzień,
     pomarańczowe o zmierzchu, blade promienie księżyca w nocy, mocniejsze w pełnię, dithered poświata zapalonych lamp),
     iskierki odbić na wodzie tam, gdzie pada światło (w kolorze lampy/słońca), płynny lot duszków po łuku i unoszenie
@@ -509,6 +514,8 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Sea/NightEvents.cs`, `WillOWisp.cs`, `StarPickup.cs`, `MonsterEvent.cs`, `Altar.cs` | nocne zdarzenia (harmonogram, ogniki, gwiazdy, potwór), ołtarz |
 | `Scripts/Lore/Chronicle.cs`, `Rituals.cs` | kronika: liczniki cyklu, punkty księżyca przy nowiu, odkrycia do bestiariusza, rytuały i ich efekty (statyczne mnożniki) |
 | `Scripts/Platform/WinApi.cs`, `DesktopWindow.cs` | okno na pulpicie (tylko build Windows): ramka, na wierzchu, róg ekranu, przeciąganie, przezroczystość z klikiem przez tło, `Autostart` (HKCU\Run) |
+| `Scripts/Farming/FruitTree.cs` | drzewa owocowe: `TreeSpecies` (dane 5 gatunków), `TreeArt`, `FruitTree` (wzrost, owoce, zbiór kliknięciem, ścinanie, świecenie) |
+| `Scripts/Visual/LightShafts.cs`, `NightGlow.cs` | snopy słońca/księżyca (Sprite Light 2D z wolumetrią, za kamerą), nocna poświata ogników, duszków i run |
 | `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |
 | `Scripts/UI/PlacementMode.cs` | tryb stawiania: duch na kafelku, okrąg zasięgu światła, licznik oświetlonych grządek, kupno lampy, przenoszenie |
@@ -904,7 +911,13 @@ dekoracji na kafelku. Nagrobki i dekoracje stref przyjdą ze strefami (Etap 5).
   a rośliny nocy nie rosną. Drzewo nie zużywa Esencji, bo to nagroda za długi wzrost.
   Świeci tylko w nocy, kiedy owocuje (po zebraniu owoców gaśnie do czasu odrośnięcia).
   W kodzie: `Illumination.IsLit` uwzględnia owocujące świecące drzewa obok lamp.
-- Mechanika czeka na swój etap (kod jeszcze nie istnieje).
+- **Stan (zrobione na prośbę gracza):** Sklep → Drzewa (sadzonka stawiana jak lampa), `Farming/FruitTree.cs` + dane
+  `TreeSpecies`. Wzrost w **godzinach** aktywnej pracy zamiast dni (szybsza nagroda, do balansu), z tempem pracy.
+  Owoce: zwykłe drzewa odrastają od pracy, upiorna grusza nocą, drzewo księżyca tylko w pełnię. **Klik w owocujące drzewo =
+  zbiór od razu (monety)**, klik w inne = panel ze stanem i „Zetnij” (drugi klik potwierdza; drewno: dorosłe 6, młode 2).
+  Krwawa jarzębina na cmentarzu rośnie x1.5. Świecące owoce: Point Light 2D z wolumetrią + `Illumination.IsLit`.
+  Ognik jeszcze nie zbiera owoców (później). Ceny: jabłoń 120 (4x8 co 30 min), bez 200 (5x10 co 40 min), jarzębina 250
+  (6x9 co 45 min), grusza 500 + 5 plonów nocy (4x30 co 2 h nocy), drzewo księżyca 800 + 2 odłamki (3x120 co 1 h pełni).
 
 ---
 

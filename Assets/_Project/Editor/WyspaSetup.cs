@@ -424,6 +424,19 @@ namespace Wyspa.EditorTools
             art.wispGlow = Frames("wisp_gardener", "_glow");
             art.merchantFrames = Frames("merchant_spirit");
             art.merchantGlow = Frames("merchant_spirit", "_glow");
+            // drzewa owocowe (GDD §15.1): fazy 0-3, świecenie owoców, przewracanie
+            art.trees = new List<TreeArt>();
+            foreach (var sp in TreeSpecies.All)
+            {
+                var ta = new TreeArt { id = sp.id, stages = new Sprite[4], fall = new Sprite[4] };
+                for (int i = 0; i < 4; i++)
+                {
+                    ta.stages[i] = LoadSprite($"Trees/tree_{sp.id}_{i}");
+                    ta.fall[i] = LoadSprite($"Trees/tree_{sp.id}_fall_{i}");
+                }
+                ta.fruitingGlow = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Trees/tree_{sp.id}_3_glow.png");
+                art.trees.Add(ta);
+            }
             art.rune = LoadSprite("Automation/rune_stone");
             art.runeGlow = LoadSprite("Automation/rune_stone_glow");
             art.lamps = new List<LampDefinition>();
@@ -442,7 +455,6 @@ namespace Wyspa.EditorTools
             art.swayCropGlow = LoadMat("SwayCropGlow");
             art.swayTree = LoadMat("SwayTree");
             art.glow = GlowMaterial();
-            art.lightShafts = LoadMat("LightShafts");
             EditorUtility.SetDirty(art);
             return art;
         }
@@ -542,7 +554,6 @@ namespace Wyspa.EditorTools
                 Debug.LogWarning("[Wyspa] Brak Ground/water_data.png - uruchom tools/pixel-proto/export_unity_fx.py.");
             FxMaterialAsset("Water", "Water", m => m.SetTexture("_DataTex", data));
             FxMaterialAsset("Fog", "Fog", null);
-            FxMaterialAsset("LightShafts", "LightShafts", null);
         }
 
         /// <summary>Klikalny obszar = kafelek pod obiektem (podstawa 6 px pod środkiem kafelka), jak w Island.</summary>
@@ -590,7 +601,7 @@ namespace Wyspa.EditorTools
             var glowMat = GlowMaterial();
             var uiTheme = AssetDatabase.LoadAssetAtPath<UiTheme>(ThemePath);
             Material swayCrop = LoadMat("SwayCrop"), swayCropGlow = LoadMat("SwayCropGlow"), swayTree = LoadMat("SwayTree");
-            Material waterMat = LoadMat("Water"), fogMat = LoadMat("Fog"), shaftsMat = LoadMat("LightShafts");
+            Material waterMat = LoadMat("Water"), fogMat = LoadMat("Fog");
             if (db == null)
                 Debug.LogError("[Wyspa] Nie znaleziono " + DataDir + "/CropDatabase.asset - uruchom Wyspa > 2.");
             float W = layout.width, H = layout.height;
@@ -628,9 +639,9 @@ namespace Wyspa.EditorTools
             // mgła nad morzem, gęstnieje z odległością od brzegu (sprite = mapa danych wody, rysuje tylko shader)
             var fog = MakeSprite("Fog", world, LoadSprite("Ground/water_data"), Vector3.zero, 5000);
             UseFx(fog, fogMat, true);
-            // promienie słońca / księżyca i poświata lamp (addytywnie, pod mgłą, nad obiektami)
-            var shafts = MakeSprite("LightShafts", world, LoadSprite("Ground/water_data"), Vector3.zero, 4800);
-            UseFx(shafts, shaftsMat, true);
+            // snopy słońca / księżyca: Sprite Light 2D z wolumetrią (LightShafts tworzy światło sam)
+            var shafts = new GameObject("LightShafts");
+            shafts.transform.SetParent(world, false);
 
             // --- obiekty stawiane na kafelkach (do Etapu 3c samoczynnie, na wolnej trawie) ---
             var objectsRoot = new GameObject("TileObjects").transform;
@@ -706,7 +717,7 @@ namespace Wyspa.EditorTools
             // --- efekty: woda, mgła, cząsteczki (Etap 3a) ---
             waterAnim.Setup(water, clock);
             fog.gameObject.AddComponent<FogController>().Setup(fog, clock);
-            shafts.gameObject.AddComponent<LightShafts>().Setup(shafts, fog, clock);
+            shafts.AddComponent<LightShafts>().Setup(null, null, clock);
             var fxGo = new GameObject("Fx");
             var particles = fxGo.AddComponent<PixelParticles>();
             particles.Setup(glowMat);

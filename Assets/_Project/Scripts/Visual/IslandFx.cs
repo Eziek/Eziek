@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Wyspa.Core;
 using Wyspa.Farming;
@@ -161,14 +162,16 @@ namespace Wyspa.Visual
 
         void Update()
         {
+            bool night = clock != null && clock.IsNight;
+            UpdateFireflies(night);   // płynnie, co klatkę
+            UpdateWind(night);
+            UpdateMotes(night);
             acc += Time.unscaledDeltaTime;
             if (acc < 0.1f)
                 return;
             float dt = acc;
             acc = 0f;
             frame++;
-            bool night = clock != null && clock.IsNight;
-            UpdateFireflies(night);
 
             sparkleTimer -= dt;
             if (sparkleTimer <= 0f)
@@ -191,9 +194,11 @@ namespace Wyspa.Visual
         {
             if (flies == null)
                 return;
+            float ft = Time.unscaledTime * 10f;   // klatki jak w prototypie, ale ruch ciągły
             for (int i = 0; i < flies.Length; i++)
             {
-                int t = frame + flyPhase[i];
+                float tf = ft + flyPhase[i];
+                int t = Mathf.FloorToInt(tf);
                 bool visible = night && t % 16 < 11;
                 var sr = flies[i];
                 sr.enabled = visible;
@@ -201,9 +206,142 @@ namespace Wyspa.Visual
                     continue;
                 bool halo = t % 16 >= 3 && t % 16 <= 6 && firefly.Length > 1;
                 sr.sprite = firefly[halo ? 1 : 0];
-                float x = flyBase[i].x + Mathf.Round(3f * Mathf.Sin(t * 0.25f));
-                float y = flyBase[i].y + Mathf.Round(2f * Mathf.Cos(t * 0.18f));
+                float x = flyBase[i].x + Mathf.Round(3f * Mathf.Sin(tf * 0.25f));
+                float y = flyBase[i].y + Mathf.Round(2f * Mathf.Cos(tf * 0.18f));
                 sr.transform.position = new Vector3((x + 0.5f) / Ppu, (y + 0.5f) / Ppu, 0f);
+            }
+        }
+
+        // ------------------------------------------------------------ wiatr i pyłki (prośba gracza: więcej życia w powietrzu)
+
+        class Streak { public SpriteRenderer sr; public Vector2 pos; public float speed, age, life, phase; }
+        readonly List<Streak> streaks = new List<Streak>();
+        class Mote { public SpriteRenderer sr; public Vector2 pos; public float speed, phase, age, life; }
+        readonly List<Mote> motes = new List<Mote>();
+        float gustTimer = 3f;
+        Sprite streakSprite, moteSprite;
+        static readonly Color DayMote = new Color(1f, 0.9f, 0.6f, 0.8f);
+        static readonly Color NightMote = new Color(0.45f, 1f, 0.9f, 0.7f);
+
+        /// <summary>Sprite z kodu: pozioma smuga (jaśniejsza z przodu) albo jeden piksel.</summary>
+        static Sprite MakeSprite(int w, bool gradient)
+        {
+            var tex = new Texture2D(w, 1, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
+            var px = new Color32[w];
+            for (int x = 0; x < w; x++)
+            {
+                byte a = gradient ? (byte)(60 + 195 * x / Mathf.Max(1, w - 1)) : (byte)255;
+                px[x] = new Color32(255, 255, 255, a);
+            }
+            tex.SetPixels32(px);
+            tex.Apply(false);
+            return Sprite.Create(tex, new Rect(0, 0, w, 1), new Vector2(0.5f, 0.5f), Ppu);
+        }
+
+        Rect Area()
+        {
+            var island = Island.Instance;
+            return island != null && island.Ready ? island.LandRect : fireflyArea;
+        }
+
+        /// <summary>Podmuchy: co kilka sekund 2-4 jasne smugi przelatują nad wyspą z lewej na prawą, po łagodnej fali.</summary>
+        void UpdateWind(bool night)
+        {
+            float dt = Time.unscaledDeltaTime;
+            gustTimer -= dt;
+            if (gustTimer <= 0f)
+            {
+                gustTimer = Random.Range(3f, 8f);
+                if (streakSprite == null)
+                    streakSprite = MakeSprite(10, true);
+                var area = Area();
+                int n = Random.Range(2, 5);
+                for (int i = 0; i < n; i++)
+                {
+                    var s = streaks.Find(q => q.age >= q.life);
+                    if (s == null)
+                    {
+                        var go = new GameObject("Wind");
+                        go.transform.SetParent(transform, false);
+                        s = new Streak { sr = go.AddComponent<SpriteRenderer>() };
+                        s.sr.sprite = streakSprite;
+                        s.sr.sortingOrder = 4500;
+                        if (glowMaterial != null)
+                            s.sr.sharedMaterial = glowMaterial;
+                        streaks.Add(s);
+                    }
+                    s.pos = new Vector2((area.xMin - 1.5f) * Ppu - i * 14f, (area.yMin + Random.value * area.height) * Ppu);
+                    s.speed = Random.Range(45f, 70f);
+                    s.age = 0f;
+                    s.life = (area.width + 3f) * Ppu / s.speed;
+                    s.phase = Random.value * 6.28f;
+                    s.sr.color = night ? new Color(0.6f, 0.75f, 0.9f, 0f) : new Color(1f, 1f, 0.95f, 0f);
+                    s.sr.enabled = true;
+                }
+            }
+            foreach (var s in streaks)
+            {
+                if (s.age >= s.life)
+                {
+                    s.sr.enabled = false;
+                    continue;
+                }
+                s.age += dt;
+                s.pos.x += s.speed * dt;
+                float y = s.pos.y + Mathf.Sin(s.age * 2.2f + s.phase) * 3f;
+                float u = s.age / s.life;
+                var c = s.sr.color;
+                c.a = Mathf.Sin(Mathf.Clamp01(u) * Mathf.PI) * (night ? 0.25f : 0.4f);   // pojawia się i znika płynnie
+                s.sr.color = c;
+                s.sr.transform.position = new Vector3(Mathf.Round(s.pos.x) / Ppu, Mathf.Round(y) / Ppu, 0f);
+            }
+        }
+
+        /// <summary>Pyłki: w dzień ciepłe drobinki w powietrzu, w nocy rzadsze turkusowe zarodniki. Unoszą się i znikają.</summary>
+        void UpdateMotes(bool night)
+        {
+            int want = night ? 6 : 14;
+            if (moteSprite == null)
+                moteSprite = MakeSprite(1, false);
+            while (motes.Count < 14)
+            {
+                var go = new GameObject("Mote");
+                go.transform.SetParent(transform, false);
+                var m = new Mote { sr = go.AddComponent<SpriteRenderer>() };
+                m.sr.sprite = moteSprite;
+                m.sr.sortingOrder = 4400;
+                if (glowMaterial != null)
+                    m.sr.sharedMaterial = glowMaterial;
+                m.sr.enabled = false;
+                motes.Add(m);
+            }
+            float dt = Time.unscaledDeltaTime;
+            var area = Area();
+            for (int i = 0; i < motes.Count; i++)
+            {
+                var m = motes[i];
+                if (i >= want)
+                {
+                    m.sr.enabled = false;
+                    m.age = m.life;
+                    continue;
+                }
+                if (m.age >= m.life)
+                {
+                    m.pos = new Vector2((area.xMin + Random.value * area.width) * Ppu, (area.yMin + Random.value * area.height) * Ppu);
+                    m.speed = Random.Range(2f, 5f);
+                    m.phase = Random.value * 6.28f;
+                    m.age = 0f;
+                    m.life = Random.Range(4f, 9f);
+                }
+                m.age += dt;
+                m.pos.y += m.speed * dt;
+                float x = m.pos.x + Mathf.Sin(m.age * 0.9f + m.phase) * 4f;
+                var c = night ? NightMote : DayMote;
+                c.a *= Mathf.Sin(Mathf.Clamp01(m.age / m.life) * Mathf.PI);
+                m.sr.color = c;
+                m.sr.enabled = true;
+                m.sr.transform.position = new Vector3((Mathf.Round(x) + 0.5f) / Ppu, (Mathf.Round(m.pos.y) + 0.5f) / Ppu, 0f);
             }
         }
 

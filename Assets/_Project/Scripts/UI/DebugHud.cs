@@ -105,6 +105,9 @@ namespace Wyspa.UI
                 if (GUILayout.Button(act.DebugTempo >= 0f ? "Tempo: zmierzone" : "Tempo: pełne"))
                     act.DebugTempo = act.DebugTempo >= 0f ? -1f : 1f;
                 GUILayout.EndHorizontal();
+                if (FruitTree.All.Count > 0 && GUILayout.Button($"Drzewa ({FruitTree.All.Count}): dorosłe z owocami"))
+                    foreach (var t in FruitTree.All.ToArray())
+                        t.DebugMature();
                 if (GUILayout.Button("Odblokuj wszystkie nasiona"))
                     game.DebugUnlockAll();
                 GUILayout.Label($"Ogniki: {WispGardener.All.Count}, duszki: {MerchantSpirit.All.Count}, runy: {SeedRune.All.Count}");

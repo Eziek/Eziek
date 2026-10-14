@@ -75,3 +75,4 @@ toast.wisp.no_crate,Ognik nie ma skrzyni - postaw skrzynię na plony,The wisp ha
 toast.rune.no_seeds,Runa: brak monet na nasiona ({0}),Rune: not enough coins for seeds ({0}),Rune: zu wenig Münzen für Samen ({0}),ルーン：種のコインが足りない（{0}）,符文：金币不够买种子（{0}）,{0} = roślina
 toast.seed_unlocked,Nowe nasiona: {0},New seeds: {0},Neue Samen: {0},新しい種：{0},新种子：{0},{0} = roślina
 toast.hint.ring,"Prawy klik na wyspie: Księga, sklep, rozbudowa, opcje","Right-click the island: Grimoire, shop, expand, options","Rechtsklick auf die Insel: Grimoire, Laden, Ausbau, Optionen",島を右クリック：魔導書・ショップ・拡張・設定,右键点击岛屿：魔典、商店、扩建、设置,"podpowiedź do pierścienia akcji, aż gracz go użyje"
+toast.fruit,Zebrano {0}x {1}: +{2} monet,Picked {0}x {1}: +{2} coins,{0}x {1} geerntet: +{2} Münzen,{1}を{0}個収穫：+{2}コイン,采摘{0}个{1}：+{2}金币,"{0} = ile, {1} = owoc, {2} = monety"
