@@ -42,6 +42,7 @@ namespace Wyspa.Save
         public PrestigeSave prestige;           // v15: perły mgły, dary, liczba rejsów (Economy/Prestige)
         public bool mist;                       // v16: slot czeka w Przystani we mgle (rejs skończony, nowej wyspy jeszcze nie ma)
         public List<string> mistUnlocks = new List<string>();   // v16: nasiona odblokowane w poprzednim rejsie (Pamięć nasion)
+        public double clockOffset;              // v16: przesunięcie cyklu dnia i nocy (nowa wyspa zaczyna się rano, GameClock)
     }
 
     [Serializable]
@@ -347,6 +348,7 @@ namespace Wyspa.Save
                 familiars = Familiars.FamiliarSystem.Instance != null ? Familiars.FamiliarSystem.Instance.Snapshot() : null,
                 market = Market.Snapshot(),
                 prestige = Prestige.Snapshot(),
+                clockOffset = GameClock.SaveOffsetSeconds,
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
@@ -447,6 +449,7 @@ namespace Wyspa.Save
                 prestige = Prestige.Snapshot(),
                 fertilizer = Mathf.RoundToInt(Prestige.Value(Prestige.MistCompost)),
                 essence = Prestige.Level(Prestige.EmberReserve) > 0 ? 1e6f : 0f,   // przycięte do pojemności słoja
+                clockOffset = GameClock.MorningOffset(),   // nowa wyspa zaczyna się rano
             };
             data.coins = Prestige.StartCurrencies()[0].amount;
             int slot = MistSlot;
@@ -508,7 +511,10 @@ namespace Wyspa.Save
                 return;
             MigrateLegacy();
             if (!File.Exists(FilePath))
+            {
+                GameClock.SaveOffsetSeconds = GameClock.MorningOffset();   // nowa gra albo reset: zawsze od rana
                 return;
+            }
 
             SaveData data;
             try
@@ -528,6 +534,7 @@ namespace Wyspa.Save
             }
             if (!string.IsNullOrEmpty(data.slotName))
                 CurrentName = data.slotName;
+            GameClock.SaveOffsetSeconds = data.clockOffset;
             if (data.mist)
             {
                 // slot we mgle (np. wczytany z pominięciem menu): najpierw Przystań

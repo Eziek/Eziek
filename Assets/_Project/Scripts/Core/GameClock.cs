@@ -8,6 +8,8 @@ namespace Wyspa.Core
     /// (06:00-20:00 na zegarze gry), a 20 min to noc (20:00-06:00). Cykl liczy się od stałej daty w czasie UTC, więc idzie dalej,
     /// także gdy gra jest wyłączona. Każdy cykl to osobna „doba gry” (Now ma datę i godzinę na zegarze gry), dzięki czemu
     /// zdarzenia „raz na noc” (kupiec, potwór, ołtarz) działają raz na cykl. Księżyc: pełny cykl faz trwa 8 nocy, pełnia to jedna noc.
+    /// Każdy zapis ma własne przesunięcie cyklu (SaveOffsetSeconds): nowa wyspa zaczyna się zawsze rano, a potem czas płynie
+    /// dalej tak samo, także offline.
     /// </summary>
     public class GameClock : MonoBehaviour
     {
@@ -41,7 +43,25 @@ namespace Wyspa.Core
         // ------------------------------------------------------------ czas cyklu
 
         /// <summary>Czas od początku epoki w cyklach (część całkowita = numer doby gry).</summary>
-        static double Cycles(DateTime utc) => ((utc - EpochUtc).TotalSeconds + DebugOffsetSeconds) / CycleSeconds;
+        static double Cycles(DateTime utc) => ((utc - EpochUtc).TotalSeconds + DebugOffsetSeconds + SaveOffsetSeconds) / CycleSeconds;
+
+        /// <summary>Przesunięcie cyklu bieżącego zapisu (z pliku; 0 w menu głównym i w starszych zapisach).</summary>
+        public static double SaveOffsetSeconds;
+
+        /// <summary>Godzina zegara gry, o której zaczyna się nowa wyspa (ok. 37 min dnia przed pierwszą nocą).</summary>
+        public const float StartHour = 7f;
+
+        /// <summary>
+        /// Przesunięcie, przy którym teraz jest StartHour (nowa gra, reset, nowa wyspa po rejsie): noc nigdy na początek.
+        /// Zawsze 0..3600 s, więc czas tylko przeskakuje do przodu.
+        /// </summary>
+        public static double MorningOffset()
+        {
+            double c = ((DateTime.UtcNow - EpochUtc).TotalSeconds + DebugOffsetSeconds) / CycleSeconds;
+            double now = (c - Math.Floor(c)) * CycleSeconds;
+            double off = SecondAt(StartHour) - now;
+            return off < 0 ? off + CycleSeconds : off;
+        }
 
         /// <summary>Do testów (HUD debugowy): przesunięcie cyklu gry, np. +1 cykl bez czekania godziny.</summary>
         public static double DebugOffsetSeconds;

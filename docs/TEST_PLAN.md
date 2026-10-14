@@ -212,3 +212,10 @@ Najpierw **Wyspa → 2** (motyw UI wczytuje nowe ikony `icon_gift_*`; bez tego d
    Nawóz z mgły, Żar w zanadrzu: pełny słój). Dary efektowe działają (np. Skrzydła mgły: szybsze ogniki, Głębokie skrzynie).
 7. Księga → Rejs w nowej grze: kolekcja zgodna z Przystanią, rejs nr 2.
 8. Zapis v15 (stare dary kupione w Księdze) wczytuje się: poziomy darów zostają (przycięte do nowych maksimów).
+
+## 13. Start zawsze rano
+1. Nowa gra w pustym slocie, gdy cykl jest w nocy (np. F1 → „+20 min” w menu nic nie da, sprawdź po prostu kilka razy o różnych
+   porach): zegar w HUD pokazuje 07:00, jest dzień, do zmroku ok. 37 min.
+2. Opcje → Reset: znów 07:00. Wypłynięcie z Przystani we mgle na nową wyspę: 07:00.
+3. Zapis i wczytanie po kilku minutach: zegar idzie dalej od miejsca zapisu (nie wraca do 07:00), noc przychodzi normalnie.
+4. Stary zapis (sprzed tej zmiany): pora dnia taka jak wcześniej.

@@ -172,6 +172,7 @@ namespace Wyspa.Core
             Alchemy.Potions.Restore(null);   // statyczne: bez tego mikstury z poprzedniego slotu działałyby dalej
             Economy.Market.Restore(null);    // zarobek rejsu i renoma (wczytuje SaveSystem)
             Economy.Prestige.Restore(null);  // perły i dary mgły (wczytuje SaveSystem)
+            GameClock.SaveOffsetSeconds = 0;  // menu główne: zwykły cykl; zapis ustawia własne przesunięcie (nowa wyspa: rano)
             if (GetComponent<Orders.OrderBook>() == null) gameObject.AddComponent<Orders.OrderBook>();   // zamówienia z tablicy
             if (GetComponent<Familiars.FamiliarSystem>() == null) gameObject.AddComponent<Familiars.FamiliarSystem>();   // chowańce
             if (GetComponent<Weather.WeatherSystem>() == null) gameObject.AddComponent<Weather.WeatherSystem>();   // pogoda

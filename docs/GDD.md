@@ -408,6 +408,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Skala UI (po teście: przy powiększonym oknie i małej wyspie pasek zajmował pół okna): **zależy od rozdzielczości
   monitora, nie od powiększenia okna** (1080p x2, 1440p x3, 4K x4), najwyżej o 1 mniej niż skala świata. Opcje → Okno →
   „Rozmiar interfejsu”: auto albo x1-x4.
+- [x] Start gry **zawsze rano** (07:00 na zegarze gry), także po resecie i po rejsie; każdy zapis ma własne przesunięcie
+  cyklu (§9 p. 82).
 - [x] Prestiż: **Przystań we mgle** między rejsami, dary **losowane** za perły (1 perła = 1 losowanie, animacja walki ikon),
   rzadkość z kolorami, 37 darów, kolekcja z wyszarzałymi niezdobytymi (§11.8, §9 p. 81). Wcześniejszy zakup darów w Księdze
   zastąpiony.
@@ -670,6 +672,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     pokazuje kolekcję). Zapis v16. Gałąź główna repozytorium to teraz `main`.
     Każdy z 37 darów ma własną ikonę 12 px w palecie mrocznej (`gift_icons.py`, podgląd `docs/img/ikony_darow.png`).
     Wygrana w losowaniu: fanfara (dłuższa z gongiem dla epickich i legendarnych) i fajerwerki w kolorze rzadkości.
+82. **Nowa wyspa zawsze zaczyna się rano** (zgłoszenie gracza: po resecie trafił na noc). Każdy zapis ma własne przesunięcie
+    cyklu dnia i nocy (`GameClock.SaveOffsetSeconds`, pole `clockOffset` w zapisie): nowa gra, reset i wypłynięcie z Przystani
+    ustawiają je tak, żeby była 07:00 (ok. 37 min dnia przed pierwszą nocą). Potem czas płynie normalnie, także offline.
+    Starsze zapisy mają przesunięcie 0 (bez zmian), menu główne też.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

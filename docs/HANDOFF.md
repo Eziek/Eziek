@@ -1,13 +1,14 @@
 # Przekazanie sesji (stan na 2026-10-14)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-81), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-82), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
 - Gałąź robocza: **`main`** (historia przepisana: bez stopek asystenta, autor Eziek). Stara gałąź `claude/...` do usunięcia
   na GitHubie po ustawieniu `main` jako domyślnej. PR-ów nie otwieramy bez prośby gracza.
-- Wersja zapisu: **v16** (Przystań we mgle: slot między rejsami, pole `mist`).
+- Wersja zapisu: **v16** (Przystań we mgle: slot między rejsami, pole `mist`; `clockOffset`: własny cykl dnia zapisu,
+  nowa wyspa zaczyna się o 07:00).
 - Gracz testuje w Unity 6.6 i w buildzie Windows, odsyła zrzuty i uwagi.
 - Kod kompiluje się na atrapach (`tools/cscheck`), shadery przez `tools/shadercheck`.
 - **Gra nazywa się Misty Packland** (GDD §16.5). Pakiet do wydania: `docs/RELEASE.md`.
