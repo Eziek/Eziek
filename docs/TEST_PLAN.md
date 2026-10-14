@@ -62,6 +62,13 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
 4. Drzewko mieści się na stronie (bez nachodzenia na tytuł i tekst na dole), także po niemiecku i w CJK.
 5. Efekty: „Przestronne gniazdo” → w gnieździe 4 miejsca; „Pojemne skrzynie” → skrzynia 0/30; „Krzyżowanie” → dymek mówi 5%.
 
+## 4a3. Podmiana roślin (dzień / noc)
+1. Posadź roślinę nocną, F1 → 12:00: dymek grządki „czeka na noc” i „Kliknij, aby podmienić”. Klik: koło z nasionami dnia,
+   wybór sadzi nową, nocne nasiono jest w worku (licznik w kole). PPM na grządce: „Wykop roślinę”.
+2. Gniazdo z siewcą: przyciski „Siewca w dzień”, „Siewca w nocy” (koło od razu w dobrej kategorii), „Podmiana o świcie i zmroku”.
+3. Ustaw dzień: marchew, noc: księżycowy kwiat. F1 → 23:30: siewca wymienia marchew bez lampy na kwiaty; F1 → 12:00: odwrotnie.
+4. Podmiana wył.: siewca sadzi tylko na pustych grządkach. Zapis i wczytanie zachowuje oba ustawienia.
+
 ## 4b. Hybrydy, wyprawy, zapiski
 1. Wyspa → 2 (nowe rośliny). F1 → „Mutacje zawsze”: posadź obok siebie marchew i wilczą jagodę, zbierz: toast mutacji,
    w worku „Wilcza marchew”. Dymek nasiona w kole: „Krzyżówka: Marchew + Wilcza jagoda”. Sprawdź wygląd 4 faz każdej hybrydy.

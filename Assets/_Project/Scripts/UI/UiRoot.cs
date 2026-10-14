@@ -318,6 +318,13 @@ namespace Wyspa.UI
             };
             var cam = Camera.main;
             var hit = cam != null ? Wyspa.Input.ClickRouter.Pick(cam.ScreenToWorldPoint(screen)) : null;
+            if (hit != null && hit.TryGetComponent(out FarmPlot grown) && !grown.State.IsEmpty && !grown.State.IsRipe)
+                list.Insert(0, new ActionRing.Entry
+                {
+                    icon = "sapling",
+                    tip = () => Loc.Get("act.dig_up") + (grown != null && !grown.State.IsEmpty ? "\n" + Loc.Get("ui.dig_up.back", Loc.Get("crop." + grown.State.crop.id)) : ""),
+                    run = () => { if (grown != null) grown.DigUp(); },
+                });
             if (hit != null && hit.TryGetComponent(out FarmPlot plot) && Island.Instance != null)
                 list.Insert(0, new ActionRing.Entry
                 {
@@ -417,7 +424,9 @@ namespace Wyspa.UI
                 moon += "\n" + Loc.Get("ui.plot.tempo", game.Activity.TempoMultiplier);
             if (s.crop.kind == CropKind.Day && Weather.WeatherSystem.Raining)
                 moon += "\n" + Loc.Get("ui.plot.rain");
-            return state + "\n" + Loc.Get("ui.plot.progress", pct) + quality + moon;
+            // roślina nie pasuje do pory (nocna w dzień, dzienna nocą bez lampy): podpowiedź, że da się ją podmienić
+            string swap = plot.OutOfSeason(night, ctx.lit) ? "\n" + Loc.Get("ui.plot.replace_hint") : "";
+            return state + "\n" + Loc.Get("ui.plot.progress", pct) + quality + moon + swap;
         }
     }
 }

@@ -98,6 +98,12 @@ namespace Wyspa.Farming
                 RefreshVisual();
                 game.AfterHarvest(this, crop);
             }
+            else if (!state.IsEmpty)
+            {
+                // rosnąca roślina (np. nocna o świcie): koło nasion podmienia ją na inną, stare nasiono wraca do worka
+                if (UiRoot.Instance != null)
+                    UiRoot.Instance.Wheel.Open(this);
+            }
             else if (state.IsEmpty)
             {
                 if (UiRoot.Instance != null)
@@ -124,6 +130,35 @@ namespace Wyspa.Farming
             RefreshVisual();
             Pop();
             return crop;
+        }
+
+        /// <summary>
+        /// Wykopanie niedojrzałej rośliny (prośba gracza: po nocy posadzone rośliny nocne stały i nie dało się nic zrobić).
+        /// Nasiono wraca do worka, postęp wzrostu przepada. Zwraca wykopaną roślinę (null, gdy nic nie rosło albo jest dojrzała).
+        /// </summary>
+        public CropDefinition DigUp()
+        {
+            var crop = state.crop;
+            if (crop == null || state.IsRipe)
+                return null;
+            var game = GameLoop.Instance;
+            if (game != null)
+                game.Seeds.Add(crop.id);
+            state.Clear();
+            RefreshVisual();
+            Pop();
+            IslandFx.Planted(CropPosition, CropOrder);
+            GameEvents.PlaySound("dig", 0.6f);
+            return crop;
+        }
+
+        /// <summary>Roślina, która teraz nie może rosnąć z powodu pory: nocna w dzień, dzienna nocą bez lampy.</summary>
+        public bool OutOfSeason(bool night, bool lit)
+        {
+            var c = state.crop;
+            if (c == null || state.IsRipe)
+                return false;
+            return c.kind == CropKind.Night ? !night : night && !lit;
         }
 
         /// <summary>Sadzenie (koło nasion, runa siewu) - koszt nasiona płaci wywołujący.</summary>

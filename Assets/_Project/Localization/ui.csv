@@ -285,3 +285,9 @@ ui.altar.finale_wait,Najbliższa noc pełni za ok. {0:0.#} h.,Next full-moon nig
 ui.altar.finale_done,"Światło Opiekunów płonie: lampy palą o 20% mniej Żaru, rośliny nocy rosną o 10% szybciej, mgła jest rzadsza.","The Keepers' Light burns: lamps use 20% less Ember, night crops grow 10% faster, the fog is thinner.","Das Licht der Hüter brennt: Lampen verbrauchen 20 % weniger Glut, Nachtpflanzen wachsen 10 % schneller, der Nebel ist dünner.",守り人の光が燃えている：ランプの熾火消費-20%、夜の作物の成長+10%、霧が薄くなった,守护人之光正在燃烧：灯消耗的余火-20%，夜间作物生长+10%，雾变淡了,
 ui.monster.next,Dalej,Next,Weiter,次へ,继续,
 ui.monster.farewell,Pożegnaj,Say farewell,Abschied nehmen,別れを告げる,告别,
+ui.plot.replace_hint,"Kliknij, aby podmienić (nasiono wróci do worka)",Click to replace (the seed goes back to the bag),Klicken zum Ersetzen (der Samen kommt in den Beutel zurück),クリックで植え替え（種は袋に戻る）,点击替换（种子会回到袋中）,
+act.dig_up,Wykop roślinę,Dig up the plant,Pflanze ausgraben,植物を掘り出す,挖出植物,pierścień akcji na grządce
+ui.dig_up.back,"{0}: nasiono wróci do worka, wzrost przepadnie","{0}: the seed goes back to the bag, growth is lost","{0}: Der Samen kommt in den Beutel zurück, das Wachstum geht verloren",{0}：種は袋に戻り、成長は失われる,{0}：种子回到袋中，生长进度丢失,
+ui.nest.sower_day,Siewca w dzień: {0},Sower by day: {0},Säer am Tag: {0},昼の種まき：{0},白天播种：{0},otwiera koło nasion dnia
+ui.nest.sower_night,Siewca w nocy: {0},Sower by night: {0},Säer in der Nacht: {0},夜の種まき：{0},夜间播种：{0},otwiera koło nasion nocy
+ui.nest.swap,Podmiana o świcie i zmroku: {0},Swap at dawn and dusk: {0},Tausch bei Morgen- und Abenddämmerung: {0},夜明けと夕暮れに植え替え：{0},黎明和黄昏时替换：{0},"{0} = wł./wył.; siewca wymienia rośliny, które o tej porze nie rosną"

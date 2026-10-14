@@ -578,6 +578,11 @@ Obrazki referencyjne (kopie): `docs/img/`
 63. Zakończenie historii: Światło Opiekunów na ołtarzu w noc pełni, ostatnie wynurzenie oka z epilogiem, stałe nagrody.
 64. Wiatr: pionowa „kreska” przy kołysaniu to ucinanie przesuniętych pikseli na krawędzi sprite'a. Kołyszące się sprite'y
     (rośliny, drzewa, krzaki) mają teraz 6 px przezroczystego marginesu po bokach (`tools/pixel-proto/pad_sway.py`, po eksporcie).
+65. Błąd logiczny (zgłoszenie gracza): po nocy posadzone rośliny nocne stały i nie dało się nic z nimi zrobić.
+    Klik w rosnącą roślinę otwiera koło nasion w trybie podmiany (stare nasiono wraca do worka, postęp przepada),
+    w pierścieniu akcji „Wykop roślinę”, dymek grządki podpowiada podmianę. Siewca: osobne nasiona na dzień i na noc
+    oraz „Podmiana o świcie i zmroku” (domyślnie wł.): wymienia rośliny, które o tej porze nie rosną (uwaga: rośliny
+    wielonocne nie dorosną, gdy podmiana jest włączona). Zapis v14.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -752,8 +757,9 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
    Klik w gniazdo: lista ogników (imię, zawód, poziom, doświadczenie) i przywołanie nowego: 200/250/350 monet x1.5 za
    każdego ognika tego zawodu + 3 plony nocy. Zawody:
    - **Ogrodnik:** zbiera dojrzałe plony (kurs do „udźwigu”), niesie do skrzyni; bez plonów strąca owoce z drzew i zbiera je z ziemi.
-   - **Siewca** (wymaga ulepszenia „Ognik-siewca”, dawniej „Runa siewu”): sieje na pustych grządkach; tryb nasion w gnieździe
-     (pamięć ziemi, wybrana roślina, nic). Nasiono z worka, inaczej za monety.
+   - **Siewca** (wymaga ulepszenia „Ognik-siewca”, dawniej „Runa siewu”): sieje na pustych grządkach; w gnieździe osobno
+     nasiona na dzień i na noc (pamięć ziemi, wybrana roślina, nic) i podmiana o świcie i zmroku (rośliny, które o tej porze
+     nie rosną, wracają do worka). Nasiono z worka, inaczej za monety.
    - **Drwal:** rozbiera dzikie drzewa, krzaki, kamienie i pnie w zasięgu (bez Esencji, bez zabytków), niesie drewno/kamień do gniazda.
    - **Alchemik** (wymaga kotła): warzy w kotle przepis wybrany w panelu kotła („Ognik-alchemik warzy”) ze składników ze
      skrzyń i wypija gotowy, gdy mikstura nie działa albo zaraz się skończy.

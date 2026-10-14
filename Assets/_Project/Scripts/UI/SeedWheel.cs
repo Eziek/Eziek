@@ -20,6 +20,8 @@ namespace Wyspa.UI
         GameObject blocker;
         TooltipView tooltip;
         FarmPlot plot;
+        CropDefinition plotCrop;   // co rosło przy otwarciu (podmiana); zmiana z zewnątrz zamyka koło
+        static int forcedNight = -1;   // kategoria narzucona na czas jednego otwarcia (podmiana, siewca dzień/noc)
         Automation.ISeedChooser picker;
         readonly List<(Button b, System.Func<bool> affordable)> buttons = new List<(Button, System.Func<bool>)>();
 
@@ -36,11 +38,13 @@ namespace Wyspa.UI
                     var game = GameLoop.Instance;
                     nightPref = PlayerPrefs.GetInt("wheelNight", game != null && game.Clock.IsNight ? 1 : 0);
                 }
-                return nightPref == 1;
+                return forcedNight >= 0 ? forcedNight == 1 : nightPref == 1;
             }
             set
             {
                 nightPref = value ? 1 : 0;
+                if (forcedNight >= 0)
+                    forcedNight = nightPref;   // przełącznik w środku koła działa też w trybie narzuconym
                 PlayerPrefs.SetInt("wheelNight", nightPref);
             }
         }
@@ -68,12 +72,17 @@ namespace Wyspa.UI
             return view;
         }
 
-        /// <summary>Koło do sadzenia na pustej grządce: odblokowane nasiona (Sklep → Nasiona) i to, co jest w worku.</summary>
+        /// <summary>
+        /// Koło do sadzenia na pustej grządce: odblokowane nasiona (Sklep → Nasiona) i to, co jest w worku.
+        /// Na grządce z rosnącą rośliną: podmiana (stara wraca do worka), domyślnie nasiona pasujące do pory.
+        /// </summary>
         public void Open(FarmPlot target)
         {
             var game = GameLoop.Instance;
-            if (game == null || game.Crops == null)
+            if (game == null || game.Crops == null || target == null)
                 return;
+            if (!target.State.IsEmpty && forcedNight < 0)
+                forcedNight = game.Clock.IsNight ? 1 : 0;
             var slots = new List<Slot>();
             foreach (var cd in game.Crops.crops)
             {
@@ -88,14 +97,17 @@ namespace Wyspa.UI
                 });
             }
             plot = target;
+            plotCrop = target.State.crop;
             picker = null;
             reopen = () => Open(target);
             Build(target.transform.position, slots);
         }
 
         /// <summary>Wybór nasion dla ognika-siewcy (gniazdo): pamięć ziemi, odblokowane rośliny, hybrydy z worka, nic.</summary>
-        public void OpenPicker(Automation.ISeedChooser rune)
+        public void OpenPicker(Automation.ISeedChooser rune, bool? night = null)
         {
+            if (night.HasValue)
+                forcedNight = night.Value ? 1 : 0;
             var game = GameLoop.Instance;
             if (game == null || game.Crops == null || rune == null)
                 return;
@@ -203,14 +215,16 @@ namespace Wyspa.UI
                 blocker.SetActive(false);
             tooltip.Hide(this);
             plot = null;
+            plotCrop = null;
             picker = null;
+            forcedNight = -1;
         }
 
         void Update()
         {
             if (!IsOpen)
                 return;
-            if (UiInput.RightPressed || UiInput.EscapePressed || (picker == null && (plot == null || !plot.State.IsEmpty)))
+            if (UiInput.RightPressed || UiInput.EscapePressed || (picker == null && (plot == null || plot.State.crop != plotCrop || plot.State.IsRipe)))
                 Close();
             else
                 RefreshAffordable();
@@ -227,7 +241,11 @@ namespace Wyspa.UI
             var target = plot;
             var game = GameLoop.Instance;
             // najpierw worek nasion (za darmo), potem zakup za monety (hybryd nie da się kupić)
-            if (game != null && target != null && target.State.IsEmpty
+            if (game == null || target == null || target.State.IsRipe || target.State.crop == crop)
+                return;
+            if (game.Seeds.Count(crop.id) > 0 || (!crop.hybrid && game.Wallet.Coins >= crop.seedPrice))
+                target.DigUp();   // podmiana: najpierw wykop (nasiono wraca do worka), dopiero potem płać za nowe
+            if (target.State.IsEmpty
                 && (game.Seeds.TryTake(crop.id) || (!crop.hybrid && game.Wallet.TrySpend(crop.seedPrice))))
             {
                 target.Replant(crop);

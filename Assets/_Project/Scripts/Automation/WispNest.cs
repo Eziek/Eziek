@@ -22,7 +22,7 @@ namespace Wyspa.Automation
     /// (imię, zawód, poziom, doświadczenie), przywołanie nowego (monety + plony nocy, cena rośnie z liczbą ogników tego zawodu),
     /// wybór nasion dla siewcy. Ogniki z gniazda pracują w polu 7x7 wokół niego (latarnik i zbieracz na całej wyspie).
     /// </summary>
-    public class WispNest : MonoBehaviour, IAreaEffect, IContextActions, ISeedChooser
+    public class WispNest : MonoBehaviour, IAreaEffect, IContextActions
     {
         /// <summary>Miejsca w gnieździe: 3, ulepszenie „Przestronne gniazdo” do 5.</summary>
         public static int Capacity => Upgrades.UpgradeEffects.NestCapacity;
@@ -34,16 +34,39 @@ namespace Wyspa.Automation
         SpriteRenderer body;
         Sprite[] frames;
         IslandArt art;
-        string seed = Memory;
+        string seed = Memory, seedNight = Memory;
+        bool swap = true;
         readonly List<Wisp> wisps = new List<Wisp>();
 
         public int AreaRadius => Wisp.Radius;
-        public Vector3 PickerAnchor => transform.position;
         public IReadOnlyList<Wisp> Wisps => wisps;
+        /// <summary>Nasiona siewcy w dzień (zapis: seed).</summary>
         public string Seed
         {
             get => seed;
             set => seed = value ?? Memory;
+        }
+        /// <summary>Nasiona siewcy w nocy.</summary>
+        public string SeedNight
+        {
+            get => seedNight;
+            set => seedNight = value ?? Memory;
+        }
+        /// <summary>Podmiana o świcie i zmierzchu: nocne, które w dzień stoją, na dzienne (i odwrotnie). Domyślnie włączona.</summary>
+        public bool Swap => swap;
+        public string SeedFor(bool night) => night ? seedNight : seed;
+
+        /// <summary>Jedno z dwóch ustawień siewcy (dzień albo noc) dla koła nasion.</summary>
+        class SeedSlot : ISeedChooser
+        {
+            public WispNest nest;
+            public bool night;
+            public string Seed
+            {
+                get => night ? nest.seedNight : nest.seed;
+                set { if (night) nest.SeedNight = value; else nest.Seed = value; }
+            }
+            public Vector3 PickerAnchor => nest.transform.position;
         }
 
         public TilePos Tile
@@ -206,12 +229,22 @@ namespace Wyspa.Automation
             }
             if (wisps.Exists(w => w.Kind == WispKind.Sower))
             {
-                string what = seed == Memory ? Loc.Get("ui.rune.memory") : seed == Off ? Loc.Get("ui.rune.off") : Loc.Get("crop." + seed);
-                info.Button(Loc.Get("ui.nest.sower", what), () =>
+                foreach (bool night in new[] { false, true })
                 {
-                    var ui = UI.UiRoot.Instance;
-                    if (ui != null)
-                        ui.Wheel.OpenPicker(this);
+                    var slot = new SeedSlot { nest = this, night = night };
+                    string s = slot.Seed;
+                    string what = s == Memory ? Loc.Get("ui.rune.memory") : s == Off ? Loc.Get("ui.rune.off") : Loc.Get("crop." + s);
+                    info.Button(Loc.Get(night ? "ui.nest.sower_night" : "ui.nest.sower_day", what), () =>
+                    {
+                        var ui = UI.UiRoot.Instance;
+                        if (ui != null)
+                            ui.Wheel.OpenPicker(slot, slot.night);
+                    });
+                }
+                info.Button(Loc.Get("ui.nest.swap", Loc.Get(swap ? "ui.on" : "ui.off")), () =>
+                {
+                    swap = !swap;
+                    GameEvents.RequestContext(this);
                 });
             }
             if (wisps.Count >= Capacity)
@@ -242,9 +275,19 @@ namespace Wyspa.Automation
             return list;
         }
 
-        public void Restore(List<WispSave> list, string seedMode)
+        public void Restore(List<WispSave> list, string seedMode, string seedNightMode, bool noSwap)
         {
             seed = seedMode ?? Memory;
+            seedNight = seedNightMode ?? Memory;
+            swap = !noSwap;
+            // zapis sprzed v14 (jedno ustawienie): nasiono nocne przechodzi do ustawienia nocy
+            var game = GameLoop.Instance;
+            if (seedNightMode == null && game != null && game.Crops != null && game.Crops.Find(seed) is Farming.CropDefinition c
+                && c.kind == Farming.CropKind.Night)
+            {
+                seedNight = seed;
+                seed = Memory;
+            }
             if (list == null)
                 return;
             foreach (var s in list)

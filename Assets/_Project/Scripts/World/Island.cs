@@ -27,6 +27,8 @@ namespace Wyspa.World
         public string merchant;                    // v8: id duszka-handlarza przy tej skrzyni
         public List<Automation.WispSave> wisps;    // v12: ogniki w gnieździe (zawód, doświadczenie, imię)
         public string brewAuto;                    // v12: kocioł - przepis, który warzy ognik-alchemik
+        public string seedNight;                   // v14: gniazdo - nasiona siewcy w nocy (seed = w dzień)
+        public bool noSwap;                        // v14: gniazdo - siewca nie podmienia roślin o świcie/zmierzchu
         public string brew;                        // v10: kocioł - przepis w kotle
         public float brewLeft;                     // v10: sekundy do końca warzenia
         public bool brewReady;                     // v10: mikstura gotowa do wypicia
@@ -340,7 +342,7 @@ namespace Wyspa.World
                     if (b != null && o.crate != null && b.TryGetComponent(out Automation.HarvestCrate crate))
                         crate.Restore(o.crate);
                     if (b != null && b.TryGetComponent(out Automation.WispNest nest))
-                        nest.Restore(o.wisps, o.seed);
+                        nest.Restore(o.wisps, o.seed, o.seedNight, o.noSwap);
                     if (b != null && !string.IsNullOrEmpty(o.merchant))
                         SpawnMerchant(b, o.merchant);
                     if (b != null && b.TryGetComponent(out Alchemy.Cauldron cauldron))
@@ -401,6 +403,8 @@ namespace Wyspa.World
                 {
                     os.wisps = nest.Snapshot();
                     os.seed = nest.Seed;
+                    os.seedNight = nest.SeedNight;
+                    os.noSwap = !nest.Swap;
                 }
                 if (o.TryGetComponent(out Alchemy.Cauldron cauldron))
                     os.brewAuto = cauldron.AutoRecipe;

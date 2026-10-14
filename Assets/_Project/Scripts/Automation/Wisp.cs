@@ -551,19 +551,33 @@ namespace Wyspa.Automation
 
         IEnumerator SowerJob()
         {
+            // osobne nasiona na dzień i na noc (prośba gracza); o świcie i zmierzchu podmiana roślin, które teraz nie rosną
             var game = GameLoop.Instance;
-            if (game == null || nest == null || nest.Seed == WispNest.Off)
+            if (game == null || nest == null)
                 return null;
-            var chosen = nest.Seed == WispNest.Memory || game.Crops == null ? null : game.Crops.Find(nest.Seed);
+            bool night = game.Clock.IsNight;
+            string mode = nest.SeedFor(night);
+            if (mode == WispNest.Off)
+                return null;
+            var chosen = mode == WispNest.Memory || game.Crops == null ? null : game.Crops.Find(mode);
             var route = new List<(FarmPlot plot, CropDefinition crop)>();
             foreach (var plot in FarmPlot.All)
             {
                 if (route.Count >= Carry)
                     break;
-                if (!plot.State.IsEmpty || reserved.Contains(plot) || !InRange(plot.Cell.x, plot.Cell.y))
+                if (reserved.Contains(plot) || !InRange(plot.Cell.x, plot.Cell.y))
                     continue;
-                var crop = chosen != null ? chosen : plot.LastCrop;
-                if (crop == null || (game.Seeds.Count(crop.id) <= 0 && (crop.hybrid || game.Wallet.Coins < crop.seedPrice)))
+                CropDefinition crop;
+                if (plot.State.IsEmpty)
+                    crop = chosen != null ? chosen : plot.LastCrop;
+                else if (nest.Swap && chosen != null && plot.OutOfSeason(night, game.ContextFor(plot, night).lit))
+                    crop = chosen;   // podmiana: stara roślina wraca do worka jako nasiono
+                else
+                    continue;
+                // nie sadzimy rośliny, która o tej porze i tak by nie rosła (np. pamięć ziemi z nocną o świcie)
+                if (crop == null || (crop.kind == CropKind.Night) != night || crop == plot.State.crop)
+                    continue;
+                if (game.Seeds.Count(crop.id) <= 0 && (crop.hybrid || game.Wallet.Coins < crop.seedPrice))
                     continue;
                 if (Reserve(plot))
                     route.Add((plot, crop));
@@ -583,8 +597,15 @@ namespace Wyspa.Automation
                     continue;
                 yield return FlyTo(plot.CropPosition + new Vector3(0f, 0.35f, 0f));
                 var game = GameLoop.Instance;
-                if (game == null || plot == null || !plot.State.IsEmpty)
+                if (game == null || plot == null || plot.State.IsRipe)
                     continue;
+                if (!plot.State.IsEmpty)
+                {
+                    bool night = game.Clock.IsNight;
+                    if (!nest.Swap || !plot.OutOfSeason(night, game.ContextFor(plot, night).lit))
+                        continue;   // w międzyczasie zaczęła rosnąć albo gracz wyłączył podmianę
+                    plot.DigUp();
+                }
                 if (!game.Seeds.TryTake(crop.id) && (crop.hybrid || !game.Wallet.TrySpend(crop.seedPrice)))
                     continue;
                 plot.Replant(crop);
