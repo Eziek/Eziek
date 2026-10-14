@@ -214,7 +214,7 @@ kluczy, a wersję mroczną nakłada `run_dark_palette.py`.
   Poniżej pierwotne ustalenia z testu 32 px (historia).
 - Prototyp: **siatka 16 px** (rośliny ok. 18×24, drzewa ok. 32×40), kadr 272×200 (×3 = 816×600).
 - Test **32 px** (rośliny ok. 32–40, drzewo ok. 64–80): poziom detalu jak gołąb z referencji. Patrz `docs/img/porownanie_16_vs_32.png`.
-- Rekomendacja Claude: **32 px**. Obiekty 128 px odradzane (okno byłoby ogromne, a 4× więcej pracy na asset).
+- Rekomendacja: **32 px**. Obiekty 128 px odradzane (okno byłoby ogromne, a 4× więcej pracy na asset).
 - Koszt 32 px: przy ×2 okno z całą wyspą to ok. 800×560. Pomysł: start z **małą wyspą** (ok. 640×400), a powiększenie
   wyspy rozszerza okno albo pozwala je przewijać.
 - Assety finalne przy 32 px najlepiej rysować ręcznie (Aseprite). Sprite'y generowane kodem nadają się na placeholdery.
@@ -468,7 +468,7 @@ Obrazki referencyjne (kopie): `docs/img/`
 11. Przyjęty **cały system ulepszeń i progresji** (§11): automatyzacja, rytm pracy (seria skupienia, bonus za przerwę,
     zmęczenie), powiększanie wyspy ze strefami, lampy z trzema kierunkami ulepszeń, mutacje i jakość, morze i wyprawy,
     rytuały z cyklem księżycowym zamiast prestiżu, kolekcje i lore, opcje wygody.
-    Główna gałąź repo powstanie z pusha z Unity. Gałąź Claude zostaje osobno.
+    Główna gałąź repo powstanie z pusha z Unity. Gałąź robocza zostaje osobno.
 12. Sprite'y do nowych systemów + projekt UI (§12): HUD znikający, koło nasion, Księga jako główne menu,
     tryb stawiania z podglądem światła, toasty, własny font 3×5 z polskimi znakami.
 13. **Rozbudowa wyspy kafelkami** (§13): pojedyncze kafelki przy brzegu za monety + Esencję, organiczny brzeg,
@@ -641,6 +641,17 @@ Obrazki referencyjne (kopie): `docs/img/`
     - **Prestiż „Rejs we mgłę”** (§11.8): Perły Mgły z zarobku rejsu, blask pereł (+2% cen za każdą), 10 Darów Mgły.
     - PPM przesuwa widok także w przezroczystym oknie (zapas 40 px).
     Zapis v15.
+79. Porządki UI i wody (zrzuty gracza, przegląd kodu UI):
+    - Czytelna czcionka **Fusion Pixel 8px** (małe litery, PL/DE, linia 10 px jak w układzie), domyślnie włączona,
+      Opcje → Ogólne → Czcionka (dawna 3x5 do wyboru). Próbki `docs/img/ui_fonty.png`. Wersje 10/12 px wymagają przebudowy układu.
+    - Księga: czyszczenie strony przed pomiarem (ucięte pierwsze litery), ciemne złoto i szary na pergaminie, status w sklepie
+      w wierszu nazwy, opisy darów skracane, przycisk rytuału na szerokość tekstu.
+    - Skala UI dopasowana do okna (płótno min. ok. 216x176), Księga w skali gracza; dymki do 220 px z zawijaniem i
+      odwracaniem przy krawędzi; toasty nad Księgą, pod paskiem HUD, dłużej przy długim tekście; pasek HUD bez skakania.
+    - Łodzie i boja w wodzie (`SpriteFloat.shader`, `Visual/Floating`): dno pod wodą, piana, kołysanie, kręgi.
+    - Mgła: ciemny pas od krawędzi wody w przezroczystym oknie, chmury w zwykłym oknie dalej od wyspy.
+    - Scena gry nazywa się **MainLevel** (`Assets/_Project/Scenes/MainLevel.unity`, Wyspa → 3).
+    - Komentarze w kodzie bez historii rozmów (same opisy techniczne).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -1254,7 +1265,7 @@ Pliki: `Assets/_Project/Localization/glossary.csv` (słownik terminów), `game.c
    - 0.1 / 0,1;
    - zegar 24 h (PL, DE, JA, ZH) lub zgodny z systemem.
 5. **Słownik terminów jest źródłem prawdy** (`glossary.csv`). Nowy termin trafia najpierw do słownika, potem do tekstów.
-   Wstępne tłumaczenia przygotował Claude. **JA, ZH i DE wymagają weryfikacji przez native speakera** przed wydaniem.
+   Tłumaczenia są wstępne. **JA, ZH i DE wymagają weryfikacji przez native speakera** przed wydaniem.
 
 ### 16.2 Fonty
 **Stan:** Fusion Pixel **8px proportional** (wersja 2026.09.25) w `Art/Fonts/FusionPixel/` (wariant `ja` i `zh_hans`, licencja

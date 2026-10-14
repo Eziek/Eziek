@@ -20,7 +20,7 @@ namespace Wyspa.Familiars
     }
 
     /// <summary>
-    /// Chowańce (wybór gracza po Etapie 6d): przychodzą same, gdy wyspa spełni warunek, i zostają na zawsze z małym bonusem.
+    /// Chowańce: przychodzą same, gdy wyspa spełni warunek, i zostają na zawsze z małym bonusem.
     /// Kot (10 kupionych kafelków i skrzynia): mutacje x2, raz na cykl przynosi kilka monet. Kruk (dorosłe drzewo owocowe):
     /// drzewa rosną i owocują o 25% szybciej. Ropucha (20 zebranych roślin nocy): rośliny nocy +15%.
     /// Nietoperz (3 lampy): lampy palą o 20% mniej Esencji. Sprawdzane co kilka sekund; w menu głównym nic się nie dzieje.

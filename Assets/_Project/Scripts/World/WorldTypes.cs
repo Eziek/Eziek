@@ -39,7 +39,7 @@ namespace Wyspa.World
     public enum DecoKind
     {
         TreeRound, Rock, Bush, DeadTree, Spruce, Stump, StumpSpruce, StumpDead, Rubble,
-        // Etap 5a: strefy (§13.8)
+        // strefy (§13.8)
         Gravestone0, Gravestone1, Gravestone2, GravestoneBroken, WoodenCross, Obelisk, OpenGrave, Crypt, SkullPile,
         Candles, IronGate, Thorns, Mangrove, LilyPads, RottenLog, Cattails, Reeds, SwampPool,
         BrokenWall, FallenColumn, Statue, StoneStairs, RuinsRubble, Brazier, RuneTablet, VinePillar, BrokenPillar, RuinedArch,

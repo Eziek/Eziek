@@ -7,7 +7,7 @@ using Wyspa.Localization;
 namespace Wyspa.Automation
 {
     /// <summary>
-    /// Skład (prośba gracza: „za dużo drewna i kamienia, może konwerter na pieniądze”): sam sprzedaje nadwyżkę drewna
+    /// Skład: sam sprzedaje nadwyżkę drewna
     /// i kamienia ponad ustawioną rezerwę (porcja co 10 s), żeby drwal i runy dziczy dawały też monety.
     /// Rezerwę ustawia się w panelu (zostaje na budowle i ulepszenia), można też sprzedać nadwyżkę od razu.
     /// </summary>

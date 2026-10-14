@@ -5,7 +5,7 @@ using Wyspa.Core;
 namespace Wyspa.Visual
 {
     /// <summary>
-    /// Snopy światła (prośba gracza: „jak lampy, bardziej wolumetryczne”): Sprite Light 2D z wygenerowanym obrazem ukośnych
+    /// Snopy światła: Sprite Light 2D z wygenerowanym obrazem ukośnych
     /// snopów, z włączoną wolumetrią (Light2D.volumeIntensity), więc snopy rozjaśniają wyspę jak lampa i widać je w powietrzu.
     /// Dzień: ciepłe słońce, zmierzch: pomarańczowe, noc: blade promienie księżyca (mocniejsze w pełnię). Snopy wolno dryfują.
     /// Światło idzie za kamerą, więc obejmuje zawsze cały kadr.

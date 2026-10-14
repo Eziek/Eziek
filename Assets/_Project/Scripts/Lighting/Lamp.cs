@@ -49,7 +49,7 @@ namespace Wyspa.Lighting
             glowRenderer = glow;
             if (light2D != null)
             {
-                // wolumetria (prośba gracza): poświata lampy widoczna w powietrzu, jak w mgle
+                // wolumetria: poświata lampy widoczna w powietrzu, jak w mgle
                 light2D.volumeIntensityEnabled = true;
                 light2D.volumeIntensity = 0.12f;
             }

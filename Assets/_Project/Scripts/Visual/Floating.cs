@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Wyspa.Visual
 {
     /// <summary>
-    /// Obiekt na wodzie (po teście gracza: „łódka powinna być w wodzie, a nie nad wodą, i brak fal przy niej i przy boi”):
+    /// Obiekt na wodzie:
     /// materiał SpriteFloat chowa dno pod linią wody, kołysze ją o piksel i rysuje pianę przy burtach,
     /// a co kilka sekund od burt rozchodzą się dwa kręgi na wodzie (sprite'y w siatce 32 px, jak woda).
     /// Łódź wypraw, łódź kupca-widma, boja sieci. Materiał z IslandArt.floatMat (Wyspa → 2).

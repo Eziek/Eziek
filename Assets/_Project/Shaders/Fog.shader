@@ -1,4 +1,4 @@
-// Mgła (GDD §4.6, §13): tylko nad morzem, kłębiaste chmury w pixel arcie (prośba gracza: jak cumulusy z referencji,
+// Mgła (GDD §4.6, §13): tylko nad morzem, kłębiaste chmury w pixel arcie (jak cumulusy z referencji,
 // w brudnej palecie dark fantasy). Rozbudowa wyspy odsuwa ją sama (mapa odległości liczona od nowego brzegu).
 // Port tools/pixel-proto/fog_clouds_preview.py (podgląd docs/img/mgla_chmury.png), liczona w siatce 32 px jak woda.
 // Sprite = mapa danych wody malowana przez Island (R = odległość x4, G > 0 = woda). Gęstość ustawia FogController.
@@ -95,7 +95,7 @@ Shader "Wyspa/Fog"
             #define FOG_CAP 2.0       // łuki guzków w środku bryły
             #define FOG_BAND 0.8      // przezroczyste okno: trochę mniejsze, gęstsze chmury (mieszczą się w FOG_REACH)
             // przezroczyste okno: mgła kończy się najdalej tyle pikseli danych za pasem wody (zawsze w kadrze)
-            #define FOG_REACH 34.0     // gruby wał (prośba gracza: „więcej mgły, nie tylko mały pasek”)
+            #define FOG_REACH 34.0     // gruby wał
             // tony: środek, rozpiętość bryły, rąbek, łuki, głębia (ciemniej dalej od wyspy), szum, podstawa
             #define TONE_MID 2.9
             #define TONE_SPAN 2.6
@@ -199,7 +199,9 @@ Shader "Wyspa/Fog"
                 bool band = _FogOuter > 0.0;
                 // gęstsza mgła (noc, zgaszone lampy) podchodzi bliżej brzegu; w przezroczystym oknie zaczyna się przy wodzie
                 float edge = band ? _FogOuter : _FogFrom / max(0.3, _Density);
-                float lo = band ? edge + 4.0 : edge + 2.0;     // w oknie przezroczystym chmury nie wchodzą na pomost i łódź
+                // środki chmur dalej od granicy mgły: duże chmury sięgają ok. 17 px do środka (
+                // „ścianą” tuż przy wyspie); w oknie przezroczystym chmury nie wchodzą na pomost i łódź
+                float lo = band ? edge + 4.0 : edge + 12.0;
                 float hi = band ? edge + 20.0 : 1e6;
                 float scale = band ? FOG_BAND : 1.0;
                 float cellSize = FOG_CELL * scale;
@@ -237,7 +239,6 @@ Shader "Wyspa/Fog"
                     has = true;
                 }
                 // zwykłe okno: dalej od wyspy morze całe w mgle; przezroczyste: ciemny pas pod chmurami od krawędzi wody
-                // (zachodzi 3 px na wodę, bez szczeliny z pulpitem między wodą a chmurami - po teście gracza)
                 bool base = band ? (d > edge - 3.0 && d < edge + 9.0) : d > edge + 10.0;
 
                 float jit = WyspaHash(float2(floor(p.x / 2.0) + 3.0, q.y + 11.0)).x - 0.5;

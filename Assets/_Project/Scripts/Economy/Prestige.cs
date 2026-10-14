@@ -15,7 +15,7 @@ namespace Wyspa.Economy
     }
 
     /// <summary>
-    /// Prestiż (Etap 8, prośba gracza): „Rejs we mgłę”. Gracz zostawia wyspę mgle i zaczyna na nowej, a za zarobek rejsu
+    /// Prestiż: „Rejs we mgłę”. Gracz zostawia wyspę mgle i zaczyna na nowej, a za zarobek rejsu
     /// dostaje Perły Mgły. Każda zdobyta perła na stałe podnosi ceny (+2%, „blask pereł”), a perły wydaje się na Dary Mgły
     /// (trwałe ulepszenia między rejsami). Zostają też bestiariusz i kronika. Sam rejs (nowy zapis) robi SaveSystem.SailIntoMist.
     /// </summary>

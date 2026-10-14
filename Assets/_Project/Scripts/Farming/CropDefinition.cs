@@ -32,7 +32,7 @@ namespace Wyspa.Farming
         [Tooltip("Rośliny nocy: ile „plonów nocy” (waluta) daje zbiór.")]
         public int nightHarvestYield = 1;
 
-        [Header("Etap 4a")]
+        [Header("Pełnia i hybrydy")]
         [Tooltip("Rośnie tylko w pełnię księżyca (krwawa róża, GDD §4.7).")]
         public bool requiresFullMoon;
         [Tooltip("Hybryda: nasiona tylko z mutacji (worek nasion), nie do kupienia.")]
@@ -42,7 +42,7 @@ namespace Wyspa.Farming
         [Tooltip("Ikona nasiona w UI (bez przedrostka icon_), puste = seed_<id>.")]
         public string seedIcon;
 
-        [Header("Etap 6b")]
+        [Header("Sklep")]
         [Tooltip("Cena odblokowania w Sklep → Nasiona (monety). 0 = dostępna od początku.")]
         public int unlockPrice;
 

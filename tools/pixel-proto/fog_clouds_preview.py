@@ -1,4 +1,4 @@
-"""Podgląd mgły „kłębiaste chmury” (prośba gracza: jak pixel-artowe cumulusy z referencji, ale w brudnej palecie dark fantasy).
+"""Podgląd mgły „kłębiaste chmury”.
 
 Każdy kłąb to kula: cieniowanie od światła z lewej-góry w 6 tonach, z poszarpanymi granicami tonów (szum w parach pikseli
 zamiast gładkiego przejścia). Kłąb niżej na ekranie zasłania wyższe (stoi bliżej), więc jasny wierzch przedniego kłębu
@@ -92,7 +92,7 @@ def fog(mode, edge, T, dist=None, w=W, h=H, s=S):
     px, py = xx + 0.5, yy + 0.5
     d = dist(px / s, py / s)
     band = mode == 'band'
-    lo, hi = (edge + 4.0, edge + 20.0) if band else (edge + 2.0, 1e9)
+    lo, hi = (edge + 4.0, edge + 20.0) if band else (edge + 12.0, 1e9)
     best_y = np.full(xx.shape, -1e9)
     big = np.zeros(xx.shape); rim = np.zeros(xx.shape); depth = np.zeros(xx.shape)
     cell = CELL * (BAND_SCALE if band else 1.0)

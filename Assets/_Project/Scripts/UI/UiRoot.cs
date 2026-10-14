@@ -99,7 +99,7 @@ namespace Wyspa.UI
         TMP_FontAsset pixelFont, readableFont;
 
         /// <summary>
-        /// Czytelny font (po teście gracza: „UI mocno nieczytelny”): Fusion Pixel 8px z małymi literami zamiast fontu 3x5
+        /// Czytelny font: Fusion Pixel 8px z małymi literami zamiast fontu 3x5
         /// z samymi wielkimi. Domyślnie włączony, Opcje → Ogólne → Czcionka.
         /// </summary>
         public static bool ReadableFont
@@ -251,27 +251,35 @@ namespace Wyspa.UI
         }
 
         /// <summary>
-        /// Skala UI (po teście: przy powiększonym oknie i małej wyspie pasek zajmował pół okna). Zależy od rozdzielczości
+        /// Skala UI. Zależy od rozdzielczości
         /// monitora, nie od powiększenia okna: 1080p → x2, 1440p → x3, 4K → x4. Najwyżej o 1 mniej niż skala świata,
         /// żeby UI zmieściło się w oknie. Gracz może ustawić rozmiar sam (Opcje → Okno).
         /// </summary>
-        public static int UiScale()
+        /// <summary>Skala UI, jakiej chce gracz (Opcje) albo dobrana do monitora (1080p = x2, 1440p = x3, 4K = x4).</summary>
+        public static int DesiredUiScale()
         {
-            var view = ViewController.Instance;
-            int world = view != null
-                ? view.PixelRatio
-                : Mathf.Max(1, Mathf.Min(Screen.width / 272, Screen.height / 200));
             int want = UiScaleSetting;
             if (want == 0)
                 want = Mathf.Max(1, Mathf.RoundToInt(Screen.currentResolution.height / 540f));
-            return Mathf.Max(1, Mathf.Min(want, world - 1));
+            return want;
         }
 
-        /// <summary>Skala na czas Księgi: zwykła, chyba że okno jest za małe (np. okno Game w edytorze) - wtedy mniejsza.</summary>
+        /// <summary>
+        /// Skala UI w oknie: jak chce gracz, ale tak, żeby płótno miało co najmniej ok. 216x176 pikseli UI (pasek HUD,
+        /// dymki, toasty i menu główne się mieszczą). Wcześniej skala była ograniczona do skali świata minus 1, przez co w mini-trybie
+        /// i przy oknie x2 UI było zawsze x1.
+        /// </summary>
+        public static int UiScale()
+        {
+            int fit = Mathf.Min(Screen.width / 216, Screen.height / 176);   // menu główne (204x154) i pasek HUD z marginesem
+            return Mathf.Max(1, Mathf.Min(DesiredUiScale(), fit));
+        }
+
+        /// <summary>Skala na czas Księgi: okno rośnie do Księgi w skali gracza (RequireWindow), w edytorze mieści się w oknie Game.</summary>
         static int BookScale()
         {
             int fit = Mathf.Min(Mathf.FloorToInt(Screen.width / (BookView.Width + 16f)), Mathf.FloorToInt(Screen.height / (BookView.Height + 16f)));
-            return Mathf.Max(1, Mathf.Min(UiScale(), fit));
+            return Mathf.Max(1, Mathf.Min(DesiredUiScale(), fit));
         }
 
         void OpenBook(BookView.Tab tab)
@@ -362,7 +370,7 @@ namespace Wyspa.UI
                 new ActionRing.Entry { icon = "menu", nameKey = "menu.main", run = BackToMenu },
                 new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame },
             };
-            // losowe sadzenie na wszystkich pustych grządkach (prośba gracza): w nocy rośliny nocy, w dzień rośliny dnia
+            // losowe sadzenie na wszystkich pustych grządkach: w nocy rośliny nocy, w dzień rośliny dnia
             bool anyEmpty = false;
             foreach (var p in FarmPlot.All)
                 if (p != null && p.State.IsEmpty) { anyEmpty = true; break; }

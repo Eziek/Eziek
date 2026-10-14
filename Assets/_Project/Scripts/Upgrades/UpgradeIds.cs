@@ -26,7 +26,7 @@ namespace Wyspa.Upgrades
         public const string SwiftBoat = "swift_boat";
         public const string SpiderWicks = "spider_wicks";
 
-        // Etap 8 (prośba gracza: 60 ulepszeń, głównie więcej monet ze sprzedaży). Gałęzie: targ i zamówienia (dół-lewo),
+        // . Gałęzie: targ i zamówienia (dół-lewo),
         // morze (dół-prawo), skład i ogniki (góra), plony dnia (góra-prawo), plony nocy (prawo), jakość (prawo-góra),
         // sad (prawo-dół), Żar i praca (lewo). Pozycje w UpgradeTree, dane w WyspaSetup, liczenie cen w Economy/Market.
         public const string Stall = "stall";

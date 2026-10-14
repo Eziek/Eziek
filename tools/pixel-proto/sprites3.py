@@ -1,5 +1,5 @@
 """Sprite'y do systemów z GDD §11: rośliny nocy, hybryda, automatyka, budowle, strefy, morze, zdarzenia.
-Rozmiar zgodny z placeholderami Etapu 1 (siatka 16 px). Paleta mroczna (+ kolory emisyjne)."""
+Rozmiar zgodny z placeholderami. Paleta mroczna (+ kolory emisyjne)."""
 import math
 import sprites
 from sprites import Sprite, GREEN, EARTH, ORANGE, STONE, _plant
@@ -161,7 +161,7 @@ def blood_rose(stage):
 
 # ---------------- automatyka ----------------
 def wisp_gardener(f, bob=True):
-    """bob=False: bez podskoku w klatkach (Etap 6c+: płynne unoszenie robi kod), klatki zmieniają tylko płomień."""
+    """bob=False: bez podskoku w klatkach, klatki zmieniają tylko płomień."""
     s = Sprite(16, 20, 8, 19)
     dy = (0, -1, 0, 1)[f % 4] if bob else 0
     s.blob(8, 10 + dy, 3.6, 4.2, ['wi', 'wi', 'wl'])

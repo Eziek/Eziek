@@ -166,3 +166,16 @@ Najpierw **Wyspa → 2** (nowe ulepszenia, ikony kostki i perły).
    perły w sakwie, bestiariusz zachowany, waluty i ulepszenia od zera (dary: Posag, Wierny ognik, Pamięć nasion działają).
 9. Dar kupiony za perły od razu działa (np. Mgielny targ podnosi ceny), zostaje po zapisie i wczytaniu.
 10. Stary zapis (v14) wczytuje się bez błędów: zarobek rejsu od zera, perły 0.
+
+## 10. UI i woda (porządki)
+1. Księga: Ulepszenia, potem Rytuały, Bestiariusz, Sklep - żadna strona nie przewija się w bok, pierwsze litery całe.
+2. Teksty na pergaminie (status rytuału, poziomy darów, opisy w sklepie) czytelne; nazwy zapisów w menu głównym widoczne.
+3. Opcje → Ogólne → Czcionka: Czytelna / Pikselowa 3x5 przełącza od razu, wiersze się nie rozjeżdżają.
+4. Mini-tryb i okno x2: Księga, dymki i toasty w czytelnej skali (nie x1).
+5. Dymek przy prawej i dolnej krawędzi przeskakuje na drugą stronę kursora; długi opis (Ognik-ogrodnik, DE) się zawija.
+6. Kup ulepszenie z kilkoma poziomami i nie ruszaj kursora: dymek pokazuje nowy poziom i koszt.
+7. Toast przy otwartej Księdze (np. kupno ulepszenia) widać nad Księgą; toasty nie zasłaniają paska HUD.
+8. Pasek HUD nie skacze na boki, gdy pojawia się i znika „Tempo”.
+9. Łódź przy pomoście, łódź kupca i boja: dół w wodzie, piana przy burtach, kręgi co kilka sekund.
+10. Przezroczyste okno: między wodą a chmurami nie widać pulpitu. Zwykłe okno: woda między wyspą a mgłą.
+11. Scena: Wyspa → 3 buduje `MainLevel.unity` i ustawia ją w Build Settings.

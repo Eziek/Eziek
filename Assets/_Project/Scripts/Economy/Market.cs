@@ -25,7 +25,7 @@ namespace Wyspa.Economy
     }
 
     /// <summary>
-    /// Wszystkie ceny sprzedaży w jednym miejscu (Etap 8, prośba gracza: dużo ulepszeń „więcej pieniędzy ze sprzedaży”).
+    /// Wszystkie ceny sprzedaży w jednym miejscu.
     /// Cena = podstawa x jakość x (1 + suma premii) x kanał x perły x mnożniki chwili (popyt dnia, dzień targowy, pełnia),
     /// potem targowanie (szansa na x2 i więcej). Premie z UpgradeEffects (drzewko) i Prestige (dary mgły).
     /// Zlicza też zarobek rejsu (prestiż) i sprzedane sztuki (renoma).

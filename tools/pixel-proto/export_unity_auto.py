@@ -1,4 +1,4 @@
-"""Eksport assetów Etapu 6b: nowe rośliny (fazy 0-3), ikony nasion, duszek-handlarz.
+"""Eksport assetów nowe rośliny (fazy 0-3), ikony nasion, duszek-handlarz.
 
 Uruchom z tools/pixel-proto:  python3 export_unity_auto.py   (po export_unity_ui.py - dopisuje do pivots.json)
 """
@@ -62,7 +62,7 @@ for kind in ('crow', 'finch'):
 for fill in range(3):   # skrzynia na plony 16 px (sąsiednie nie nachodzą na siebie)
     save(S3.harvest_crate(fill), "Automation", f"harvest_crate_{fill}")
 
-for note in (True, False):   # wprowadzenie (Etap 6d)
+for note in (True, False):   # wprowadzenie
     save(S6.notice_board(note), "Objects", "notice_board" + ("" if note else "_empty"), glow=False)
 save(S6.intro_arrow(), "Fx", "intro_arrow", glow=False)
 

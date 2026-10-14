@@ -29,7 +29,7 @@ namespace Wyspa.Farming
         public string FruitKey => "fruit." + id;
         public bool Glows => lightRadius > 0f;
 
-        // Etap 6d+ (prośba gracza): wzrost x3 szybciej; owoce nocne liczone w nocach cyklu gry (noc = 20 min)
+        // wzrost x3 szybciej; owoce nocne liczone w nocach cyklu gry (noc = 20 min)
         public static readonly TreeSpecies[] All =
         {
             new TreeSpecies { id = "apple", saplingCoins = 120, growSeconds = 40 * 60, fruitSeconds = 10 * 60, fruitCount = 4, fruitPrice = 8 },
@@ -80,7 +80,7 @@ namespace Wyspa.Farming
     }
 
     /// <summary>
-    /// Drzewo owocowe (GDD §15.1, prośba gracza): sadzonka rośnie od pracy przy komputerze (jak rośliny dnia, z tempem pracy),
+    /// Drzewo owocowe (GDD §15.1): sadzonka rośnie od pracy przy komputerze (jak rośliny dnia, z tempem pracy),
     /// dorosłe owocuje cyklicznie. Klik w owocujące drzewo = zbiór (monety). Panel: stan, „Zetnij” (drewno, drzewo znika).
     /// Upiorna grusza i drzewo księżyca, gdy owocują w nocy, świecą jak mała lampa (liczy się do wzrostu roślin).
     /// </summary>

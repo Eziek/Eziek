@@ -7,7 +7,7 @@ using Wyspa.World;
 namespace Wyspa.Visual
 {
     /// <summary>
-    /// Więcej życia na wyspie (Etap 7, prośba gracza: „więcej animacji”): ćmy krążą nocą wokół zapalonych lamp,
+    /// Więcej życia na wyspie: ćmy krążą nocą wokół zapalonych lamp,
     /// a co jakiś czas ryba wyskakuje z wody przy brzegu z pluskiem. Bez postaci, sam ruch sprite'ów i cząsteczki.
     /// Tworzy go GameLoop (bez przebudowy sceny); grafiki z IslandArt (Wyspa → 2).
     /// </summary>

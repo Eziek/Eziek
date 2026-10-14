@@ -77,7 +77,7 @@ namespace Wyspa.Save
     {
         [SerializeField] float autosaveSeconds = 60f;
 
-        // ------------------------------------------------------------ sloty (menu główne, Etap 6d+)
+        // ------------------------------------------------------------ sloty
 
         /// <summary>Ile slotów zapisu ma menu główne.</summary>
         public const int Slots = 3;
@@ -321,7 +321,7 @@ namespace Wyspa.Save
         }
 
         /// <summary>
-        /// Rejs we mgłę (prestiż, Etap 8): perły z zarobku rejsu, potem zapis nowej wyspy w tym samym slocie. Zostają perły,
+        /// Rejs we mgłę: perły z zarobku rejsu, potem zapis nowej wyspy w tym samym slocie. Zostają perły,
         /// dary mgły, kronika (bestiariusz, historia, rytuały), nazwa wyspy; reszta zaczyna się od nowa (dary mogą coś zostawić:
         /// odblokowane nasiona, ognika-ogrodnika, monety i surowce na start). Scena ładuje się od nowa. False = za mało pereł.
         /// </summary>
@@ -414,7 +414,7 @@ namespace Wyspa.Save
                 CurrentName = data.slotName;
 
             // najpierw wyspa: grządki (do wczytania niżej) i miejsca na obiekty powstają razem z kafelkami.
-            // Zapis sprzed Etapu 3b nie ma wyspy - dostaje nowy świat (waluty i ulepszenia zostają).
+            // Bardzo stary zapis bez wyspy dostaje nowy świat (waluty i ulepszenia zostają).
             if (game.Island != null)
             {
                 if (data.island != null && data.island.tiles != null && data.island.tiles.Count > 0)

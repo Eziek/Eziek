@@ -7,7 +7,7 @@ namespace Wyspa.World
 {
     /// <summary>
     /// Obiekt stojący na kafelku (lampa, skrzynia, kamień runiczny). Island stawia go na wolnym kafelku, gdy jest potrzebny
-    /// (do Etapu 3c samoczynnie; potem gracz w trybie stawiania). Obiekt z kotwicą (np. ognik przy skrzyni) nie zajmuje kafelka.
+    /// . Obiekt z kotwicą (np. ognik przy skrzyni) nie zajmuje kafelka.
     /// </summary>
     public class TileObject : MonoBehaviour, IClickable, IContextActions
     {

@@ -78,7 +78,7 @@ namespace Wyspa.Core
             return true;
         }
 
-        // ---- nasiona do odblokowania (Etap 6b, Sklep → Nasiona)
+        // ---- nasiona do odblokowania
 
         /// <summary>Czy roślinę da się kupić w kole nasion (unlockPrice 0 = od początku).</summary>
         public bool IsUnlocked(CropDefinition crop) => crop != null && !crop.hybrid && (crop.unlockPrice <= 0 || unlockedSeeds.Contains(crop.id));
@@ -93,7 +93,7 @@ namespace Wyspa.Core
         }
 
         /// <summary>
-        /// Losowe nasiono na porę dnia (prośba gracza): w nocy roślina nocy, w dzień roślina dnia. Spośród odblokowanych
+        /// Losowe nasiono na porę dnia: w nocy roślina nocy, w dzień roślina dnia. Spośród odblokowanych
         /// (na które stać) i tych z worka; krwawe rośliny pełni tylko w pełnię. Null, gdy nie ma z czego losować.
         /// </summary>
         public CropDefinition RandomSeed(bool night, CropDefinition except = null)
@@ -163,7 +163,7 @@ namespace Wyspa.Core
         void Awake()
         {
             Instance = this;
-            // starsze sceny (sprzed Etapu 2a) nie mają tych komponentów - dokładamy je w locie
+            // starsze sceny nie mają tych komponentów - dokładamy je w locie
             // (bez operatora ??, bo „pusty” obiekt Unity nie jest prawdziwym null)
             if (rhythm == null) rhythm = GetComponent<WorkRhythm>();
             if (rhythm == null) rhythm = gameObject.AddComponent<WorkRhythm>();

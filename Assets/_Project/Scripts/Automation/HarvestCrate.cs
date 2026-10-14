@@ -13,11 +13,11 @@ namespace Wyspa.Automation
     {
         public string cropId;
         public int count;
-        public int quality;   // 0 w zapisach sprzed Etapu 4a = 1
+        public int quality;   // 0 w starszych zapisach = 1
     }
 
     /// <summary>
-    /// Skrzynia na plony (GDD §11.3 E). Ogniki-ogrodnicy niosą do najbliższej skrzyni z miejscem (Etap 6b: może ich być wiele).
+    /// Skrzynia na plony (GDD §11.3 E). Ogniki-ogrodnicy niosą do najbliższej skrzyni z miejscem.
     /// Klik = panel z przyciskiem „Sprzedaj” (pełna cena) i „Przenieś”; duszki-handlarze sprzedają same (90%).
     /// </summary>
     [RequireComponent(typeof(BoxCollider2D))]

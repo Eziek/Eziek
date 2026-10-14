@@ -1,4 +1,4 @@
-"""Próbka 32 px w OBECNYM stylu gry (paleta mroczna, gruby kontur, ziemny klif) + nowa woda (prośba gracza):
+"""Próbka 32 px w OBECNYM stylu gry (paleta mroczna, gruby kontur, ziemny klif) + nowa woda:
 - głębia: dno z kamieniami i wodorostami jako osobna warstwa z paralaksą i załamaniem światła (falowanie wierszy),
 - światełka pod wodą (świecące drobinki przy dnie, pulsują i dryfują),
 - fale, które idą do brzegu, rosną i załamują się w pianę,

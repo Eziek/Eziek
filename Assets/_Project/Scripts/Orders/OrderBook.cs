@@ -47,7 +47,7 @@ namespace Wyspa.Orders
     }
 
     /// <summary>
-    /// Zamówienia na tablicy ogłoszeń (prośba gracza, po Etapie 6d). Po wprowadzeniu co 2 cykle gry przybija się karteczka
+    /// Zamówienia na tablicy ogłoszeń. Po wprowadzeniu co 2 cykle gry przybija się karteczka
     /// od kogoś z mgły (najwyżej 3 naraz): „zbierz N sztuk” jednego albo dwóch plonów / owoców w terminie kilku cykli.
     /// Postęp liczy się sam ze zbiorów (także ogników), zbiór dalej daje zwykłe monety. Za wykonanie: monety i bonus
     /// (nawóz, nasiona nocy, odłamek gwiazdy, drewno, kamień). Przeterminowana karteczka po prostu znika, bez kary.

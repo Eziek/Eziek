@@ -28,7 +28,7 @@ namespace Wyspa.Automation
         Vector3 PickerAnchor { get; }
     }
 
-    /// <summary>Płynny lot duszków (prośba gracza: bez skoków): łuk w górę między punktami, wygładzony start i lądowanie.</summary>
+    /// <summary>Płynny lot duszków: łuk w górę między punktami, wygładzony start i lądowanie.</summary>
     public static class Flight
     {
         /// <summary>Lot z a do b z prędkością kafelki/s; łuk wznosi się o arc (jednostki świata) w połowie drogi.</summary>
@@ -53,7 +53,7 @@ namespace Wyspa.Automation
     public enum WispKind { Gardener, Sower, Woodcutter, Alchemist, Lamplighter, Gatherer }
 
     /// <summary>
-    /// Ognik z gniazda (rój ogników, prośba gracza: „żeby było więcej ogników, które latają i coś robią”). Każdy ma zawód:
+    /// Ognik z gniazda. Każdy ma zawód:
     /// ogrodnik zbiera plony i owoce do skrzyń, siewca sadzi, drwal rozbiera dzikie drzewa i kamienie, alchemik obsługuje kocioł,
     /// latarnik nocą „dolewa światła” lampom, zbieracz łapie spadające gwiazdy, owoce z ziemi i błyskotki w trawie.
     /// Bez pracy krąży wokół gniazda, drzew i lamp. Za pracę zdobywa doświadczenie: wyższy poziom = szybszy lot, więcej niesie,
@@ -551,7 +551,7 @@ namespace Wyspa.Automation
 
         IEnumerator SowerJob()
         {
-            // osobne nasiona na dzień i na noc (prośba gracza); o świcie i zmierzchu podmiana roślin, które teraz nie rosną
+            // osobne nasiona na dzień i na noc; o świcie i zmierzchu podmiana roślin, które teraz nie rosną
             var game = GameLoop.Instance;
             if (game == null || nest == null)
                 return null;

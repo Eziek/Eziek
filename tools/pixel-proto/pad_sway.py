@@ -1,4 +1,4 @@
-"""Margines na kołysanie (po teście gracza: przy wietrze widać było pionową kreskę, która schodzi w dół).
+"""Margines na kołysanie.
 
 Shader kołysania przesuwa górne wiersze sprite'a w bok o kilka pikseli (z podmuchem do ok. 5). Sprite kończy się tuż przy
 liściach, więc przesunięte piksele wychodziły poza obrazek i były ucinane równą pionową krawędzią. Ten skrypt dokłada

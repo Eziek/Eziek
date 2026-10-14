@@ -8,7 +8,7 @@ using Wyspa.Save;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// Menu główne (prośba gracza, Etap 6d+): trzy sloty zapisu z nazwą (do 10 znaków), datą i godziną zapisu.
+    /// Menu główne: trzy sloty zapisu z nazwą (do 10 znaków), datą i godziną zapisu.
     /// Pełny slot: „Graj” i „Usuń” (drugi klik potwierdza), pusty: „Nowa gra” z polem na nazwę. Na dole język i wyjście.
     /// Za menu widać wyspę w tle (nie jest zapisywana). Wybór slotu ładuje scenę od nowa już z tym zapisem.
     /// </summary>
@@ -116,7 +116,8 @@ namespace Wyspa.UI
                 return;
             }
 
-            var name = Ui.Txt(rt, "Name", info.exists ? t.textDark : t.textMuted);
+            // slot to ciemna ramka: jasny tekst
+            var name = Ui.Txt(rt, "Name", info.exists ? t.textLight : t.textMuted);
             name.text = info.exists ? (string.IsNullOrEmpty(info.slotName) ? Loc.Get("ui.menu.default_name", i + 1) : info.slotName)
                                     : Loc.Get("ui.menu.empty");
             Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -4), new Vector2(110, 10));
@@ -176,7 +177,7 @@ namespace Wyspa.UI
             var start = TextButton(row, "Start", Loc.Get("ui.menu.start"), Vector2.zero, () => SaveSystem.Play(slot, field != null ? field.text : draftName));
             x = PlaceRight(start, x);
 
-            var label = Ui.Txt(row, "Label", t.textDark);
+            var label = Ui.Txt(row, "Label", t.textLight);
             label.text = Loc.Get("ui.menu.name");
             Ui.Place(label.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -2), new Vector2(100, 10));
 

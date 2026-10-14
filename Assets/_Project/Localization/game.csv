@@ -6,7 +6,7 @@ upgrade.wisp_gardener.desc,"Gniazdo ogników z darmowym ogrodnikiem i skrzynia. 
 upgrade.soil_memory.name,Ognik-siewca,Wisp Sower,Irrlicht-Säer,鬼火の種まき,鬼火播种者,
 upgrade.soil_memory.desc,W gnieździe przywołasz siewcę (sieje wybrane nasiona). Pierwsza runa dziczy za darmo.,Summon sowers in the nest (they plant chosen seeds). First wild rune is free.,Im Nest rufst du Säer (säen gewählte Samen). Erste Wildrune gratis.,巣で種まきを呼べる（選んだ種を植える）。最初の野生のルーンは無料。,可在巢中召唤播种者（种下所选种子）。第一个荒野符文免费。,
 upgrade.merchant_chest.name,Duszek-handlarz,Merchant Spirit,Händlergeist,商いの精霊,商贩精灵,
-upgrade.merchant_chest.desc,"Duszek stoi przy skrzyni i sprzedaje ją, gdy tylko się zapełni (90% ceny). Pierwszy za darmo.",A spirit waits by a crate and sells it as soon as it is full (90% price). The first one is free.,"Ein Geist wartet an einer Kiste und verkauft sie, sobald sie voll ist (90 % des Preises). Der erste ist gratis.",精霊が箱のそばで待ち、いっぱいになるとすぐ売る（90%）。最初の1体は無料。,精灵守在箱子旁，箱子一满就出售（90%价格）。第一个免费。,Etap 6d: duszek przypięty do skrzyni
+upgrade.merchant_chest.desc,"Duszek stoi przy skrzyni i sprzedaje ją, gdy tylko się zapełni (90% ceny). Pierwszy za darmo.",A spirit waits by a crate and sells it as soon as it is full (90% price). The first one is free.,"Ein Geist wartet an einer Kiste und verkauft sie, sobald sie voll ist (90 % des Preises). Der erste ist gratis.",精霊が箱のそばで待ち、いっぱいになるとすぐ売る（90%）。最初の1体は無料。,精灵守在箱子旁，箱子一满就出售（90%价格）。第一个免费。,duszek przypięty do skrzyni
 rhythm.streak.status,Seria {0} min,Streak {0} min,Serie {0} Min.,連続{0}分,连续{0}分钟,
 rhythm.streak.bonus,Seria skupienia +{0}%,Focus streak +{0}%,Fokusserie +{0} %,集中の連続 +{0}%,专注连续 +{0}%,
 rhythm.refreshed.status,Odświeżony +{0}% ({1} min),Refreshed +{0}% ({1} min),Erfrischt +{0} % ({1} Min.),リフレッシュ +{0}%（{1}分）,精神焕发 +{0}%（{1}分钟）,

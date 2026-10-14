@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Wyspa.Lore
 {
     /// <summary>
-    /// Zapiski „Ostatniej latarni” (GDD §11.3 H, wybór gracza): wyspa to ostatni oświetlony ląd Łańcucha Latarni, poprzedni
+    /// Zapiski „Ostatniej latarni” (GDD §11.3 H): wyspa to ostatni oświetlony ląd Łańcucha Latarni, poprzedni
     /// Opiekun popłynął w mgłę. Każde źródło ma własną pulę, a zapiski z puli odkrywa się po kolei, więc historia czyta się
     /// w porządku. Klucze lore.* to wpisy tabeli game.csv, w kronice zapisywane jako „lore:klucz”.
     /// </summary>

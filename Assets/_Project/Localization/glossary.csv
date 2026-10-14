@@ -1,6 +1,6 @@
 ﻿key,pl,en,de,ja,zh-Hans,uwagi
 game.title,Misty Packland,Misty Packland,Misty Packland,Misty Packland,Misty Packland,"marka, nie tłumaczyć (do 2026-10 nazwa robocza Pockland); JA czytanie: ミスティ・パックランド"
-term.essence,Żar,Ember,Glut,熾火,余火,energia z pracy (wybór gracza: Żar; w kodzie nadal Essence)
+term.essence,Żar,Ember,Glut,熾火,余火,energia z pracy (w kodzie nadal Essence)
 term.grimoire,Księga,Grimoire,Grimoire,魔導書,魔典,główne menu
 menu.shop,Sklep,Shop,Laden,ショップ,商店,
 menu.upgrades,Ulepszenia,Upgrades,Verbesserungen,強化,升级,
@@ -142,7 +142,7 @@ fruit.elder,Jagoda bzu,Elderberry,Holunderbeere,ニワトコの実,接骨木果,
 fruit.rowan,Krwawa jagoda,Blood berry,Blutbeere,血の実,血莓,jarzębina
 fruit.ghostpear,Upiorna gruszka,Ghost pear,Geisterbirne,幽霊梨,幽灵梨,świeci nocą
 fruit.moon,Owoc księżyca,Moonfruit,Mondfrucht,月の実,月之果,tylko w pełnię
-bld.board,Tablica ogłoszeń,Notice Board,Anschlagbrett,掲示板,告示板,wprowadzenie (Etap 6d): karteczki z zadaniami
+bld.board,Tablica ogłoszeń,Notice Board,Anschlagbrett,掲示板,告示板,wprowadzenie: karteczki z zadaniami
 term.note,Karteczka,Note,Zettel,張り紙,便条,zadanie przybite do tablicy ogłoszeń
 term.save_slot,Zapis,Save,Spielstand,セーブ,存档,slot zapisu w menu głównym (3 sloty)
 menu.main,Menu główne,Main menu,Hauptmenü,メインメニュー,主菜单,pierścień akcji: powrót do menu (gra się zapisuje)

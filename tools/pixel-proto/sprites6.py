@@ -1,4 +1,4 @@
-"""Sprite'y Etapu 6b: sześć nowych roślin (3 dnia, 3 nocy), ikony ich nasion i duszek-handlarz.
+"""Sprite'y sześć nowych roślin (3 dnia, 3 nocy), ikony ich nasion i duszek-handlarz.
 Te same zasady co sprites3 (paleta mroczna + emisja, siatka 16 px, gruby kontur)."""
 import math
 import sprites
@@ -185,7 +185,7 @@ HYBRIDS = {
 
 # ---------------- duszek-handlarz ----------------
 def merchant_spirit(f):
-    """Złoty duszek z sakiewką: lata do skrzyń i sprzedaje plony (Etap 6b)."""
+    """Złoty duszek z sakiewką: lata do skrzyń i sprzedaje plony."""
     s = Sprite(16, 22, 8, 21)
     dy = 0   # unoszenie robi kod (płynnie), klatki zmieniają tylko płomień
     s.blob(8, 8 + dy, 3.4, 4, ['fx', 'fl', 'fl'])
@@ -252,7 +252,7 @@ SEED_SYMBOLS = {
 }
 
 
-# ---------------- ikony UI (Etap 6b+): kategorie koła nasion, wyjście, zasypanie grządki ----------------
+# --------------- ikony UI: kategorie koła nasion, wyjście, zasypanie grządki ----------------
 ICON_MAPS = {
     # losowe sadzenie (kostka) i prestiż (perła mgły)
     'dice': [".wwwwwwwz.", ".w1www1wz.", ".wwwwwwwz.", ".www1wwwz.", ".wwwwwwwz.",
@@ -279,13 +279,13 @@ ICON_MAPS = {
               ".hjjhhjjh.", ".hjhjjhjh.", ".hhhhhhhh.", "..........", ".........."],
     'drop': ["....W.....", "....W.....", "...WLW....", "...WLW....", "..WLLLW...",
              "..WLLLW...", "..WWLWW...", "...WWW....", "..........", ".........."],
-    # menu główne (Etap 6d+): trzy deski jak w księdze zapisów
+    # menu główne: trzy deski jak w księdze zapisów
     'menu': ["..........", ".hhhhhhh..", ".hjjjjjh..", ".hhhhhhh..", ".hjjjjjh..",
              ".hhhhhhh..", ".hjjjjjh..", ".hhhhhhh..", "..........", ".........."],
 }
 
 
-# ---------------- ptaki (prośba gracza: życie na wyspie) ----------------
+# --------------- ptaki ----------------
 def bird(kind, pose):
     """kind: 'crow' (wrona) albo 'finch' (mały ptaszek). pose: sit0, sit1 (dziób w dół), fly0 (skrzydła w górze), fly1 (w dole).
     Patrzy w prawo; w lewo odbija kod (flipX)."""
@@ -320,7 +320,7 @@ def bird(kind, pose):
 BIRD_POSES = ('sit0', 'sit1', 'fly0', 'fly1')
 
 
-# ---------- wprowadzenie (Etap 6d): tablica z karteczkami i strzałka celu ----------
+# --------- wprowadzenie: tablica z karteczkami i strzałka celu ----------
 def notice_board(note=True):
     """Krzywa tablica ogłoszeń na dwóch słupkach, 16 px szerokości z obrysem (jak kafelek). note: przybita karteczka."""
     s = Sprite(16, 22, 8, 20)
@@ -355,7 +355,7 @@ def intro_arrow():
     return s.outline()
 
 
-# ---------- kocioł alchemiczny (po Etapie 6d) ----------
+# --------- kocioł alchemiczny ----------
 def cauldron(state='idle', f=0):
     """Żeliwny kocioł na trzech nóżkach, 16 px szerokości z obrysem. state: idle (zimny, ciemny wywar),
     brew (ogień pod spodem, turkusowy wywar z bąblami, klatki 0-2), ready (fioletowy, świecący wywar, klatki 0-1)."""
@@ -390,7 +390,7 @@ def cauldron(state='idle', f=0):
     return s.outline()
 
 
-# ---------- chowańce (po Etapie 6d): kot, kruk, ropucha, nietoperz ----------
+# --------- chowańce: kot, kruk, ropucha, nietoperz ----------
 CAT_POSES = ('sit0', 'sit1', 'walk0', 'walk1', 'sleep')
 
 

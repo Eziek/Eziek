@@ -8,7 +8,7 @@ namespace Wyspa.Weather
     public enum WeatherKind { Clear, Rain, Storm, Mist }
 
     /// <summary>
-    /// Pogoda (wybór gracza po Etapie 6d). Cykl gry dzielimy na trzy części po 20 min (dwie w dzień, jedna w nocy); każda losuje
+    /// Pogoda. Cykl gry dzielimy na trzy części po 20 min (dwie w dzień, jedna w nocy); każda losuje
     /// pogodę z numeru cyklu (ta sama po restarcie, bez zapisu). Deszcz: rośliny dnia +20%, krople nad wyspą, trochę ciemniej,
     /// częstszy wiatr. Burza: ulewa, błyski piorunów, czasem piorun zostawia odłamek gwiazdy. Mgła (tylko noc): gęstsza mgła,
     /// błędne ogniki częściej. Krople padają tylko nad lądem, więc w przezroczystym oknie nie leje na pulpit.

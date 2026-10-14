@@ -2,7 +2,7 @@
 #define WYSPA_SWAY_INCLUDED
 // Kołysanie sprite'ów i kontur (GDD §5.5). Wymaga wcześniej: CBUFFER z polami poniżej oraz TEXTURE2D(_MainTex).
 // Przesuwamy całe wiersze pikseli o pełne piksele: 0 u podstawy, najwięcej u góry (jak w prototypie, anim.py, sway_fn).
-// Czas płynny (prośba gracza): wiersze przeskakują dokładnie wtedy, gdy wypada im piksel, a nie co 0.1 s.
+// Czas płynny: wiersze przeskakują dokładnie wtedy, gdy wypada im piksel, a nie co 0.1 s.
 
 float WyspaStepTime(float fps)
 {
@@ -10,7 +10,7 @@ float WyspaStepTime(float fps)
 }
 
 // Podmuch wiatru (globalnie, ustawia IslandFx razem ze smugami): czoło podmuchu przechodzi przez wyspę z lewej na prawą,
-// więc rośliny pochylają się po kolei, falą, a nie wszystkie naraz (prośba gracza: ładniejszy wiatr).
+// więc rośliny pochylają się po kolei, falą, a nie wszystkie naraz.
 float _WyspaWindFront;   // piksele świata: gdzie jest teraz czoło podmuchu
 float _WyspaWindPower;   // 0..1 siła bieżącego podmuchu (0 = bez wiatru)
 #define WYSPA_WIND_WIDTH 40.0

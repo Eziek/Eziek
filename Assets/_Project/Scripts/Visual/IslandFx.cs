@@ -243,7 +243,7 @@ namespace Wyspa.Visual
             }
         }
 
-        // ------------------------------------------------------------ wiatr i pyłki (prośba gracza: więcej życia w powietrzu)
+        // ------------------------------------------------------------ wiatr i pyłki
 
         class Streak { public SpriteRenderer sr; public Vector2 pos; public float speed, age, life, phase; }
         readonly List<Streak> streaks = new List<Streak>();

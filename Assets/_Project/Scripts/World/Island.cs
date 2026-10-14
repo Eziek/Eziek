@@ -44,9 +44,9 @@ namespace Wyspa.World
         public List<TileSave> tiles = new List<TileSave>();
         public List<DecoSave> decorations = new List<DecoSave>();
         public List<ObjectSave> objects = new List<ObjectSave>();
-        // Etap 4: morze
+        // morze
         public Sea.ExpeditionSave expedition;
-        public List<int> zonesFound = new List<int>();   // Etap 5a: odkryte strefy (toast tylko raz)
+        public List<int> zonesFound = new List<int>();   // odkryte strefy (toast tylko raz)
         public bool pier;
         public int pierC, pierR;
         public int pierDir;   // +1 deski w prawo, -1 w lewo (0 w starszych zapisach = z lądu)
@@ -263,7 +263,7 @@ namespace Wyspa.World
             var plan = map.Plan;
             Rebuild();
             SyncPlots();
-            // nowa gra (Etap 6d): na czwartym kafelku startu zamiast dekoracji stoi tablica z karteczkami wprowadzenia
+            // nowa gra: na czwartym kafelku startu zamiast dekoracji stoi tablica z karteczkami wprowadzenia
             if (withBoard)
                 SpawnBoard(plan.startDecoTile);
             else
@@ -339,7 +339,7 @@ namespace Wyspa.World
                     legacyMerchants.Add((tile, o.id));   // zapis sprzed v8: duszek stał na własnym kafelku
                 else if (LegacyBuilding(o) is string kind && IsFree(tile))
                 {
-                    // budowle automatyki (Etap 6b); zapisy sprzed 6b miały jedną skrzynię, skrzynię kupca i kamień runiczny ze sceny
+                    // budowle automatyki; zapisy sprzed 6b miały jedną skrzynię, skrzynię kupca i kamień runiczny ze sceny
                     var b = SpawnBuilding(kind, tile, o.id);
                     if (b != null && o.crate != null && b.TryGetComponent(out Automation.HarvestCrate crate))
                         crate.Restore(o.crate);
@@ -541,7 +541,7 @@ namespace Wyspa.World
             Changed?.Invoke();
         }
 
-        // ================================================================ strefy (Etap 5a, §13.8)
+        // ================================================================ strefy
 
         public ZoneKind ZoneAt(TilePos p) => map.Owns(p) && map.Plan != null ? map.Plan.ZoneAt(p) : ZoneKind.None;
 
@@ -1083,7 +1083,7 @@ namespace Wyspa.World
             Changed?.Invoke();
         }
 
-        // ================================================================ morze: pomost i sieci (Etap 4c)
+        // ================================================================ morze: pomost i sieci
 
         public bool HasPier => pier != null;
         public Sea.Pier PierObject => pier;
@@ -1091,7 +1091,7 @@ namespace Wyspa.World
         public bool HasBoat => boat != null;
         public Sea.Expedition Boat => boat;
 
-        /// <summary>Łódź przy końcu pomostu (wyprawy, Etap 4d).</summary>
+        /// <summary>Łódź przy końcu pomostu.</summary>
         public bool BuildBoat()
         {
             if (pier == null || boat != null)
@@ -1226,7 +1226,7 @@ namespace Wyspa.World
             return true;
         }
 
-        // ================================================================ budowle na brzegu (Etap 5b)
+        // ================================================================ budowle na brzegu
 
         /// <summary>Wolny kafelek lądu przy wodzie (ołtarz, latarnia morska stoją na brzegu).</summary>
         public bool IsShoreFree(TilePos p)
@@ -1272,7 +1272,7 @@ namespace Wyspa.World
             return obj;
         }
 
-        // ================================================================ tablica wprowadzenia (Etap 6d, GDD §12.8)
+        // ================================================================ tablica wprowadzenia (GDD §12.8)
 
         public const string BoardBuilding = "board";
         const int BoardWood = 3;
@@ -1317,7 +1317,7 @@ namespace Wyspa.World
             return obj;
         }
 
-        // ================================================================ budowle automatyki (Etap 6b)
+        // ================================================================ budowle automatyki
 
         static string LegacyBuilding(ObjectSave o)
         {
@@ -1423,7 +1423,7 @@ namespace Wyspa.World
             return obj;
         }
 
-        // ---------------------------------------------------------------- duszek-handlarz przy skrzyni (prośba gracza)
+        // ---------------------------------------------------------------- duszek-handlarz przy skrzyni
 
         static readonly Vector2Int MerchantOffset = new Vector2Int(9, 5);   // piksele od podstawy skrzyni: obok, lekko wyżej
 
@@ -1595,7 +1595,7 @@ namespace Wyspa.World
 
         // ================================================================ obiekty na kafelkach
 
-        /// <summary>Czy obiekt ma stać na wyspie (np. skrzynia po kupnie ognika). Do Etapu 3c stawiany samoczynnie.</summary>
+        /// <summary>Czy obiekt ma stać na wyspie (np. skrzynia po kupnie ognika). Do.</summary>
         public void Want(TileObject obj, bool wanted)
         {
             if (obj == null)

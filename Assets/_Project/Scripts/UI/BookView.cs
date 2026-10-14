@@ -81,10 +81,10 @@ namespace Wyspa.UI
             Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(38, -6), new Vector2(W - 44, H - 12));
             title = Ui.Txt(page.transform, "Title", t.textDark, TextAlignmentOptions.TopLeft, Ui.TextSize * 2);
             Ui.Place(title.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(10, -8), new Vector2(200, 18));
-            // treść w przewijanym oknie (po teście gracza: drzewko i lista budowli nie mieściły się na stronie):
+            // treść w przewijanym oknie:
             // kółko myszy przewija, przeciąganie przesuwa; wszystko poza oknem jest przycięte
             viewport = Ui.Place(Ui.Rect("Viewport", page.transform), Ui.TopLeft, Ui.TopLeft, new Vector2(10, -30), new Vector2(W - 64, ViewH));
-            // maska sięga 4 px poza okno w poziomie (po teście gracza: pierwsza kolumna pikseli liter była ucinana na krawędzi maski)
+            // maska sięga 4 px poza okno w poziomie
             var mask = viewport.gameObject.AddComponent<RectMask2D>();
             mask.padding = new Vector4(-4f, -1f, -4f, -1f);
             mask.softness = Vector2Int.zero;
@@ -112,7 +112,7 @@ namespace Wyspa.UI
             // mały kadr (start 144x112) nie mieści Księgi: okno na chwilę rośnie (tylko w buildzie)
             if (ViewController.Instance != null)
                 ViewController.Instance.RequireWindow(new Vector2Int(
-                    Mathf.CeilToInt((W + 16) * UiRoot.UiScale()), Mathf.CeilToInt((H + 16) * UiRoot.UiScale())));
+                    Mathf.CeilToInt((W + 16) * UiRoot.DesiredUiScale()), Mathf.CeilToInt((H + 16) * UiRoot.DesiredUiScale())));
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();
             Show(tab);
@@ -139,6 +139,23 @@ namespace Wyspa.UI
         const float ViewH = H - 72;
 
         /// <summary>Rozmiar treści = zasięg elementów strony (co najmniej okno); przewijanie tylko tam, gdzie się nie mieści.</summary>
+        /// <summary>
+        /// Czyści treść strony. Destroy działa dopiero na końcu klatki, więc elementy najpierw odpinamy od treści -
+        /// inaczej FitContent mierzył też poprzednią zakładkę (po drzewku ulepszeń inne strony przewijały się w bok
+        /// i ucinały pierwsze litery).
+        /// </summary>
+        void ClearContent()
+        {
+            var old = new List<Transform>();
+            foreach (Transform c in content)
+                old.Add(c);
+            foreach (var c in old)
+            {
+                c.SetParent(null, false);
+                Destroy(c.gameObject);
+            }
+        }
+
         void FitContent(bool keepScroll)
         {
             float vw = W - 64, vh = ViewH, maxX = vw, maxY = vh;
@@ -168,8 +185,7 @@ namespace Wyspa.UI
             current = tab;
             foreach (var (tb, img) in tabImages)
                 img.sprite = tb == tab ? Ui.Theme.slotSelected : Ui.Theme.slot;
-            foreach (Transform c in content)
-                Destroy(c.gameObject);
+            ClearContent();
             treeNodes.Clear();
             info.text = "";
             foreach (var t in Tabs)
@@ -239,7 +255,7 @@ namespace Wyspa.UI
         const float TreeMargin = 18f;
 
         /// <summary>
-        /// Środek komórki na stronie: drzewko od lewego górnego rogu (78 węzłów, Etap 8), strona przewija się w obie strony;
+        /// Środek komórki na stronie: drzewko od lewego górnego rogu, strona przewija się w obie strony;
         /// po otwarciu widok staje na ogniku-ogrodniku (CenterTree).
         /// </summary>
         static Vector2 CellCenter(Vector2Int c)
@@ -282,7 +298,7 @@ namespace Wyspa.UI
                         continue;
                     var a = CellCenter(UpgradeTree.Cell(r.upgrade.id));
                     var b = CellCenter(UpgradeTree.Cell(def.id));
-                    var color = st == NodeState.Owned ? Ui.Theme.textGold : (st == NodeState.Open ? Ui.Theme.textDark : Ui.Theme.textMuted);
+                    var color = st == NodeState.Owned ? Ui.Theme.textGoldOnPage : (st == NodeState.Open ? Ui.Theme.textDark : Ui.Theme.textMutedOnPage);
                     Line(new Vector2(Mathf.Min(a.x, b.x) - 1, a.y + 1), new Vector2(Mathf.Abs(b.x - a.x) + 2, 2), color);
                     Line(new Vector2(b.x - 1, Mathf.Max(a.y, b.y) + 1), new Vector2(2, Mathf.Abs(b.y - a.y) + 2), color);
                 }
@@ -305,7 +321,7 @@ namespace Wyspa.UI
                 var icon = Ui.Img(frame.transform, "Icon", Ui.Theme.Icon(st == NodeState.Fog ? "lock" : UpgradeTree.Icon(def.id)), false);
                 Ui.Place(icon.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(12, 12));
                 var node = new TreeNode { def = def, state = st, frame = frame, icon = icon };
-                // poziomy jako kropki pod węzłem (po teście: napis „0/2” na ramce był nieczytelny)
+                // poziomy jako kropki pod węzłem
                 int levels = st == NodeState.Fog ? 0 : def.MaxLevel;
                 if (levels > 1)
                 {
@@ -355,7 +371,7 @@ namespace Wyspa.UI
                 n.frame.color = n.state == NodeState.Fog ? new Color(0.6f, 0.6f, 0.6f, 0.8f) : new Color(pulse, pulse, pulse, 1f);
                 n.icon.color = n.state == NodeState.Open && !canBuy ? new Color(1f, 1f, 1f, 0.55f) : Color.white;
                 for (int i = 0; i < n.pips.Count; i++)
-                    n.pips[i].color = i < lvl ? Ui.Theme.textGold : Ui.Theme.textDark;
+                    n.pips[i].color = i < lvl ? Ui.Theme.textGoldOnPage : Ui.Theme.textMutedOnPage;   // kupione ciemnym złotem, reszta szara
             }
         }
 
@@ -488,7 +504,7 @@ namespace Wyspa.UI
                     var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
                     LocText.On(name, def.NameKey);
                     Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -3), new Vector2(160, 10));
-                    var stats = Ui.Txt(row, "Info", Ui.Theme.textMuted);
+                    var stats = Ui.Txt(row, "Info", Ui.Theme.textMutedOnPage);
                     stats.text = Loc.Get("ui.lamp.info", def.radius, def.essencePerMinute * 60f);
                     Ui.Place(stats.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(28, -13), new Vector2(200, 10));
 
@@ -510,7 +526,7 @@ namespace Wyspa.UI
             RefreshShop();
         }
 
-        // ---- Morze (Etap 4): pomost, sieci, łódź. Koszty w monetach i drewnie (§11.2: drewno na budowle)
+        // ---- Morze: pomost, sieci, łódź. Koszty w monetach i drewnie (§11.2: drewno na budowle)
 
         class ShopItem
         {
@@ -621,7 +637,7 @@ namespace Wyspa.UI
                 float bw = Mathf.Max(40f, Ui.Width(bt) + 10f);
                 // opis z kosztem kończy się przed przyciskiem: za długi opis skracamy („...”), koszt zostaje cały,
                 // a pełny tekst pokazuje dymek po najechaniu
-                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
+                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMutedOnPage);
                 string fullDesc = it.descKey != null ? Loc.Get(it.descKey) : it.desc;
                 string costText = PlacementMode.CostText(it.cost);
                 float descW = W - 64 - 28 - bw - 6;
@@ -631,13 +647,14 @@ namespace Wyspa.UI
                 desc.gameObject.AddComponent<HoverTip>().Init(tooltip, () => fullDesc + "\n" + costText);
                 Ui.Stretch(bt.rectTransform);
                 Ui.Place((RectTransform)it.button.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -pad), new Vector2(bw, 16));
-                it.status = Ui.Txt(row, "Status", Ui.Theme.textMuted, TextAlignmentOptions.TopRight);
-                Ui.Place(it.status.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -pad - 3), new Vector2(110, 10));
+                it.status = Ui.Txt(row, "Status", Ui.Theme.textMutedOnPage, TextAlignmentOptions.TopRight);
+                // powód blokady w wierszu nazwy
+                Ui.Place(it.status.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -pad + 2), new Vector2(110, 10));
                 y += rowH;
             }
         }
 
-        // ---- Nasiona (Etap 6b): jednorazowe odblokowanie za monety, potem w kole nasion
+        // ---- Nasiona: jednorazowe odblokowanie za monety, potem w kole nasion
 
         void BuildSeedShop()
         {
@@ -700,7 +717,7 @@ namespace Wyspa.UI
             }
         }
 
-        // ---- Budowle (Etap 6b): skrzynie, ogniki, duszki-handlarze, runy; każda kolejna sztuka droższa
+        // ---- Budowle: skrzynie, ogniki, duszki-handlarze, runy; każda kolejna sztuka droższa
 
         void BuildBuildingShop()
         {
@@ -909,7 +926,7 @@ namespace Wyspa.UI
                 var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
                 LocText.On(name, r.nameKey);
                 Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -1), new Vector2(160, 10));
-                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
+                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMutedOnPage);
                 string ritualDesc = Loc.Get(r.descKey);
                 string ritualCost = Loc.Get("ui.rituals.points", r.points) + ", " + PlacementMode.CostText(r.cost);
                 FitWithSuffix(desc, ritualDesc, " - " + ritualCost, W - 110);
@@ -924,11 +941,12 @@ namespace Wyspa.UI
                         chronicle.TryPerform(def, game.Wallet);
                     RefreshRituals();
                 });
-                Ui.Place((RectTransform)b.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -3), new Vector2(42, 16));
                 var bt = Ui.Txt(b.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
                 Ui.Stretch(bt.rectTransform);
                 LocText.On(bt, "ui.rituals.perform");
-                var status = Ui.Txt(row, "Status", Ui.Theme.textGold, TextAlignmentOptions.TopRight);
+                // szerokość z tekstu (DE „Vollziehen” dotykał ramki w 42 px)
+                Ui.Place((RectTransform)b.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -3), new Vector2(Mathf.Max(42f, Ui.Width(bt) + 10f), 16));
+                var status = Ui.Txt(row, "Status", Ui.Theme.textGoldOnPage, TextAlignmentOptions.TopRight);
                 Ui.Place(status.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -6), new Vector2(60, 10));
                 ritualRows.Add((r, b, status));
                 y += 23;
@@ -952,7 +970,7 @@ namespace Wyspa.UI
             }
         }
 
-        // ------------------------------------------------------------------ Rejs we mgłę (prestiż, Etap 8)
+        // ------------------------------------------------------------------ Rejs we mgłę
 
         TextMeshProUGUI voyageHead, voyageRun, voyageGlow, sailText;
         Button sailButton;
@@ -969,9 +987,9 @@ namespace Wyspa.UI
             float w = W - 64;
             voyageHead = Ui.Txt(content, "Pearls", Ui.Theme.textDark);
             Ui.Place(voyageHead.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, 0), new Vector2(w, 10));
-            voyageGlow = Ui.Txt(content, "Glow", Ui.Theme.textMuted);
+            voyageGlow = Ui.Txt(content, "Glow", Ui.Theme.textMutedOnPage);
             Ui.Place(voyageGlow.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -11), new Vector2(w, 10));
-            voyageRun = Ui.Txt(content, "Run", Ui.Theme.textMuted);
+            voyageRun = Ui.Txt(content, "Run", Ui.Theme.textMutedOnPage);
             Ui.Place(voyageRun.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -22), new Vector2(w, 10));
             sailButton = Ui.Btn(content, "Sail", Sail);
             Ui.Place((RectTransform)sailButton.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -35), new Vector2(w, 16));
@@ -979,7 +997,7 @@ namespace Wyspa.UI
             Ui.Stretch(sailText.rectTransform);
             sailButton.gameObject.AddComponent<HoverTip>().Init(tooltip, () => Loc.Get("ui.voyage.sail_tip"));
 
-            var head = Ui.Txt(content, "Gifts", Ui.Theme.textGold);
+            var head = Ui.Txt(content, "Gifts", Ui.Theme.textGoldOnPage);
             Ui.Place(head.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -57), new Vector2(w, 10));
             LocText.On(head, "ui.voyage.gifts");
             float y = 69;
@@ -992,9 +1010,9 @@ namespace Wyspa.UI
                 var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
                 LocText.On(name, g.NameKey);
                 Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(16, -1), new Vector2(150, 10));
-                var level = Ui.Txt(row, "Level", Ui.Theme.textGold, TextAlignmentOptions.TopRight);
+                var level = Ui.Txt(row, "Level", Ui.Theme.textGoldOnPage, TextAlignmentOptions.TopRight);
                 Ui.Place(level.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-48, -1), new Vector2(40, 10));
-                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMuted);
+                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMutedOnPage);
                 Ui.Place(desc.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(16, -11), new Vector2(w - 66, 10));
                 desc.raycastTarget = true;
                 desc.gameObject.AddComponent<HoverTip>().Init(tooltip, () => GiftText(gift));
@@ -1042,7 +1060,7 @@ namespace Wyspa.UI
             {
                 int lvl = Prestige.Level(g.id), cost = Prestige.NextCost(g);
                 level.text = Loc.Get("ui.upgrade.level", lvl, g.MaxLevel);
-                desc.text = GiftText(g);
+                FitWithSuffix(desc, GiftText(g), "", W - 64 - 66);   // pełny opis w dymku
                 buy.gameObject.SetActive(cost > 0);
                 buy.interactable = cost > 0 && Prestige.Pearls >= cost;
                 price.text = cost > 0 ? Loc.Get("ui.voyage.buy", cost) : "";
@@ -1130,7 +1148,7 @@ namespace Wyspa.UI
             {
                 if (chronicle.Claimed(category))
                 {
-                    var done = Ui.Txt(content, "Done", Ui.Theme.textGold, TextAlignmentOptions.TopRight);
+                    var done = Ui.Txt(content, "Done", Ui.Theme.textGoldOnPage, TextAlignmentOptions.TopRight);
                     done.text = Loc.Get("ui.bestiary.complete");
                     Ui.Place(done.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -y), new Vector2(160, 10));
                 }
@@ -1183,7 +1201,7 @@ namespace Wyspa.UI
             {
                 var e = entries[i];
                 bool known = chronicle.Found(e.id);
-                var t = Ui.Txt(content, "Entry", known ? Ui.Theme.textDark : Ui.Theme.textMuted);
+                var t = Ui.Txt(content, "Entry", known ? Ui.Theme.textDark : Ui.Theme.textMutedOnPage);
                 t.text = known ? e.label : "???";
                 float col = (i % 2) * ((W - 64) / 2f);
                 Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(col, -(y + (i / 2) * 13)), new Vector2((W - 64) / 2f - 4, 10));
@@ -1194,8 +1212,7 @@ namespace Wyspa.UI
 
         void BuildStats()
         {
-            foreach (Transform c in content)
-                Destroy(c.gameObject);
+            ClearContent();
             var game = GameLoop.Instance;
             if (game == null)
                 return;
@@ -1251,7 +1268,7 @@ namespace Wyspa.UI
             else BuildGeneralOptions(y);
         }
 
-        /// <summary>Dźwięk (Etap 6c): głośność tła i efektów co 10%, cisza, gdy okno nie jest aktywne.</summary>
+        /// <summary>Dźwięk: głośność tła i efektów co 10%, cisza, gdy okno nie jest aktywne.</summary>
         void BuildSoundOptions(float y)
         {
             OptLabel("ui.options.vol_ambient", y);
@@ -1434,7 +1451,7 @@ namespace Wyspa.UI
             OptButton("Quit", Loc.Get("ui.options.quit_button"), OptCol, y, 40f, UiRoot.QuitGame, false);
             y += OptRow + 6;
 
-            var dbg = Ui.Txt(content, "Debug", Ui.Theme.textMuted);
+            var dbg = Ui.Txt(content, "Debug", Ui.Theme.textMutedOnPage);
             LocText.On(dbg, "ui.options.debug");
             Ui.Place(dbg.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(W - 64, 10));
             info.text = Loc.Get(Wyspa.Platform.Autostart.Supported ? "ui.options.reset_hint" : "ui.options.window_build");

@@ -1,7 +1,7 @@
 // Woda (GDD §4.5) liczona w shaderze z mapy danych (Ground/water_data.png, opis w tools/pixel-proto/export_unity_fx.py):
 // głębia, ryby pod wodą (ósemki), coś dużego w głębinie, połyski, grzbiety fal, przybój, pulsująca piana.
 // Port prototypu tools/pixel-proto/water.py (10 kl./s). Ryby i potwora ustawia WaterAnimator (tablice z C#).
-// Etap 7 (prośba gracza, próbka tools/art32/probka32.py): obraz w 32 px, dno z paralaksą i załamaniem, światełka
+// obraz w 32 px, dno z paralaksą i załamaniem, światełka
 // pod wodą, fale załamujące się w pianę, kręgi. Dane (odległość, klasy) zostają w siatce 16 px.
 Shader "Wyspa/Water"
 {
@@ -144,7 +144,7 @@ Shader "Wyspa/Water"
                 float2 pix = floor(input.uv * size);
                 half4 data = SAMPLE_TEXTURE2D_LOD(_DataTex, sampler_DataTex, (pix + 0.5) * _DataTex_TexelSize.xy, 0);
                 int cls = (int)round(data.g * 255.0 / 32.0);
-                // Etap 7: obraz w 32 px na kafelek (2 piksele na piksel danych), X/Y w pikselach 32 px (y w dół),
+                // obraz w 32 px na kafelek (2 piksele na piksel danych), X/Y w pikselach 32 px (y w dół),
                 // x/y w pikselach danych (ryby, potwór i klasy brzegu jak dotąd)
                 float2 hp = floor(input.uv * size * 2.0);
                 int X = (int)hp.x;
@@ -171,7 +171,7 @@ Shader "Wyspa/Water"
                 int baseCls = water ? band : 1;
                 half3 col = BaseColor(baseCls);
 
-                // --- dno z paralaksą (prośba gracza: głębia): kamienie i wodorosty przesuwają się wolniej niż kamera,
+                // --- dno z paralaksą: kamienie i wodorosty przesuwają się wolniej niż kamera,
                 // a przy brzegu wiersze lekko falują (załamanie światła w wodzie)
                 float2 cam = _WorldSpaceCameraPos.xy * 32.0;
                 float2 sb = float2(X, Y) + float2(-cam.x, cam.y) * 0.12 + float2(round(sin(t * 0.25) * 2.0), 0.0);
@@ -242,7 +242,7 @@ Shader "Wyspa/Water"
                     }
                 }
 
-                // --- światełka pod wodą (prośba gracza): drobinki przy dnie pulsują i dryfują razem z dnem, nocą świecą
+                // --- światełka pod wodą: drobinki przy dnie pulsują i dryfują razem z dnem, nocą świecą
                 if (water && d > 6.0)
                 {
                     float2 lp = float2(X, Y) + float2(-cam.x, cam.y) * 0.12;
@@ -288,7 +288,7 @@ Shader "Wyspa/Water"
                     }
                 }
 
-                // --- fale, które idą do brzegu, rosną i załamują się w pianę (prośba gracza) ---
+                // --- fale, które idą do brzegu, rosną i załamują się w pianę ---
                 if (water)
                 {
                     float sn = WNoise(float2(X, Y) / 28.0 + 3.1);

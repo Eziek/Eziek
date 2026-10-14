@@ -10,7 +10,7 @@ using Wyspa.World;
 namespace Wyspa.Platform
 {
     /// <summary>
-    /// Ikona w zasobniku Windows (Etap 6c, tylko build na Windows). Lewy klik: pokaż / schowaj okno gry. Prawy klik: menu
+    /// Ikona w zasobniku Windows. Lewy klik: pokaż / schowaj okno gry. Prawy klik: menu
     /// (pokaż/schowaj, zawsze na wierzchu, mini-tryb, wyjście). Powiadomienia Windows, gdy okno jest schowane albo nieaktywne:
     /// kupiec-widmo, potwór, zamówienia, chowaniec, gotowa mikstura i dojrzałe plony (najwyżej co minutę, opcja w Opcjach → System).
     /// Komunikaty ikony odbiera osobne, nigdy niepokazywane okno, które Unity obsługuje w swojej pętli komunikatów;

@@ -20,7 +20,7 @@ namespace Wyspa.Upgrades
         public static float BoatDuration = 1f;
         public static float LampBurn = 1f;
 
-        // Etap 8: handel i dochody (czyta je Economy/Market i systemy obok); wartości neutralne bez ulepszeń
+        // handel i dochody (czyta je Economy/Market i systemy obok); wartości neutralne bez ulepszeń
         public static float SaleAll = 0f;   // Stragan
         public static float SaleAll2 = 0f;   // Uczciwa waga
         public static float CritChance = 0f;   // Targowanie

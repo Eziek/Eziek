@@ -1,4 +1,4 @@
-// Sprite na wodzie (łódź wypraw, łódź kupca-widma, boja sieci; po teście gracza: „łódka powinna być w wodzie, a nie nad wodą”).
+// Sprite na wodzie.
 // Oświetlany światłami 2D jak Sprite-Lit-Default (URP 17.6). Wiersze poniżej linii wody są przyciemnione kolorem wody
 // i półprzezroczyste (głębiej znikają), linia wody kołysze się o piksel, przy burtach migocze piana.
 // Linię wody i fazę ustawia komponent Visual/Floating (MaterialPropertyBlock). Sprite = osobna tekstura (uv 0..1).

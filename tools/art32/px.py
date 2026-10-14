@@ -1,4 +1,4 @@
-"""Wspólne narzędzia docelowej grafiki 32 px (Etap 7): paleta dark fantasy, szum, dithering, pola odległości.
+"""Wspólne narzędzia docelowej grafiki 32 px: paleta dark fantasy, szum, dithering, pola odległości.
 
 Grafiki rysuje kod piksel po pikselu (numpy + Pillow), deterministycznie (stałe ziarna), bez filtrów rozmywających.
 """

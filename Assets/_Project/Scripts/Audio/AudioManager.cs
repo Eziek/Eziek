@@ -5,7 +5,7 @@ using Wyspa.Core;
 namespace Wyspa.Audio
 {
     /// <summary>
-    /// Dźwięk (Etap 6c): tło dnia i nocy z płynnym przenikaniem, deszcz ponad tłem, efekty z puli źródeł.
+    /// Dźwięk: tło dnia i nocy z płynnym przenikaniem, deszcz ponad tłem, efekty z puli źródeł.
     /// Klipy z Resources/Audio (placeholdery z tools/audio/gen_audio.py). Systemy gry wołają GameEvents.PlaySound("harvest").
     /// Głośność tła i efektów w Opcjach (PlayerPrefs), opcjonalna cisza, gdy okno nie jest aktywne.
     /// </summary>

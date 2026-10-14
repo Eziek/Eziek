@@ -14,9 +14,9 @@ namespace Wyspa.Core
         [Tooltip("Do testów: gracz zawsze nieaktywny (symulacja przerwy).")]
         [SerializeField] bool forceIdle;
 
-        // ---- tempo pracy (prośba gracza): pisanie i ruch myszy przyspieszają rośliny dnia
+        // ---- tempo pracy: pisanie i ruch myszy przyspieszają rośliny dnia
         const float SampleSeconds = 0.2f;
-        const int Samples = 75;                     // okno 15 s (prośba gracza: tempo reaguje szybciej niż przy minucie)
+        const int Samples = 75;                     // okno 15 s
         const float KeyboardWeight = 1f, MouseWeight = 0.35f;
         /// <summary>Średnia waga próbek, przy której tempo = 1 (ciągłe pisanie trafia w ok. połowę próbek).</summary>
         const float FullTempo = 0.5f;

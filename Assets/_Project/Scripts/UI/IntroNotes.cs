@@ -8,7 +8,7 @@ using Wyspa.World;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// Wprowadzenie bez postaci (Etap 6d, GDD §12.8): kroki z tablicy ogłoszeń. Karteczka z bieżącym zadaniem wisi pod wyspą
+    /// Wprowadzenie bez postaci (GDD §12.8): kroki z tablicy ogłoszeń. Karteczka z bieżącym zadaniem wisi pod wyspą
     /// (pokazuje się i chowa razem z paskiem HUD), a nad celem unosi się złota strzałka. Kroki: posadź, pracuj, zbierz,
     /// dokup kafelek, kup lampę (najpierw kafelek: na wyspie 2x2 nie ma wolnego miejsca na lampę); na końcu karteczka „gotowe”.
     /// Rozebranie tablicy kończy wprowadzenie w każdej chwili.
@@ -59,7 +59,7 @@ namespace Wyspa.UI
             note = Ui.Place(img.rectTransform, Ui.BottomLeft, new Vector2(0.5f, 1f), Vector2.zero, new Vector2(80, 20));
             text = Ui.Txt(note, "Text", t.panelPage != null ? t.textDark : t.textLight);
             text.textWrappingMode = TextWrappingModes.Normal;
-            counter = Ui.Txt(note, "Counter", t.textMuted, TextAlignmentOptions.TopRight);
+            counter = Ui.Txt(note, "Counter", t.textMutedOnPage, TextAlignmentOptions.TopRight);
         }
 
         void OnEnable()

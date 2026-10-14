@@ -9,7 +9,7 @@ using Wyspa.Localization;
 namespace Wyspa.Automation
 {
     /// <summary>
-    /// Duszek-handlarz (Etap 6b; od 6d na prośbę gracza przypięty do skrzyni): unosi się obok swojej skrzyni i gdy tylko
+    /// Duszek-handlarz: unosi się obok swojej skrzyni i gdy tylko
     /// skrzynia się zapełni, sprzedaje całą zawartość po 90% ceny. Nie ma własnego kafelka - idzie razem ze skrzynią.
     /// </summary>
     public class MerchantSpirit : MonoBehaviour

@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-14)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-78), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-79), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -12,7 +12,9 @@ Historia decyzji jest w GDD §9 (punkty 1-78), a lista testów w `docs/TEST_PLAN
 - **Gra nazywa się Misty Packland** (GDD §16.5). Pakiet do wydania: `docs/RELEASE.md`.
 - **Etap 8** (losowe sadzenie, 60 ulepszeń handlu, prestiż „Rejs we mgłę”): GDD §11.8, §9 p. 78, `docs/UPGRADES_TRADE.md`,
   TEST_PLAN 9. Ceny sprzedaży liczy tylko `Economy/Market.cs` (nowe źródła sprzedaży muszą iść przez niego).
-- **Gracz nie widział jeszcze w Unity:** Etapu 8, powrotu do 16 px z wodą 32 px, nowej mgły (chmury, GDD §9 p. 75-76),
+- **Scena gry: `MainLevel.unity`** (dawniej Prototype). UI: czytelna czcionka Fusion Pixel 8px (opcja), poprawki z przeglądu
+  kodu UI (GDD §9 p. 79, TEST_PLAN 10). Komentarze w kodzie bez historii rozmów; commity bez stopek o asystencie.
+- **Gracz nie widział jeszcze w Unity:** porządków UI (p. 79), Etapu 8, powrotu do 16 px z wodą 32 px, nowej mgły (chmury, GDD §9 p. 75-76),
   logo w menu, menu Wyspa → Wydanie i buildu z nową nazwą (TEST_PLAN 4d i 8).
 
 ### Zrobione w ostatniej serii (od GDD §9 p. 58)

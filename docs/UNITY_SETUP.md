@@ -54,7 +54,7 @@ i pivoty.
 ## 3. Menu „Wyspa” (pasek u góry edytora)
 1. **Wyspa → 1. Ustawienia projektu**: okno 816×600, praca w tle, sprawdzenie, czy jest URP.
 2. **Wyspa → 2. Utwórz dane (rośliny, lampy)**: tworzy ScriptableObjecty w `Assets/_Project/Data`.
-3. **Wyspa → 3. Zbuduj scenę prototypu**: buduje `Assets/_Project/Scenes/Prototype.unity`:
+3. **Wyspa → 3. Zbuduj scenę MainLevel**: buduje `Assets/_Project/Scenes/MainLevel.unity`:
    - kamera Pixel Perfect 272×200,
    - Global Light 2D sterowany porą dnia,
    - woda, wyspa, drzewa,
@@ -75,7 +75,7 @@ Potem naciśnij **Play**.
 - **Zapis** trafia do `%USERPROFILE%/AppData/LocalLow/<firma>/<projekt>/save.json` (co minutę i przy wyjściu).
 
 ## 4a. Etap 2a: waluty, ulepszenia, rytm pracy (test)
-Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (dodaje dane ulepszeń i nowe komponenty), potem Play.
+Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę MainLevel** (dodaje dane ulepszeń i nowe komponenty), potem Play.
 - **Ulepszenia** w HUD: Słój Esencji (pojemność 60 → 120 → 240 → 480), Ognik-ogrodnik, Pamięć ziemi, Skrzynia kupca.
   Zakup działa i zapisuje się, a efekty automatyzacji dojdą w Etapie 2b. Szybki test: przycisk **Cheat: +500 monet**.
 - **Rytm pracy:**
@@ -90,7 +90,7 @@ Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (dodaje dane ulepsze
 - Stary zapis gry wczyta się bez utraty monet (zapis v2).
 
 ## 4a2. Etap 2b: automatyzacja (test)
-Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (skrzynia, ognik, skrzynia kupca, kamień runiczny), potem Play.
+Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę MainLevel** (skrzynia, ognik, skrzynia kupca, kamień runiczny), potem Play.
 1. Posadź kilka roślin, ustaw **x60** i „Wymuś aktywność”.
 2. **Cheat** i kup **Ognik-ogrodnik**: obok skrzyni pojawi się ognik. Co 30 s gry (przy x60: 0,5 s) leci do dojrzałego plonu
    i wkłada go do skrzyni. Sprite skrzyni zmienia się wraz z napełnieniem (pusta, połowa, pełna; pojemność 20).
@@ -103,7 +103,7 @@ Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (skrzynia, ognik, sk
 Raz na projekt: **Window → TextMeshPro → Import TMP Essential Resources** (bez tego tekst się nie pokaże,
 a w konsoli będzie błąd „Brak zasobów TextMeshPro”).
 
-Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (krok 3 sam uruchamia krok 2, który tworzy `Data/UiTheme.asset`), potem Play.
+Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę MainLevel** (krok 3 sam uruchamia krok 2, który tworzy `Data/UiTheme.asset`), potem Play.
 1. **HUD:** u góry monety i Esencja z paskiem, w prawym górnym rogu Księga i opcje, w lewym dolnym rytm pracy i zegar.
    Po 5 s bez ruchu myszy HUD znika, wraca po jej poruszeniu. Inne waluty pokażą się dopiero, gdy je zdobędziesz.
 2. **Klik w pustą grządkę** otwiera koło nasion. Najedź na nasiono: dymek z opisem. Na nasiona, na które cię nie stać, nie da się kliknąć.
@@ -118,7 +118,7 @@ Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (krok 3 sam uruchami
 7. Pliki tekstów: `Assets/_Project/Localization/*.csv` (UTF-8). Po zmianie pliku wystarczy ponownie Play.
 
 ## 4c. Etap 3a: żywa wyspa (test)
-Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (krok 2 tworzy materiały w `Data/Materials`), potem Play.
+Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę MainLevel** (krok 2 tworzy materiały w `Data/Materials`), potem Play.
 1. **Kołysanie:** rośliny i drzewa bujają się o piksel u góry, skokowo. Sąsiednie rośliny nie ruszają się równo.
 2. **Kontur:** najedź na grządkę z rośliną: jasny kontur. Dojrzała roślina pulsuje złotym konturem.
 3. **Woda:** pod wodą pływają ciemne ryby (powoli, ósemki), w głębi na dole porusza się coś dużego, po powierzchni
@@ -465,7 +465,7 @@ Wtedy mogę pracować bezpośrednio na plikach projektu, a nie tylko na `Assets/
 3. **Edit → Project Settings → Quality:** dla **każdego** poziomu jakości (klikasz po kolei w wierszach u góry)
    ustaw **Render Pipeline Asset** na `Pockland_URP2D`.
 4. **Wyspa → 1. Ustawienia projektu.** W konsoli ma się pojawić „URP z 2D Rendererem: OK”.
-5. **Wyspa → 3. Zbuduj scenę prototypu** jeszcze raz i Play. Przyciski 19:30 / 23:30 w HUD powinny przyciemniać scenę,
+5. **Wyspa → 3. Zbuduj scenę MainLevel** jeszcze raz i Play. Przyciski 19:30 / 23:30 w HUD powinny przyciemniać scenę,
    a lampy świecić.
 6. Opcjonalnie usuń pliki szablonu 3D, których nie używamy: `Assets/TutorialInfo`, `Assets/Readme.asset`,
    `Assets/Settings/PC_*`, `Mobile_*`, `*VolumeProfile*`, `SampleSceneProfile`.

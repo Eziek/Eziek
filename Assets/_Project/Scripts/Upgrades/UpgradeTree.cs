@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Wyspa.Upgrades
 {
     /// <summary>
-    /// Drzewko ulepszeń (prośba gracza: „na środku ognik-ogrodnik, rozchodzi się w drzewko, które się odkrywa”).
+    /// Drzewko ulepszeń.
     /// Pozycje w siatce (kolumna, wiersz od góry; środek = ognik-ogrodnik w 13, 9), ikona i zamiana wartości poziomu na liczbę.
     /// Gałęzie: rój (góra), Żar (lewo), ziemia (prawo), handel i morze (dół). Wymagania (rodzic) są w danych ulepszeń.
     /// </summary>
@@ -47,7 +47,7 @@ namespace Wyspa.Upgrades
             { UpgradeIds.MerchantChest, new Node { cell = new Vector2Int(13, 10), icon = "shop", show = Same } },
             { UpgradeIds.FairTrade, new Node { cell = new Vector2Int(12, 11), icon = "coin", show = Whole } },
             { UpgradeIds.SwiftBoat, new Node { cell = new Vector2Int(14, 11), icon = "boat", show = Less } },
-            // Etap 8: handel i dochody
+            // handel i dochody
             { UpgradeIds.Stall, new Node { cell = new Vector2Int(12, 12), icon = "shop", show = Whole } },
             { UpgradeIds.Scales, new Node { cell = new Vector2Int(12, 13), icon = "scale", show = Whole } },
             { UpgradeIds.Haggle, new Node { cell = new Vector2Int(11, 13), icon = "coin", show = Whole } },

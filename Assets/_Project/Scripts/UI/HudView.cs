@@ -10,7 +10,7 @@ using Wyspa.Localization;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// HUD (GDD §12.2, §12.10, Etap 6d): jeden zwarty pasek tuż nad wyspą. Górny wiersz: waluty i Esencja, dolny: rytm pracy,
+    /// HUD (GDD §12.2): jeden zwarty pasek tuż nad wyspą. Górny wiersz: waluty i Esencja, dolny: rytm pracy,
     /// tempo i zegar. Pasek idzie za lądem (nie przykleja się do rogów okna, więc w przezroczystym oknie nie wisi nad pulpitem).
     /// Znika po kilku sekundach bez ruchu myszy, wraca po jej poruszeniu. W mini-trybie go nie ma.
     /// </summary>
@@ -135,6 +135,8 @@ namespace Wyspa.UI
         }
 
         /// <summary>Pasek nad środkiem lądu, w granicach płótna (przy przewiniętej dużej wyspie zostaje u góry okna).</summary>
+        float shownWidth, lastGrow;   // szerokość paska z opóźnionym zwężaniem
+
         void Follow()
         {
             var cam = Camera.main;
@@ -205,7 +207,7 @@ namespace Wyspa.UI
             else
                 rhythmText.text = Loc.Get("ui.rhythm.normal", r.StreakMinutes);
             Ui.SetBar(rhythmFill, r.StreakMinutes / 25f);
-            // czas gry (prośba gracza): godzina na zegarze gry i odliczanie w prawdziwym czasie do nocy / świtu
+            // czas gry: godzina na zegarze gry i odliczanie w prawdziwym czasie do nocy / świtu
             var clock = game.Clock;
             int left = Mathf.CeilToInt(clock.IsNight ? GameClock.CycleSeconds - clock.Second : GameClock.DaySeconds - clock.Second);
             string countdown = $"{left / 60}:{left % 60:00}";
@@ -226,11 +228,13 @@ namespace Wyspa.UI
             var frame = (RectTransform)rhythmFill.parent;
             Ui.Place(frame, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 3), frame.sizeDelta);
             bx += frame.sizeDelta.x + 4;
-            if (tempoText.text.Length > 0)
+            // tempo: w dolnym wierszu, a gdy się nie mieści w oknie - w wierszu zegara
+            float tempoW = tempoText.text.Length > 0 ? Ui.Width(tempoText) : 0f;
+            bool tempoBelow = tempoW > 0f && bx + tempoW + 4f + 26f + Pad > root.rect.width - 4f;
+            if (tempoW > 0f && !tempoBelow)
             {
-                float w2 = Ui.Width(tempoText);
-                Ui.Place(tempoText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 2), new Vector2(w2, 10));
-                bx += w2 + 4;
+                Ui.Place(tempoText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 2), new Vector2(tempoW, 10));
+                bx += tempoW + 4;
             }
             // wskaźnik pracy: klawiatura i mysz jasne przez chwilę po wykrytym inpucie, inaczej przygaszone
             var act = game.Activity;
@@ -248,8 +252,20 @@ namespace Wyspa.UI
             Ui.Place(dayIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad, y3), new Vector2(12, 12));
             Ui.Place(clockText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad + 14, y3 - 2), new Vector2(cw, 10));
             float timeWidth = Pad + 14 + cw + Pad;
+            if (tempoBelow)
+            {
+                Ui.Place(tempoText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad + 14 + cw + 6, y3 - 2), new Vector2(tempoW, 10));
+                timeWidth += tempoW + 6;
+            }
             float width2 = Mathf.Ceil(Mathf.Max(topWidth, Mathf.Max(bottomWidth, timeWidth)));
-            bar.sizeDelta = new Vector2(width2, 3 * RowH + Pad + 2);
+            // szerokość od razu rośnie, a maleje dopiero po 3 s (pasek nie skacze na boki przy każdej zmianie tekstu)
+            float now2 = Time.unscaledTime;
+            if (width2 >= shownWidth || now2 - lastGrow > 3f)
+            {
+                if (width2 >= shownWidth) lastGrow = now2;
+                shownWidth = width2;
+            }
+            bar.sizeDelta = new Vector2(shownWidth, 3 * RowH + Pad + 2);
         }
             // ------------------------------------------------------------ monety lecą łukiem do licznika (GDD §5.5)
 

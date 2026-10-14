@@ -8,7 +8,7 @@ using Wyspa.Visual;
 namespace Wyspa.Alchemy
 {
     /// <summary>
-    /// Kocioł alchemiczny (wybór gracza po Etapie 6d): klik → przepisy. Składniki bierze ze skrzyń na plony, warzy kilka minut
+    /// Kocioł alchemiczny: klik → przepisy. Składniki bierze ze skrzyń na plony, warzy kilka minut
     /// (ogień i bąble), potem wywar świeci na fioletowo - klik „Wypij” włącza miksturę na 2 cykle gry (wabik: do przypłynięcia kupca).
     /// Warzenie liczy się w czasie gry (z przyspieszeniem z HUD debugowego), tylko gdy gra działa.
     /// </summary>

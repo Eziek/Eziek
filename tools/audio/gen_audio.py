@@ -1,4 +1,4 @@
-"""Dźwięki-placeholdery Pockland (Etap 6c): syntezowane w numpy, zapisywane jako OGG (ffmpeg, libvorbis).
+"""Dźwięki-placeholdery Pockland: syntezowane w numpy, zapisywane jako OGG (ffmpeg, libvorbis).
 
 Mroczne i ciche: tło dnia (fale, wiatr, rzadkie ptaki), tło nocy (fale, wiatr, pomruk, rzadka sowa), deszcz,
 krótkie efekty (sadzenie, zbiór, moneta, kopanie, ścinanie, stawianie, klik, Księga, powiadomienie, grzmot, magia, kafelek, bąbel).
@@ -133,7 +133,7 @@ def owl(dur=0.45, f=380.0):
 
 
 def amb_night():
-    """Noc (po teście: świerszcze były drażniące): ciche fale, lekki wiatr, niski miękki pomruk, rzadko daleka sowa."""
+    """Noc: ciche fale, lekki wiatr, niski miękki pomruk, rzadko daleka sowa."""
     sec = 12.0
     t = t_axis(sec)
     x = waves(sec, 0.5) * 0.45 + wind(sec) * 0.12

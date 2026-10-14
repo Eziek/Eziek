@@ -21,14 +21,15 @@ using Wyspa.World;
 namespace Wyspa.EditorTools
 {
     /// <summary>
-    /// Menu "Wyspa": ustawienia projektu, dane (rośliny, lampy) i scena prototypu zbudowana z prototype_layout.json.
+    /// Menu "Wyspa": ustawienia projektu, dane (rośliny, lampy) i scena gry MainLevel zbudowana z prototype_layout.json.
     /// Wszystko można uruchamiać wielokrotnie - istniejące dane są aktualizowane, scena budowana od nowa.
     /// </summary>
     public static class WyspaSetup
     {
         const string Root = "Assets/_Project";
         const string DataDir = Root + "/Data";
-        const string ScenePath = Root + "/Scenes/Prototype.unity";
+        const string ScenePath = Root + "/Scenes/MainLevel.unity";
+        const string OldScenePath = Root + "/Scenes/Prototype.unity";   // dawna nazwa sceny: przenoszona przy budowie
         const string LayoutPath = Root + "/Art/prototype_layout.json";
         const string Sprites = PixelArtImporter.SpritesRoot;
         const int Ppu = PixelArtImporter.PixelsPerUnit;
@@ -50,22 +51,22 @@ namespace Wyspa.EditorTools
             public int seed, sell;
             public bool fullMoon, hybrid;
             public string parentA, parentB, seedIcon;
-            public int unlock;   // Etap 6b: cena odblokowania w Sklep → Nasiona (0 = od początku)
+            public int unlock;   // cena odblokowania w Sklep → Nasiona (0 = od początku)
         }
         struct LampSpec { public string name; public int price; public float perMinute, growth; public bool flicker; }
 
-        // Etap 6d+ (prośba gracza): wzrost roślin dnia x3 szybciej (marchew 10 min → 3:20)
+        // wzrost roślin dnia x3 szybciej (marchew 10 min → 3:20)
         static readonly CropSpec[] CropSpecs =
         {
             new CropSpec { id = "carrot", name = "Marchew", sprite = "crop_carrot", kind = CropKind.Day, seconds = 200, seed = 5, sell = 12 },
             new CropSpec { id = "wheat", name = "Zboże", sprite = "crop_wheat", kind = CropKind.Day, seconds = 300, seed = 8, sell = 18 },
             new CropSpec { id = "pumpkin", name = "Dynia", sprite = "crop_pumpkin", kind = CropKind.Day, seconds = 500, seed = 15, sell = 40 },
-            // Etap 6b: do odblokowania w Sklep → Nasiona (unlock = monety, jednorazowo)
+            // do odblokowania w Sklep → Nasiona (unlock = monety, jednorazowo)
             new CropSpec { id = "garlic", name = "Czosnek", sprite = "crop_garlic", kind = CropKind.Day, seconds = 240, seed = 6, sell = 15, unlock = 300 },
             new CropSpec { id = "poppy", name = "Mak", sprite = "crop_poppy", kind = CropKind.Day, seconds = 400, seed = 12, sell = 30, unlock = 780 },
             new CropSpec { id = "wormwood", name = "Piołun", sprite = "crop_wormwood", kind = CropKind.Day, seconds = 800, seed = 25, sell = 70, unlock = 1800 },
             // rośliny nocy: czas = sekundy ciemności (rosną też offline). Noc cyklu gry trwa 1200 s (20 min):
-            // wilcza jagoda w 3/4 nocy, trupi grzyb w 1 noc, cmentarny bluszcz w 4 noce (Etap 6d+, wzrost x3)
+            // wilcza jagoda w 3/4 nocy, trupi grzyb w 1 noc, cmentarny bluszcz w 4 noce
             new CropSpec { id = "corpseshroom", name = "Trupi grzyb", sprite = "crop_corpseshroom", kind = CropKind.Night, seconds = 1200, seed = 15, sell = 45 },
             new CropSpec { id = "moonflower", name = "Księżycowy kwiat", sprite = "crop_moonflower", kind = CropKind.Night, seconds = 1500, seed = 20, sell = 60 },
             new CropSpec { id = "ghostpumpkin", name = "Upiorna dynia", sprite = "crop_ghostpumpkin", kind = CropKind.Night, seconds = 2400, seed = 30, sell = 90 },
@@ -73,7 +74,7 @@ namespace Wyspa.EditorTools
             new CropSpec { id = "belladonna", name = "Wilcza jagoda", sprite = "crop_belladonna", kind = CropKind.Night, seconds = 900, seed = 12, sell = 35, unlock = 960 },
             new CropSpec { id = "mandrake", name = "Mandragora", sprite = "crop_mandrake", kind = CropKind.Night, seconds = 2100, seed = 35, sell = 120, unlock = 2400 },
             new CropSpec { id = "graveivy", name = "Cmentarny bluszcz", sprite = "crop_graveivy", kind = CropKind.Night, seconds = 4800, seed = 60, sell = 260, unlock = 4800 },
-            // hybryda (Etap 4a): nasiona tylko z mutacji dyni i upiornej dyni na sąsiednich grządkach
+            // hybryda: nasiona tylko z mutacji dyni i upiornej dyni na sąsiednich grządkach
             new CropSpec { id = "hybridpumpkin", name = "Dynia-upiór", sprite = "crop_hybridpumpkin", kind = CropKind.Night, seconds = 2400, seed = 0, sell = 150,
                            hybrid = true, parentA = "pumpkin", parentB = "ghostpumpkin", seedIcon = "seed_hybrid" },
             // hybrydy z mutacji (treść: 5 nowych par, część dnia, krwawy piołun tylko w pełnię); ikony nasion icon_seed_<id>
@@ -107,7 +108,7 @@ namespace Wyspa.EditorTools
 
         static (float, CurrencyAmount[]) L(float value, params CurrencyAmount[] cost) => (value, cost);
 
-        // GDD §11.3 (wartości wstępne do balansu). Drzewko (prośba gracza): środek = ognik-ogrodnik, wymagania = rodzic w drzewku,
+        // GDD §11.3 (wartości wstępne do balansu). Drzewko: środek = ognik-ogrodnik, wymagania = rodzic w drzewku,
         // pozycje i ikony w Upgrades/UpgradeTree.cs. Wartość poziomu: mnożnik, liczba albo szansa (patrz UpgradeEffects).
         static readonly UpgradeSpec[] UpgradeSpecs =
         {
@@ -152,7 +153,7 @@ namespace Wyspa.EditorTools
                 levels = new[] { L(0.95f, Coins(800)), L(1f, Coins(2400)) }, requires = new[] { UpgradeIds.MerchantChest } },
             new UpgradeSpec { id = UpgradeIds.SwiftBoat, name = "Szybka łódź", category = UpgradeCategory.Sea,
                 levels = new[] { L(0.85f, Coins(600), Wood(10)), L(0.7f, Coins(1800), Wood(20)) }, requires = new[] { UpgradeIds.MerchantChest } },
-            // Etap 8 (prośba gracza): 60 ulepszeń handlu i dochodów, wartości wstępne do balansu (GDD §11.3, docs/UPGRADES_TRADE.md)
+            // 60 ulepszeń handlu i dochodów, wartości wstępne do balansu (GDD §11.3, docs/UPGRADES_TRADE.md)
             new UpgradeSpec { id = UpgradeIds.Stall, name = "Stragan", category = UpgradeCategory.Trade,
                 levels = new[] { L(0.05f, Coins(1000)), L(0.1f, Coins(3000)), L(0.15f, Coins(9000)) }, requires = new[] { UpgradeIds.FairTrade } },
             new UpgradeSpec { id = UpgradeIds.Scales, name = "Uczciwa waga", category = UpgradeCategory.Trade,
@@ -419,7 +420,7 @@ namespace Wyspa.EditorTools
                 }
             }
 
-            // latarnia morska (Etap 5b): lampa spoza układu prototypu, stawiana z Morza
+            // latarnia morska: lampa spoza układu prototypu, stawiana z Morza
             var lh = LoadOrCreate<LampDefinition>($"{DataDir}/Lamps/Lamp_lighthouse.asset");
             lh.id = "lighthouse";
             lh.displayName = "Latarnia morska";
@@ -521,7 +522,7 @@ namespace Wyspa.EditorTools
                 new DecoArt { kind = DecoKind.Rubble, sprite = R("rubble"), nameKey = "deco.rubble",
                     essenceCost = 2, reward = CurrencyType.Stone, rewardAmount = 1, anim = RemoveAnim.Poof, chips = stone },
             };
-            // --- Etap 5a: dekoracje stref (§13.8, §14.3). Zabytki (krypta, posąg, schody) są nieusuwalne i opowiadają lore.
+            // --- dekoracje stref (§13.8, §14.3). Zabytki (krypta, posąg, schody) są nieusuwalne i opowiadają lore.
             Sprite Z(string n) => LoadSprite("Zones/" + n);
             Sprite Zg(string n) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Zones/{n}_glow.png");
             DecoArt Zone(DecoKind kind, string sprite, string nameKey, int essence, CurrencyType reward, int amount, bool stoneChips,
@@ -585,7 +586,7 @@ namespace Wyspa.EditorTools
             art.altar = LoadSprite("Sea/altar");
             art.altarGlow = LoadSprite("Sea/altar_glow");
             art.lighthouse = AssetDatabase.LoadAssetAtPath<LampDefinition>($"{DataDir}/Lamps/Lamp_lighthouse.asset");
-            // automatyka (Etap 6b)
+            // automatyka
             Sprite[] Frames(string name, string suffix = "")
             {
                 var frames = new Sprite[4];
@@ -737,7 +738,7 @@ namespace Wyspa.EditorTools
             return theme;
         }
 
-        // ----------------------------------------------------------------- Etap 3a: materiały efektów
+        // ----------------------------------------------------------------- materiały efektów
         const string MatDir = DataDir + "/Materials";
         const string ShaderDir = Root + "/Shaders";
         // prototyp (anim.py): rośliny 2 cykle na 48 klatek (10 kl./s), drzewa 1 cykl
@@ -801,7 +802,7 @@ namespace Wyspa.EditorTools
             sr.gameObject.AddComponent<FxMaterial>().Setup(sr, fx, fallback);
         }
 
-        [MenuItem("Wyspa/3. Zbuduj scenę prototypu", priority = 3)]
+        [MenuItem("Wyspa/3. Zbuduj scenę MainLevel", priority = 3)]
         public static void BuildScene()
         {
             var layout = LoadLayout();
@@ -852,7 +853,7 @@ namespace Wyspa.EditorTools
             global.intensity = 1f;
             global.color = Color.white;
 
-            // --- wyspa z kafelków (Etap 3b): ląd, woda i mgła malowane w locie przez Island ---
+            // --- wyspa z kafelków: ląd, woda i mgła malowane w locie przez Island ---
             var world = new GameObject("World").transform;
             // woda liczona w shaderze (ryby, fale, przybój); bez shadera widać statyczną wodę z Island
             var water = MakeSprite("Water", world, LoadSprite("Ground/water_base"), Vector3.zero, -2000);
@@ -865,7 +866,7 @@ namespace Wyspa.EditorTools
             var shafts = new GameObject("LightShafts");
             shafts.transform.SetParent(world, false);
 
-            // --- obiekty stawiane na kafelkach (do Etapu 3c samoczynnie, na wolnej trawie) ---
+            // --- obiekty stawiane na kafelkach ---
             var objectsRoot = new GameObject("TileObjects").transform;
             var tileObjects = new List<TileObject>();
             TileObject AsTileObject(Component c, string id, string nameKey, TileObject anchor = null, Vector2Int offset = default)
@@ -877,11 +878,11 @@ namespace Wyspa.EditorTools
                 return t;
             }
 
-            // automatyka (Etap 6b): skrzynie, ogniki, duszki-handlarze i runy stawia Island w trakcie gry (IslandArt, Sklep → Budowle)
+            // automatyka: skrzynie, ogniki, duszki-handlarze i runy stawia Island w trakcie gry (IslandArt, Sklep → Budowle)
 
             // lampy (także startową latarnię) stawia Island w trakcie gry: IslandArt.lamps, sklep, tryb stawiania
 
-            // nocne zdarzenia (Etap 5b): ogniki, spadające gwiazdy, potwór
+            // nocne zdarzenia: ogniki, spadające gwiazdy, potwór
             Sprite E(string n) => LoadSprite("Events/" + n);
             Sprite Eg(string n) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Events/{n}_glow.png");
             var eventsGo = new GameObject("NightEvents");
@@ -896,7 +897,7 @@ namespace Wyspa.EditorTools
                 new[] { E("tentacle_0"), E("tentacle_1"), E("tentacle_2") },
                 new[] { E("monster_eye_0"), E("monster_eye_1"), E("monster_eye_2") }, Eg("monster_eye_2"), glowMat);
 
-            // kupiec-widmo (Etap 4b): łódź pod wyspą raz na noc; obiekt zawsze aktywny (harmonogram), sprite'y chowa sam
+            // kupiec-widmo: łódź pod wyspą raz na noc; obiekt zawsze aktywny (harmonogram), sprite'y chowa sam
             var merchantGo = new GameObject("GhostMerchant");
             merchantGo.transform.SetParent(world, false);
             var merchantBody = MakeSprite("Body", merchantGo.transform, LoadSprite("Sea/ghost_merchant"), Vector3.zero, 700);
@@ -936,7 +937,7 @@ namespace Wyspa.EditorTools
             SetRefs(dayNight, ("clock", clock), ("globalLight", global));
             SetRefs(click, ("targetCamera", cam));
 
-            // --- efekty: woda, mgła, cząsteczki (Etap 3a) ---
+            // --- efekty: woda, mgła, cząsteczki ---
             waterAnim.Setup(water, clock);
             fog.gameObject.AddComponent<FogController>().Setup(fog, clock);
             shafts.AddComponent<LightShafts>().Setup(null, null, clock);
@@ -956,6 +957,8 @@ namespace Wyspa.EditorTools
             SetRefs(uiRoot, ("theme", uiTheme));
 
             EnsureFolder(Path.GetDirectoryName(ScenePath).Replace('\\', '/'));
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(OldScenePath) != null && AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) == null)
+                AssetDatabase.MoveAsset(OldScenePath, ScenePath);   // stara scena Prototype.unity: ta sama scena pod nową nazwą
             EditorSceneManager.SaveScene(scene, ScenePath);
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
             Debug.Log("[Wyspa] Scena zapisana: " + ScenePath + ". Naciśnij Play.");

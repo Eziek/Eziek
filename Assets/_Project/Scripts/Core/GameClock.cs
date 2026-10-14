@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Wyspa.Core
 {
     /// <summary>
-    /// Pora dnia z cyklu gry (prośba gracza, zastępuje zegar komputera): pełna doba trwa 1 h, z czego 40 min to dzień
+    /// Pora dnia z cyklu gry: pełna doba trwa 1 h, z czego 40 min to dzień
     /// (06:00-20:00 na zegarze gry), a 20 min to noc (20:00-06:00). Cykl liczy się od stałej daty w czasie UTC, więc idzie dalej,
     /// także gdy gra jest wyłączona. Każdy cykl to osobna „doba gry” (Now ma datę i godzinę na zegarze gry), dzięki czemu
     /// zdarzenia „raz na noc” (kupiec, potwór, ołtarz) działają raz na cykl. Księżyc: pełny cykl faz trwa 8 nocy, pełnia to jedna noc.

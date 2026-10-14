@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Wyspa.Core
 {
     /// <summary>
-    /// Gra wisi godzinami na pulpicie - ma mało kosztować, ale animacje mają być płynne (prośba gracza).
+    /// Gra wisi godzinami na pulpicie - ma mało kosztować, ale animacje mają być płynne.
     /// Opcje → Płynność: 0 oszczędna (30 / 12 kl./s), 1 płynna (60 / 30, domyślnie), 2 bardzo płynna (60 / 60).
     /// Pierwsza liczba: okno z fokusem, druga: w tle (gracz pracuje w innym programie).
     /// </summary>

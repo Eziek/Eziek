@@ -45,6 +45,9 @@ namespace Wyspa.UI
         public Color textWisp = new Color32(0x5f, 0xcf, 0xb8, 0xff);
         public Color textDark = new Color32(0x1c, 0x15, 0x20, 0xff);
         public Color textWarn = new Color32(0xa2, 0x4d, 0x48, 0xff);
+        [Tooltip("Na pergaminie (strony Księgi, karteczki): złoty i szary z palety mają tam kontrast 1,2:1 i 2,1:1.")]
+        public Color textGoldOnPage = new Color32(0x8a, 0x5a, 0x1c, 0xff);
+        public Color textMutedOnPage = new Color32(0x5a, 0x4a, 0x52, 0xff);
 
         Dictionary<string, Sprite> lookup;
 

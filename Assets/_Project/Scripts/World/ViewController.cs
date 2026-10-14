@@ -10,6 +10,7 @@ namespace Wyspa.World
     /// w edytorze rośnie sam kadr (okno Game ma rozmiar ustawiony w edytorze).
     /// </summary>
     [RequireComponent(typeof(Camera))]
+    [DefaultExecutionOrder(-50)]   // przed trybami stawiania i rozbudowy, które czytają LastRightWasDrag w tej samej klatce
     public class ViewController : MonoBehaviour
     {
         public static ViewController Instance { get; private set; }
@@ -33,7 +34,7 @@ namespace Wyspa.World
 
         // grubszy wał mgły w przezroczystym oknie (FOG_REACH 34 w Fog.shader): zapas ponad wideExtra zapisane w scenie
         static readonly Vector2Int WideWall = new Vector2Int(16, 16);
-        // przesuwanie PPM sięga dalej w mgłę (prośba gracza); w przezroczystym oknie tylko trochę, bo za wałem jest pulpit
+        // przesuwanie PPM sięga dalej w mgłę; w przezroczystym oknie tylko trochę, bo za wałem jest pulpit
         static readonly Vector2Int FogPan = new Vector2Int(96, 80), FogPanWide = new Vector2Int(40, 40);
 
         Vector2Int Margin => wide ? margin + wideExtra + WideWall : margin;

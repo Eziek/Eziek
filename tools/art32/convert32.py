@@ -1,4 +1,4 @@
-"""Etap 7: przerobienie grafik świata z 16 px na 32 px (pixel art, paleta dark fantasy) - zaakceptowany styl gracza.
+""" przerobienie grafik świata z 16 px na 32 px (pixel art, paleta dark fantasy) - zaakceptowany styl gracza.
 
 Czyta obecne PNG 16 px (z export_unity*.py + pad_sway.py), zamienia kolory z powrotem na klucze palety, robi hd2x
 (crisp: Scale2x, czysty kontur, bryła, łuski liści) i zapisuje PNG 32 px w tym samym miejscu. Poświaty (*_glow) liczy

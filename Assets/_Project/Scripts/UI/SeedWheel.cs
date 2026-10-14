@@ -83,7 +83,7 @@ namespace Wyspa.UI
                 return;
             if (!target.State.IsEmpty && forcedNight < 0)
                 forcedNight = game.Clock.IsNight ? 1 : 0;
-            // pierwsze miejsce: losowe nasiono pasujące do pory dnia (prośba gracza), niezależnie od kategorii koła
+            // pierwsze miejsce: losowe nasiono pasujące do pory dnia, niezależnie od kategorii koła
             var slots = new List<Slot>
             {
                 new Slot
@@ -153,7 +153,7 @@ namespace Wyspa.UI
             public System.Func<bool> affordable;
         }
 
-        /// <summary>Przyciski po okręgu wokół punktu na świecie; promień rośnie z liczbą nasion (Etap 6b: więcej roślin).</summary>
+        /// <summary>Przyciski po okręgu wokół punktu na świecie; promień rośnie z liczbą nasion.</summary>
         void Build(Vector3 worldPos, List<Slot> slots)
         {
             var cam = Camera.main;
@@ -308,11 +308,13 @@ namespace Wyspa.UI
         }
     }
 
-    /// <summary>Pokazuje dymek, gdy kursor jest nad elementem UI.</summary>
+    /// <summary>Pokazuje dymek, gdy kursor jest nad elementem UI. Treść odświeża się co 0,25 s (np. poziom i koszt po zakupie).</summary>
     public class HoverTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         TooltipView tooltip;
         System.Func<string> content;
+        bool hovered;
+        float refresh;
 
         public void Init(TooltipView view, System.Func<string> text)
         {
@@ -322,18 +324,33 @@ namespace Wyspa.UI
 
         public void OnPointerEnter(PointerEventData e)
         {
+            hovered = true;
+            refresh = 0.25f;
             if (tooltip != null && content != null)
                 tooltip.Show(this, content());
         }
 
         public void OnPointerExit(PointerEventData e)
         {
+            hovered = false;
             if (tooltip != null)
                 tooltip.Hide(this);
         }
 
+        void Update()
+        {
+            if (!hovered || tooltip == null || content == null)
+                return;
+            refresh -= Time.unscaledDeltaTime;
+            if (refresh > 0f)
+                return;
+            refresh = 0.25f;
+            tooltip.Show(this, content());   // bez zmiany tekstu dymek nic nie przelicza
+        }
+
         void OnDisable()
         {
+            hovered = false;
             if (tooltip != null)
                 tooltip.Hide(this);
         }

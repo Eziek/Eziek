@@ -1,4 +1,4 @@
-"""Eksport do Unity dla Etapu 3a (żywa wyspa): woda pod shader, mgła, sprite'y cząsteczek.
+"""Eksport do Unity dla woda pod shader, mgła, sprite'y cząsteczek.
 
 Uruchom z tools/pixel-proto:  python3 export_unity_fx.py   (po export_unity.py; dopisuje do pivots.json)
 
@@ -8,7 +8,7 @@ Uruchom z tools/pixel-proto:  python3 export_unity_fx.py   (po export_unity.py; 
     (0 ląd, 1 płycizna b2, 2 środek b1, 3 głębia b0, 4 najgłębsza p0, 5 cień klifu, 6 piana 1, 7 piana 2).
 - Art/water_layout.json: ścieżki ryb (ósemki) i miejsce potwora w głębinie, liczone tak jak w prototypie (water.py).
 - Fx/*: drobne sprite'y cząsteczek (iskierki, świetliki, ziemia, listki, piana).
-- Etap 3b: Ground/plot_tile.png (grządka 16x16 na kafelek), UI/Frames/frame_* (ramki trybu rozbudowy).
+ Ground/plot_tile.png (grządka 16x16 na kafelek), UI/Frames/frame_* (ramki trybu rozbudowy).
 """
 import os, json
 import daynight            # paleta mroczna (jak export_unity.py)
@@ -71,7 +71,7 @@ fx = {
 for name, spr in fx.items():
     E.save(spr, "Fx", name, pivot=(0.5, 0.5), glow=False)
 
-# --- Etap 3b: wyspa z kafelków ---
+# - wyspa z kafelków ---
 import tiles_proto as TP
 E.save(TP.plot16(), "Ground", "plot_tile", pivot=(0.5, 0.5), glow=False)
 

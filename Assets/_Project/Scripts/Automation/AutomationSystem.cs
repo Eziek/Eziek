@@ -9,7 +9,7 @@ using Wyspa.World;
 namespace Wyspa.Automation
 {
     /// <summary>
-    /// Automatyka (GDD §11.3 E, Etap 6b, rój ogników): budowle w wielu egzemplarzach - skrzynie, gniazda ogników, duszki-handlarze,
+    /// Automatyka (GDD §11.3 E): budowle w wielu egzemplarzach - skrzynie, gniazda ogników, duszki-handlarze,
     /// runy dziczy, kotły.
     /// Ulepszenie z drzewka odblokowuje rodzaj budowli i daje pierwszą sztukę za darmo; kolejne kupuje się w Sklep → Budowle
     /// (cena rośnie z każdą sztuką). Ulepszenia dalej skracają odstępy pracy wszystkich ogników i duszków.

@@ -9,7 +9,7 @@ using Wyspa.World;
 namespace Wyspa.Visual
 {
     /// <summary>
-    /// Ptaki (prośba gracza: życie na wyspie). W dzień co jakiś czas przylatuje wrona albo ptaszek, siada na drzewie
+    /// Ptaki. W dzień co jakiś czas przylatuje wrona albo ptaszek, siada na drzewie
     /// (owocowym albo dzikim) lub na wolnym kafelku trawy, dziobie, na ziemi podskakuje, po chwili odlatuje.
     /// Kursor blisko ptaka go płoszy. Tylko wygląd: bez kolizji i wpływu na grę.
     /// </summary>

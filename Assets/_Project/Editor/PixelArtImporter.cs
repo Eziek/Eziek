@@ -30,7 +30,7 @@ namespace Wyspa.EditorTools
             public float x;
             public float y;
             public int[] border;
-            public int hd;   // Etap 7: 2 = grafika 32 px (art32/convert32.py), PPU x2
+            public int hd;   // 2 = grafika 32 px (art32/convert32.py), PPU x2
         }
 
         struct SpriteMeta

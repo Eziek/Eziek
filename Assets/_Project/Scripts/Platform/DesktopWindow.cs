@@ -23,7 +23,7 @@ namespace Wyspa.Platform
         const int CornerMargin = 8;
         const int SnapDistance = 32;
         /// <summary>Szerokość pasa wody przy brzegu w przezroczystym oknie (piksele gry).</summary>
-        // pas wody w przezroczystym oknie: mieści pomost (33 px od brzegu) i łódź przy nim (prośba gracza po teście)
+        // pas wody w przezroczystym oknie: mieści pomost (33 px od brzegu) i łódź przy nim
         public const float ShoreWaterPixels = 46f;
 
         bool frameless, topMost, transparent;

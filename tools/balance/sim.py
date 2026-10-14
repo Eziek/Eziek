@@ -1,6 +1,6 @@
 """Symulacja progresji Pockland (balans): ile godzin aktywnej pracy do kolejnych kamieni milowych.
 
-Cykl gry (Etap 6d+): doba gry trwa 1 h - 40 min dnia, 20 min nocy - i idzie także offline.
+Cykl gry: doba gry trwa 1 h - 40 min dnia, 20 min nocy - i idzie także offline.
 Gracz pracuje WORK_H godzin dziennie (aktywny), resztę doby gra jest wyłączona.
 - Rośliny dnia rosną, gdy gracz jest aktywny i grządka jest oświetlona (dzień albo lampa w nocy), z tempem pracy.
 - Rośliny nocy rosną w nocy cyklu w ciemności (także offline). Gracz trzyma je na grządkach poza zasięgiem lamp.

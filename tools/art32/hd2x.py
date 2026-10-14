@@ -1,4 +1,4 @@
-"""Przerysowanie obecnych sprite'ów 16 px na 32 px (wybór gracza: „jak obecne 16 px, tylko większe”, bez „klusek”,
+"""Przerysowanie obecnych sprite'ów 16 px na 32 px (, bez „klusek”,
 więcej detalu, lepsze kolory).
 
 Kroki dla każdego sprite'a (na kluczach palety, nie na RGB):
@@ -11,7 +11,7 @@ Kroki dla każdego sprite'a (na kluczach palety, nie na RGB):
 """
 import numpy as np
 
-# rampy obecnej palety (ciemny → jasny); dodatkowe jaśniejsze szczyty dla kontrastu z trawą (uwaga gracza o kolorach)
+# rampy obecnej palety (ciemny → jasny); dodatkowe jaśniejsze szczyty dla kontrastu z trawą
 RAMPS = [
     ['gs', 'g0', 'g1', 'g2', 'g3', 'g4'],
     ['e0', 'e1', 'e2', 'e3', 'e4'],
@@ -22,7 +22,7 @@ RAMPS = [
     ['wi', 'wl'],
     ['fx', 'fl'],
 ]
-# paleta dark fantasy dla roślin i obiektów (uwaga gracza: kolory bardziej mroczne): chłodniej, mniej nasycenia,
+# paleta dark fantasy dla roślin i obiektów: chłodniej, mniej nasycenia,
 # zieleń w stronę oliwki i szarości, pomarańcz w rdzę, jasne szczyty przygaszone
 DARK_FANTASY = {
     'o': '#0b080c', 'gs': '#121a1b',
@@ -82,7 +82,7 @@ def lum(rgb, k):
 
 def hd2x(spr, rgb, seed=1, texture=True, crisp=False):
     """Zwraca siatkę kluczy 2x z detalem (lista wierszy, None = przezroczysty).
-    crisp=True (uwaga gracza: „bardziej pixel art niż anime”): bez ditheringu przejść, bez losowych plamek i odblasków,
+    crisp=True: bez ditheringu przejść, bez losowych plamek i odblasków,
     czarny kontur bez selout, liście jako równe łuski - czyste plamy koloru."""
     rnd = np.random.default_rng(seed)
     up, down = build_steps(rgb)

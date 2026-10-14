@@ -110,7 +110,7 @@ namespace Wyspa.World
     {
         // Balans (tempo „szybkie”, cykl gry 1 h, wzrost x3; tools/balance/sim.py): 25 kafelków po ok. 3-4 dniach pracy,
         // 100 po ok. 2 tygodniach, 150 po ok. miesiącu (8 h pracy dziennie)
-        // pierwsze 20 kafelków taniej (prośba gracza): zniżka 60% na starcie, maleje do zera przy 20. kafelku
+        // pierwsze 20 kafelków taniej: zniżka 60% na starcie, maleje do zera przy 20. kafelku
         public static int TileCoins(int n) =>
             Math.Max(10, (int)Math.Round((10 + 20 * n + 1.5 * n * n) * (n < 20 ? 0.4 + 0.6 * n / 20.0 : 1.0)));
         public static int TileEssence(int n) => 3 + n / 3;

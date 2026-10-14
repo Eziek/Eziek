@@ -6,7 +6,7 @@ using Wyspa.Visual;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// Tablica ogłoszeń na nowej wyspie (Etap 6d, GDD §12.8). Po wykonanym kroku karteczka się odrywa (cząsteczki),
+    /// Tablica ogłoszeń na nowej wyspie (GDD §12.8). Po wykonanym kroku karteczka się odrywa (cząsteczki),
     /// a po chwili przybija się następna. Klik: panel z treścią karteczki i „Rozbierz” (koniec wprowadzenia, drewno).
     /// </summary>
     public class NoticeBoard : MonoBehaviour, IContextActions

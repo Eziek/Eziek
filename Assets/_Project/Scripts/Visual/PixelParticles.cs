@@ -12,7 +12,7 @@ namespace Wyspa.Visual
         public static PixelParticles Instance { get; private set; }
 
         const float Ppu = 16f;
-        // Etap 6c+ (prośba gracza): ruch co klatkę (płynnie), pozycje dalej przyciągnięte do siatki pikseli
+        // ruch co klatkę (płynnie), pozycje dalej przyciągnięte do siatki pikseli
         const float Step = 0f;
         const int MaxParticles = 160;
 

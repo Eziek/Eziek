@@ -142,7 +142,7 @@ namespace Wyspa.Farming
         }
 
         /// <summary>
-        /// Wykopanie niedojrzałej rośliny (prośba gracza: po nocy posadzone rośliny nocne stały i nie dało się nic zrobić).
+        /// Wykopanie niedojrzałej rośliny.
         /// Nasiono wraca do worka, postęp wzrostu przepada. Zwraca wykopaną roślinę (null, gdy nic nie rosło albo jest dojrzała).
         /// </summary>
         public CropDefinition DigUp()

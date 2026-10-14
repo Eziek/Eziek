@@ -10,9 +10,9 @@ namespace UnityEngine
     public class Behaviour : Component { public bool enabled; public bool isActiveAndEnabled; }
     public class MonoBehaviour : Behaviour { public Coroutine StartCoroutine(IEnumerator e) => null; public void StopCoroutine(Coroutine c) { } public void StopAllCoroutines() { } }
     public class ScriptableObject : Object { public static T CreateInstance<T>() where T : ScriptableObject => default; }
-    public class GameObject : Object { public GameObject(string n) { } public GameObject(string n, params Type[] components) { } public Transform transform; public string tag; public bool activeSelf; public void SetActive(bool v) { } public T AddComponent<T>() where T : Component => default; public T GetComponent<T>() => default; }
-    public class Transform : Component, IEnumerable { public Vector3 position, localPosition, localScale; public Transform parent; public void SetParent(Transform p, bool w) { } public void SetAsLastSibling() { } public Vector3 TransformPoint(Vector3 p) => p; public Vector3 InverseTransformPoint(Vector3 p) => p; public IEnumerator GetEnumerator() => null; }
-    public class RectTransform : Transform { public Vector2 anchorMin, anchorMax, pivot, anchoredPosition, sizeDelta, offsetMin, offsetMax; public Rect rect; }
+    public class GameObject : Object { public GameObject(string n) { } public GameObject(string n, params Type[] components) { } public Transform transform; public string tag; public bool activeSelf, activeInHierarchy; public void SetActive(bool v) { } public T AddComponent<T>() where T : Component => default; public T GetComponent<T>() => default; }
+    public class Transform : Component, IEnumerable { public Vector3 position, localPosition, localScale; public Transform parent; public int childCount; public int GetSiblingIndex() => 0; public void SetParent(Transform p, bool w) { } public void SetAsLastSibling() { } public Vector3 TransformPoint(Vector3 p) => p; public Vector3 InverseTransformPoint(Vector3 p) => p; public IEnumerator GetEnumerator() => null; }
+    public class RectTransform : Transform { public Vector2 anchorMin, anchorMax, pivot, anchoredPosition, sizeDelta, offsetMin, offsetMax; public Rect rect; public void GetWorldCorners(Vector3[] corners) { } }
     public static class RectTransformUtility { public static bool ScreenPointToLocalPointInRectangle(RectTransform rect, Vector2 screenPoint, Camera cam, out Vector2 localPoint) { localPoint = default; return false; } }
     public enum RenderMode { ScreenSpaceOverlay, ScreenSpaceCamera, WorldSpace }
     public class Canvas : Behaviour { public RenderMode renderMode; public bool pixelPerfect; public int sortingOrder; }
@@ -135,7 +135,8 @@ namespace UnityEditor
     public enum TextureImporterCompression { Uncompressed }
     public class AssetPostprocessor { public string assetPath; public AssetImporter assetImporter; }
     public enum ImportAssetOptions { ForceUpdate }
-    public static class AssetDatabase { public static T LoadAssetAtPath<T>(string p) where T : UnityEngine.Object => default; public static void CreateAsset(UnityEngine.Object o, string p) { } public static void SaveAssets() { } public static void Refresh() { } public static bool IsValidFolder(string p) => true; public static string CreateFolder(string a, string b) => ""; public static string[] FindAssets(string f, string[] d) => null; public static string GUIDToAssetPath(string g) => ""; public static void ImportAsset(string p, ImportAssetOptions o) { } }
+    public static class AssetDatabase { public static T LoadAssetAtPath<T>(string p) where T : UnityEngine.Object => default; public static void CreateAsset(UnityEngine.Object o, string p) { } public static void SaveAssets() { } public static void Refresh() { } public static bool IsValidFolder(string p) => true; public static string CreateFolder(string a, string b) => ""; public static string[] FindAssets(string f, string[] d) => null; public static string GUIDToAssetPath(string g) => ""; public static void ImportAsset(string p, ImportAssetOptions o) { } public static string MoveAsset(string oldPath, string newPath) => ""; }
+    public class SceneAsset : UnityEngine.Object { }
     public class MenuItem : Attribute { public MenuItem(string s) { } public int priority; }
     public static class EditorUtility { public static void SetDirty(UnityEngine.Object o) { } public static void RevealInFinder(string path) { } }
     public enum IconKind { Any = -1, Application = 0, Settings = 1, Notification = 2, Spotlight = 3, Store = 4 }

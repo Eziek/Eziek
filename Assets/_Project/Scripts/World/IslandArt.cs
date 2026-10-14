@@ -66,21 +66,21 @@ namespace Wyspa.World
         public List<LampDefinition> lamps = new List<LampDefinition>();
         public Sprite[] dust;
 
-        [Header("Życie stref (Etap 5a): wrona, żaba, bąble")]
+        [Header("Życie stref: wrona, żaba, bąble")]
         public Sprite[] crow;
         public Sprite[] crowGlow;
         public Sprite[] frog;
         public Sprite[] frogGlow;
         public Sprite[] bubbles;
 
-        [Header("Morze (Etap 4)")]
+        [Header("Morze")]
         public Sprite pier;
         public Sprite netBuoy;
         public Sprite boat;
         public Sprite boatGlow;
         public Sprite altar;
         public Sprite altarGlow;
-        [Tooltip("Latarnia morska (Etap 5b): lampa spoza sklepu lamp, stawiana z Morza.")]
+        [Tooltip("Latarnia morska: lampa spoza sklepu lamp, stawiana z Morza.")]
         public LampDefinition lighthouse;
 
         [Header("Drzewa owocowe (GDD §15.1)")]
@@ -117,7 +117,7 @@ namespace Wyspa.World
         public Sprite[] cauldronReady;
         public Sprite[] cauldronReadyGlow;
 
-        [Header("Wprowadzenie (Etap 6d): tablica z karteczkami")]
+        [Header("Wprowadzenie: tablica z karteczkami")]
         public Sprite noticeBoard;
         public Sprite noticeBoardEmpty;
         [Tooltip("Złota strzałka nad celem kroku wprowadzenia.")]
@@ -131,7 +131,7 @@ namespace Wyspa.World
             return null;
         }
 
-        [Header("Automatyka (Etap 6b): budowle w wielu egzemplarzach")]
+        [Header("Automatyka: budowle w wielu egzemplarzach")]
         [Tooltip("Skrzynia na plony: pusta, do połowy, pełna.")]
         public Sprite[] crateFill;
         public Sprite[] wispFrames;
