@@ -187,6 +187,16 @@ namespace Wyspa.Automation
         // ------------------------------------------------------------ zakup ognika
 
         /// <summary>Czy zawód jest dostępny: siewca wymaga ulepszenia „Runa siewu”, alchemik - kotła na wyspie.</summary>
+        /// <summary>Jest miejsce na kolejnego ognika (limit z ulepszeń i darów).</summary>
+        public bool HasRoom
+        {
+            get
+            {
+                wisps.RemoveAll(w => w == null);
+                return wisps.Count < Capacity;
+            }
+        }
+
         public static bool KindUnlocked(WispKind k, GameLoop game)
         {
             if (game == null || !game.Upgrades.Has(Upgrades.UpgradeIds.WispGardener))

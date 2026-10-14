@@ -88,7 +88,39 @@ namespace Wyspa.Automation
             Grant(island, Crate, wisp || merchant);
             GrantNest(island, wisp);
             Grant(island, Merchant, merchant);
-            Grant(island, Rune, upgrades.Has(UpgradeIds.SoilMemory));
+            GrantSower(upgrades.Has(UpgradeIds.SoilMemory));   // „Ognik-siewca”: darmowy siewca (runę dziczy kupuje się w sklepie)
+        }
+
+        /// <summary>Klucz w granted: darmowy siewca już był.</summary>
+        public const string Sower = "sower";
+
+        /// <summary>
+        /// „Ognik-siewca” daje darmowego ognika-siewcę w pierwszym gnieździe (zgłoszenie gracza: wcześniej dawał runę dziczy).
+        /// Gdy pierwsze gniazdo jest pełne, siewca trafia do innego z miejscem; gdy wszystkie pełne, czeka (toast) do
+        /// następnego zakupu ulepszenia albo wczytania.
+        /// </summary>
+        void GrantSower(bool on)
+        {
+            if (!on || granted.Contains(Sower) || WispNest.All.Count == 0)
+                return;
+            WispNest target = null;
+            foreach (var n in WispNest.All)
+                if (n != null && n.HasRoom)
+                {
+                    target = n;
+                    break;
+                }
+            if (target == null)
+            {
+                GameEvents.RaiseToast("toast.sower_waits");
+                return;
+            }
+            if (target.AddWisp(WispKind.Sower) != null)
+            {
+                granted.Add(Sower);
+                Visual.IslandFx.FindPopped(target.transform.position + new Vector3(0f, 1f, 0f));
+                GameEvents.RaiseToast("toast.sower_joined");
+            }
         }
 
         void Grant(Island island, string kind, bool on)

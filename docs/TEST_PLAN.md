@@ -265,3 +265,11 @@ Najpierw **Wyspa → 2** (grafiki czapek).
 5. Zapis i wczytanie: czapki na ognikach zostają. Rejs we mgłę: kupione czapki zostają w sklepie („Masz”) na nowej wyspie.
 6. Czapki są małe i siedzą na czubku głowy (oczy widoczne), także gdy ognik leci w lewo. Dwa ogniki blisko siebie:
    jeden rysuje się w całości przed drugim (narzędzie i czapka nie wchodzą na ciało sąsiada), odsuwają się wyraźniej.
+
+## 19. Ognik-siewca i podsumowanie rejsu
+1. Kup „Ognik-siewca”: w pierwszym gnieździe pojawia się siewca (błysk, toast „Ognik-siewca dołączył do gniazda”), runa
+   dziczy nie pojawia się sama; w Sklep → Budowle runę da się kupić.
+2. Wszystkie gniazda pełne: toast „Gniazda pełne: ognik-siewca czeka...”; po zwolnieniu miejsca i kolejnym zakupie
+   ulepszenia albo wczytaniu siewca dołącza.
+3. Stary zapis z „Ognik-siewca” i runą: po wczytaniu dochodzi siewca, runa zostaje.
+4. Podsumowanie rejsu (PL, DE, EN): żaden wiersz nie wchodzi na ramkę, okno szersze przy dłuższych tekstach.

@@ -82,27 +82,37 @@ namespace Wyspa.UI
                 (Loc.Get("ui.summary.wisps", s.wisps), false),
                 (Loc.Get("ui.summary.pearls", s.pearls), true),
             };
-            const float w = 180f;
-            float h = 6 + 12 + 4 + lines.Count * 11 + 6 + 4 + 16 + 6;
-            var p = Ui.Img(root, "Summary", t.panel, true, true);
-            var box = Ui.Place(p.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(w, h));
-            var title = Ui.Txt(box, "Title", t.textGold, TextAlignmentOptions.Top);
+            // szerokość z najdłuższego wiersza (języki różnie długie); ramki panelu i pergaminu mają po 7 px
+            const float pad = 9f, inner = 10f, lineH = 11f;
+            var title = Ui.Txt(root, "Title", t.textGold, TextAlignmentOptions.Top);
             title.text = Loc.Get("ui.summary.title", s.voyage);
-            Ui.Place(title.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -6), new Vector2(w, 10));
-            var page = Ui.Img(box, "Page", t.panelPage != null ? t.panelPage : t.tooltip, true);
-            var pageRt = Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(6, -22), new Vector2(w - 12, lines.Count * 11 + 6));
+            float textW = Ui.Width(title);
             var texts = new List<TextMeshProUGUI>();
             for (int i = 0; i < lines.Count; i++)
             {
-                var tx = Ui.Txt(pageRt, "Line", lines[i].gold ? t.textGoldOnPage : t.textDark);
+                var tx = Ui.Txt(root, "Line", lines[i].gold ? t.textGoldOnPage : t.textDark);
                 tx.text = lines[i].text;
-                Ui.Place(tx.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(6, -4 - i * 11), new Vector2(w - 24, 10));
-                tx.gameObject.SetActive(false);
+                textW = Mathf.Max(textW, Ui.Width(tx));   // pomiar na aktywnym obiekcie
                 texts.Add(tx);
+            }
+            float w = Mathf.Clamp(textW + 2 * (pad + inner), 180f, Mathf.Max(180f, root.rect.width - 8f));
+            float pageH = lines.Count * lineH + 12f;
+            float h = 8 + 10 + 6 + pageH + 6 + 16 + 8;
+            var p = Ui.Img(root, "Summary", t.panel, true, true);
+            var box = Ui.Place(p.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(w, h));
+            title.rectTransform.SetParent(box, false);
+            Ui.Place(title.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -8), new Vector2(w, 10));
+            var page = Ui.Img(box, "Page", t.panelPage != null ? t.panelPage : t.tooltip, true);
+            var pageRt = Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(pad, -24), new Vector2(w - 2 * pad, pageH));
+            for (int i = 0; i < texts.Count; i++)
+            {
+                texts[i].rectTransform.SetParent(pageRt, false);
+                Ui.Place(texts[i].rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(inner, -6 - i * lineH), new Vector2(w - 2 * (pad + inner), 10));
+                texts[i].gameObject.SetActive(false);
             }
             bool next = false;
             var go = Ui.Btn(box, "Next", () => next = true);
-            Ui.Place((RectTransform)go.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0, 6), new Vector2(w - 60, 16));
+            Ui.Place((RectTransform)go.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0, 8), new Vector2(Mathf.Min(120f, w - 2 * pad), 16));
             var label = Ui.Txt(go.transform, "Text", t.textLight, TextAlignmentOptions.Center);
             label.text = Loc.Get("ui.summary.next");
             Ui.Stretch(label.rectTransform);

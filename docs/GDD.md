@@ -721,6 +721,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     się w całości (SortingGroup: ciało, narzędzie, czapka razem), niższy na ekranie przed wyższym, więc narzędzia i czapki
     sąsiadów się nie przeplatają. Ocieranie od 0,9 kafelka (odsunięcie do 0,45), miejsca przy gnieździe co 0,6, rozmówcy
     0,92 od siebie. Dymki pogaduszek nad wszystkimi ognikami (osobny obiekt, kolejność 4510).
+90. **„Ognik-siewca” daje siewcę, nie runę** (zgłoszenie gracza): ulepszenie dokłada darmowego ognika-siewcę do pierwszego
+    gniazda z miejscem (gdy wszystkie pełne: toast, czeka do kolejnego zakupu ulepszenia albo wczytania). Runę dziczy
+    odblokowuje, ale kupuje się ją w sklepie (pierwsza 150 monet + 5 kamienia). Zapisy z kupionym „Ognik-siewca”
+    dostają siewcę przy wczytaniu (runa, która już stoi, zostaje). Okno podsumowania rejsu: szerokość z najdłuższego
+    wiersza, tekst z dala od ramek.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
