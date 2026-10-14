@@ -100,7 +100,17 @@ namespace Wyspa.World
             objects = tileObjects;
         }
 
-        void Start() => EnsureLightShafts();
+        void Start()
+        {
+            EnsureLightShafts();
+            // ptaki: tworzone w locie (bez przebudowy sceny), sprite'y z IslandArt (Wyspa → 2)
+            if (art != null && art.birdCrow != null && art.birdCrow.Length >= 4 && FindAnyObjectByType<AmbientBirds>() == null)
+            {
+                var birds = new GameObject("Birds");
+                birds.transform.SetParent(transform.parent, false);
+                birds.AddComponent<AmbientBirds>().Setup(art.birdCrow, art.birdFinch, FindAnyObjectByType<GameClock>());
+            }
+        }
 
         /// <summary>
         /// Snopy światła (LightShafts, Light 2D): scena może go nie mieć (bez Wyspa → 3), więc tworzymy obiekt sami.
@@ -677,9 +687,13 @@ namespace Wyspa.World
             UseFx(body, art.swayTree);
             var glow = NewSprite("Glow", go.transform, Vector3.zero, 1);
             glow.transform.localPosition = Vector3.zero;
-            if (art.glow != null)
+            // świecące owoce kołyszą się razem z drzewem (ten sam rytm, materiał bez oświetlenia)
+            if (art.swayTreeGlow != null)
+                UseFx(glow, art.swayTreeGlow);
+            else if (art.glow != null)
                 glow.sharedMaterial = art.glow;
             glow.enabled = false;
+            go.AddComponent<SpriteFx>().Setup(0.05f, body, glow);   // każde drzewo we własnej fazie kołysania
             var tree = go.AddComponent<Farming.FruitTree>();
             AddTileCollider(go);
             var obj = go.AddComponent<TileObject>();

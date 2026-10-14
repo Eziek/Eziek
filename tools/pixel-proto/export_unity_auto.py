@@ -50,6 +50,10 @@ for f in range(4):
     save(S6.merchant_spirit(f), "Automation", f"merchant_spirit_{f}")
     save(S3.wisp_gardener(f, bob=False), "Automation", f"wisp_gardener_{f}")   # bez podskoku: płynny lot w kodzie
 
+for kind in ('crow', 'finch'):
+    for pose in S6.BIRD_POSES:
+        save(S6.bird(kind, pose), "Critters", f"bird_{kind}_{pose}", glow=False)
+
 for name, rows in S6.ICON_MAPS.items():
     save(K.from_map(rows), "UI/Icons", "icon_" + name, pivot=(0.5, 0.5), glow=False)
 

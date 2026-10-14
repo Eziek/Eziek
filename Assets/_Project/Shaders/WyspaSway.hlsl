@@ -9,12 +9,16 @@ float WyspaStepTime(float fps)
     return floor(_Time.y * fps) / fps;
 }
 
+// Podmuch wiatru 0..1 (globalnie, ustawia IslandFx razem ze smugami wiatru): mocniejsze kołysanie i pochylenie z wiatrem.
+float _WyspaWind;
+
 float2 WyspaSwayUV(float2 uv)
 {
     float h = floor(uv.y * _MainTex_TexelSize.w) * _MainTex_TexelSize.y;   // 0 = dolny wiersz tekstury
     float t = _Time.y;
     float s = sin(6.2831853 * _SwaySpeed * t + _SwayPhase);
-    float shift = round(_SwayAmount * s * h);
+    float w = saturate(_WyspaWind);
+    float shift = round(_SwayAmount * (s * (1.0 + w) + w * 1.2) * h);
     uv.x -= shift * _MainTex_TexelSize.x;
     return uv;
 }

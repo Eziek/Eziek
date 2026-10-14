@@ -20,6 +20,20 @@ namespace Wyspa.World
         [SerializeField] Vector2Int minView = new Vector2Int(144, 112);
         [Tooltip("Zapas wokół lądu w pikselach (woda i mgła dookoła).")]
         [SerializeField] Vector2Int margin = new Vector2Int(48, 32);
+        [Tooltip("Przezroczyste okno: dodatkowy zapas na kłęby mgły wokół wyspy (piksele).")]
+        [SerializeField] Vector2Int wideExtra = new Vector2Int(16, 24);
+        bool wide;
+
+        Vector2Int Margin => wide ? margin + wideExtra : margin;
+
+        /// <summary>Przezroczyste okno: większy zapas wokół lądu, żeby kłęby mgły mieściły się w kadrze.</summary>
+        public void SetWideMargin(bool on)
+        {
+            if (wide == on)
+                return;
+            wide = on;
+            Refit();
+        }
         [Tooltip("Największa część ekranu, jaką może zająć okno (szerokość, wysokość).")]
         [SerializeField] Vector2 maxScreenFraction = new Vector2(0.6f, 0.7f);
         [SerializeField] int windowScale = 3;
@@ -136,8 +150,8 @@ namespace Wyspa.World
             }
             var land = LandPixels();
             var max = MaxView();
-            int w = Mathf.CeilToInt((land.width + 2 * margin.x) / 16f) * 16;
-            int h = Mathf.CeilToInt((land.height + 2 * margin.y) / 16f) * 16;
+            int w = Mathf.CeilToInt((land.width + 2 * Margin.x) / 16f) * 16;
+            int h = Mathf.CeilToInt((land.height + 2 * Margin.y) / 16f) * 16;
             view = new Vector2Int(Mathf.Clamp(w, minView.x, max.x), Mathf.Clamp(h, minView.y, max.y));
             Apply(true);
         }
@@ -201,7 +215,7 @@ namespace Wyspa.World
         bool CanPan()
         {
             var land = LandPixels();
-            return land.width + 2 * margin.x > view.x || land.height + 2 * margin.y > view.y;
+            return land.width + 2 * Margin.x > view.x || land.height + 2 * Margin.y > view.y;
         }
 
         /// <summary>Kamera na środku lądu, przesunięta o pan w granicach (wyspa + zapas), przyciągnięta do pikseli.</summary>
@@ -209,8 +223,8 @@ namespace Wyspa.World
         {
             var land = LandPixels();
             var c = land.center;
-            float hx = Mathf.Max(0f, (land.width + 2 * margin.x - view.x) / 2f);
-            float hy = Mathf.Max(0f, (land.height + 2 * margin.y - view.y) / 2f);
+            float hx = Mathf.Max(0f, (land.width + 2 * Margin.x - view.x) / 2f);
+            float hy = Mathf.Max(0f, (land.height + 2 * Margin.y - view.y) / 2f);
             pan = new Vector2(Mathf.Clamp(pan.x, -hx, hx), Mathf.Clamp(pan.y, -hy, hy));
             float x = Mathf.Round(c.x + pan.x) / Ppu;
             float y = Mathf.Round(c.y + pan.y) / Ppu;

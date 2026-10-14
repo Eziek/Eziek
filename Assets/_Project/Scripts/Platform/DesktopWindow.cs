@@ -194,9 +194,8 @@ namespace Wyspa.Platform
             var fog = FindAnyObjectByType<FogController>();
             if (fog != null)
                 fog.SetShoreBand(transparent, ShoreWaterPixels);
-            var shafts = FindAnyObjectByType<LightShafts>();
-            if (shafts != null)
-                shafts.SetMask(transparent ? ShoreWaterPixels : 0f);
+            if (ViewController.Instance != null)
+                ViewController.Instance.SetWideMargin(transparent);
 
             if (!Supported || Hwnd == IntPtr.Zero)
                 return;

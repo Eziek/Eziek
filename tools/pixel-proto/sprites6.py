@@ -164,3 +164,38 @@ ICON_MAPS = {
     'fill': [".......jj.", "......jj..", ".....jj...", "....jj....", "..sss.....",
              ".szzs.....", ".szs......", "..s.......", "hhhhhhh...", ".........."],
 }
+
+
+# ---------------- ptaki (prośba gracza: życie na wyspie) ----------------
+def bird(kind, pose):
+    """kind: 'crow' (wrona) albo 'finch' (mały ptaszek). pose: sit0, sit1 (dziób w dół), fly0 (skrzydła w górze), fly1 (w dole).
+    Patrzy w prawo; w lewo odbija kod (flipX)."""
+    s = Sprite(12, 10, 6, 9)
+    body = ['o', 'p0', 'p1'] if kind == 'crow' else ['e1', 'e2', 'e3']
+    head = body if kind == 'crow' else ['e0', 'p1', 'p2']
+    beak = 'go' if kind == 'crow' else 'or'
+    peck = pose == 'sit1'
+    fly = pose.startswith('fly')
+    by = 5 if not fly else 4
+    s.blob(5.5, by, 3, 2.3 if kind == 'crow' else 2.0, body)
+    hx, hy = (8.5, by - 2.0) if not peck else (9.0, by + 0.5)
+    s.blob(hx, hy, 1.6 if kind == 'crow' else 1.4, 1.5, head)
+    bx, byk = int(hx + 1.6), int(round(hy))
+    s.set(bx, byk, beak)
+    if kind == 'crow':
+        s.set(bx + 1, byk, beak)
+    if kind == 'finch':
+        s.set(6, by + 1, 'cr'); s.set(5, by + 1, 'cr')     # jasny brzuszek
+    s.line(1, by + 1, 3, by, body[1])                      # ogon
+    if pose == 'fly0':
+        s.line(5, by - 1, 2, 0, body[1]); s.line(6, by - 1, 4, 0, body[1])
+    elif pose == 'fly1':
+        s.line(5, by + 1, 2, 9, body[1]); s.line(6, by + 1, 4, 9, body[1])
+    else:
+        s.set(5, 8, beak); s.set(7, 8, beak)               # nóżki
+    s.outline()
+    s.set(int(hx), int(round(hy)) - 1 if not peck else int(round(hy)), 'fl' if kind == 'crow' else 'cr')   # oko
+    return s
+
+
+BIRD_POSES = ('sit0', 'sit1', 'fly0', 'fly1')

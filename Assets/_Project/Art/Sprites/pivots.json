@@ -11,6 +11,46 @@
       "y": 0.04545
     },
     {
+      "name": "bird_crow_fly0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_crow_fly1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_crow_sit0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_crow_sit1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_finch_fly0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_finch_fly1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_finch_sit0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_finch_sit1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
       "name": "boat",
       "x": 0.51667,
       "y": 0.0625

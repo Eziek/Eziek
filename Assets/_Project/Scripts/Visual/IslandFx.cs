@@ -140,6 +140,28 @@ namespace Wyspa.Visual
         }
 
         /// <summary>Znalezisko wyskakuje z kafelka jak plon przy zbiorze (iskierki).</summary>
+        /// <summary>Zbiór owoców z drzewa: owoce spadają z korony na ziemię i znikają (zamiast podskakującego drzewa).</summary>
+        public static void FruitDrop(Vector3 canopy, float dropPixels, Sprite fruit, int count, int order)
+        {
+            var fx = Instance;
+            if (fx == null || fx.particles == null || fruit == null)
+                return;
+            for (int i = 0; i < count; i++)
+            {
+                var at = canopy + new Vector3(Random.Range(-7, 8) / Ppu, Random.Range(-3, 4) / Ppu, 0f);
+                var v = new Vector2(Random.Range(-14f, 14f), Random.Range(8f, 22f));
+                fx.particles.Spawn(at, new[] { fruit }, v, 220f, 1.1f, order + 2, false, 10f, false, dropPixels + Random.Range(-2f, 3f));
+            }
+        }
+
+        /// <summary>Liście sypią się z korony (ścięte drzewo, podmuch).</summary>
+        public static void LeafBurst(Vector3 at, int count, int order)
+        {
+            var fx = Instance;
+            if (fx != null && fx.particles != null && fx.leaves != null && fx.leaves.Length > 0)
+                fx.particles.Burst(at, fx.leaves, count, 34f, 120f, 0.9f, order + 2);
+        }
+
         public static void FindPopped(Vector3 at)
         {
             var fx = Instance;
@@ -219,6 +241,8 @@ namespace Wyspa.Visual
         class Mote { public SpriteRenderer sr; public Vector2 pos; public float speed, phase, age, life; }
         readonly List<Mote> motes = new List<Mote>();
         float gustTimer = 3f;
+        float gustTime, gustLength;   // trwający podmuch (kołysanie roślin i drzew przez _WyspaWind)
+        static readonly int WindId = Shader.PropertyToID("_WyspaWind");
         Sprite streakSprite, moteSprite;
         static readonly Color DayMote = new Color(1f, 0.9f, 0.6f, 0.8f);
         static readonly Color NightMote = new Color(0.45f, 1f, 0.9f, 0.7f);
@@ -277,7 +301,18 @@ namespace Wyspa.Visual
                     s.phase = Random.value * 6.28f;
                     s.sr.color = night ? new Color(0.6f, 0.75f, 0.9f, 0f) : new Color(1f, 1f, 0.95f, 0f);
                     s.sr.enabled = true;
+                    gustLength = Mathf.Max(gustLength, s.life);
                 }
+                gustTime = 0f;
+            }
+            // podmuch: rośliny i drzewa pochylają się z wiatrem (płynnie narasta i opada)
+            if (gustLength > 0f)
+            {
+                gustTime += dt;
+                float u = gustTime / gustLength;
+                Shader.SetGlobalFloat(WindId, u < 1f ? Mathf.Sin(u * Mathf.PI) * 0.8f : 0f);
+                if (u >= 1f)
+                    gustLength = 0f;
             }
             foreach (var s in streaks)
             {
@@ -352,6 +387,15 @@ namespace Wyspa.Visual
             int n = 0;
             foreach (var p in FarmPlot.All)
                 if (p.State.IsRipe) n++;
+            // owocujące drzewa też iskrzą (połowa szans, iskra w koronie)
+            foreach (var t in FruitTree.All)
+                if (t.Fruiting && Random.value < 0.5f)
+                {
+                    var at = t.transform.position + new Vector3(Random.Range(-9, 10) / Ppu, Random.Range(14, 30) / Ppu, 0f);
+                    var fr = new[] { sparkle[0], sparkle[1], sparkle[2], sparkle[1], sparkle[0] };
+                    particles.Spawn(at, fr, Vector2.zero, 0f, 0.5f, 2000, true);
+                    return;
+                }
             if (n == 0)
                 return;
             int pick = Random.Range(0, n);

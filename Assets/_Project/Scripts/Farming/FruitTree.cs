@@ -67,6 +67,8 @@ namespace Wyspa.Farming
         public Sprite[] stages = new Sprite[4];
         public Sprite fruitingGlow;
         public Sprite[] fall = new Sprite[4];
+        [Tooltip("Owoc spadający przy zbiorze (ikona owocu).")]
+        public Sprite fruit;
     }
 
     /// <summary>Klik w obiekt, który chce obsłużyć go sam zamiast panelu (np. drzewo z owocami: zbiór od razu).</summary>
@@ -94,6 +96,7 @@ namespace Wyspa.Farming
         bool chopping;
         bool chopArmed;
         bool glowing;
+        Coroutine bounce;
 
         public TreeSpecies Species => species;
         public float Growth => growth;
@@ -158,7 +161,10 @@ namespace Wyspa.Farming
                 glowing = shouldGlow;
                 RefreshVisual();
                 if (Stage != before)
+                {
                     IslandFx.Grew(transform.position + new Vector3(0f, 0.6f, 0f), body != null ? body.sortingOrder : 0);
+                    Bounce(0.14f, 0.6f);   // nowa faza: sprężyste „pyknięcie”, jak przy roślinach
+                }
             }
         }
 
@@ -215,13 +221,37 @@ namespace Wyspa.Farming
             var at = transform.position + new Vector3(0f, 1.2f, 0f);
             GameEvents.RaiseCurrencyGained(at, CurrencyType.Coins, coins);
             GameEvents.RaiseToast("toast.fruit", species.fruitCount, Loc.Get(species.FruitKey), coins);
-            if (art != null && art.stages != null && art.stages.Length > 3)
-                IslandFx.Harvest(at, art.stages[3], body != null ? body.sortingOrder : 0);
+            // owoce spadają z korony, drzewo lekko się otrząsa (bez podskakiwania całego drzewa)
+            IslandFx.FruitDrop(at, 18f, art != null ? art.fruit : null, Mathf.Min(species.fruitCount, 5), body != null ? body.sortingOrder : 0);
+            Bounce(0.06f, 0.5f);
             Lore.Chronicle.Note("tree:" + species.id);
             Lore.Chronicle.Count("harvest", species.fruitCount);
             fruit = 0f;
             glowing = false;
             RefreshVisual();
+        }
+
+        /// <summary>Sprężyste kołysanie skali od podstawy (pivot sprite'a jest u dołu), gasnące w czasie.</summary>
+        void Bounce(float strength, float duration)
+        {
+            if (!isActiveAndEnabled)
+                return;
+            if (bounce != null)
+                StopCoroutine(bounce);
+            bounce = StartCoroutine(BounceRoutine(strength, duration));
+        }
+
+        IEnumerator BounceRoutine(float strength, float duration)
+        {
+            for (float t = 0f; t < duration; t += Time.unscaledDeltaTime)
+            {
+                float u = t / duration;
+                float k = Mathf.Sin(u * Mathf.PI * 3f) * (1f - u) * strength;
+                transform.localScale = new Vector3(1f + k * 0.6f, 1f - k, 1f);
+                yield return null;
+            }
+            transform.localScale = Vector3.one;
+            bounce = null;
         }
 
         int Wood => Adult ? 6 : (Stage == 1 ? 2 : 0);
@@ -273,20 +303,31 @@ namespace Wyspa.Farming
             var basePos = transform.position;
             if (glow != null) glow.enabled = false;
             if (light2D != null) light2D.enabled = false;
-            // potrząśnięcie, potem przewracanie (tylko młode i dorosłe mają klatki)
-            for (float t = 0f; t < 0.4f; t += Time.unscaledDeltaTime)
+            int order = body != null ? body.sortingOrder : 0;
+            // trzy uderzenia siekierą: drzewo drży, sypią się liście, potem przewraca się coraz szybciej
+            for (int hit = 0; hit < 3; hit++)
             {
-                transform.position = basePos + new Vector3(Mathf.Sin(t * 60f) * 1f / 16f, 0f, 0f);
-                yield return null;
-            }
-            transform.position = basePos;
-            if (Stage >= 1 && art != null && art.fall != null)
-                foreach (var f in art.fall)
+                IslandFx.LeafBurst(basePos + new Vector3(0f, 1.4f, 0f), 2, order);
+                for (float t = 0f; t < 0.22f; t += Time.unscaledDeltaTime)
                 {
-                    if (f != null && body != null) body.sprite = f;
-                    yield return new WaitForSecondsRealtime(0.12f);
+                    float k = Mathf.Sin(t * 70f) * (1f - t / 0.22f);
+                    transform.position = basePos + new Vector3(k * 1.2f / 16f, 0f, 0f);
+                    yield return null;
                 }
-            IslandFx.Planted(basePos, body != null ? body.sortingOrder : 0);
+                transform.position = basePos;
+                yield return new WaitForSecondsRealtime(0.12f);
+            }
+            if (Stage >= 1 && art != null && art.fall != null)
+            {
+                float[] times = { 0.16f, 0.12f, 0.08f, 0.06f };   // przyspiesza jak padające drzewo
+                for (int i = 0; i < art.fall.Length; i++)
+                {
+                    if (art.fall[i] != null && body != null) body.sprite = art.fall[i];
+                    yield return new WaitForSecondsRealtime(times[Mathf.Min(i, times.Length - 1)]);
+                }
+                IslandFx.LeafBurst(basePos + new Vector3(1.2f, 0.4f, 0f), 7, order);
+            }
+            IslandFx.Planted(basePos, order);
             var game = GameLoop.Instance;
             int wood = Wood;
             if (game != null && wood > 0)

@@ -444,6 +444,12 @@ Obrazki referencyjne (kopie): `docs/img/`
 39. Uwagi gracza po teście: zasypywanie grządek i rozbiórka budowli, „Wyjdź z gry” (brak X w oknie bez ramki), powiększenie
     x2..x6 + Ctrl + kółko, koło nasion z podziałem dzień / noc, mgła tylko nad pasem wody, **tempo pracy** (pisanie i mysz
     przyspieszają rośliny dnia do x1.5, §4.1).
+44. Po teście: mgła w przezroczystym oknie **dalej od wyspy**: nad pasem wody czysto, osobne miękkie kłęby od ok. 4 px za wodą
+    do ok. 30 px dalej (okno ma wtedy większy zapas wokół lądu). Drzewa: każde kołysze się we własnej fazie, świecące owoce
+    kołyszą się razem z drzewem (materiał SwayTreeGlow), **podmuchy wiatru pochylają rośliny i drzewa** (`_WyspaWind`),
+    przy zbiorze owoce spadają z korony (zamiast podskakującego całego drzewa), nowa faza = sprężyste pyknięcie, owocujące
+    drzewa iskrzą, ścinanie: trzy uderzenia, liście, przyspieszające przewracanie. **Ptaki** (`AmbientBirds`): w dzień wrona
+    albo ptaszek przylatuje co 25-70 s, siada na drzewie lub wolnym kafelku, dziobie, podskakuje, odlatuje; kursor je płoszy.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -515,6 +521,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Lore/Chronicle.cs`, `Rituals.cs` | kronika: liczniki cyklu, punkty księżyca przy nowiu, odkrycia do bestiariusza, rytuały i ich efekty (statyczne mnożniki) |
 | `Scripts/Platform/WinApi.cs`, `DesktopWindow.cs` | okno na pulpicie (tylko build Windows): ramka, na wierzchu, róg ekranu, przeciąganie, przezroczystość z klikiem przez tło, `Autostart` (HKCU\Run) |
 | `Scripts/Farming/FruitTree.cs` | drzewa owocowe: `TreeSpecies` (dane 5 gatunków), `TreeArt`, `FruitTree` (wzrost, owoce, zbiór kliknięciem, ścinanie, świecenie) |
+| `Scripts/Visual/AmbientBirds.cs` | ptaki: przylot po łuku, siadanie na drzewie lub kafelku, dziobanie, podskoki, odlot, płoszenie kursorem |
 | `Scripts/Visual/LightShafts.cs`, `NightGlow.cs` | snopy słońca/księżyca (Sprite Light 2D z wolumetrią, za kamerą), nocna poświata ogników, duszków i run |
 | `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |

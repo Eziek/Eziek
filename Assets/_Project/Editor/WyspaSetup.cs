@@ -435,8 +435,14 @@ namespace Wyspa.EditorTools
                     ta.fall[i] = LoadSprite($"Trees/tree_{sp.id}_fall_{i}");
                 }
                 ta.fruitingGlow = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Trees/tree_{sp.id}_3_glow.png");
+                ta.fruit = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}UI/Icons/icon_fruit_{sp.id}.png");
                 art.trees.Add(ta);
             }
+            // ptaki (sit0, sit1, fly0, fly1)
+            Sprite[] Bird(string kind) => new[] { LoadSprite($"Critters/bird_{kind}_sit0"), LoadSprite($"Critters/bird_{kind}_sit1"),
+                                                   LoadSprite($"Critters/bird_{kind}_fly0"), LoadSprite($"Critters/bird_{kind}_fly1") };
+            art.birdCrow = Bird("crow");
+            art.birdFinch = Bird("finch");
             art.rune = LoadSprite("Automation/rune_stone");
             art.runeGlow = LoadSprite("Automation/rune_stone_glow");
             art.lamps = new List<LampDefinition>();
@@ -454,6 +460,7 @@ namespace Wyspa.EditorTools
             art.swayCrop = LoadMat("SwayCrop");
             art.swayCropGlow = LoadMat("SwayCropGlow");
             art.swayTree = LoadMat("SwayTree");
+            art.swayTreeGlow = LoadMat("SwayTreeGlow");
             art.glow = GlowMaterial();
             EditorUtility.SetDirty(art);
             return art;
@@ -549,6 +556,7 @@ namespace Wyspa.EditorTools
             FxMaterialAsset("SwayCrop", "SpriteSway", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", CropSwaySpeed); });
             FxMaterialAsset("SwayCropGlow", "SpriteSwayUnlit", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", CropSwaySpeed); });
             FxMaterialAsset("SwayTree", "SpriteSway", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", TreeSwaySpeed); });
+            FxMaterialAsset("SwayTreeGlow", "SpriteSwayUnlit", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", TreeSwaySpeed); });
             var data = AssetDatabase.LoadAssetAtPath<Texture2D>(Sprites + "Ground/water_data.png");
             if (data == null)
                 Debug.LogWarning("[Wyspa] Brak Ground/water_data.png - uruchom tools/pixel-proto/export_unity_fx.py.");

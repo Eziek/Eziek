@@ -77,6 +77,13 @@ namespace Wyspa.World
         [Header("Drzewa owocowe (GDD §15.1)")]
         public List<Farming.TreeArt> trees = new List<Farming.TreeArt>();
         public Sprite sapling;
+        [Tooltip("Kołysanie świecących owoców w rytmie drzewa (SpriteSwayUnlit, prędkość drzew).")]
+        public Material swayTreeGlow;
+
+        [Header("Ptaki (życie na wyspie)")]
+        [Tooltip("sit0, sit1 (dziób w dół), fly0, fly1")]
+        public Sprite[] birdCrow;
+        public Sprite[] birdFinch;
 
         public Farming.TreeArt Tree(string id)
         {

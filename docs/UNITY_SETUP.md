@@ -295,6 +295,16 @@ Stary materiał `Data/Materials/LightShafts.mat` można usunąć (shader nakład
 5. Upiorna grusza / drzewo księżyca z owocami w nocy świecą i oświetlają grządki w zasięgu (rośliny dnia rosną jak przy lampie).
 6. Zapis: drzewa (wzrost, owoce) wracają po ponownym uruchomieniu.
 
+## 4q. Mgła dalej od wyspy, ładniejsze drzewa, ptaki (test)
+Po pobraniu: **Wyspa → 2** (materiał `SwayTreeGlow`, ikony owoców i ptaki w `IslandArt`), potem Play.
+1. Przezroczyste okno: nad pasem wody czysto, dalej osobne, miękkie kłęby mgły z prześwitami; okno ma większy zapas.
+2. Podmuch wiatru (smugi): rośliny i drzewa pochylają się z wiatrem i wracają.
+3. Drzewa kołyszą się każde w swoim rytmie; świecące owoce gruszy/drzewa księżyca kołyszą się razem z drzewem.
+4. Zbiór owoców: owoce spadają z korony na ziemię, drzewo lekko się otrząsa (bez skakania). Nowa faza: sprężyste pyknięcie.
+5. Ścinanie: trzy uderzenia z liśćmi, potem przewracanie przyspiesza, na końcu deszcz liści.
+6. Ptaki: w dzień co 25-70 s przylatuje wrona albo ptaszek, siada na drzewie albo na trawie, dziobie, na ziemi podskakuje,
+   po chwili odlatuje. Najedź kursorem blisko: zrywa się do lotu. W nocy ptaków nie ma.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 
