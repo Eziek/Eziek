@@ -258,6 +258,14 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Nazwa gry: **Pockland**. Do sprawdzenia: zbieżność z „Pokéland” (§16.5).
 - [ ] Nazwa energii (Esencja / Żar / Dusza).
 - [x] Wersja Unity: **6.6 (6000.6.5f1)**, zmienione z 6.3 LTS na prośbę gracza (Hub poleca 6.6, instalacja jednym kliknięciem).
+- [x] **Kocioł alchemiczny** (wybór gracza): budowla w Sklep → Budowle (300 monet + 6 kamienia, wymaga ognika, kolejne x1.6).
+  Składniki bierze **ze skrzyń na plony** (skrzynia = spiżarnia; uwaga: duszek-handlarz sprzedaje pełną skrzynię razem
+  ze składnikami). Warzenie 5-10 min gry (ogień i bąble), potem wywar świeci na fioletowo, klik „Wypij” włącza miksturę
+  na 2 cykle (czas prawdziwy, mija też offline; ta sama mikstura przedłuża czas). Przepisy:
+  Wywar wzrostu (6 roślin dnia → dzień +30%), Eliksir nocy (4 rośliny nocy → noc +50%), Napar skupienia (3 owoce + 3 rośliny
+  dnia → Esencja +50%), Płynne światło (3 księżycowe kwiaty + 2 owoce → lampy bez Esencji), Wabik na widmo (2 mandragory +
+  2 owoce → kupiec-widmo najbliższej nocy, do użycia), Mgła w butelce (2 cmentarne bluszcze + 2 upiorne dynie → zdarzenia
+  nocne x2). Przepisy z nieodblokowanymi nasionami są ukryte. `Alchemy/Cauldron.cs`, `Alchemy/Potions.cs`, zapis v10.
 - [x] **Zamówienia na tablicy ogłoszeń** (wybór gracza): po wprowadzeniu tablica zostaje; co 2 cykle gry nowa karteczka
   (maks. 3) od kogoś z mgły (Zielarka z mgły, Grabarz, Latarnik, Wiedźma z bagien, Mnich z ruin, Ślepy rybak, bez postaci
   na ekranie): zebrać 1-2 rodzaje plonów lub owoców w terminie 4-7 cykli. Postęp liczy się sam ze zbiorów (ręcznych i ogników),
@@ -512,6 +520,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     kafelkach nie wystają poza zaokrąglony, nierówny brzeg.
 51. Tańsze pierwsze 20 kafelków (prośba gracza). Wybór dalszej zabawy: zamówienia, kocioł alchemiczny, chowańce i pogoda,
     dźwięk i zasobnik. Zrobione zamówienia na tablicy; wskaźnik pisania i myszy w HUD, tempo z 15 s.
+52. Kocioł alchemiczny: 6 mikstur ze składników ze skrzyń, działanie 2 cykle, zapis v10.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

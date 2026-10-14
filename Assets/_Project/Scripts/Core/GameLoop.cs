@@ -233,7 +233,7 @@ namespace Wyspa.Core
             else if (!night)
                 fullMoonAnnounced = false;
             if (activity.IsActive)
-                essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier);
+                essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier * Alchemy.Potions.Essence);   // napar skupienia
 
             // Najtańsze lampy dostają Esencję pierwsze - gdy jej braknie, gasną najdroższe.
             lampOrder.Clear();
@@ -270,7 +270,10 @@ namespace Wyspa.Core
             if (!night && DuskGrowth && crop != null && crop.kind == CropKind.Night && clock.IsDusk)
                 night = true;   // zmierzch liczy się roślinom nocy jak noc
             // rośliny dnia: rytuał „Głębokie korzenie” i tempo pracy (pisanie, mysz)
-            float dayBonus = crop != null && crop.kind == CropKind.Day ? DayGrowthMultiplier * activity.TempoMultiplier : 1f;
+            float dayBonus = crop != null && crop.kind == CropKind.Day ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth : 1f;
+            // mikstury z kotła: wywar wzrostu (rośliny dnia), eliksir nocy (rośliny nocy)
+            if (crop != null && crop.kind == CropKind.Night)
+                dayBonus = Alchemy.Potions.NightGrowth;
             return new GrowthContext
             {
                 playerActive = activity.IsActive,

@@ -105,6 +105,43 @@ namespace Wyspa.Automation
 
         const string FruitPrefix = "fruit:";
 
+        /// <summary>Ile sztuk w skrzyni pasuje do warunku (id rośliny „poppy” albo owocu „fruit:apple”) - kocioł alchemiczny.</summary>
+        public int CountWhere(Func<string, bool> match)
+        {
+            int n = 0;
+            foreach (var kv in contents)
+            {
+                Split(kv.Key, out string id, out _);
+                if (match(id)) n += kv.Value;
+            }
+            return n;
+        }
+
+        /// <summary>Zabiera do max sztuk pasujących do warunku (najpierw najniższej jakości). Zwraca, ile zabrano.</summary>
+        public int TakeWhere(Func<string, bool> match, int max)
+        {
+            var keys = new List<string>(contents.Keys);
+            keys.Sort((a, b) => { Split(a, out _, out int qa); Split(b, out _, out int qb); return qa.CompareTo(qb); });
+            int taken = 0;
+            foreach (var key in keys)
+            {
+                if (taken >= max) break;
+                Split(key, out string id, out _);
+                if (!match(id)) continue;
+                int take = Mathf.Min(max - taken, contents[key]);
+                contents[key] -= take;
+                if (contents[key] <= 0) contents.Remove(key);
+                count -= take;
+                taken += take;
+            }
+            if (taken > 0)
+            {
+                RefreshVisual();
+                Changed?.Invoke();
+            }
+            return taken;
+        }
+
         /// <summary>Owoc z drzewa (ognik strąca i zbiera z ziemi): zajmuje miejsce jak plon, sprzedaje się po cenie owocu.</summary>
         public bool TryAddFruit(TreeSpecies species)
         {

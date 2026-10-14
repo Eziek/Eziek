@@ -81,6 +81,61 @@
       "y": 0.1
     },
     {
+      "name": "cauldron_brew_0",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_brew_0_glow",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_brew_1",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_brew_1_glow",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_brew_2",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_brew_2_glow",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_idle",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_ready_0",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_ready_0_glow",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_ready_1",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_ready_1_glow",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
       "name": "cemetery_candles",
       "x": 0.53571,
       "y": 0.08333

@@ -242,3 +242,38 @@ def intro_arrow():
         for x in range(3 - half, 4 + half):
             s.set(x, y, 'go' if x > 3 - half else 'cr')
     return s.outline()
+
+
+# ---------- kocioł alchemiczny (po Etapie 6d) ----------
+def cauldron(state='idle', f=0):
+    """Żeliwny kocioł na trzech nóżkach, 16 px szerokości z obrysem. state: idle (zimny, ciemny wywar),
+    brew (ogień pod spodem, turkusowy wywar z bąblami, klatki 0-2), ready (fioletowy, świecący wywar, klatki 0-1)."""
+    s = Sprite(16, 20, 8, 18)
+    for lx in (3, 12):                                     # nóżki
+        for y in (15, 16, 17):
+            s.set(lx, y, 'p0')
+    if state == 'brew':                                    # ogień pod kotłem (emisyjny)
+        base = [(5, 17), (6, 17), (7, 17), (8, 17), (9, 17), (10, 17)]
+        tips = [((5, 16), (7, 15), (8, 16), (10, 15), (7, 14)), ((6, 16), (6, 15), (9, 16), (9, 15), (8, 14)),
+                ((5, 15), (7, 16), (8, 15), (10, 16), (9, 14))][f % 3]
+        for x, y in base:
+            s.set(x, y, 'fx')
+        for x, y in tips:
+            s.set(x, y, 'fl' if y < 16 else 'fx')
+    s.blob(8, 10, 6.6, 4.3, ['o', 'p0', 'p1'])             # brzuch kotła
+    for x in range(2, 14):                                 # rant
+        s.set(x, 5, 'p1'); s.set(x, 6, 'p0')
+    s.set(2, 5, 'p0'); s.set(13, 5, 'p0'); s.set(4, 5, 'b3'); s.set(5, 5, 'b3')
+    s.set(4, 9, 'b2'); s.set(4, 10, 'b2'); s.set(5, 8, 'b2')     # odblask na żeliwie
+    liquid = {'idle': ('g1', 'g2', None), 'brew': ('wi', 'wl', 'wl'), 'ready': ('mu', 'ml', 'ml')}[state]
+    for x in range(3, 13):                                 # powierzchnia wywaru
+        s.set(x, 4, liquid[0])
+    s.set(5, 4, liquid[1]); s.set(9, 4, liquid[1])
+    if state == 'brew':                                    # bąble nad wywarem
+        bubbles = [((5, 3), (9, 2)), ((6, 2), (10, 3), (8, 1)), ((4, 3), (8, 3), (7, 0))][f % 3]
+        for x, y in bubbles:
+            s.set(x, y, liquid[2])
+    if state == 'ready':                                   # świecąca para
+        for x, y in [((6, 2), (9, 1), (7, 0)), ((7, 2), (8, 1), (10, 0))][f % 2]:
+            s.set(x, y, 'ml')
+    return s.outline()

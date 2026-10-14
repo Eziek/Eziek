@@ -85,6 +85,13 @@ namespace Wyspa.World
         public Sprite[] birdCrow;
         public Sprite[] birdFinch;
 
+        [Header("Kocioł alchemiczny")]
+        public Sprite cauldronIdle;
+        public Sprite[] cauldronBrew;
+        public Sprite[] cauldronBrewGlow;
+        public Sprite[] cauldronReady;
+        public Sprite[] cauldronReadyGlow;
+
         [Header("Wprowadzenie (Etap 6d): tablica z karteczkami")]
         public Sprite noticeBoard;
         public Sprite noticeBoardEmpty;

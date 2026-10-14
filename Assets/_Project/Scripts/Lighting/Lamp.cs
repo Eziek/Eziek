@@ -57,7 +57,9 @@ namespace Wyspa.Lighting
         /// <summary>Wywoływane co tick przez GameLoop (najtańsze lampy pierwsze).</summary>
         public void Tick(float dt, bool night, EssenceStore essence)
         {
-            bool on = !DebugAllOff && night && definition != null && essence.TryConsume(definition.essencePerMinute * ConsumptionMultiplier * dt / 60f);
+            // mikstura „Płynne światło”: lampy świecą bez Esencji
+            float burn = Alchemy.Potions.LampsFree ? 0f : definition != null ? definition.essencePerMinute * ConsumptionMultiplier * dt / 60f : 0f;
+            bool on = !DebugAllOff && night && definition != null && essence.TryConsume(burn);
             SetOn(on);
         }
 

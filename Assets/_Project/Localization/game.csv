@@ -86,3 +86,25 @@ toast.merchant.need_crate,Duszek-handlarz potrzebuje skrzyni bez duszka - postaw
 toast.order.new,Nowa karteczka na tablicy: {0},A new note on the board: {0},Neuer Zettel am Brett: {0},掲示板に新しい依頼：{0},告示板上有新委托：{0},{0} = zamawiający
 toast.order.done,Zamówienie wykonane ({0}): {1},Order done ({0}): {1},Auftrag erledigt ({0}): {1},依頼達成（{0}）：{1},委托完成（{0}）：{1},"{0} = zamawiający, {1} = nagroda"
 toast.order.expired,Karteczka zbutwiała: {0},A note rotted away: {0},Ein Zettel ist verrottet: {0},依頼が朽ちた：{0},一张委托腐烂了：{0},"przeterminowane zamówienie, bez kary"
+potion.growth,Wywar wzrostu,Growth Brew,Wachstumssud,成長の煎じ薬,生长药汤,mikstura
+potion.growth.effect,rośliny dnia rosną o 30% szybciej (2 cykle),day crops grow 30% faster (2 cycles),Tagpflanzen wachsen 30 % schneller (2 Zyklen),昼の作物が30%速く育つ（2サイクル）,白天作物生长加快30%（2个周期）,
+potion.night,Eliksir nocy,Night Elixir,Nachtelixier,夜の霊薬,夜之灵药,mikstura
+potion.night.effect,rośliny nocy rosną o 50% szybciej (2 cykle),night crops grow 50% faster (2 cycles),Nachtpflanzen wachsen 50 % schneller (2 Zyklen),夜の作物が50%速く育つ（2サイクル）,夜间作物生长加快50%（2个周期）,
+potion.focus,Napar skupienia,Focus Tea,Fokustee,集中の茶,专注药茶,mikstura
+potion.focus.effect,praca daje o 50% więcej Esencji (2 cykle),work gives 50% more Essence (2 cycles),Arbeit gibt 50 % mehr Essenz (2 Zyklen),作業で得るエッセンスが50%増える（2サイクル）,工作获得的精华增加50%（2个周期）,
+potion.light,Płynne światło,Liquid Light,Flüssiges Licht,液体の光,液态之光,mikstura
+potion.light.effect,lampy świecą bez Esencji (2 cykle),lamps burn no Essence (2 cycles),Lampen brauchen keine Essenz (2 Zyklen),ランプがエッセンスを使わない（2サイクル）,灯不消耗精华（2个周期）,
+potion.lure,Wabik na widmo,Wraith Lure,Geisterköder,亡霊の誘い香,诱灵香,mikstura
+potion.lure.effect,kupiec-widmo przypłynie najbliższej nocy,the Ghost Merchant comes the next night,der Geisterhändler kommt in der nächsten Nacht,次の夜、幽霊商人が必ず来る,幽灵商人会在下一个夜晚到来,
+potion.fog,Mgła w butelce,Bottled Fog,Nebel in der Flasche,瓶詰めの霧,瓶中之雾,mikstura
+potion.fog.effect,nocne zdarzenia dwa razy częściej (2 cykle),night events twice as often (2 cycles),Nachtereignisse doppelt so oft (2 Zyklen),夜の出来事が2倍起きる（2サイクル）,夜间事件频率翻倍（2个周期）,
+toast.potion.brewing,Kocioł warzy: {0} ({1} min),The cauldron brews: {0} ({1} min),Der Kessel braut: {0} ({1} Min.),釜で調合中：{0}（{1}分）,炼金釜正在熬制：{0}（{1}分钟）,{0} = mikstura
+toast.potion.ready,Mikstura gotowa: {0},Potion ready: {0},Trank fertig: {0},薬が完成：{0},药剂完成：{0},
+toast.potion.drunk,{0}: {1},{0}: {1},{0}: {1},{0}：{1},{0}：{1},"{0} = mikstura, {1} = działanie"
+toast.potion.ended,Mikstura przestała działać: {0},Potion wore off: {0},Trank wirkt nicht mehr: {0},薬の効果が切れた：{0},药效结束：{0},
+potion.growth.short,dzień +30%,day +30%,Tag +30 %,昼+30%,白天+30%,krótko na przycisku
+potion.night.short,noc +50%,night +50%,Nacht +50 %,夜+50%,夜间+50%,
+potion.focus.short,Esencja +50%,Essence +50%,Essenz +50 %,エッセンス+50%,精华+50%,
+potion.light.short,lampy za darmo,free lamps,Lampen gratis,ランプ無料,灯免费,
+potion.lure.short,kupiec-widmo,Ghost Merchant,Geisterhändler,幽霊商人,幽灵商人,
+potion.fog.short,zdarzenia x2,events x2,Ereignisse x2,出来事x2,事件x2,

@@ -25,6 +25,9 @@ namespace Wyspa.World
         public float growth, fruit;                // v7: wzrost drzewa i odrastanie owoców (sekundy)
         public int fallen;                         // v8: owoce strącone przez ognika, leżące pod drzewem
         public string merchant;                    // v8: id duszka-handlarza przy tej skrzyni
+        public string brew;                        // v10: kocioł - przepis w kotle
+        public float brewLeft;                     // v10: sekundy do końca warzenia
+        public bool brewReady;                     // v10: mikstura gotowa do wypicia
     }
 
     [Serializable]
@@ -331,6 +334,8 @@ namespace Wyspa.World
                         rune.Seed = o.seed;
                     if (b != null && !string.IsNullOrEmpty(o.merchant))
                         SpawnMerchant(b, o.merchant);
+                    if (b != null && !string.IsNullOrEmpty(o.brew) && b.TryGetComponent(out Alchemy.Cauldron cauldron))
+                        cauldron.Restore(o.brew, o.brewLeft, o.brewReady);
                 }
             }
             // duszki ze starych zapisów: do skrzyni bez duszka, a gdy takiej nie ma - skrzynia na ich dawnym kafelku
@@ -381,6 +386,12 @@ namespace Wyspa.World
                 }
                 if (o.TryGetComponent(out Automation.SeedRune rune))
                     os.seed = rune.Seed;
+                if (o.TryGetComponent(out Alchemy.Cauldron cauldron) && cauldron.Brewing != null)
+                {
+                    os.brew = cauldron.Brewing;
+                    os.brewLeft = cauldron.Left;
+                    os.brewReady = cauldron.Ready;
+                }
                 if (o.TryGetComponent(out Farming.FruitTree tree) && tree.Species != null)
                 {
                     os.tree = tree.Species.id;
@@ -1276,6 +1287,11 @@ namespace Wyspa.World
                     body.sprite = First(art.wispFrames);
                     go.AddComponent<Automation.WispGardener>().Setup(body, Glow(First(art.wispGlow)), art.wispFrames, art.wispGlow);
                     NightGlow.Add(go, new Vector2(0f, 0.6f), new Color(0.37f, 0.81f, 0.72f), 1.6f, 0.7f);
+                    break;
+                case Automation.AutomationSystem.Cauldron:
+                    body.sprite = art.cauldronIdle;
+                    go.AddComponent<Alchemy.Cauldron>().Setup(body, Glow(null), art.cauldronIdle, art.cauldronBrew, art.cauldronBrewGlow,
+                                                                 art.cauldronReady, art.cauldronReadyGlow);
                     break;
                 case Automation.AutomationSystem.Rune:
                     body.sprite = art.rune;

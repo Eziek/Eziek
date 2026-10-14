@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 9;   // v9: zamówienia z tablicy (v8: krok wprowadzenia)
+        public int version = 10;  // v10: kocioł i mikstury (v9: zamówienia z tablicy, v8: krok wprowadzenia)
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
@@ -36,6 +36,7 @@ namespace Wyspa.Save
         public int intro;                       // v8: krok wprowadzenia (starsze zapisy: wprowadzenie skończone)
         public string slotName;                 // v8: nazwa zapisu w menu głównym (do 10 znaków)
         public Orders.OrderSave orders;         // v9: zamówienia z tablicy ogłoszeń
+        public List<Alchemy.PotionSave> potions = new List<Alchemy.PotionSave>();   // v10: działające mikstury
     }
 
     [Serializable]
@@ -261,6 +262,7 @@ namespace Wyspa.Save
                 intro = UI.IntroNotes.Instance != null ? UI.IntroNotes.Instance.Step : UI.IntroNotes.Done,
                 slotName = CurrentName,
                 orders = Orders.OrderBook.Instance != null ? Orders.OrderBook.Instance.Snapshot() : null,
+                potions = Alchemy.Potions.Snapshot(),
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
@@ -333,6 +335,7 @@ namespace Wyspa.Save
                 Lore.Chronicle.Instance.Restore(data.chronicle);
             if (Orders.OrderBook.Instance != null)
                 Orders.OrderBook.Instance.Restore(data.orders);
+            Alchemy.Potions.Restore(data.potions);
             if (UI.IntroNotes.Instance != null)
                 UI.IntroNotes.Instance.Step = data.version >= 8 ? Mathf.Clamp(data.intro, 0, UI.IntroNotes.Done) : UI.IntroNotes.Done;
 

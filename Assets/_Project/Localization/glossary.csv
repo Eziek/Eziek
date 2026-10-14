@@ -150,3 +150,5 @@ npc.keeper,Latarnik,Lighthouse Keeper,Leuchtturmwärter,灯台守,守塔人,zama
 npc.witch,Wiedźma z bagien,Bog Witch,Moorhexe,沼の魔女,沼泽女巫,zamawiająca
 npc.monk,Mnich z ruin,Ruin Monk,Ruinenmönch,廃墟の修道士,废墟修士,zamawiający
 npc.fisher,Ślepy rybak,Blind Fisher,Blinder Fischer,盲目の漁師,盲眼渔夫,zamawiający
+bld.cauldron,Kocioł alchemiczny,Alchemy Cauldron,Alchemiekessel,錬金釜,炼金釜,warzy mikstury ze składników ze skrzyń
+term.potion,Mikstura,Potion,Trank,薬,药剂,działa przez 2 cykle gry

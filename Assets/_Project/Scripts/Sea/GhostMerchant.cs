@@ -95,12 +95,13 @@ namespace Wyspa.Sea
                 return;
             // czy i kiedy przypłynie: losowane z numeru nocy (to samo po restarcie gry)
             var rnd = new WRandom(NightSeed(clock));
-            if (rnd.Range(0.0, 1.0) >= VisitChance)
+            bool lured = Alchemy.Potions.Lure;   // mikstura-wabik: kupiec przypłynie tej nocy na pewno
+            if (rnd.Range(0.0, 1.0) >= VisitChance && !lured)
             {
                 visitedNight = night;   // tej nocy nie przypłynie
                 return;
             }
-            float arrive = (float)rnd.Range(0.0, 0.5) * GameClock.NightSeconds;
+            float arrive = lured ? 0f : (float)rnd.Range(0.0, 0.5) * GameClock.NightSeconds;
             float into = clock.SecondsIntoNight;
             if (into >= arrive && into < arrive + StaySeconds)
                 Arrive(night, arrive + StaySeconds - into);
@@ -124,6 +125,7 @@ namespace Wyspa.Sea
                 return;
             visitedNight = night ?? game.Clock.NightKey;
             leaveAt = Time.unscaledTime + Mathf.Max(30f, stay);
+            Alchemy.Potions.Consume("lure");   // wabik zadziałał
             BuildOffers(game, (int)(NightSeed(game.Clock) % int.MaxValue) + 17);
             var island = Island.Instance;
             transform.position = island != null ? island.WaterBelow(18) : new Vector3(0f, -3f, 0f);

@@ -366,6 +366,15 @@ Po pobraniu: **Wyspa → 2** (ikony klawiatury i myszy w motywie UI), potem Play
 3. Stary zapis bez tablicy: Sklep → Budowle → Tablica ogłoszeń (40 monet + 3 drewna), potem pojawiają się zamówienia.
 4. F1 → czas x60 przyspiesza cykle: nowe karteczki co 2 cykle, stare po terminie znikają („Karteczka zbutwiała”).
 
+## 4x. Kocioł alchemiczny (test)
+Po pobraniu: **Wyspa → 2** (sprite'y kotła w `IslandArt`), potem Play. Potrzebny ognik (Księga → Ulepszenia) i skrzynia.
+1. Sklep → Budowle → Kocioł alchemiczny: postaw na wolnym kafelku (zimny kocioł, ciemny wywar).
+2. Klik w kocioł: przyciski przepisów z działaniem i składnikami „masz/potrzeba” (ze skrzyń). Gdy w skrzyniach jest
+   6 roślin dnia, „Wywar wzrostu” jest aktywny: klik zabiera składniki, pod kotłem pali się ogień, wywar bulgocze.
+3. Po ok. 5 min (F1 → czas x60 szybciej): toast „Mikstura gotowa”, wywar świeci na fioletowo. Klik → „Wypij”.
+   Panel kotła pokazuje „Działa: Wywar wzrostu (1:59:..)”, dymek grządki pokazuje szybszy wzrost.
+4. Płynne światło: w nocy lampy świecą, a Esencja nie spada. Wabik: najbliższej nocy przypływa kupiec-widmo.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

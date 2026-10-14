@@ -61,6 +61,12 @@ for note in (True, False):   # wprowadzenie (Etap 6d)
     save(S6.notice_board(note), "Objects", "notice_board" + ("" if note else "_empty"), glow=False)
 save(S6.intro_arrow(), "Fx", "intro_arrow", glow=False)
 
+save(S6.cauldron('idle'), "Objects", "cauldron_idle")   # kocioł alchemiczny
+for f in range(3):
+    save(S6.cauldron('brew', f), "Objects", f"cauldron_brew_{f}")
+for f in range(2):
+    save(S6.cauldron('ready', f), "Objects", f"cauldron_ready_{f}")
+
 for name, rows in S6.ICON_MAPS.items():
     save(K.from_map(rows), "UI/Icons", "icon_" + name, pivot=(0.5, 0.5), glow=False)
 

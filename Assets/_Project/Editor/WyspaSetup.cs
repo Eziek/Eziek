@@ -448,6 +448,13 @@ namespace Wyspa.EditorTools
             art.noticeBoard = LoadSprite("Objects/notice_board");
             art.noticeBoardEmpty = LoadSprite("Objects/notice_board_empty");
             art.introArrow = LoadSprite("Fx/intro_arrow");
+            // kocioł alchemiczny: zimny, warzenie (3 klatki), gotowy (2 klatki) + piksele emisyjne
+            Sprite Obj(string n) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Objects/{n}.png");
+            art.cauldronIdle = LoadSprite("Objects/cauldron_idle");
+            art.cauldronBrew = new[] { Obj("cauldron_brew_0"), Obj("cauldron_brew_1"), Obj("cauldron_brew_2") };
+            art.cauldronBrewGlow = new[] { Obj("cauldron_brew_0_glow"), Obj("cauldron_brew_1_glow"), Obj("cauldron_brew_2_glow") };
+            art.cauldronReady = new[] { Obj("cauldron_ready_0"), Obj("cauldron_ready_1") };
+            art.cauldronReadyGlow = new[] { Obj("cauldron_ready_0_glow"), Obj("cauldron_ready_1_glow") };
             art.rune = LoadSprite("Automation/rune_stone");
             art.runeGlow = LoadSprite("Automation/rune_stone_glow");
             art.lamps = new List<LampDefinition>();

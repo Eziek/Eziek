@@ -15,8 +15,8 @@ namespace Wyspa.Automation
     /// </summary>
     public class AutomationSystem : MonoBehaviour
     {
-        public const string Crate = "crate", Wisp = "wisp", Merchant = "merchant", Rune = "rune";
-        public static readonly string[] Kinds = { Crate, Wisp, Merchant, Rune };
+        public const string Crate = "crate", Wisp = "wisp", Merchant = "merchant", Rune = "rune", Cauldron = "cauldron";
+        public static readonly string[] Kinds = { Crate, Wisp, Merchant, Rune, Cauldron };
 
         /// <summary>Rodzaje, których darmowa pierwsza sztuka już była (w zapisie, żeby po przeniesieniu/usunięciu nie wracała).</summary>
         readonly HashSet<string> granted = new HashSet<string>();
@@ -29,6 +29,7 @@ namespace Wyspa.Automation
                 case Wisp: return "bld.wisp_gardener";
                 case Merchant: return "bld.merchant_spirit";
                 case Rune: return "bld.seed_rune";
+                case Cauldron: return "bld.cauldron";
                 default: return kind;
             }
         }
@@ -55,6 +56,7 @@ namespace Wyspa.Automation
                 case Crate: coins = 60; extra = new CurrencyAmount(CurrencyType.Wood, 4); break;
                 case Wisp: coins = 250; extra = new CurrencyAmount(CurrencyType.NightHarvest, 5); break;
                 case Merchant: coins = 500; extra = new CurrencyAmount(CurrencyType.Stone, 8); break;
+                case Cauldron: coins = 300; extra = new CurrencyAmount(CurrencyType.Stone, 6); break;
                 default: coins = 150; extra = new CurrencyAmount(CurrencyType.Stone, 5); break;
             }
             coins = Mathf.RoundToInt(coins * Mathf.Pow(1.6f, Mathf.Max(0, owned)) / 5f) * 5;

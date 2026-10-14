@@ -85,7 +85,7 @@ namespace Wyspa.Sea
             if (game == null || island == null || !island.Ready || !game.Clock.IsNight)
                 return;
             wisps.RemoveAll(w => w == null);
-            float mult = LighthouseLit ? 2f : 1f;
+            float mult = (LighthouseLit ? 2f : 1f) * Alchemy.Potions.Events;   // „Mgła w butelce”: zdarzenia częściej
             if (wisps.Count < 2 && Random.value < WispPerMinute / 60f * mult)
                 SpawnWisp();
             if (Random.value < StarPerMinute / 60f * mult)

@@ -230,3 +230,13 @@ ui.order.bonus.shard,odłamek gwiazdy x{0},star shard x{0},Sternsplitter x{0},�
 ui.order.bonus.wood,drewno x{0},wood x{0},Holz x{0},木材 x{0},木材 x{0},
 ui.order.bonus.stone,kamień x{0},stone x{0},Stein x{0},石 x{0},石头 x{0},
 ui.shop.board.desc,Zamówienia od mieszkańców mgły,Orders from the folk of the fog,Aufträge der Nebelbewohner,霧の住人からの依頼,雾中居民的委托,"sklep: tablica, gdy jej nie ma"
+ui.shop.cauldron.desc,Mikstury ze składników ze skrzyń na plony,Potions from harvest crate ingredients,Tränke aus Zutaten der Erntekisten,収穫箱の材料で薬を作る,用收获箱中的材料熬制药剂,sklep → budowle
+ui.cauldron.need,{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},składnik: masz / potrzeba
+ui.cauldron.any_day,rośl. dnia,day crops,Tagpfl.,昼の作物,白天作物,dowolne rośliny dnia (krótko)
+ui.cauldron.any_night,rośl. nocy,night crops,Nachtpfl.,夜の作物,夜间作物,dowolne rośliny nocy (krótko)
+ui.cauldron.any_fruit,owoce,fruit,Früchte,果実,果实,dowolne owoce
+ui.cauldron.brewing,Warzy się: {0} ({1}),Brewing: {0} ({1}),Braut: {0} ({1}),調合中：{0}（{1}）,熬制中：{0}（{1}）,{1} = czas do końca
+ui.cauldron.drink,Wypij: {0},Drink: {0},Trinken: {0},飲む：{0},饮用：{0},
+ui.cauldron.active,Działa: {0} ({1}),Active: {0} ({1}),Wirkt: {0} ({1}),効果中：{0}（{1}）,生效中：{0}（{1}）,{1} = pozostały czas
+ui.cauldron.active_until_use,Działa: {0} (do użycia),Active: {0} (until used),Wirkt: {0} (bis verbraucht),効果中：{0}（使うまで）,生效中：{0}（直到使用）,
+ui.cauldron.recipe,{0} ({1}): {2},{0} ({1}): {2},{0} ({1}): {2},{0}（{1}）：{2},{0}（{1}）：{2},przycisk przepisu: nazwa (działanie): składniki
