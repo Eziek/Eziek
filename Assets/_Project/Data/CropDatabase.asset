@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe8f8ea50f3790b4aa30e99cc9c7ee0e, type: 3}
+  m_Name: CropDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDatabase
+  crops:
+  - {fileID: 11400000, guid: 5fa70f15b8d8f9349b64efd405df6a1f, type: 2}
+  - {fileID: 11400000, guid: 43a5038650728b04f96a05c704d6e81b, type: 2}
+  - {fileID: 11400000, guid: 55d96250d45929c41bc4a770da1fe8a2, type: 2}
+  - {fileID: 11400000, guid: f7af8694b477ef24688a9885afdc7631, type: 2}
+  - {fileID: 11400000, guid: ba553c5a2fcd1204d87d8601674f7b28, type: 2}
+  - {fileID: 11400000, guid: 2cb436a88dde7a440bb3a3fe1ed70a48, type: 2}
+  - {fileID: 11400000, guid: ab9b05777f0e6c9458521b99d6324ed6, type: 2}

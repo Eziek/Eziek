@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_wheat
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: wheat
+  displayName: "Zbo\u017Ce"
+  kind: 0
+  growSeconds: 900
+  stages:
+  - {fileID: 21300000, guid: 52180c7ed6d5a7f44b7b466d1fa97c11, type: 3}
+  - {fileID: 21300000, guid: 5908fd4737454884d8353c260185f843, type: 3}
+  - {fileID: 21300000, guid: 4ffd58c6693e3174c9c820205c142ced, type: 3}
+  - {fileID: 21300000, guid: 5d234ed961d9abb4e84aaff2a1f87805, type: 3}
+  seedPrice: 8
+  sellPrice: 18

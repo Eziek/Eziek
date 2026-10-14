@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_ghostpumpkin
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: ghostpumpkin
+  displayName: Upiorna dynia
+  kind: 1
+  growSeconds: 21600
+  stages:
+  - {fileID: 21300000, guid: f1cdf4c3c22876e4ba3fc901cafbfa0f, type: 3}
+  - {fileID: 21300000, guid: eefcbbca6cd5cfe4c8c167a3088e8612, type: 3}
+  - {fileID: 21300000, guid: 698642b4294afad48ba1fc6414cd9c0e, type: 3}
+  - {fileID: 21300000, guid: c9e2e17dc7325404caaed8769e2668b5, type: 3}
+  seedPrice: 30
+  sellPrice: 90
