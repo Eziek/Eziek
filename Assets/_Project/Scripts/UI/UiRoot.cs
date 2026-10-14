@@ -37,6 +37,7 @@ namespace Wyspa.UI
         public ActionRing Ring { get; private set; }
         /// <summary>Menu główne (tylko gdy nie wybrano jeszcze slotu zapisu).</summary>
         public MainMenuView Menu { get; private set; }
+        public MistHarborView Harbor { get; private set; }
 
         // prawy klik na wyspie otwiera pierścień akcji (GDD §12.10): uzbrojony przy wciśnięciu, otwiera się po puszczeniu bez przeciągania
         bool ringArmed;
@@ -228,7 +229,9 @@ namespace Wyspa.UI
             Context = ContextPanel.Create(canvasRect, StartMove);
             Placement = PlacementMode.Create(transform, Tooltip);
             Ring = ActionRing.Create(canvasRect, Tooltip);
-            if (Save.SaveSystem.InMenu)
+            if (Save.SaveSystem.InMist)
+                Harbor = MistHarborView.Create(canvasRect, Tooltip);   // między rejsami: losowanie darów, potem nowa wyspa
+            else if (Save.SaveSystem.InMenu)
                 Menu = MainMenuView.Create(canvasRect);
             Tooltip.transform.SetAsLastSibling();
         }

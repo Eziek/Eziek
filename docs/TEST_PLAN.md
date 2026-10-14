@@ -161,10 +161,9 @@ Najpierw **Wyspa → 2** (nowe ulepszenia, ikony kostki i perły).
 5. F1: dużo monet, kup Stragan, Targowanie, Złoty interes. Zbieraj ręcznie: ceny wyższe, czasem toast „Złoty interes! x3”.
 6. Popyt dnia: o świcie toast z rośliną; w kole nasion przy niej „Dziś popyt: x1.5”. Odsetki i Dzierżawa: toast o świcie z monetami.
 7. Gorliwy handlarz: duszek sprzedaje przy połowie skrzyni. Kupiec-widmo: napiwek przy przybyciu, tańsze towary, dłuższy pobyt.
-8. Księga → Rejs (ikona perły): perły, blask, zarobek rejsu i próg następnej perły. Bez 10 000 monet zarobku przycisk nieaktywny.
-   F1 → monety (dodane monety liczą się do zarobku) → „Odpłyń we mgłę” → drugi klik: nowa wyspa w tym samym slocie, rejs nr 2,
-   perły w sakwie, bestiariusz zachowany, waluty i ulepszenia od zera (dary: Posag, Wierny ognik, Pamięć nasion działają).
-9. Dar kupiony za perły od razu działa (np. Mgielny targ podnosi ceny), zostaje po zapisie i wczytaniu.
+8. Księga → Rejs (ikona perły): perły, blask, zarobek rejsu i próg następnej perły, pod spodem kolekcja darów (bez kupowania).
+   Szczegóły rejsu i Przystani: sekcja 12.
+9. (zastąpione przez sekcję 12)
 10. Stary zapis (v14) wczytuje się bez błędów: zarobek rejsu od zera, perły 0.
 
 ## 10. UI i woda (porządki)
@@ -193,3 +192,20 @@ Najpierw **Wyspa → 2** (nowe ulepszenia, ikony kostki i perły).
    Po postawieniu: sieci i łódź przy nowym końcu pomostu, ryby wokół nowego końca, zapis i wczytanie trzymają nowe miejsce.
 7. Łódź na wyprawie w trakcie przenoszenia: po przeniesieniu nadal na wyprawie (postęp bez zmian), wraca do nowego pomostu.
 8. Klik w boję sieci: panel z czasem do połowu i „Przenieś” (to samo przenoszenie pomostu). Dymek nad boją: „Sieci rybackie”.
+
+## 12. Przystań we mgle i losowane dary
+1. F1 → „Perły mgły +5”, monety na co najmniej 10 000 zarobku, Księga → Rejs → „Odpłyń we mgłę” → drugi klik:
+   zamiast nowej wyspy ekran **Przystań we mgle** (wyspa w tle przygaszona mgłą), u góry perły, nr rejsu, „dary X/37”.
+2. Kolekcja: 37 ramek, kolor ramki = rzadkość (szary, zielony, niebieski, fioletowy, złoty). Niezdobyte wyszarzałe,
+   dymek: nazwa, rzadkość, efekt, „Jeszcze nie zdobyty”.
+3. „Losuj dar”: ikony zlatują się w krąg, kręcą się i zacieśniają, po kolei wylatują na boki i szarzeją, ostatnia z grzmotem;
+   zwycięzca x2 na środku w rozbłysku koloru rzadkości, napis „Nowy dar: ...” albo „...: poziom 2/3”, potem wszystkie
+   wracają na miejsca, a nowy dar mruga i jest w kolorze z kropką poziomu. Klik w trakcie przyspiesza. Perły -1.
+4. Kilka losowań pod rząd: ten sam dar wchodzi na wyższy poziom; dar z jednym poziomem po zdobyciu już nie walczy.
+   Bez pereł przycisk „Brak pereł” (nieaktywny). Dymek przycisku: szanse rzadkości.
+5. Zamknij grę w Przystani i uruchom ponownie: slot w menu „We mgle: czeka w przystani”, „Graj” wraca do Przystani,
+   perły i dary jak przed zamknięciem. „Menu główne” z Przystani też działa.
+6. „Wypłyń na nową wyspę”: nowa wyspa z darami (Posag: monety, Pełna spiżarnia: drewno i kamień, Wierny ognik, Pamięć nasion,
+   Nawóz z mgły, Żar w zanadrzu: pełny słój). Dary efektowe działają (np. Skrzydła mgły: szybsze ogniki, Głębokie skrzynie).
+7. Księga → Rejs w nowej grze: kolekcja zgodna z Przystanią, rejs nr 2.
+8. Zapis v15 (stare dary kupione w Księdze) wczytuje się: poziomy darów zostają (przycięte do nowych maksimów).

@@ -125,9 +125,9 @@ namespace Wyspa.UI
             {
                 var when = Ui.Txt(rt, "When", t.textMuted);
                 // data i godzina zapisu w formacie języka gry (np. 14.10.2026 13:45)
-                when.text = info.savedAtUtcTicks > 0
-                    ? Loc.Get("ui.menu.slot_info", info.SavedLocal.ToString("g", LocCore.Culture(Loc.Language)))
-                    : Loc.Get("ui.menu.unreadable");   // plik jest, ale się nie czyta (kopia trafi do *.corrupt.json)
+                when.text = info.savedAtUtcTicks <= 0 ? Loc.Get("ui.menu.unreadable")
+                    : info.mist ? Loc.Get("ui.menu.slot_mist")   // rejs skończony, czeka w Przystani we mgle
+                    : Loc.Get("ui.menu.slot_info", info.SavedLocal.ToString("g", LocCore.Culture(Loc.Language)));   // plik jest, ale się nie czyta (kopia trafi do *.corrupt.json)
                 Ui.Place(when.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(5, -15), new Vector2(120, 10));
             }
 

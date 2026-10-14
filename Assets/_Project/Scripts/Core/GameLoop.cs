@@ -186,6 +186,7 @@ namespace Wyspa.Core
         {
             essence.SetCapacity(upgrades.Value(UpgradeIds.EssenceJar, essence.BaseCapacity));
             UpgradeEffects.Apply(upgrades);
+            Economy.Prestige.ApplyToEffects();   // dary mgły dokładają się do drzewka
             if (automation != null)
                 automation.ApplyUpgrades(upgrades);
         }

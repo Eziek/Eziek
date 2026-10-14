@@ -14,7 +14,7 @@ namespace Wyspa.Save
     [Serializable]
     class SaveData
     {
-        public int version = 15;  // v15: prestiż (perły, dary mgły) i zarobek rejsu, v14: siewca dzień/noc i podmiana, v13: cele wypraw i liczba wypraw, v12: rój ogników (gniazda, runy dziczy), v11: chowańce (v10: kocioł i mikstury, v9: zamówienia, v8: wprowadzenie)
+        public int version = 16;  // v16: przystań we mgle (stan między rejsami), v15: prestiż (perły, dary mgły) i zarobek rejsu, v14: siewca dzień/noc i podmiana, v13: cele wypraw i liczba wypraw, v12: rój ogników (gniazda, runy dziczy), v11: chowańce (v10: kocioł i mikstury, v9: zamówienia, v8: wprowadzenie)
         public long savedAtUtcTicks;
         public int coins;                       // v1 (zostaje dla zgodności, v2 ma currencies)
         public float essence;
@@ -40,6 +40,8 @@ namespace Wyspa.Save
         public Familiars.FamiliarSave familiars;    // v11: chowańce na wyspie
         public MarketSave market;               // v15: zarobek rejsu i renoma (Economy/Market)
         public PrestigeSave prestige;           // v15: perły mgły, dary, liczba rejsów (Economy/Prestige)
+        public bool mist;                       // v16: slot czeka w Przystani we mgle (rejs skończony, nowej wyspy jeszcze nie ma)
+        public List<string> mistUnlocks = new List<string>();   // v16: nasiona odblokowane w poprzednim rejsie (Pamięć nasion)
     }
 
     [Serializable]
@@ -59,6 +61,7 @@ namespace Wyspa.Save
         public string slotName;
         public long savedAtUtcTicks;
         public IslandHeader island;
+        public bool mist;   // slot w Przystani we mgle
         [NonSerialized] public int index;
         [NonSerialized] public bool exists;
 
@@ -90,6 +93,9 @@ namespace Wyspa.Save
         /// <summary>Nazwa bieżącego zapisu (z pliku albo wpisana przy nowej grze).</summary>
         public static string CurrentName = "";
         public static bool InMenu => CurrentSlot < 0;
+        /// <summary>Slot w Przystani we mgle (między rejsami) albo -1. Przystań działa jak menu: wyspa w tle bez zapisu.</summary>
+        public static int MistSlot = -1;
+        public static bool InMist => MistSlot >= 0;
 
         /// <summary>Każde uruchomienie gry (także Play w edytorze bez przeładowania domeny) zaczyna się od menu głównego.</summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -97,6 +103,7 @@ namespace Wyspa.Save
         {
             CurrentSlot = -1;
             CurrentName = "";
+            MistSlot = -1;
         }
 
         public static string SlotPath(int slot) => Path.Combine(Application.persistentDataPath, $"save_{slot + 1}.json");
@@ -187,9 +194,36 @@ namespace Wyspa.Save
         /// <summary>Gra na slocie (wczytanie albo nowa wyspa, gdy plik nie istnieje): scena ładuje się od nowa.</summary>
         public static void Play(int slot, string newName = null)
         {
-            CurrentSlot = Mathf.Clamp(slot, 0, Slots - 1);
+            slot = Mathf.Clamp(slot, 0, Slots - 1);
             CurrentName = CleanName(newName, slot);
+            var info = ReadSlot(slot);
+            if (info != null && info.mist)
+            {
+                // rejs skończony, ale gracz nie wypłynął jeszcze na nową wyspę: najpierw Przystań we mgle
+                if (!string.IsNullOrEmpty(info.slotName))
+                    CurrentName = info.slotName;
+                CurrentSlot = -1;
+                MistSlot = slot;
+            }
+            else
+            {
+                MistSlot = -1;
+                CurrentSlot = slot;
+            }
             ReloadScene();
+        }
+
+        static SlotInfo ReadSlot(int slot)
+        {
+            try
+            {
+                string path = SlotPath(slot);
+                return File.Exists(path) ? JsonUtility.FromJson<SlotInfo>(File.ReadAllText(path)) : null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public static void DeleteSlot(int slot)
@@ -222,6 +256,7 @@ namespace Wyspa.Save
                 Save(owner);
             owner = null;
             CurrentSlot = -1;
+            MistSlot = -1;
             ReloadScene();
         }
 
@@ -321,14 +356,81 @@ namespace Wyspa.Save
         }
 
         /// <summary>
-        /// Rejs we mgłę: perły z zarobku rejsu, potem zapis nowej wyspy w tym samym slocie. Zostają perły,
-        /// dary mgły, kronika (bestiariusz, historia, rytuały), nazwa wyspy; reszta zaczyna się od nowa (dary mogą coś zostawić:
-        /// odblokowane nasiona, ognika-ogrodnika, monety i surowce na start). Scena ładuje się od nowa. False = za mało pereł.
+        /// Rejs we mgłę: perły z zarobku rejsu, potem slot przechodzi w stan „we mgle” (stara wyspa znika) i scena ładuje się
+        /// od nowa jako Przystań we mgle (UI/MistHarborView). Zostają perły, dary, kronika (bestiariusz, historia, rytuały),
+        /// nazwa wyspy i lista odblokowanych nasion (dla Pamięci nasion). False = za mało pereł.
         /// </summary>
         public bool SailIntoMist(GameLoop game)
         {
             if (InMenu || game == null || Prestige.CollectVoyage() <= 0)
                 return false;
+            var data = new SaveData
+            {
+                savedAtUtcTicks = DateTime.UtcNow.Ticks,
+                chronicle = Lore.Chronicle.Instance != null ? Lore.Chronicle.Instance.Snapshot() : null,
+                intro = UI.IntroNotes.Done,
+                slotName = CurrentName,
+                prestige = Prestige.Snapshot(),
+                mist = true,
+                mistUnlocks = game.SnapshotUnlocks(),
+            };
+            owner = null;   // bez autozapisu starej wyspy w tej klatce
+            WriteTo(FilePath, data);
+            MistSlot = CurrentSlot;
+            CurrentSlot = -1;
+            ReloadScene();
+            return true;
+        }
+
+        static SaveData ReadMist()
+        {
+            if (!InMist)
+                return null;
+            try
+            {
+                string path = SlotPath(MistSlot);
+                var data = File.Exists(path) ? JsonUtility.FromJson<SaveData>(File.ReadAllText(path)) : null;
+                return data != null && data.mist ? data : null;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Wyspa] Nie udało się odczytać zapisu we mgle: {e.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>Przystań: perły i dary z zapisu slotu (wołane przy otwarciu ekranu). False = slot nie jest we mgle.</summary>
+        public static bool LoadMist()
+        {
+            var data = ReadMist();
+            if (data == null)
+                return false;
+            Prestige.Restore(data.prestige);
+            if (!string.IsNullOrEmpty(data.slotName))
+                CurrentName = data.slotName;
+            return true;
+        }
+
+        /// <summary>Po każdym losowaniu w Przystani: perły i dary od razu do pliku (zamknięcie gry nic nie cofa).</summary>
+        public static void SaveMist()
+        {
+            var data = ReadMist();
+            if (data == null)
+                return;
+            data.prestige = Prestige.Snapshot();
+            data.savedAtUtcTicks = DateTime.UtcNow.Ticks;
+            WriteTo(SlotPath(MistSlot), data);
+        }
+
+        /// <summary>
+        /// Wypłynięcie z Przystani: nowa wyspa w tym samym slocie z darami (monety i surowce na start, ognik-ogrodnik,
+        /// odblokowane nasiona, nawóz, pełny słój Żaru). Scena ładuje się od nowa już z grą.
+        /// </summary>
+        public static void LeaveMist()
+        {
+            var old = ReadMist();
+            if (old == null)
+                return;
             var upgrades = new List<UpgradeSave>();
             if (Prestige.Level(Prestige.FaithfulWisp) > 0)
                 upgrades.Add(new UpgradeSave { id = UpgradeIds.WispGardener, level = 1 });
@@ -337,33 +439,47 @@ namespace Wyspa.Save
                 savedAtUtcTicks = DateTime.UtcNow.Ticks,
                 currencies = Prestige.StartCurrencies(),
                 upgrades = upgrades,
-                unlockedSeeds = Prestige.Level(Prestige.SeedMemory) > 0 ? game.SnapshotUnlocks() : new List<string>(),
-                chronicle = Lore.Chronicle.Instance != null ? Lore.Chronicle.Instance.Snapshot() : null,
+                unlockedSeeds = Prestige.Level(Prestige.SeedMemory) > 0 && old.mistUnlocks != null ? old.mistUnlocks : new List<string>(),
+                chronicle = old.chronicle,
                 intro = UI.IntroNotes.Done,
-                slotName = CurrentName,
+                slotName = old.slotName,
                 market = new MarketSave(),
                 prestige = Prestige.Snapshot(),
+                fertilizer = Mathf.RoundToInt(Prestige.Value(Prestige.MistCompost)),
+                essence = Prestige.Level(Prestige.EmberReserve) > 0 ? 1e6f : 0f,   // przycięte do pojemności słoja
             };
             data.coins = Prestige.StartCurrencies()[0].amount;
-            owner = null;   // bez autozapisu starej wyspy w tej klatce
-            Write(data);
+            int slot = MistSlot;
+            WriteTo(SlotPath(slot), data);
+            MistSlot = -1;
+            CurrentSlot = slot;
+            CurrentName = CleanName(old.slotName, slot);
             ReloadScene();
-            return true;
         }
 
-        void Write(SaveData data)
+        /// <summary>Z Przystani do menu głównego (slot zostaje we mgle: „Graj” wraca do Przystani).</summary>
+        public static void MistToMenu()
+        {
+            MistSlot = -1;
+            CurrentSlot = -1;
+            ReloadScene();
+        }
+
+        void Write(SaveData data) => WriteTo(FilePath, data);
+
+        static void WriteTo(string path, SaveData data)
         {
             try
             {
                 // najpierw plik tymczasowy, potem podmiana: przerwany zapis (ubity proces) nie zostawi uciętego JSON-a
-                string tmp = FilePath + ".tmp";
+                string tmp = path + ".tmp";
                 File.WriteAllText(tmp, JsonUtility.ToJson(data, true));
-                if (!File.Exists(FilePath))
-                    File.Move(tmp, FilePath);
+                if (!File.Exists(path))
+                    File.Move(tmp, path);
                 else
                 {
-                    try { File.Replace(tmp, FilePath, null); }
-                    catch (IOException) { File.Copy(tmp, FilePath, true); File.Delete(tmp); }   // dysk bez obsługi podmiany
+                    try { File.Replace(tmp, path, null); }
+                    catch (IOException) { File.Copy(tmp, path, true); File.Delete(tmp); }   // dysk bez obsługi podmiany
                 }
             }
             catch (Exception e)
@@ -412,6 +528,15 @@ namespace Wyspa.Save
             }
             if (!string.IsNullOrEmpty(data.slotName))
                 CurrentName = data.slotName;
+            if (data.mist)
+            {
+                // slot we mgle (np. wczytany z pominięciem menu): najpierw Przystań
+                owner = null;
+                MistSlot = CurrentSlot;
+                CurrentSlot = -1;
+                ReloadScene();
+                return;
+            }
 
             // najpierw wyspa: grządki (do wczytania niżej) i miejsca na obiekty powstają razem z kafelkami.
             // Bardzo stary zapis bez wyspy dostaje nowy świat (waluty i ulepszenia zostają).

@@ -408,6 +408,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Skala UI (po teście: przy powiększonym oknie i małej wyspie pasek zajmował pół okna): **zależy od rozdzielczości
   monitora, nie od powiększenia okna** (1080p x2, 1440p x3, 4K x4), najwyżej o 1 mniej niż skala świata. Opcje → Okno →
   „Rozmiar interfejsu”: auto albo x1-x4.
+- [x] Prestiż: **Przystań we mgle** między rejsami, dary **losowane** za perły (1 perła = 1 losowanie, animacja walki ikon),
+  rzadkość z kolorami, 37 darów, kolekcja z wyszarzałymi niezdobytymi (§11.8, §9 p. 81). Wcześniejszy zakup darów w Księdze
+  zastąpiony.
 - [x] Pogaduszki ogników (prośba gracza): pary wolnych ogników „rozmawiają” runami w dymkach, z szczebiotem bez znaczenia;
   ogniki nie przenikają się, tylko ocierają. Pomost (z sieciami i łodzią) można przenieść. §11.3 E1 i F, §9 p. 80.
 - [x] Rój ogników (prośba gracza): **gniazdo na 3 ogniki**, 6 zawodów (ogrodnik, siewca, drwal, alchemik, latarnik,
@@ -659,6 +662,11 @@ Obrazki referencyjne (kopie): `docs/img/`
       znaczenia („simlish”) z syntezowanych sylab, każdy ognik innym głosem. Przełącznik w opcjach dźwięku.
     - Ogniki **nie przenikają się**, tylko delikatnie ocierają (odsuwanie sprite'ów, trasa bez zmian).
     - **Przenoszenie pomostu i sieci** (§11.3 F): klik w deski albo w boję → „Przenieś”; sieci i łódź płyną z pomostem.
+81. Prestiż przebudowany (prośba gracza, §11.8): po „Odpłyń we mgłę” najpierw **Przystań we mgle**, gdzie perły wydaje się
+    na **losowania darów** (1 perła = 1 losowanie, „walka” ikon na środku, zostaje jeden, potem wszystkie wracają na miejsca),
+    i dopiero potem nowa wyspa z darami. Dary mają **rzadkość z kolorami** (zwykły, niezwykły, rzadki, epicki, legendarny),
+    **27 nowych** (razem 37), kolekcja: zdobyte w kolorze, niezdobyte wyszarzałe. Zakup darów w Księdze usunięty (Księga
+    pokazuje kolekcję). Zapis v16. Gałąź główna repozytorium to teraz `main`.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -930,31 +938,73 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 - `Expedition`: stan łodzi (licznik aktywnych sekund, tabela łupów).
 - `Mutation`: tabela par roślin i hybrydy, rzut przy zbiorze.
 
-### 11.8 Prestiż: Rejs we mgłę (Etap 8, prośba gracza)
+### 11.8 Prestiż: Rejs we mgłę (Etap 8, przebudowa: Przystań we mgle i losowane dary)
 - **Po co:** po kilku tygodniach wyspa jest „skończona”. Rejs pozwala zacząć od nowa, mocniejszym, z nową wyspą (nowe
   ziarno świata, inne strefy we mgle).
-- **Jak:** Księga → zakładka Rejs (ikona perły) → „Odpłyń we mgłę” (drugi klik potwierdza). Zapis slotu zastępuje nowa wyspa.
+- **Jak:** Księga → zakładka Rejs (ikona perły) → „Odpłyń we mgłę” (drugi klik potwierdza) → **Przystań we mgle**: ekran
+  między rejsami (wyspa w tle jak w menu głównym). Tam gracz wydaje perły na losowania darów, a dopiero „Wypłyń na nową
+  wyspę” zaczyna grę z wylosowanymi darami. Zamknięcie gry w Przystani niczego nie gubi: slot w menu ma dopisek „We mgle”,
+  a „Graj” wraca do Przystani. Z Przystani można wyjść do menu głównego.
 - **Perły Mgły** = pierwiastek z (monety zarobione w tym rejsie / 10 000): 10 tys. = 1, 40 tys. = 2, 1 mln = 10.
-  Zarobek liczy każda moneta wpadająca do portfela (sprzedaż, zamówienia, odsetki, wyprawy).
+  Zarobek liczy każda moneta wpadająca do portfela (sprzedaż, zamówienia, odsetki, wyprawy). Niewydane perły zostają.
 - **Blask pereł:** każda kiedykolwiek zdobyta perła +2% do wszystkich cen i dochodów (na zawsze, także po wydaniu perły).
+- **Losowanie:** 1 perła = 1 losowanie. Najpierw rzadkość: zwykły 50%, niezwykły 28%, rzadki 14%, epicki 6%, legendarny 2%
+  (rzadkości bez darów do zdobycia wypadają z losowania, reszta proporcjonalnie), potem dar tej rzadkości po równo.
+  Ten sam dar drugi raz: poziom wyżej. Dar na najwyższym poziomie już nie wypada. Każde losowanie od razu trafia do zapisu.
+- **Walka darów** (animacja losowania): ikony wszystkich darów, które mogą wypaść, zlatują się w krąg na środku, krąg kręci
+  się coraz szybciej i zacieśnia, ikony rzucają się na siebie i po kolei wylatują na boki (szarzeją), ostatni cios z grzmotem.
+  Zwycięzca rośnie x2 na środku w rozbłysku koloru rzadkości, napis z nazwą i poziomem, potem wszystkie wracają na swoje
+  miejsca w kolekcji, a nowy dar mruga obwódką. Klik w trakcie przyspiesza. Ok. 5 s.
+- **Kolekcja** (Przystań i zakładka Rejs w Księdze): kratka 37 darów w ramkach koloru rzadkości (kamień, mech, błękit,
+  fiolet, stare złoto). Zdobyte w pełnym kolorze z kropkami poziomów, niezdobyte wyszarzałe; dymek: nazwa, rzadkość,
+  efekt, poziom. Podgląd: `docs/img/przystan_mgly.png`.
 - **Zostaje:** perły, dary, liczba rejsów, kronika (bestiariusz, historia, rytuały), nazwa wyspy, opcje.
   **Przepada:** wyspa, waluty, ulepszenia z drzewka, budowle, worek nasion, chowańce, zamówienia.
-- **Dary Mgły** (za perły, trwałe):
+- **Dary Mgły** (37; wartości na kolejnych poziomach):
 
-| Dar | Efekt | Poziomy (koszt w perłach) |
+| Rzadkość | Dar | Efekt |
 |---|---|---|
-| Mgielny targ | ceny i dochody +10/20/30/40/50% | 1, 2, 3, 4, 5 |
-| Posag | nowa wyspa +500 / 2000 / 8000 monet | 1, 2, 4 |
-| Wierny ognik | ognik-ogrodnik od startu | 2 |
-| Pamięć nasion | odblokowane nasiona zostają | 2 |
-| Żar Opiekunów | Żar z pracy +10/20/30% | 1, 2, 3 |
-| Zielone ręce | wzrost roślin +10/20/30% | 1, 2, 3 |
-| Stare znajomości | ulepszenia -10/20/30% monet | 2, 3, 4 |
-| Tania ziemia | kafelki -10/20/30% monet | 1, 2, 3 |
-| Pełna spiżarnia | start z 30 / 80 drewna i kamienia | 1, 2 |
-| Perłowe szczęście | szansa na złoty interes +3/6/9% | 2, 3, 4 |
+| zwykły | Posag | nowa wyspa +500 / 2000 / 8000 monet |
+| zwykły | Tania ziemia | kafelki -10/20/30% monet |
+| zwykły | Pełna spiżarnia | start z 30 / 80 / 150 drewna i kamienia |
+| zwykły | Skrzydła mgły | ogniki latają +10/20/30% szybciej |
+| zwykły | Głębokie skrzynie | skrzynie +5/10/15 miejsc |
+| zwykły | Słoneczne nasiona | rośliny dnia +8/16/24% |
+| zwykły | Księżycowa rosa | rośliny nocy +8/16/24% |
+| zwykły | Gęsty olej | lampy -8/16/24% Żaru |
+| zwykły | Kupiecki topór | skład +1/2/3 za drewno |
+| zwykły | Kamieniarz z mgły | skład +1/2/3 za kamień |
+| zwykły | Mądre ogniki | doświadczenie ogników +15/30/45% |
+| zwykły | Nawóz z mgły | start z 3 / 6 / 10 porcjami nawozu |
+| niezwykły | Wierny ognik | ognik-ogrodnik od startu |
+| niezwykły | Żar Opiekunów | Żar z pracy +10/20/30% |
+| niezwykły | Zielone ręce | wzrost roślin +10/20/30% |
+| niezwykły | Szczodry duszek | duszek-handlarz i ogniki +3/6/9% ceny |
+| niezwykły | Znajomy widma | kupiec-widmo -5/10/15% |
+| niezwykły | Sad przodków | owoce +10/20/30% |
+| niezwykły | Stała klientela | zamówienia +10/20/30% |
+| niezwykły | Kapryśne nasiona | mutacje +1/2/3 pkt proc. |
+| niezwykły | Wiatr we mgle | wyprawy -8/16/24% czasu |
+| niezwykły | Nocny jarmark | rośliny nocy +8/16/24% ceny |
+| niezwykły | Żar w zanadrzu | start z pełnym słojem Żaru |
+| rzadki | Mgielny targ | ceny i dochody +10/20/30/40/50% |
+| rzadki | Pamięć nasion | odblokowane nasiona zostają |
+| rzadki | Stare znajomości | ulepszenia -10/20/30% monet |
+| rzadki | Przytulne gniazdo | gniazdo +1 ognik |
+| rzadki | Skarbonka | odsetki o świcie +0,5/1% |
+| rzadki | Pełna tablica | +1 zamówienie na tablicy |
+| rzadki | Niezmordowany | zmęczenie spowalnia o 10/20% mniej |
+| rzadki | Dniówka z mgły | +1/2 monety za minutę pracy |
+| epicki | Perłowe szczęście | złoty interes +3/6/9% szansy |
+| epicki | Złote runo | mnożnik złotego interesu +0,5/1 |
+| epicki | Gwiezdny traf | odłamek gwiazdy przy sprzedaży +2/4% |
+| legendarny | Korona mgły | ceny i dochody +25% |
+| legendarny | Perłowa łaska | +25% pereł z rejsu |
+| legendarny | Serce wyspy | wszystkie rośliny +25% |
 
-Kod: `Economy/Prestige.cs`, rejs `Save/SaveSystem.SailIntoMist`, strona `UI/BookView.BuildVoyage`. Liczby do balansu.
+Kod: `Economy/Prestige.cs` (dary, losowanie, `ApplyToEffects` po `UpgradeEffects.Apply`), Przystań `UI/MistHarborView.cs`,
+kolekcja `UI/GiftGrid.cs`, zapis `Save/SaveSystem` (`SailIntoMist`, `LoadMist`, `SaveMist`, `LeaveMist`, zapis v16 z polem
+`mist`). Ikony darów na razie z ikon UI (część się powtarza), docelowo własne. Liczby do balansu.
 
 ### 11.7 Etapy implementacji
 - **Etap 1 (gotowy):** szkielet systemów (§10).

@@ -8,7 +8,7 @@ ui.soon,Wkrótce,Coming soon,Demnächst,近日公開,即将推出,
 ui.shop.soon,"Lampy i budowle pojawią się wkrótce. Nasiona kupujesz, klikając pustą grządkę.",Lamps and buildings are coming soon. Buy seeds by clicking an empty plot.,Lampen und Gebäude kommen bald. Samen kaufst du per Klick auf ein leeres Beet.,ランプと建物は近日公開。種は空いた畑をクリックして買えます。,灯和建筑即将推出。点击空田地即可购买种子。,
 ui.upgrade.buy,Kup,Buy,Kaufen,購入,购买,
 ui.upgrade.level,Poziom {0}/{1},Level {0}/{1},Stufe {0}/{1},レベル {0}/{1},等级 {0}/{1},
-ui.voyage.hint,"Rejs we mgłę: zostawiasz wyspę i zaczynasz na nowej. Zostają perły, dary, kronika i bestiariusz. Przepadają wyspa, waluty, ulepszenia i budowle.","Sail into the mist: leave your island and start on a new one. You keep pearls, gifts, the chronicle and the bestiary. The island, currencies, upgrades and buildings are lost.","Reise in den Nebel: Du verlässt die Insel und beginnst auf einer neuen. Perlen, Gaben, Chronik und Bestiarium bleiben. Insel, Währungen, Verbesserungen und Bauten gehen verloren.",霧への航海：島を離れ、新しい島で始める。真珠、贈り物、年代記と図鑑は残り、島、通貨、強化、建物は失われる。,驶入迷雾：离开小岛，在新岛上重新开始。珍珠、馈赠、编年史和图鉴会保留，小岛、货币、升级和建筑将失去。,
+ui.voyage.hint,"Rejs we mgłę: zostawiasz wyspę, w Przystani we mgle losujesz perłami dary i wypływasz na nową. Zostają perły, dary, kronika i bestiariusz. Przepadają wyspa, waluty, ulepszenia i budowle.","Sail into the mist: leave your island, draw gifts with pearls in the Harbor in the Mist and sail to a new one. You keep pearls, gifts, the chronicle and the bestiary. The island, currencies, upgrades and buildings are lost.","Reise in den Nebel: Du verlässt die Insel, ziehst im Hafen im Nebel Gaben mit Perlen und segelst zu einer neuen. Perlen, Gaben, Chronik und Bestiarium bleiben. Insel, Währungen, Verbesserungen und Bauten gehen verloren.",霧への航海：島を離れ、霧の港で真珠を使って贈り物を引き、新しい島へ出航する。真珠、贈り物、年代記と図鑑は残り、島、通貨、強化、建物は失われる。,驶入迷雾：离开小岛，在雾中港湾用珍珠抽取馈赠，再驶向新岛。珍珠、馈赠、编年史和图鉴会保留，小岛、货币、升级和建筑将失去。,
 ui.voyage.pearls,Perły Mgły: {0} (zdobyte: {1}) - rejs nr {2},Mist Pearls: {0} (earned: {1}) - voyage {2},Nebelperlen: {0} (gesamt: {1}) - Reise {2},霧の真珠：{0}（累計{1}）- 第{2}航海,雾珍珠：{0}（累计{1}）- 第{2}次航程,"{0} = niewydane, {1} = łącznie, {2} = numer rejsu"
 ui.voyage.glow,Blask pereł i dary: ceny +{0}%,Pearl glow and gifts: prices +{0}%,Perlenglanz und Gaben: Preise +{0}%,真珠の輝きと贈り物：価格+{0}%,珍珠光辉与馈赠：价格+{0}%,
 ui.voyage.run,Ten rejs: {0} monet = {1} {0:plural:perła|perły|pereł} (następna przy {2}),This voyage: {0} coins = {1} {0:plural:pearl|pearls} (next at {2}),Diese Reise: {0} Münzen = {1} {0:plural:Perle|Perlen} (nächste bei {2}),今回の航海：{0}コイン = 真珠{1}（次は{2}）,本次航程：{0}金币 = {1}颗珍珠（下一颗需{2}）,"{0} = zarobek rejsu, {2} = próg następnej perły"
@@ -16,8 +16,21 @@ ui.voyage.sail,Odpłyń we mgłę (+{0} {0:plural:perła|perły|pereł}),Sail in
 ui.voyage.confirm,Na pewno? Kliknij jeszcze raz (+{0} {0:plural:perła|perły|pereł}),Are you sure? Click again (+{0} {0:plural:pearl|pearls}),Sicher? Nochmal klicken (+{0} {0:plural:Perle|Perlen}),本当に？もう一度クリック（真珠+{0}）,确定吗？再点一次（+{0}颗珍珠）,
 ui.voyage.cant,Pierwsza perła przy 10 000 monet zarobku w rejsie,"First pearl at 10,000 coins earned this voyage",Erste Perle bei 10.000 Münzen Verdienst auf dieser Reise,"この航海で10,000コイン稼ぐと最初の真珠","本次航程赚到10,000金币时获得第一颗珍珠",
 ui.voyage.sail_tip,Perły = pierwiastek z (zarobek rejsu / 10 000). Każda zdobyta perła: +2% do wszystkich cen na zawsze.,"Pearls = square root of (voyage earnings / 10,000). Each pearl earned: +2% to all prices forever.",Perlen = Wurzel aus (Reiseverdienst / 10.000). Jede erhaltene Perle: +2% auf alle Preise für immer.,"真珠 = √(航海の稼ぎ ÷ 10,000)。得た真珠1つにつき全価格が永久に+2%。","珍珠 = √(本次航程收入 ÷ 10,000)。每获得一颗珍珠，所有价格永久+2%。",
-ui.voyage.gifts,"Dary Mgły (za perły, na zawsze)","Gifts of the Mist (for pearls, forever)","Gaben des Nebels (für Perlen, für immer)",霧の贈り物（真珠で交換、永続）,雾之馈赠（用珍珠兑换，永久）,
+ui.voyage.gifts,Dary Mgły (kolekcja),Gifts of the Mist (collection),Gaben des Nebels (Sammlung),霧の贈り物（コレクション）,雾之馈赠（收藏）,
 ui.voyage.buy,{0} {0:plural:perła|perły|pereł},{0} {0:plural:pearl|pearls},{0} {0:plural:Perle|Perlen},真珠{0},{0}颗珍珠,cena daru
+ui.voyage.gifts_where,Dary losujesz perłami w Przystani we mgle.,You draw gifts with pearls in the Harbor in the Mist.,Gaben ziehst du mit Perlen im Hafen im Nebel.,贈り物は霧の港で真珠を使って引く。,在雾中港湾用珍珠抽取馈赠。,
+ui.harbor.title,Przystań we mgle,Harbor in the Mist,Hafen im Nebel,霧の港,雾中港湾,
+ui.harbor.pearls,Perły: {0} - rejs nr {1} - dary {2}/{3},Pearls: {0} - voyage {1} - gifts {2}/{3},Perlen: {0} - Reise {1} - Gaben {2}/{3},真珠：{0} - 第{1}航海 - 贈り物 {2}/{3},珍珠：{0} - 第{1}次航行 - 馈赠 {2}/{3},
+ui.harbor.hint,Perła = jedno losowanie daru,A pearl = one gift draw,Eine Perle = eine Gabe ziehen,真珠1つ = 贈り物1回,一颗珍珠 = 抽一次馈赠,
+ui.harbor.roll,Losuj dar ({0} {0:plural:perła|perły|pereł}),Draw a gift ({0} {0:plural:pearl|pearls}),Gabe ziehen ({0} {0:plural:Perle|Perlen}),贈り物を引く（真珠{0}）,抽取馈赠（珍珠{0}）,
+ui.harbor.roll_tip,"Ten sam dar drugi raz: poziom wyżej. Dar na najwyższym poziomie już nie wypada. Szanse: zwykły 50%, niezwykły 28%, rzadki 14%, epicki 6%, legendarny 2%.","The same gift again: one level higher. Gifts at max level no longer drop. Chances: common 50%, uncommon 28%, rare 14%, epic 6%, legendary 2%.","Dieselbe Gabe erneut: eine Stufe höher. Gaben auf Höchststufe fallen nicht mehr. Chancen: gewöhnlich 50%, ungewöhnlich 28%, selten 14%, episch 6%, legendär 2%.",同じ贈り物をもう一度引くとレベルが上がる。最大レベルの贈り物はもう出ない。確率：コモン50%、アンコモン28%、レア14%、エピック6%、レジェンド2%。,再次抽到同一馈赠：等级提升。满级馈赠不再出现。几率：普通50%，罕见28%，稀有14%，史诗6%，传说2%。,
+ui.harbor.no_pearls,Brak pereł,No pearls,Keine Perlen,真珠がない,没有珍珠,
+ui.harbor.all_owned,Wszystkie dary zdobyte,All gifts collected,Alle Gaben gesammelt,すべての贈り物を獲得,已集齐所有馈赠,
+ui.harbor.sail,Wypłyń na nową wyspę,Sail to a new island,Zur neuen Insel segeln,新しい島へ出航,驶向新岛,
+ui.harbor.fight,Dary walczą... (klik: szybciej),The gifts fight... (click: faster),Die Gaben kämpfen... (Klick: schneller),贈り物が戦っている…（クリックで早送り）,馈赠正在争斗……（点击加速）,
+ui.harbor.won_new,Nowy dar: {0} ({1}),New gift: {0} ({1}),Neue Gabe: {0} ({1}),新しい贈り物：{0}（{1}）,新馈赠：{0}（{1}）,
+ui.harbor.won_level,{0}: poziom {1}/{2},{0}: level {1}/{2},{0}: Stufe {1}/{2},{0}：レベル{1}/{2},{0}：等级{1}/{2},
+ui.gift.not_owned,Jeszcze nie zdobyty,Not collected yet,Noch nicht erhalten,未獲得,尚未获得,
 ui.upgrade.max,Maks.,Max,Max.,最大,已满,
 ui.upgrade.requires,Wymaga: {0},Requires: {0},Benötigt: {0},必要：{0},需要：{0},
 ui.toast.upgrade_bought,Kupiono: {0},Bought: {0},Gekauft: {0},購入：{0},已购买：{0},
@@ -279,6 +292,7 @@ ui.options.notify,Powiadomienia Windows,Windows notifications,Windows-Benachrich
 ui.hud.to_night,{0}  noc za {1},{0}  night in {1},{0}  Nacht in {1},{0}  夜まで {1},{0}  距夜晚 {1},"pasek HUD: {0} = godzina gry, {1} = mm:ss do nocy"
 ui.hud.to_day,{0}  świt za {1},{0}  dawn in {1},{0}  Morgen in {1},{0}  夜明けまで {1},{0}  距黎明 {1},"pasek HUD: {0} = godzina gry, {1} = mm:ss do świtu"
 ui.menu.unreadable,Zapis nieczytelny,Unreadable save,Spielstand unlesbar,読めないセーブ,存档无法读取,slot z uszkodzonym plikiem
+ui.menu.slot_mist,We mgle: czeka w przystani,In the mist: waiting at the harbor,Im Nebel: wartet im Hafen,霧の中：港で待機中,雾中：在港湾等待,
 ui.nest.range,Ogniki pracują w polu {0}x{0} wokół gniazda,Wisps work in the {0}x{0} area around the nest,Irrlichter arbeiten im Bereich {0}x{0} um das Nest,巣の周囲{0}x{0}で働く,鬼火在巢周围{0}x{0}范围内工作,{0} = bok pola
 ui.nest.wisp,"{0} ({1}), poz. {2}: {3}/{4} dośw.","{0} ({1}), lv. {2}: {3}/{4} XP","{0} ({1}), Stufe {2}: {3}/{4} EP",{0}（{1}）Lv.{2}：{3}/{4} EXP,{0}（{1}）{2}级：{3}/{4} 经验,"{0} imię, {1} zawód, {2} poziom, {3}/{4} doświadczenie"
 ui.nest.wisp_max,"{0} ({1}), poz. {2} (najwyższy)","{0} ({1}), lv. {2} (max)","{0} ({1}), Stufe {2} (max.)",{0}（{1}）Lv.{2}（最大）,{0}（{1}）{2}级（满级）,

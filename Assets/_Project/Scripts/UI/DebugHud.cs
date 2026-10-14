@@ -116,6 +116,8 @@ namespace Wyspa.UI
                         t.DebugMature();
                 if (GUILayout.Button("Odblokuj wszystkie nasiona"))
                     game.DebugUnlockAll();
+                if (GUILayout.Button($"Perły mgły +5 (jest {Economy.Prestige.Pearls})"))
+                    Economy.Prestige.DebugAddPearls(5);
                 GUILayout.Label($"Ogniki: {Wisp.All.Count}, gniazda: {WispNest.All.Count}, duszki: {MerchantSpirit.All.Count}, runy: {WildRune.All.Count}");
                 if (Wisp.All.Count > 0 && GUILayout.Button("Ogniki: +50 doświadczenia"))
                     foreach (var w in Wisp.All.ToArray())

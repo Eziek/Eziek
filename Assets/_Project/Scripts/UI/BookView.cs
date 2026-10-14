@@ -975,14 +975,12 @@ namespace Wyspa.UI
         TextMeshProUGUI voyageHead, voyageRun, voyageGlow, sailText;
         Button sailButton;
         float sailArmedUntil;
-        readonly List<(Prestige.Gift gift, Button buy, TextMeshProUGUI price, TextMeshProUGUI desc, TextMeshProUGUI level)> giftRows =
-            new List<(Prestige.Gift, Button, TextMeshProUGUI, TextMeshProUGUI, TextMeshProUGUI)>();
+        GiftGrid giftGrid;
 
         static string Num(long n) => n.ToString("N0", LocCore.Culture(Loc.Language));
 
         void BuildVoyage()
         {
-            giftRows.Clear();
             info.text = Loc.Get("ui.voyage.hint");
             float w = W - 64;
             voyageHead = Ui.Txt(content, "Pearls", Ui.Theme.textDark);
@@ -1000,49 +998,12 @@ namespace Wyspa.UI
             var head = Ui.Txt(content, "Gifts", Ui.Theme.textGoldOnPage);
             Ui.Place(head.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -57), new Vector2(w, 10));
             LocText.On(head, "ui.voyage.gifts");
-            float y = 69;
-            foreach (var g in Prestige.Gifts)
-            {
-                var gift = g;
-                var row = Ui.Place(Ui.Rect("Gift_" + g.id, content), Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(w, 22));
-                var icon = Ui.Img(row, "Icon", Ui.Theme.Icon(g.icon), false);
-                Ui.Place(icon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -4), new Vector2(12, 12));
-                var name = Ui.Txt(row, "Name", Ui.Theme.textDark);
-                LocText.On(name, g.NameKey);
-                Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(16, -1), new Vector2(150, 10));
-                var level = Ui.Txt(row, "Level", Ui.Theme.textGoldOnPage, TextAlignmentOptions.TopRight);
-                Ui.Place(level.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-48, -1), new Vector2(40, 10));
-                var desc = Ui.Txt(row, "Desc", Ui.Theme.textMutedOnPage);
-                Ui.Place(desc.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(16, -11), new Vector2(w - 66, 10));
-                desc.raycastTarget = true;
-                desc.gameObject.AddComponent<HoverTip>().Init(tooltip, () => GiftText(gift));
-                var buy = Ui.Btn(row, "Buy", () =>
-                {
-                    if (Prestige.TryBuy(gift))
-                    {
-                        GameEvents.RaiseToast("toast.gift_bought", Loc.Get(gift.NameKey));
-                        GameEvents.PlaySound("magic", 0.6f);
-                        var game = GameLoop.Instance;
-                        if (game != null)
-                            game.ApplyUpgrades();
-                    }
-                    RefreshVoyage();
-                });
-                Ui.Place((RectTransform)buy.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -3), new Vector2(42, 16));
-                var price = Ui.Txt(buy.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
-                Ui.Stretch(price.rectTransform);
-                giftRows.Add((g, buy, price, desc, level));
-                y += 23;
-            }
+            var where = Ui.Txt(content, "GiftsHint", Ui.Theme.textMutedOnPage);
+            Ui.Place(where.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -68), new Vector2(w, 10));
+            FitWithSuffix(where, Loc.Get("ui.voyage.gifts_where"), "", w);
+            // kolekcja: zdobyte w kolorze rzadkości, niezdobyte wyszarzałe (losuje się je w Przystani we mgle)
+            giftGrid = GiftGrid.Create(content, new Vector2(0, -81), w, tooltip);
             RefreshVoyage();
-        }
-
-        /// <summary>Opis daru: wartość następnego poziomu (albo obecnego, gdy maksymalny).</summary>
-        static string GiftText(Prestige.Gift g)
-        {
-            int lvl = Prestige.Level(g.id);
-            float v = g.values[Mathf.Min(lvl, g.values.Length - 1)];
-            return Loc.Get(g.DescKey, g.percent ? Mathf.Round(v * 100f) : v);
         }
 
         void RefreshVoyage()
@@ -1056,15 +1017,7 @@ namespace Wyspa.UI
             sailButton.interactable = Prestige.CanSail;
             sailText.text = !Prestige.CanSail ? Loc.Get("ui.voyage.cant")
                           : Loc.Get(armed ? "ui.voyage.confirm" : "ui.voyage.sail", Prestige.PendingPearls);
-            foreach (var (g, buy, price, desc, level) in giftRows)
-            {
-                int lvl = Prestige.Level(g.id), cost = Prestige.NextCost(g);
-                level.text = Loc.Get("ui.upgrade.level", lvl, g.MaxLevel);
-                FitWithSuffix(desc, GiftText(g), "", W - 64 - 66);   // pełny opis w dymku
-                buy.gameObject.SetActive(cost > 0);
-                buy.interactable = cost > 0 && Prestige.Pearls >= cost;
-                price.text = cost > 0 ? Loc.Get("ui.voyage.buy", cost) : "";
-            }
+            giftGrid?.Refresh();
         }
 
         /// <summary>Rejs: pierwszy klik uzbraja (4 s), drugi odpływa (nowa wyspa w tym samym slocie).</summary>

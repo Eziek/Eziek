@@ -7,6 +7,12 @@ menu.upgrades,Ulepszenia,Upgrades,Verbesserungen,強化,升级,
 menu.voyage,Rejs,Voyage,Reise,航海,航程,prestiż: rejs we mgłę (Księga)
 term.pearls,Perły Mgły,Mist Pearls,Nebelperlen,霧の真珠,雾珍珠,waluta prestiżu
 term.gifts,Dary Mgły,Gifts of the Mist,Gaben des Nebels,霧の贈り物,雾之馈赠,trwałe ulepszenia za perły
+term.harbor,Przystań we mgle,Harbor in the Mist,Hafen im Nebel,霧の港,雾中港湾,ekran między rejsami: losowanie darów za perły
+gift.rarity.common,Zwykły,Common,Gewöhnlich,コモン,普通,rzadkość daru (kolor: kamień)
+gift.rarity.uncommon,Niezwykły,Uncommon,Ungewöhnlich,アンコモン,罕见,rzadkość daru (kolor: mech)
+gift.rarity.rare,Rzadki,Rare,Selten,レア,稀有,rzadkość daru (kolor: błękit)
+gift.rarity.epic,Epicki,Epic,Episch,エピック,史诗,rzadkość daru (kolor: fiolet)
+gift.rarity.legendary,Legendarny,Legendary,Legendär,レジェンド,传说,rzadkość daru (kolor: złoto)
 menu.rituals,Rytuały,Rituals,Rituale,儀式,仪式,
 menu.bestiary,Bestiariusz,Bestiary,Bestiarium,図鑑,图鉴,
 menu.stats,Statystyki,Statistics,Statistiken,統計,统计,
