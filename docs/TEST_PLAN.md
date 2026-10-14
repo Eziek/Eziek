@@ -194,6 +194,7 @@ Najpierw **Wyspa → 2** (nowe ulepszenia, ikony kostki i perły).
 8. Klik w boję sieci: panel z czasem do połowu i „Przenieś” (to samo przenoszenie pomostu). Dymek nad boją: „Sieci rybackie”.
 
 ## 12. Przystań we mgle i losowane dary
+Najpierw **Wyspa → 2** (motyw UI wczytuje nowe ikony `icon_gift_*`; bez tego dary mają zapasowe ikony UI).
 1. F1 → „Perły mgły +5”, monety na co najmniej 10 000 zarobku, Księga → Rejs → „Odpłyń we mgłę” → drugi klik:
    zamiast nowej wyspy ekran **Przystań we mgle** (wyspa w tle przygaszona mgłą), u góry perły, nr rejsu, „dary X/37”.
 2. Kolekcja: 37 ramek, kolor ramki = rzadkość (szary, zielony, niebieski, fioletowy, złoty). Niezdobyte wyszarzałe,

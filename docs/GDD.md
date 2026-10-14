@@ -437,6 +437,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `mockups.py` | makiety UI (`out/ui_*.png`) i plik `WyspaPixel.ttf` |
 | `export_unity_ui.py` | eksport nowych sprite'ów, UI (z granicami 9-slice) i fontu do Unity (uruchamiać po `export_unity.py`) |
 | `export_unity_auto.py` | Etapy 6b-6d: nowe rośliny, duszki, ptaki, skrzynia 16 px, tablica ogłoszeń i strzałka wprowadzenia |
+| `gift_icons.py` + `export_unity_gifts.py` | ikony 37 Darów Mgły (12 px) → `UI/Icons/icon_gift_<id>.png`, arkusz `docs/img/ikony_darow.png` |
 | `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
 
@@ -667,6 +668,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     i dopiero potem nowa wyspa z darami. Dary mają **rzadkość z kolorami** (zwykły, niezwykły, rzadki, epicki, legendarny),
     **27 nowych** (razem 37), kolekcja: zdobyte w kolorze, niezdobyte wyszarzałe. Zakup darów w Księdze usunięty (Księga
     pokazuje kolekcję). Zapis v16. Gałąź główna repozytorium to teraz `main`.
+    Każdy z 37 darów ma własną ikonę 12 px w palecie mrocznej (`gift_icons.py`, podgląd `docs/img/ikony_darow.png`).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -1004,7 +1006,8 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 
 Kod: `Economy/Prestige.cs` (dary, losowanie, `ApplyToEffects` po `UpgradeEffects.Apply`), Przystań `UI/MistHarborView.cs`,
 kolekcja `UI/GiftGrid.cs`, zapis `Save/SaveSystem` (`SailIntoMist`, `LoadMist`, `SaveMist`, `LeaveMist`, zapis v16 z polem
-`mist`). Ikony darów na razie z ikon UI (część się powtarza), docelowo własne. Liczby do balansu.
+`mist`). Każdy dar ma własną ikonę 12 px (`tools/pixel-proto/gift_icons.py`, eksport `export_unity_gifts.py` →
+`UI/Icons/icon_gift_<id>.png`, arkusz `docs/img/ikony_darow.png`); bez niej grafika zapasowa z ikon UI. Liczby do balansu.
 
 ### 11.7 Etapy implementacji
 - **Etap 1 (gotowy):** szkielet systemów (§10).

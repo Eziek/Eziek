@@ -37,12 +37,13 @@ namespace Wyspa.Economy
 
         public class Gift
         {
-            public string id, icon;
+            public string id, icon;   // icon: zapasowa ikona UI, gdy motyw nie ma jeszcze własnej (icon_gift_<id>, Wyspa → 2)
             public GiftRarity rarity;
             public float[] values;    // efekt na kolejnych poziomach (opis: {0})
             public bool percent;      // opis w procentach (0.1 → 10)
             public string NameKey => "gift." + id + ".name";
             public string DescKey => "gift." + id + ".desc";
+            public string IconKey => "gift_" + id;
             public int MaxLevel => values.Length;
         }
 

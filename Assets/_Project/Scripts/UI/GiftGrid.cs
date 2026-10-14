@@ -65,7 +65,7 @@ namespace Wyspa.UI
             var slot = new Slot { gift = g };
             slot.back = Ui.Img(parent, "Gift_" + g.id, t.slot, true);
             slot.rect = Ui.Place(slot.back.rectTransform, Ui.TopLeft, Ui.TopLeft, topLeft, new Vector2(Cell, Cell));
-            slot.icon = Ui.Img(slot.rect, "Icon", t.Icon(g.icon), false);
+            slot.icon = Ui.Img(slot.rect, "Icon", Icon(g), false);
             Ui.Place(slot.icon.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(12, 12));
             slot.border = Ui.Img(slot.rect, "Rarity", Frame(), false);
             Ui.Stretch(slot.border.rectTransform);
@@ -81,6 +81,16 @@ namespace Wyspa.UI
                 }
             }
             return slot;
+        }
+
+        /// <summary>Własna ikona daru (tools/pixel-proto/gift_icons.py), a bez niej zwykła ikona UI.</summary>
+        public static Sprite Icon(Prestige.Gift g)
+        {
+            var t = Ui.Theme;
+            if (t == null)
+                return null;
+            var own = t.Icon(g.IconKey);
+            return own != null ? own : t.Icon(g.icon);
         }
 
         public void Refresh()
