@@ -76,11 +76,16 @@ namespace Wyspa.EditorTools
             PlayerSettings.runInBackground = true;
             PlayerSettings.visibleInBackground = true;
 
-            var rp = GraphicsSettings.defaultRenderPipeline;
-            if (rp is UniversalRenderPipelineAsset)
-                Debug.Log("[Wyspa] URP aktywny. Upewnij się, że renderer to 2D Renderer (szablon Universal 2D ma to domyślnie).");
-            else
+            var rp = GraphicsSettings.defaultRenderPipeline as UniversalRenderPipelineAsset;
+            if (rp == null)
                 Debug.LogWarning("[Wyspa] Brak URP! Utwórz projekt z szablonu 'Universal 2D' albo przypisz URP Asset z 2D Rendererem w Project Settings > Graphics.");
+            else if (!(rp.scriptableRenderer is Renderer2D))
+                Debug.LogWarning("[Wyspa] URP używa renderera 3D, więc światła 2D (dzień/noc, lampy) nie zadziałają. " +
+                                 "Project: Create > Rendering > URP Asset (with 2D Renderer), potem ustaw go w " +
+                                 "Project Settings > Graphics (Default Render Pipeline) i w Quality (Render Pipeline Asset) dla każdego poziomu. " +
+                                 "Szczegóły: docs/UNITY_SETUP.md.");
+            else
+                Debug.Log("[Wyspa] URP z 2D Rendererem: OK.");
 
             Debug.Log($"[Wyspa] Player Settings: okno {w * WindowScale}x{h * WindowScale}, praca w tle włączona.");
         }

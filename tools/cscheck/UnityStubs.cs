@@ -71,7 +71,9 @@ namespace UnityEngine.SceneManagement { public struct Scene { } }
 namespace UnityEngine.Rendering { public class RenderPipelineAsset : UnityEngine.Object { } public static class GraphicsSettings { public static RenderPipelineAsset defaultRenderPipeline; } }
 namespace UnityEngine.Rendering.Universal
 {
-    public class UniversalRenderPipelineAsset : UnityEngine.Rendering.RenderPipelineAsset { }
+    public class ScriptableRenderer { }
+    public class Renderer2D : ScriptableRenderer { }
+    public class UniversalRenderPipelineAsset : UnityEngine.Rendering.RenderPipelineAsset { public ScriptableRenderer scriptableRenderer => null; }
     public class Light2D : UnityEngine.Behaviour { public enum LightType { Parametric, Freeform, Sprite, Point, Global } public LightType lightType { get; set; } public float intensity { get; set; } public UnityEngine.Color color { get; set; } public float pointLightOuterRadius { get; set; } public float pointLightInnerRadius { get; set; } public float falloffIntensity { get; set; } }
     public class PixelPerfectCamera : UnityEngine.MonoBehaviour { public enum GridSnapping { None, PixelSnapping, UpscaleRenderTexture } public int assetsPPU { get; set; } public int refResolutionX { get; set; } public int refResolutionY { get; set; } public GridSnapping gridSnapping { get; set; } }
 }

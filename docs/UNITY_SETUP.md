@@ -92,6 +92,7 @@ Unity 6: **File → Build Profiles → Windows → Build**.
 |---|---|
 | Sprite'y rozmyte albo w złym miejscu | **Wyspa → Narzędzia → Reimportuj sprite'y** |
 | Wszystko czarne | Brak Global Light 2D albo projekt bez 2D Renderera. Użyj szablonu **Universal 2D** i przebuduj scenę |
+| Noc nie ciemnieje, lampy nie świecą, w konsoli „URP używa renderera 3D” | Projekt powstał z szablonu Universal 3D. Napraw: patrz sekcja „Przełączenie na 2D Renderer” niżej |
 | Płomienie lamp przyciemnione w nocy | Brak materiału `Data/GlowUnlit.mat` (shader URP Sprite-Unlit-Default). Uruchom ponownie krok 2 |
 | Klikanie nie działa | Na scenie musi być `ClickRouter` (obiekt `Game`), a grządki muszą mieć BoxCollider2D |
 
@@ -121,3 +122,15 @@ Unity 6: **File → Build Profiles → Windows → Build**.
 ## Sugestia: cały projekt w tym repo
 Najwygodniej będzie trzymać **cały projekt Unity w tym repozytorium**. W katalogu głównym jest już `.gitignore` dla Unity.
 Wtedy mogę pracować bezpośrednio na plikach projektu, a nie tylko na `Assets/_Project`.
+
+## Przełączenie na 2D Renderer (gdy projekt powstał z szablonu Universal 3D)
+1. W oknie **Project** kliknij prawym w `Assets/Settings` → **Create → Rendering → URP Asset (with 2D Renderer)**.
+   Powstaną dwa pliki, np. `New Universal Render Pipeline Asset` i `..._Renderer2D`. Nazwij asset `Pockland_URP2D`.
+2. **Edit → Project Settings → Graphics → Default Render Pipeline:** przeciągnij `Pockland_URP2D`.
+3. **Edit → Project Settings → Quality:** dla **każdego** poziomu jakości (klikasz po kolei w wierszach u góry)
+   ustaw **Render Pipeline Asset** na `Pockland_URP2D`.
+4. **Wyspa → 1. Ustawienia projektu.** W konsoli ma się pojawić „URP z 2D Rendererem: OK”.
+5. **Wyspa → 3. Zbuduj scenę prototypu** jeszcze raz i Play. Przyciski 19:30 / 23:30 w HUD powinny przyciemniać scenę,
+   a lampy świecić.
+6. Opcjonalnie usuń pliki szablonu 3D, których nie używamy: `Assets/TutorialInfo`, `Assets/Readme.asset`,
+   `Assets/Settings/PC_*`, `Mobile_*`, `*VolumeProfile*`, `SampleSceneProfile`.
