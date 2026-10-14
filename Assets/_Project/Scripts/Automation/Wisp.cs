@@ -216,6 +216,14 @@ namespace Wyspa.Automation
             StartCoroutine(Brain());
         }
 
+        /// <summary>Świt (scenka): senny dymek z wielokropkiem i mruczenie (gdy akurat nic nie mówi).</summary>
+        public void Yawn()
+        {
+            if (bubble == null || bubble.Showing || chatWith != null)
+                return;
+            bubble.Say(new[] { RuneGlyphs.Dots }, RuneColor, VoicePitch * 0.9f, OnScreen() ? 0.25f : 0f);
+        }
+
         /// <summary>Scenka odpłynięcia: ognik odkłada to, co niesie, wraca do gniazda i już tylko unosi się nad nim.</summary>
         public void RecallHome()
         {

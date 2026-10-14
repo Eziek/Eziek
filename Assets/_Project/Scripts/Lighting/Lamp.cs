@@ -50,6 +50,16 @@ namespace Wyspa.Lighting
             ExtinguishStart = Time.unscaledTime;
         }
 
+        /// <summary>Lampa najbliżej punktu (np. środka wyspy: od niej rusza łańcuch zmierzchu) albo null.</summary>
+        public static Lamp NearestTo(Vector2 to)
+        {
+            Lamp best = null;
+            foreach (var l in All)
+                if (l != null && (best == null || ((Vector2)l.transform.position - to).sqrMagnitude < ((Vector2)best.transform.position - to).sqrMagnitude))
+                    best = l;
+            return best;
+        }
+
         /// <summary>Lampa świeci przez chwilę bez względu na porę i Żar (scenka przypłynięcia).</summary>
         public void Flare(float seconds) => flareUntil = Time.unscaledTime + seconds;
 

@@ -29,6 +29,18 @@ namespace Wyspa.Visual
         float timer;
 
         public float Density => density;
+
+        const float DawnSeconds = 22f;
+        float dawnStart = -100f;
+
+        /// <summary>Świt (scenka): mgła stoi pod samym brzegiem i przez ok. 20 s cofa się na zwykłą odległość.</summary>
+        public void Dawn()
+        {
+            if (!band)
+                dawnStart = Time.unscaledTime;
+        }
+
+        bool Dawning => Time.unscaledTime - dawnStart < DawnSeconds;
         bool band;
         float bandEdge = 18f;
 
@@ -55,6 +67,8 @@ namespace Wyspa.Visual
         void Update()
         {
             timer -= Time.unscaledDeltaTime;
+            if (Dawning)
+                Apply();   // cofanie mgły co klatkę (płynnie)
             if (timer > 0f)
                 return;
             timer = 0.5f;
@@ -83,7 +97,13 @@ namespace Wyspa.Visual
             fog.GetPropertyBlock(block);
             block.SetFloat(DensityId, Mathf.Max(0.3f, density));
             // wartości zwykłe = domyślne z materiału (22 / 40 / bez końca)
-            block.SetFloat(FromId, band ? 5f : 22f);
+            float from = band ? 5f : 22f;
+            if (!band && Dawning)
+            {
+                float u = Mathf.Clamp01((Time.unscaledTime - dawnStart) / DawnSeconds);
+                from = Mathf.Lerp(3f, 22f, u * u * (3f - 2f * u));   // od brzegu z powrotem na 22 px
+            }
+            block.SetFloat(FromId, from);
             block.SetFloat(SpanId, 40f);
             block.SetFloat(OuterId, band ? bandEdge : 0f);
             fog.SetPropertyBlock(block);

@@ -691,6 +691,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     wczytaniu; zwroty (rozbiórka, nieudane postawienie) nie liczą się do zarobku rejsu (perły); Skarbonka 1. poziomu działa
     (limit odsetek 1000 monet za 1%); odmiana „perła/pereł” w zakładce Rejs; cykl księżyca nie zamyka się wstecz po rejsie;
     toast złotego interesu pokazuje prawdziwy mnożnik (x2.5); znalezisko spod darmowego kafelka nie przepada.
+86. **Scenki świtu i zmierzchu** (wybór gracza): zmierzch: lampy zapalają się łańcuchem od latarni przy środku wyspy
+    (0,35 s na jednostkę odległości, każda z błyskiem), ćmy nadlatują z ciemności do zapalonych lamp; świt: mgła stoi pod
+    samym brzegiem i przez ok. 22 s cofa się na zwykłą odległość (nie w przezroczystym oknie), z koron drzew zrywa się
+    2-4 ptaków, ogniki ziewają (dymek z wielokropkiem i senne mruczenie). Tylko przy zmianie pory w trakcie gry, nie przy
+    wczytaniu i nie w scenkach rejsu. Kod: `Visual/DayTransitions.cs` (+ Lamp, FogController, AmbientBirds, AmbientLife, Wisp).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

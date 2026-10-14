@@ -16,7 +16,7 @@ namespace Wyspa.Visual
         const int MothsPerLamp = 2;
         const float LampLight = 1.6f;          // wysokość klatki latarni nad podstawą (świat)
 
-        class Moth { public SpriteRenderer sr; public Lamp lamp; public float phase, speed; }
+        class Moth { public SpriteRenderer sr; public Lamp lamp; public float phase, speed, arrive = 1f; public Vector3 from; public bool was; }
         readonly List<Moth> moths = new List<Moth>();
         float fishTimer = 25f;
         bool jumping;
@@ -66,6 +66,14 @@ namespace Wyspa.Visual
                 var m = moths[i];
                 bool on = i < slot && m.lamp != null;
                 m.sr.enabled = on;
+                if (on && !m.was)
+                {
+                    // lampa się zapaliła: ćma nadlatuje z ciemności zamiast pojawić się przy świetle
+                    float ang = Random.value * Mathf.PI * 2f;
+                    m.from = m.lamp.transform.position + new Vector3(Mathf.Cos(ang) * 3.5f, 1.5f + Mathf.Sin(ang) * 2f, 0f);
+                    m.arrive = 0f;
+                }
+                m.was = on;
                 if (!on)
                     continue;
                 // nerwowy lot wokół światła: dwie różne częstotliwości i drganie skrzydeł
@@ -74,6 +82,13 @@ namespace Wyspa.Visual
                 var p = c + new Vector3(Mathf.Cos(a) * 0.55f + Mathf.Sin(a * 2.7f) * 0.12f,
                                         Mathf.Sin(a * 1.3f) * 0.35f + Mathf.Sin(t * 9f + m.phase) * 0.04f, 0f);
                 m.sr.flipX = Mathf.Sin(a) > 0f;
+                if (m.arrive < 1f)
+                {
+                    m.arrive = Mathf.Min(1f, m.arrive + Time.unscaledDeltaTime / (1.2f + m.speed * 0.4f));   // ok. 2 s
+                    float e = m.arrive * m.arrive * (3f - 2f * m.arrive);
+                    p = Vector3.Lerp(m.from, p, e);
+                    m.sr.flipX = p.x < m.sr.transform.position.x;
+                }
                 m.sr.transform.position = p;
                 m.sr.sprite = art.moth[Mathf.FloorToInt(t * 14f + m.phase) % art.moth.Length];
             }

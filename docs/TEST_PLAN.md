@@ -236,3 +236,10 @@ Najpierw **Wyspa → 2** (motyw UI wczytuje nowe ikony `icon_gift_*`; bez tego d
    latarnia rozbłyska (także w dzień), na dole „Rejs nr N” i linijka zapisków. Potem HUD wraca, można grać.
 4. Przewijanie PPM, Ctrl+kółko, pierścień PPM i kliki w wyspę nie działają w trakcie scenek.
 5. Czwarty ognik (Przytulne gniazdo) zostaje po zapisie i wczytaniu. Rozbiórka budowli nie podnosi „zarobku rejsu”.
+
+## 16. Świt i zmierzch
+1. F1 → godzina tuż przed 20:00 (albo „+20 min” w odpowiedniej chwili): o zmroku lampy zapalają się po kolei od latarni
+   przy środku, każda z małym błyskiem; ćmy nadlatują z daleka do zapalonych lamp.
+2. Tuż przed świtem (06:00): mgła na moment podchodzi pod sam brzeg i przez ok. 20 s się cofa; z drzew zrywa się kilka
+   ptaków; ogniki pokazują dymki z „...” z sennym mruczeniem.
+3. Wczytanie gry w nocy albo rano: bez scenek (lampy od razu w swoim stanie). Przezroczyste okno: bez cofania się mgły.

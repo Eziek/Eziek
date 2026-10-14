@@ -117,19 +117,46 @@ namespace Wyspa.Visual
             return true;
         }
 
-        IEnumerator Life(Bird b, Vector3 perch, int perchOrder, bool onGround)
+        /// <summary>Świt (scenka): kilka ptaków siedzi już w koronach drzew i po chwili zrywa się do lotu.</summary>
+        public void DawnFlock(int count)
+        {
+            var island = Island.Instance;
+            if (island == null || !island.Ready)
+                return;
+            for (int i = 0; i < count && birds.Count < MaxBirds + 2; i++)
+            {
+                var frames = Random.value < 0.5f ? crow : finch;
+                if (frames == null || frames.Length < 4 || frames[0] == null)
+                    return;
+                if (!PickPerch(island, out var perch, out int order, out bool onGround))
+                    return;
+                var go = new GameObject("Bird");
+                go.transform.SetParent(transform, false);
+                var sr = go.AddComponent<SpriteRenderer>();
+                sr.sprite = frames[0];
+                sr.sortingOrder = order;
+                go.transform.position = perch;
+                var bird = new Bird { sr = sr, frames = frames };
+                birds.Add(bird);
+                bird.routine = StartCoroutine(Life(bird, perch, order, onGround, Random.Range(0.6f, 2.4f)));
+            }
+        }
+
+        /// <param name="perchedFor">Większe od 0: ptak już siedzi (bez przylotu) i po tylu sekundach odlatuje (świt).</param>
+        IEnumerator Life(Bird b, Vector3 perch, int perchOrder, bool onGround, float perchedFor = 0f)
         {
             var cam = Camera.main;
             float side = Random.value < 0.5f ? -1f : 1f;
             float half = cam != null ? cam.orthographicSize * cam.aspect + 1.5f : 8f;
             float cx = cam != null ? cam.transform.position.x : perch.x;
             var start = new Vector3(cx + side * half, perch.y + Random.Range(1.5f, 3f), 0f);
-            yield return Fly(b, start, perch, 0.8f);
+            if (perchedFor <= 0f)
+                yield return Fly(b, start, perch, 0.8f);
 
             // na miejscu: dziobanie, na ziemi podskoki; po 8-18 s albo spłoszony odlatuje
             b.sr.sortingOrder = perchOrder;
             b.sr.sprite = b.frames[0];
-            float stay = Random.Range(8f, 18f);
+            float stay = perchedFor > 0f ? perchedFor : Random.Range(8f, 18f);
             float t = 0f, nextPeck = Random.Range(0.6f, 1.6f), nextHop = Random.Range(1.5f, 3.5f);
             var pos = perch;
             while (t < stay && !b.scared)
