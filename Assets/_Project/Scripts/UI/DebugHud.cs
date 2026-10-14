@@ -4,6 +4,7 @@ using Wyspa.Economy;
 using Wyspa.Farming;
 using Wyspa.Lighting;
 using Wyspa.Upgrades;
+using Wyspa.Visual;
 
 namespace Wyspa.UI
 {
@@ -153,6 +154,8 @@ namespace Wyspa.UI
             if (fi != game.Activity.ForceIdle) game.Activity.ForceIdle = fi;
             Lamp.DebugAllOff = GUILayout.Toggle(Lamp.DebugAllOff, "Zgaś lampy (test roślin nocy)");
             r.RhythmEnabled = GUILayout.Toggle(r.RhythmEnabled, "Rytm pracy (seria/przerwa/zmęczenie)");
+            bool fx = GUILayout.Toggle(FxMaterial.Enabled, "Shadery efektów (woda, mgła, kołysanie)");
+            if (fx != FxMaterial.Enabled) FxMaterial.Enabled = fx;
             if (GUILayout.Button("Cheat: +500 monet, +5 plonów nocy"))
             {
                 wallet.Add(CurrencyType.Coins, 500);

@@ -264,6 +264,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Tabela łupów wypraw łodzią.
 - [ ] Treść lore (historia wyspy, mgły, potwora).
 - [x] Chiński: **uproszczony (zh-Hans)**.
+- [x] Cząsteczki: **własny system pikselowy** (pula sprite'ów, 12 kl./s) zamiast ParticleSystem, dla ostrych pikseli.
+- [x] Woda i mgła: **liczone w shaderze z mapy danych** (port prototypu), ryby i potwór w shaderze, nie jako osobne sprite'y.
 - [ ] Rozmiar fontu tekstu: 10 px czy 12 px. Sprawdzimy później w Unity (§16.3).
 - [x] Lokalizacja w kodzie: **własna warstwa CSV** (`LocCore`/`Loc`) zamiast paczki Unity Localization (§16.4).
 - [ ] Przejście na Unity Localization: później albo wcale (klucze są zgodne, więc migracja jest możliwa).
@@ -288,6 +290,10 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `ui_kit.py` | font 3×5 (+ generator TTF), ikony, elementy 9-slice |
 | `mockups.py` | makiety UI (`out/ui_*.png`) i plik `WyspaPixel.ttf` |
 | `export_unity_ui.py` | eksport nowych sprite'ów, UI (z granicami 9-slice) i fontu do Unity (uruchamiać po `export_unity.py`) |
+| `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
+
+Shadery sprawdzamy poza Unity: `tools/shadercheck/check.py` kompiluje bloki HLSL kompilatorem DXC na prawdziwych plikach
+URP 17.6 (opis w pliku i w CLAUDE.md). Wyłapuje błędy w naszym kodzie, ale nie zastępuje testu w Unity.
 
 Uruchamianie (z katalogu `tools/pixel-proto/`):
 ```
@@ -347,6 +353,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     Lokalizacja przez **własną warstwę CSV** zamiast paczki Unity Localization: mniej konfiguracji w edytorze,
     da się ją testować poza Unity, a klucze i format `{0:plural:...}` zostają zgodne, gdyby trzeba było przejść na paczkę.
     Tabele: `Assets/_Project/Localization/` (glossary, game, ui).
+27. Etap 2c przetestowany. Etap 3 w dwóch częściach: **3a żywa wyspa** (shadery i cząsteczki), **3b powiększanie wyspy**.
+    Shadery piszemy na bazie źródeł URP 17.6 i kompilujemy w kontenerze kompilatorem DXC (`tools/shadercheck`).
+    Woda, ryby, potwór i mgła są portem prototypu z Pythona (te same reguły, 10 kl./s), a pętle ruchu są wolniejsze niż w GIF-ie
+    (ryby 30 s, mgła 30 s), bo w grze patrzy się na nie godzinami.
 
 ---
 
@@ -383,6 +393,12 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/UI/BookView.cs` | Księga: zakładki; Ulepszenia (zakup), Statystyki, Opcje (język, jasność nocy, rytm pracy); reszta „Wkrótce” |
 | `Scripts/UI/ToastView.cs`, `TooltipView.cs` | toasty (maks. 3, 4 s) i dymek przy kursorze |
 | `Localization/*.csv` | tabele: `glossary` (słownik terminów), `game` (teksty gry), `ui` (interfejs) |
+| `Shaders/SpriteSway.shader`, `SpriteSwayUnlit.shader` | sprite oświetlany (jak Sprite-Lit-Default URP 17.6) + kołysanie wierszy pikseli + kontur; wersja bez oświetlenia dla `*_glow` |
+| `Shaders/Water.shader`, `Fog.shader`, `WyspaCommon.hlsl` | woda i mgła liczone z `Ground/water_data.png` (port `water.py` i mgły z `anim.py`), oświetlane światłami 2D |
+| `Scripts/Visual/SpriteFx.cs` | faza kołysania z pozycji na świecie i kontur przez MaterialPropertyBlock |
+| `Scripts/Visual/WaterAnimator.cs`, `FogController.cs` | ryby i potwór do shadera wody, noc; gęstość mgły (dzień / noc / zgaszone lampy) |
+| `Scripts/Visual/PixelParticles.cs`, `IslandFx.cs` | własne cząsteczki pikselowe (pula sprite'ów, 12 kl./s, siatka pikseli); efekty zbioru, sadzenia, wzrostu, iskierki, świetliki, liście |
+| `Scripts/Visual/FxMaterial.cs` | przełącznik shaderów efektów (F1): powrót do zwykłego materiału |
 | `Editor/PixelArtImporter.cs` | automatyczne ustawienia importu sprite'ów + pivoty z `pivots.json` |
 | `Editor/WyspaSetup.cs` | menu „Wyspa”: ustawienia projektu, dane (SO, także `Data/UiTheme.asset`), budowa sceny z `prototype_layout.json` (z obiektem UI) |
 
@@ -497,7 +513,11 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 - **Etap 2b (gotowy, do testu w Unity):** automatyzacja: skrzynia na plony, ognik-ogrodnik, pamięć ziemi, skrzynia kupca (obiekty pojawiają się po zakupie).
 - **Etap 2c (gotowy, do testu w Unity):** docelowe UI z lokalizacją: HUD, koło nasion, Księga (Ulepszenia, Statystyki, Opcje),
   toasty, dymki. Sklep, Rytuały i Bestiariusz w Księdze mają na razie „Wkrótce”. CJK czeka na fonty Fusion Pixel.
-- **Etap 3:** shadery (kołysanie, woda, mgła), cząsteczki (monety, iskierki, listki), powiększanie wyspy z cofaniem mgły.
+- **Etap 3a (gotowy, do testu w Unity): żywa wyspa.** Shadery: kołysanie roślin i drzew (całe wiersze pikseli, skokowo),
+  kontur przy najechaniu i puls „gotowe”, woda liczona w shaderze (ryby, potwór, połyski, grzbiety fal, przybój, piana), mgła
+  przy krawędziach (gęstsza w nocy, bliżej przy zgaszonych lampach). Cząsteczki: zbiór, sadzenie, wzrost, iskierki, świetliki,
+  spadające liście, monety lecące do licznika. Przełącznik shaderów w HUD debugowym (F1).
+- **Etap 3b:** powiększanie wyspy kafelkami z cofaniem mgły (§13). Do zrobienia przy okazji: pasma światła lamp z Bayerem (§4.4).
 - **Etap 4:** rośliny nocy (grafiki), kupiec-widmo, pomost i łowienie, łódź i wyprawy, mutacje i jakość.
 - **Etap 5:** strefy, latarnia morska, Księga rytuałów i cykle księżyca, bestiariusz, lore, potwór.
 - **Etap 6:** wygoda (tryby okna, tray, dźwięk), docelowe UI pixel art, balans.

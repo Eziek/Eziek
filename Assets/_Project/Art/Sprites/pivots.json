@@ -376,7 +376,57 @@
       "y": 0.5
     },
     {
+      "name": "fx_firefly_0",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_firefly_1",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "fx_leaf",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_0",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_1",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_fall",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_soil_0",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_soil_1",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_sparkle_0",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_sparkle_1",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_sparkle_2",
       "x": 0.5,
       "y": 0.5
     },
@@ -1421,6 +1471,16 @@
     },
     {
       "name": "water",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "water_base",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "water_data",
       "x": 0.5,
       "y": 0.5
     },

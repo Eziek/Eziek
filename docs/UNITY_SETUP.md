@@ -117,6 +117,20 @@ Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (krok 3 sam uruchami
    pełna skrzynia przy ogniku.
 7. Pliki tekstów: `Assets/_Project/Localization/*.csv` (UTF-8). Po zmianie pliku wystarczy ponownie Play.
 
+## 4c. Etap 3a: żywa wyspa (test)
+Po pobraniu zmian: **Wyspa → 3. Zbuduj scenę prototypu** (krok 2 tworzy materiały w `Data/Materials`), potem Play.
+1. **Kołysanie:** rośliny i drzewa bujają się o piksel u góry, skokowo. Sąsiednie rośliny nie ruszają się równo.
+2. **Kontur:** najedź na grządkę z rośliną: jasny kontur. Dojrzała roślina pulsuje złotym konturem.
+3. **Woda:** pod wodą pływają ciemne ryby (powoli, ósemki), w głębi na dole porusza się coś dużego, po powierzchni
+   przesuwają się połyski i grzbiety fal, fale napływają do brzegu, piana przy klifie pulsuje.
+4. **Mgła:** przy krawędziach okna, nad morzem. W nocy gęstsza, a gdy zgasisz lampy (F1 → „Zgaś lampy”), podchodzi bliżej
+   (zmienia się powoli, kilka sekund).
+5. **Noc** (F1 → 23:30): niektóre ryby świecą turkusowo, rzadko błyska oko w głębinie, nad wyspą latają świetliki.
+6. **Cząsteczki:** zbiór (roślina wyskakuje, sypie się ziemia, monety lecą do licznika i licznik podskakuje), sadzenie (ziemia),
+   nowa faza wzrostu (listki), iskierki nad dojrzałymi, w dzień czasem spada liść z drzewa.
+7. **F1 → „Shadery efektów”** wyłącza shadery (zwykłe sprite'y). Jeśli coś jest różowe albo dziwne, sprawdź z wyłączonymi
+   i wklej mi błędy z konsoli.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 
@@ -129,6 +143,8 @@ Unity 6: **File → Build Profiles → Windows → Build**.
 | Płomienie lamp przyciemnione w nocy | Brak materiału `Data/GlowUnlit.mat` (shader URP Sprite-Unlit-Default). Uruchom ponownie krok 2 |
 | Klikanie nie działa | Na scenie musi być `ClickRouter` (obiekt `Game`), a grządki muszą mieć BoxCollider2D |
 | Brak napisów w UI, w konsoli „Brak zasobów TextMeshPro” | **Window → TextMeshPro → Import TMP Essential Resources**, potem Play |
+| Różowa woda, mgła albo rośliny | Shader się nie skompilował. Kliknij plik w `Assets/_Project/Shaders` i wklej mi błędy z Inspectora. F1 → „Shadery efektów” wyłącza efekty |
+| Woda bez ryb i fal, w kolorach „tęczy” | Brak `water_data.png` jako tekstury bez sRGB. **Wyspa → Narzędzia → Reimportuj sprite'y**, potem Wyspa → 3 |
 | Brak UI, w konsoli „UiRoot: brak motywu UI” | **Wyspa → 3** (tworzy `Data/UiTheme.asset` i podpina go do obiektu `UI`) |
 | W konsoli „[Loc] Brak klucza …” | Klucz nie istnieje w żadnym CSV w `Assets/_Project/Localization/`. Zgłoś mi nazwę klucza |
 

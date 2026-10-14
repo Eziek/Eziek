@@ -41,7 +41,10 @@ namespace Wyspa.Automation
             timer = 0f;
             int coins = crate != null ? crate.SellAll(wallet, crops, priceMultiplier) : 0;
             if (coins > 0)
+            {
                 GameEvents.RaiseToast("toast.merchant_sold", coins);
+                GameEvents.RaiseCurrencyGained(transform.position, CurrencyType.Coins, coins);
+            }
             if (coins > 0 && isActiveAndEnabled)
                 StartCoroutine(OpenBriefly());
             return coins;

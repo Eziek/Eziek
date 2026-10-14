@@ -17,7 +17,11 @@ a lampy zasilane Esencją oświetlają wyspę w nocy (pora dnia z zegara kompute
   `dotnet build tools/cscheck -p:ExtraDefines="ENABLE_INPUT_SYSTEM%3BUNITY_STANDALONE_WIN%3BUNITY_EDITOR_WIN"`
   (.NET SDK doinstaluj skryptem `dotnet-install.sh` do scratchpada). Nowe API Unity dopisuj do `tools/cscheck/UnityStubs.cs`
   zgodnie z prawdziwą sygnaturą. Atrapy nie gwarantują zgodności z prawdziwym Unity, więc mów graczowi, co jest niesprawdzone.
-- Grafiki-placeholdery generuje `tools/pixel-proto/export_unity.py` (paleta mroczna). Docelowe assety rysuje się ręcznie.
+- Shadery (`Assets/_Project/Shaders/`) piszemy na bazie źródeł URP 17.6 (repo Unity-Technologies/Graphics, gałąź master)
+  i przed commitem kompilujemy: `python3 tools/shadercheck/check.py --dxc <dxc> --gfx <gfx> Assets/_Project/Shaders/*.shader`
+  (DXC i biblioteki shaderów do scratchpada, instrukcja na górze `check.py`). To nie zastępuje testu w Unity.
+- Grafiki-placeholdery generuje `tools/pixel-proto/export_unity.py` (paleta mroczna), a dodatki kolejne skrypty `export_unity_*.py`
+  (dopisują do `pivots.json`). Docelowe assety rysuje się ręcznie.
 - Gracz woli mroczną, stonowaną estetykę (odrzucił „cukierkową”). Bez postaci, animacje tylko przez shadery i cząsteczki.
 - **Lokalizacja (PL, EN, DE, JA, ZH):** żadnego tekstu w sprite'ach ani w kodzie na sztywno. Każdy napis to klucz z tabeli CSV
   w `Assets/_Project/Localization/` (`game.csv`, `ui.csv`; własna warstwa `Wyspa.Localization.Loc`, format `{0:plural:...}`),

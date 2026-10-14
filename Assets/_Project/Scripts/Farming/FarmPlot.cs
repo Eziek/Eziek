@@ -5,6 +5,7 @@ using Wyspa.Core;
 using Wyspa.Economy;
 using Wyspa.Input;
 using Wyspa.UI;
+using Wyspa.Visual;
 
 namespace Wyspa.Farming
 {
@@ -14,13 +15,23 @@ namespace Wyspa.Farming
     {
         public static readonly List<FarmPlot> All = new List<FarmPlot>();
 
+        /// <summary>Grządka pod kursorem (ustawia UI) - dostaje jasny kontur.</summary>
+        public static FarmPlot Hovered;
+
+        static readonly Color HoverOutline = new Color32(0xd8, 0xcc, 0xab, 0xff);
+        static readonly Color RipeOutline = new Color32(0xc4, 0x9a, 0x55, 0xff);
+
         [SerializeField] string plotId;
         [SerializeField] SpriteRenderer cropRenderer;
+        [SerializeField] SpriteRenderer glowRenderer;
+        [SerializeField] SpriteFx cropFx;
 
         readonly PlotState state = new PlotState();
         Coroutine popRoutine;
 
         public string PlotId => plotId;
+        public Vector3 CropPosition => cropRenderer != null ? cropRenderer.transform.position : transform.position;
+        int CropOrder => cropRenderer != null ? cropRenderer.sortingOrder : 0;
         public PlotState State => state;
 
         /// <summary>Punkt, w którym sprawdzamy, czy grządka jest oświetlona.</summary>
@@ -29,10 +40,24 @@ namespace Wyspa.Farming
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
 
-        public void Setup(string id, SpriteRenderer crop)
+        public void Setup(string id, SpriteRenderer crop, SpriteRenderer glow = null, SpriteFx fx = null)
         {
             plotId = id;
             cropRenderer = crop;
+            glowRenderer = glow;
+            cropFx = fx;
+        }
+
+        void Update()
+        {
+            if (cropFx == null)
+                return;
+            Color c = Color.clear;
+            if (Hovered == this && !state.IsEmpty)
+                c = HoverOutline;
+            else if (state.IsRipe && Mathf.FloorToInt(Time.unscaledTime / 0.6f) % 2 == 0)
+                c = RipeOutline;   // puls „gotowe do zbioru”
+            cropFx.SetOutline(c);
         }
 
         public void Tick(float dt, in GrowthContext ctx)
@@ -41,6 +66,7 @@ namespace Wyspa.Farming
             {
                 RefreshVisual();
                 Pop();
+                IslandFx.Grew(CropPosition, CropOrder);
             }
         }
 
@@ -54,8 +80,13 @@ namespace Wyspa.Farming
             {
                 var crop = state.crop;
                 game.Wallet.Add(crop.sellPrice);
+                GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.Coins, crop.sellPrice);
                 if (crop.kind == CropKind.Night)
+                {
                     game.Wallet.Add(CurrencyType.NightHarvest, crop.nightHarvestYield);
+                    GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.NightHarvest, crop.nightHarvestYield);
+                }
+                IslandFx.Harvest(CropPosition, crop.StageSprite(3), CropOrder);
                 state.Clear();
                 RefreshVisual();
                 game.AfterHarvest(this, crop);
@@ -69,11 +100,7 @@ namespace Wyspa.Farming
                 }
                 var seed = SeedSelection.Current;
                 if (seed != null && game.Wallet.TrySpend(seed.seedPrice))
-                {
-                    state.Plant(seed);
-                    RefreshVisual();
-                    Pop();
-                }
+                    Replant(seed);
             }
         }
 
@@ -81,6 +108,8 @@ namespace Wyspa.Farming
         public CropDefinition HarvestSilently()
         {
             var crop = state.crop;
+            if (crop != null)
+                IslandFx.Harvest(CropPosition, crop.StageSprite(3), CropOrder);
             state.Clear();
             RefreshVisual();
             Pop();
@@ -93,6 +122,7 @@ namespace Wyspa.Farming
             state.Plant(crop);
             RefreshVisual();
             Pop();
+            IslandFx.Planted(CropPosition, CropOrder);
         }
 
         public void RefreshVisual()
@@ -100,6 +130,8 @@ namespace Wyspa.Farming
             if (cropRenderer == null)
                 return;
             cropRenderer.sprite = state.IsEmpty ? null : state.crop.StageSprite(state.Stage);
+            if (glowRenderer != null)
+                glowRenderer.sprite = state.IsEmpty ? null : state.crop.StageGlow(state.Stage);
         }
 
         void Pop()

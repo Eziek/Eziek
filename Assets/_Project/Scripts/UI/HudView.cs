@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -35,6 +36,10 @@ namespace Wyspa.UI
         Vector2 lastMouse;
         float lastMove;
         float refresh;
+        RectTransform root;
+        readonly Dictionary<CurrencyType, int> pending = new Dictionary<CurrencyType, int>();
+        readonly Dictionary<Item, float> bumpUntil = new Dictionary<Item, float>();
+        int flying;
 
         public bool ForceVisible { get; set; }
 
@@ -47,8 +52,17 @@ namespace Wyspa.UI
             return view;
         }
 
+        void OnEnable() => GameEvents.CurrencyGained += FlyCurrency;
+        void OnDisable()
+        {
+            GameEvents.CurrencyGained -= FlyCurrency;
+            pending.Clear();   // przerwane loty: liczniki pokazują od razu prawdziwy stan
+            flying = 0;
+        }
+
         void Build(RectTransform root, System.Action openBook, System.Action openOptions)
         {
+            this.root = root;
             var t = Ui.Theme;
             // --- pasek walut ---
             var barImg = Ui.Img(root, "TopBar", t.tooltip, true);
@@ -98,7 +112,7 @@ namespace Wyspa.UI
                 lastMouse = mouse;
                 lastMove = Time.unscaledTime;
             }
-            bool visible = ForceVisible || Time.unscaledTime - lastMove < HideAfter;
+            bool visible = ForceVisible || flying > 0 || Time.unscaledTime - lastMove < HideAfter;
             float target = visible ? 1f : 0f;
             // skokowe zanikanie (ok. 10 kl./s)
             group.alpha = Mathf.MoveTowards(group.alpha, target, Time.unscaledDeltaTime * 4f);
@@ -131,8 +145,10 @@ namespace Wyspa.UI
                 }
                 else
                 {
-                    int v = w.Get(it.currency.Value);
-                    show = it.currency == CurrencyType.Coins || v > 0;   // waluty pokazujemy dopiero po zdobyciu
+                    int real = w.Get(it.currency.Value);
+                    pending.TryGetValue(it.currency.Value, out int p);
+                    int v = Mathf.Max(0, real - p);   // monety w locie doliczają się po dolocie
+                    show = it.currency == CurrencyType.Coins || real > 0;   // waluty pokazujemy dopiero po zdobyciu
                     it.text.text = v.ToString("N0", Wyspa.Localization.LocCore.Culture(Loc.Language));
                 }
                 it.root.SetActive(show);
@@ -140,7 +156,8 @@ namespace Wyspa.UI
                     continue;
                 float textX = it == essenceItem ? 50 : 14;
                 float width = textX + Ui.Width(it.text);
-                Ui.Place(it.rt, Ui.TopLeft, Ui.TopLeft, new Vector2(x, -3), new Vector2(width, 12));
+                bool bump = bumpUntil.TryGetValue(it, out float until) && Time.unscaledTime < until;
+                Ui.Place(it.rt, Ui.TopLeft, Ui.TopLeft, new Vector2(x, bump ? -2 : -3), new Vector2(width, 12));
                 x += width + 6;
             }
             bar.sizeDelta = new Vector2(x - 2, 18);
@@ -160,6 +177,70 @@ namespace Wyspa.UI
                 rhythmText.text = Loc.Get("ui.rhythm.normal", r.StreakMinutes);
             Ui.SetBar(rhythmFill, r.StreakMinutes / 25f);
             clockText.text = game.Clock.Now.ToString("HH:mm");
+        }
+            // ------------------------------------------------------------ monety lecą łukiem do licznika (GDD §5.5)
+
+        Item ItemFor(CurrencyType type)
+        {
+            foreach (var it in items)
+                if (it.currency == type)
+                    return it;
+            return null;
+        }
+
+        void FlyCurrency(Vector3 world, CurrencyType type, int amount)
+        {
+            var target = ItemFor(type);
+            var cam = Camera.main;
+            if (target == null || cam == null || root == null || !isActiveAndEnabled)
+                return;
+            Vector2 screen = cam.WorldToScreenPoint(world);
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(root, screen, null, out var start))
+                return;
+            int n = Mathf.Clamp(Mathf.CeilToInt(amount / 10f), 1, 5);
+            pending.TryGetValue(type, out int p);
+            pending[type] = p + amount;
+            string icon = type == CurrencyType.NightHarvest ? "nightcrop" : "coin";
+            for (int i = 0; i < n; i++)
+            {
+                int share = i < n - 1 ? amount / n : amount - (amount / n) * (n - 1);
+                StartCoroutine(Flight(start, target, type, share, icon, i * 0.08f));
+            }
+            refresh = 0f;
+        }
+
+        IEnumerator Flight(Vector2 start, Item target, CurrencyType type, int share, string icon, float delay)
+        {
+            flying++;
+            var img = Ui.Img(root, "FlyingCoin", Ui.Theme.Icon(icon), false);
+            var rt = Ui.Place(img.rectTransform, Ui.Center, Ui.Center, start, new Vector2(12, 12));
+            img.enabled = false;
+            float t = -delay;
+            const float duration = 0.7f;
+            const float step = 1f / 12f;   // skokowo, jak reszta animacji
+            var wait = new WaitForSecondsRealtime(step);
+            while (t < duration)
+            {
+                t += step;
+                if (t >= 0f)
+                {
+                    img.enabled = img.sprite != null;
+                    Vector2 end = (Vector2)root.InverseTransformPoint(target.rt.TransformPoint(new Vector3(6, -6, 0)));
+                    var ctrl = new Vector2(Mathf.Lerp(start.x, end.x, 0.3f) - 20f, Mathf.Max(start.y, end.y) + 24f);
+                    float u = Mathf.Clamp01(t / duration);
+                    var pos = (1 - u) * (1 - u) * start + 2 * (1 - u) * u * ctrl + u * u * end;
+                    rt.anchoredPosition = new Vector2(Mathf.Round(pos.x), Mathf.Round(pos.y));
+                }
+                yield return wait;
+            }
+            Destroy(img.gameObject);
+            pending.TryGetValue(type, out int p);
+            pending[type] = Mathf.Max(0, p - share);
+            bumpUntil[target] = Time.unscaledTime + 0.12f;   // licznik podskakuje o piksel
+            flying--;
+            refresh = 0f;
+            yield return new WaitForSecondsRealtime(0.13f);
+            refresh = 0f;
         }
     }
 }

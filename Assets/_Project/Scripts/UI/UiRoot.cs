@@ -135,6 +135,7 @@ namespace Wyspa.UI
         {
             var game = GameLoop.Instance;
             var cam = Camera.main;
+            FarmPlot.Hovered = null;
             if (game == null || cam == null || PointerOverUi || Book.IsOpen || Wheel.IsOpen)
             {
                 Tooltip.Hide(plotHoverOwner);
@@ -147,6 +148,7 @@ namespace Wyspa.UI
                 Tooltip.Hide(plotHoverOwner);
                 return;
             }
+            FarmPlot.Hovered = plot;
             Tooltip.Show(plotHoverOwner, Describe(plot, game));
         }
 

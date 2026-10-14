@@ -23,6 +23,9 @@ namespace Wyspa.Farming
         [Tooltip("4 fazy: 0 nasiono, 1 kiełek, 2 rośnie, 3 dojrzała.")]
         public Sprite[] stages = new Sprite[4];
 
+        [Tooltip("Piksele emisyjne faz (*_glow), puste gdy faza nie świeci. Rysowane na materiale bez oświetlenia.")]
+        public Sprite[] glowStages = new Sprite[4];
+
         public int seedPrice = 5;
         public int sellPrice = 12;
 
@@ -34,6 +37,13 @@ namespace Wyspa.Farming
             if (stages == null || stages.Length == 0 || stage < 0)
                 return null;
             return stages[Mathf.Min(stage, stages.Length - 1)];
+        }
+
+        public Sprite StageGlow(int stage)
+        {
+            if (glowStages == null || glowStages.Length == 0 || stage < 0)
+                return null;
+            return glowStages[Mathf.Min(stage, glowStages.Length - 1)];
         }
     }
 }

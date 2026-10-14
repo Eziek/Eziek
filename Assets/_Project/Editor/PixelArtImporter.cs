@@ -54,6 +54,8 @@ namespace Wyspa.EditorTools
             importer.mipmapEnabled = false;
             importer.alphaIsTransparency = true;
             importer.wrapMode = TextureWrapMode.Clamp;
+            // mapy danych dla shaderów (np. Ground/water_data) bez korekcji gamma - liczby mają zostać liczbami
+            importer.sRGBTexture = !Path.GetFileNameWithoutExtension(assetPath).EndsWith("_data", StringComparison.Ordinal);
 
             var settings = new TextureImporterSettings();
             importer.ReadTextureSettings(settings);

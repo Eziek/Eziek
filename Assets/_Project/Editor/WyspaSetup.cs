@@ -15,6 +15,7 @@ using Wyspa.Lighting;
 using Wyspa.Save;
 using Wyspa.UI;
 using Wyspa.Upgrades;
+using Wyspa.Visual;
 
 namespace Wyspa.EditorTools
 {
@@ -149,8 +150,12 @@ namespace Wyspa.EditorTools
                 crop.seedPrice = spec.seed;
                 crop.sellPrice = spec.sell;
                 crop.stages = new Sprite[4];
+                crop.glowStages = new Sprite[4];
                 for (int i = 0; i < 4; i++)
+                {
                     crop.stages[i] = LoadSprite($"Crops/{spec.sprite}_{i}");
+                    crop.glowStages[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Crops/{spec.sprite}_{i}_glow.png");
+                }
                 EditorUtility.SetDirty(crop);
                 db.crops.Add(crop);
             }
@@ -180,6 +185,7 @@ namespace Wyspa.EditorTools
             CreateUpgrades();
             CreateUiTheme();
             GlowMaterial();
+            CreateFxMaterials();
             AssetDatabase.SaveAssets();
             Debug.Log("[Wyspa] Dane utworzone w " + DataDir);
         }
@@ -272,6 +278,60 @@ namespace Wyspa.EditorTools
             return theme;
         }
 
+        // ----------------------------------------------------------------- Etap 3a: materiały efektów
+        const string MatDir = DataDir + "/Materials";
+        const string ShaderDir = Root + "/Shaders";
+        const string WaterLayoutPath = Root + "/Art/water_layout.json";
+        // prototyp (anim.py): rośliny 2 cykle na 48 klatek (10 kl./s), drzewa 1 cykl
+        const float CropSwaySpeed = 2f / 4.8f, TreeSwaySpeed = 1f / 4.8f;
+
+        static Material FxMaterialAsset(string name, string shaderFile, Action<Material> configure)
+        {
+            var shader = AssetDatabase.LoadAssetAtPath<Shader>($"{ShaderDir}/{shaderFile}.shader");
+            if (shader == null)
+            {
+                Debug.LogWarning($"[Wyspa] Brak shadera {ShaderDir}/{shaderFile}.shader - efekt wyłączony.");
+                return null;
+            }
+            EnsureFolder(MatDir);
+            string path = $"{MatDir}/{name}.mat";
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+            {
+                mat = new Material(shader) { name = name };
+                AssetDatabase.CreateAsset(mat, path);
+            }
+            mat.shader = shader;
+            configure?.Invoke(mat);
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
+        static void CreateFxMaterials()
+        {
+            FxMaterialAsset("SwayCrop", "SpriteSway", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", CropSwaySpeed); });
+            FxMaterialAsset("SwayCropGlow", "SpriteSwayUnlit", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", CropSwaySpeed); });
+            FxMaterialAsset("SwayTree", "SpriteSway", m => { m.SetFloat("_SwayAmount", 1f); m.SetFloat("_SwaySpeed", TreeSwaySpeed); });
+            var data = AssetDatabase.LoadAssetAtPath<Texture2D>(Sprites + "Ground/water_data.png");
+            if (data == null)
+                Debug.LogWarning("[Wyspa] Brak Ground/water_data.png - uruchom tools/pixel-proto/export_unity_fx.py.");
+            FxMaterialAsset("Water", "Water", m => m.SetTexture("_DataTex", data));
+            FxMaterialAsset("Fog", "Fog", null);
+        }
+
+        static Material LoadMat(string name) => AssetDatabase.LoadAssetAtPath<Material>($"{MatDir}/{name}.mat");
+
+        /// <summary>Materiał efektu z przełącznikiem (F1): zapasowy = materiał, który renderer miał wcześniej.</summary>
+        static void UseFx(SpriteRenderer sr, Material fx, bool hideWithoutFx = false)
+        {
+            if (sr == null)
+                return;
+            var fallback = hideWithoutFx ? null : sr.sharedMaterial;
+            if (fx != null)
+                sr.sharedMaterial = fx;
+            sr.gameObject.AddComponent<FxMaterial>().Setup(sr, fx, fallback);
+        }
+
         [MenuItem("Wyspa/3. Zbuduj scenę prototypu", priority = 3)]
         public static void BuildScene()
         {
@@ -293,6 +353,8 @@ namespace Wyspa.EditorTools
             var upgradeDb = AssetDatabase.LoadAssetAtPath<UpgradeDatabase>(DataDir + "/UpgradeDatabase.asset");
             var glowMat = GlowMaterial();
             var uiTheme = AssetDatabase.LoadAssetAtPath<UiTheme>(ThemePath);
+            Material swayCrop = LoadMat("SwayCrop"), swayCropGlow = LoadMat("SwayCropGlow"), swayTree = LoadMat("SwayTree");
+            Material waterMat = LoadMat("Water"), fogMat = LoadMat("Fog");
             if (db == null)
                 Debug.LogError("[Wyspa] Nie znaleziono " + DataDir + "/CropDatabase.asset - uruchom Wyspa > 2.");
             float W = layout.width, H = layout.height;
@@ -323,8 +385,14 @@ namespace Wyspa.EditorTools
 
             // --- teren ---
             var world = new GameObject("World").transform;
-            MakeSprite("Water", world, LoadSprite("Ground/water"), Vector3.zero, -2000);
+            // woda liczona w shaderze (ryby, fale, przybój); bez shadera widać statyczną water_base
+            var water = MakeSprite("Water", world, LoadSprite("Ground/water_base"), Vector3.zero, -2000);
+            UseFx(water, waterMat);
             MakeSprite("Island", world, LoadSprite("Ground/island"), Vector3.zero, -1900);
+            // mgła nad morzem przy krawędziach okna (sprite = mapa danych wody, rysuje tylko shader)
+            var fog = MakeSprite("Fog", world, LoadSprite("Ground/water_data"), Vector3.zero, 5000);
+            UseFx(fog, fogMat, true);
+            var trees = new List<Transform>();
 
             HarvestCrate crate = null;
             foreach (var o in layout.objects)
@@ -341,7 +409,14 @@ namespace Wyspa.EditorTools
                     crate.Setup(fill, sr);
                     continue;
                 }
-                MakeSprite(o.sprite, world, LoadSprite("Objects/" + o.sprite), Anchor(o.x, o.y), o.y);
+                var obj = MakeSprite(o.sprite, world, LoadSprite("Objects/" + o.sprite), Anchor(o.x, o.y), o.y);
+                if (o.sprite.StartsWith("tree", StringComparison.Ordinal) || o.sprite == "bush")
+                {
+                    UseFx(obj, swayTree);
+                    obj.gameObject.AddComponent<SpriteFx>().Setup(0.05f, obj);
+                    if (o.sprite.StartsWith("tree", StringComparison.Ordinal))
+                        trees.Add(obj.transform);
+                }
             }
 
             // --- automatyka: obiekty pojawiają się po zakupie ulepszeń (GDD §11.3 E) ---
@@ -382,7 +457,12 @@ namespace Wyspa.EditorTools
                     col.size = plotSprite.bounds.size;
                 var crop = MakeSprite("Crop", sr.transform, null, Vector3.zero, p.cropY);
                 crop.transform.position = Anchor(p.cropX, p.cropY);
-                plot.Setup($"plot_{p.row}_{p.col}", crop);
+                var cropGlow = MakeGlow(crop, null, p.cropY + 1, glowMat);
+                UseFx(crop, swayCrop);
+                UseFx(cropGlow, swayCropGlow);
+                var cropFx = crop.gameObject.AddComponent<SpriteFx>();
+                cropFx.Setup(0.15f, crop, cropGlow);
+                plot.Setup($"plot_{p.row}_{p.col}", crop, cropGlow, cropFx);
             }
 
             // --- lampy ---
@@ -436,6 +516,21 @@ namespace Wyspa.EditorTools
             SetRefs(upgradeState, ("database", upgradeDb));
             SetRefs(dayNight, ("clock", clock), ("globalLight", global));
             SetRefs(click, ("targetCamera", cam));
+
+            // --- efekty: woda, mgła, cząsteczki (Etap 3a) ---
+            water.gameObject.AddComponent<WaterAnimator>().Setup(water,
+                AssetDatabase.LoadAssetAtPath<TextAsset>(WaterLayoutPath), clock);
+            fog.gameObject.AddComponent<FogController>().Setup(fog, clock);
+            var fxGo = new GameObject("Fx");
+            var particles = fxGo.AddComponent<PixelParticles>();
+            particles.Setup(glowMat);
+            Sprite Fx(string n) => LoadSprite("Fx/" + n);
+            // świetliki nad wyspą (obszar jak w prototypie: x 30..190, y 30..120 + przesunięcie świata 24, 22)
+            Vector3 a0 = Center(54, 142), a1 = Center(214, 52);
+            fxGo.AddComponent<IslandFx>().Setup(particles, clock, glowMat,
+                new[] { Fx("fx_soil_0"), Fx("fx_soil_1") }, new[] { Fx("fx_leaf_0"), Fx("fx_leaf_1") }, Fx("fx_leaf_fall"),
+                new[] { Fx("fx_sparkle_0"), Fx("fx_sparkle_1"), Fx("fx_sparkle_2") }, new[] { Fx("fx_firefly_0"), Fx("fx_firefly_1") },
+                trees.ToArray(), new Rect(a0.x, a0.y, a1.x - a0.x, a1.y - a0.y));
 
             // --- UI (płótno budowane w kodzie przy starcie, GDD §12) ---
             var ui = new GameObject("UI");

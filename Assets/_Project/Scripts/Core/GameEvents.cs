@@ -1,4 +1,6 @@
 using System;
+using UnityEngine;
+using Wyspa.Economy;
 
 namespace Wyspa.Core
 {
@@ -8,5 +10,14 @@ namespace Wyspa.Core
         public static event Action<string, object[]> Toast;
 
         public static void RaiseToast(string key, params object[] args) => Toast?.Invoke(key, args);
+
+        /// <summary>Zdobyta waluta w miejscu na świecie (np. zbiór): UI pokazuje lecące monety do licznika.</summary>
+        public static event Action<Vector3, CurrencyType, int> CurrencyGained;
+
+        public static void RaiseCurrencyGained(Vector3 world, CurrencyType type, int amount)
+        {
+            if (amount > 0)
+                CurrencyGained?.Invoke(world, type, amount);
+        }
     }
 }
