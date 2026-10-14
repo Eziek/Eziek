@@ -141,7 +141,7 @@ ui.options.night,Godziny nocy,Night hours,Nachtstunden,夜の時間,夜晚时段
 ui.options.idle,Próg bezczynności,Idle after,Inaktiv nach,放置判定,闲置判定,
 ui.options.seconds,{0} s,{0} s,{0} s,{0}秒,{0}秒,{0} = sekundy
 ui.options.idle_hint,"Rośliny dnia rosną, gdy pracujesz. Bez myszy i klawiatury dłużej niż próg = przerwa.",Day crops grow while you work. No mouse or keyboard for longer than the limit = a break.,"Tagpflanzen wachsen, während du arbeitest. Länger ohne Maus und Tastatur = Pause.",昼の作物は作業中に育つ。設定時間より長く操作がないと休憩扱い。,你工作时白天作物会生长。超过设定时间没有操作即视为休息。,
-ui.options.scale,Skala,Scale,Skalierung,拡大率,缩放,
+ui.options.scale,Powiększenie,Zoom,Vergrößerung,拡大,放大,"skala okna x2-x6, też Ctrl + kółko myszy"
 ui.options.mini,Mini-tryb,Mini mode,Minimodus,ミニモード,迷你模式,
 ui.options.frame,Ramka okna,Window frame,Fensterrahmen,ウィンドウ枠,窗口边框,
 ui.options.topmost,Zawsze na wierzchu,Always on top,Immer im Vordergrund,常に最前面,始终置顶,
@@ -152,7 +152,7 @@ ui.options.corner.tl,LG,TL,OL,左上,左上,lewy górny
 ui.options.corner.tr,PG,TR,OR,右上,右上,prawy górny
 ui.options.corner.bl,LD,BL,UL,左下,左下,lewy dolny
 ui.options.corner.br,PD,BR,UR,右下,右下,prawy dolny
-ui.options.window_hint,"Bez ramki: przeciągnij okno za puste miejsce, puść przy rogu ekranu, a się przyklei.","Frameless: drag the window by an empty spot, release near a screen corner to snap it.","Ohne Rahmen: Fenster an einer leeren Stelle ziehen, nahe einer Ecke loslassen zum Andocken.",枠なし：空いている所をドラッグ。画面の角で離すと吸着する。,无边框：拖动空白处移动窗口，在屏幕角落松开即可吸附。,
+ui.options.window_hint,"Ctrl + kółko myszy: powiększenie. Bez ramki: przeciągnij okno za puste miejsce, puść przy rogu ekranu.","Ctrl + mouse wheel: zoom. Frameless: drag the window by an empty spot, release near a screen corner.","Strg + Mausrad: Zoom. Ohne Rahmen: an leerer Stelle ziehen, nahe einer Ecke loslassen.",Ctrl+ホイール：拡大。枠なし：空いている所をドラッグ、画面の角で離す。,Ctrl+滚轮：缩放。无边框：拖动空白处，在屏幕角落松开。,
 ui.options.window_build,"Ramka, wierzch, róg i autostart działają w zbudowanej grze na Windows.","Frame, on top, corner and autostart work in the built game on Windows.","Rahmen, Vordergrund, Ecke und Autostart gehen im fertigen Spiel unter Windows.",枠・最前面・角・自動起動はWindows版のビルドで動作。,边框、置顶、角落和自启动仅在Windows版游戏中生效。,
 ui.options.autostart,Start z Windows,Start with Windows,Mit Windows starten,Windowsと起動,随Windows启动,
 ui.options.reset,Reset zapisu,Reset save,Spielstand löschen,セーブをリセット,重置存档,
@@ -183,3 +183,10 @@ ui.shop.crate.desc,20 plonów,20 crops,20 Ernten,作物20個,20份作物,
 ui.shop.wisp.desc,Zbiera z pól 5x5,Harvests a 5x5 area,Erntet 5x5,5x5を収穫,收获5x5,
 ui.shop.merchant.desc,Sprzedaje skrzynie,Sells crates,Verkauft Kisten,箱を売る,出售箱子,
 ui.shop.rune.desc,Sieje na 3x3,Sows a 3x3 area,Sät 3x3,3x3に種まき,播种3x3,
+act.dismantle_confirm,Na pewno rozebrać?,Really dismantle?,Wirklich abbauen?,本当に解体する？,确定拆除？,drugi klik
+ui.fill.lose,{0} przepadnie,{0} will be lost,{0} geht verloren,{0}は失われる,{0}将会丢失,{0} = roślina
+ui.options.quit_button,Wyjdź,Quit,Beenden,終了,退出,
+ui.wheel.show_day,Pokaż nasiona dnia,Show day seeds,Tagsamen zeigen,昼の種を表示,显示白天种子,
+ui.wheel.show_night,Pokaż nasiona nocy,Show night seeds,Nachtsamen zeigen,夜の種を表示,显示夜晚种子,
+ui.plot.tempo,Tempo pracy: x{0:0.0},Work tempo: x{0:0.0},Arbeitstempo: x{0:0.0},作業テンポ：x{0:0.0},工作节奏：x{0:0.0},
+ui.rhythm.tempo,Tempo x{0:0.0},Tempo x{0:0.0},Tempo x{0:0.0},テンポ x{0:0.0},节奏 x{0:0.0},mnożnik roślin dnia

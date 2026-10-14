@@ -151,3 +151,16 @@ SEED_SYMBOLS = {
     'belladonna': [".1U1.", "1UMU1", ".1U1.", "..k..", ".kk.."],
     'graveivy': ["..W..", ".WhW.", "..h..", ".WhW.", "..h.."],
 }
+
+
+# ---------------- ikony UI (Etap 6b+): kategorie koła nasion, wyjście, zasypanie grządki ----------------
+ICON_MAPS = {
+    'sun': ["....F.....", ".F.....F..", "...XXX....", "..XFFFX...", "F.XFLFX.F.",
+            "..XFFFX...", "...XXX....", ".F.....F..", "....F.....", ".........."],
+    'moon': ["..sss.....", ".szzs.....", "szz.......", "sz........", "sz.....L..",
+             "szz.......", ".szzzzs...", "..ssss....", "..........", ".........."],
+    'exit': [".hhhhh....", ".hjjjh....", ".hj.jh....", ".hj.jh.w..", ".hjgjhwww.",
+             ".hj.jh.w..", ".hj.jh....", ".hjjjh....", ".hhhhh....", ".........."],
+    'fill': [".......jj.", "......jj..", ".....jj...", "....jj....", "..sss.....",
+             ".szzs.....", ".szs......", "..s.......", "hhhhhhh...", ".........."],
+}

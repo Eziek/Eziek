@@ -166,6 +166,10 @@ namespace Wyspa.World
 
         void Update()
         {
+            // Ctrl + kółko myszy: powiększenie okna (skala x2..x6, jak w Opcjach)
+            int scroll = UiInput.Scroll;
+            if (scroll != 0 && UiInput.CtrlHeld && !mini)
+                SetScale(Mathf.Clamp(windowScale + scroll, 2, 6));
             HandleDrag();
             Place();
         }

@@ -565,6 +565,66 @@ namespace Wyspa.World
             return true;
         }
 
+        /// <summary>Zasypanie grządki (pierścień akcji): z powrotem trawa, roślina przepada, koszt przekopania nie wraca.</summary>
+        public bool TryFill(FarmPlot plot)
+        {
+            if (plot == null)
+                return false;
+            var p = new TilePos(plot.Cell.x, plot.Cell.y);
+            if (!plots.TryGetValue(p, out var found) || found != plot)
+                return false;
+            plots.Remove(p);
+            map.SetKind(p, TileKind.Grass);
+            IslandFx.Planted(plot.CropPosition, 0);
+            plot.gameObject.SetActive(false);   // od razu znika z FarmPlot.All
+            Destroy(plot.gameObject);
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>
+        /// Rozbiórka budowli kupionej w grze (lampa, skrzynia, ognik, duszek, runa, ołtarz): wraca połowa monet z ceny.
+        /// Skrzynia najpierw sprzedaje zawartość po pełnej cenie.
+        /// </summary>
+        public bool Dismantle(TileObject obj, Wallet wallet, CropDatabase crops)
+        {
+            if (obj == null || !spawned.Contains(obj))
+                return false;
+            int refund = 0;
+            if (!string.IsNullOrEmpty(obj.LampId) && art != null && art.Lamp(obj.LampId) is LampDefinition lamp)
+                refund = lamp.price / 2;
+            else if (Array.IndexOf(Automation.AutomationSystem.Kinds, obj.BuildingId) >= 0)
+            {
+                var cost = Automation.AutomationSystem.Cost(obj.BuildingId, Mathf.Max(0, CountBuilding(obj.BuildingId) - 1));
+                refund = cost[0].amount / 2;
+            }
+            else if (obj.BuildingId == "altar")
+                refund = 250;
+            if (obj.TryGetComponent(out Automation.HarvestCrate crate) && wallet != null)
+            {
+                int sold = crate.SellAll(wallet, crops, 1f);
+                if (sold > 0)
+                    GameEvents.RaiseCurrencyGained(obj.transform.position, CurrencyType.Coins, sold);
+            }
+            if (obj.Placed && occupied.TryGetValue(obj.Tile, out var o) && o == obj)
+                occupied.Remove(obj.Tile);
+            savedObjectTiles.Remove(obj.Id);
+            spawned.Remove(obj);
+            if (refund > 0 && wallet != null)
+            {
+                wallet.Add(refund);
+                GameEvents.RaiseCurrencyGained(obj.transform.position, CurrencyType.Coins, refund);
+            }
+            IslandFx.Planted(obj.transform.position, 0);
+            obj.gameObject.SetActive(false);
+            Destroy(obj.gameObject);
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>Czy obiekt można rozebrać (kupiony w grze, nie ze sceny).</summary>
+        public bool CanDismantle(TileObject obj) => obj != null && spawned.Contains(obj) && obj.NeedsTile;
+
         void GrantFind(TilePos p, FindKind find, Wallet wallet)
         {
             if (find == FindKind.None)

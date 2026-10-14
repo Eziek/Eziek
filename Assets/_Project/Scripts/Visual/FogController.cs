@@ -14,7 +14,7 @@ namespace Wyspa.Visual
         static readonly int FromId = Shader.PropertyToID("_FogFrom");
         static readonly int SpanId = Shader.PropertyToID("_FogSpan");
         static readonly int OuterId = Shader.PropertyToID("_FogOuter");
-        static readonly int FadeId = Shader.PropertyToID("_FogFade");
+
 
         [SerializeField] SpriteRenderer fog;
         [SerializeField] GameClock clock;
@@ -30,14 +30,16 @@ namespace Wyspa.Visual
 
         public float Density => density;
         bool band;
+        float bandEdge = 18f;
 
         /// <summary>
-        /// Przezroczyste okno: mgła zaczyna się tuż przy pasie wody i kończy pierścieniem wokół wyspy (dalej pulpit).
+        /// Przezroczyste okno: mgła tylko nad pasem wody, gęstnieje ku jego krawędzi (dalej czysty pulpit).
         /// Wyłączone = zwykła mgła nad całym morzem.
         /// </summary>
-        public void SetShoreBand(bool on)
+        public void SetShoreBand(bool on, float waterEdge = 18f)
         {
             band = on;
+            bandEdge = waterEdge;
             Apply();
         }
 
@@ -81,10 +83,9 @@ namespace Wyspa.Visual
             fog.GetPropertyBlock(block);
             block.SetFloat(DensityId, Mathf.Max(0.3f, density));
             // wartości zwykłe = domyślne z materiału (22 / 40 / bez końca)
-            block.SetFloat(FromId, band ? 8f : 22f);
-            block.SetFloat(SpanId, band ? 18f : 40f);
-            block.SetFloat(OuterId, band ? 30f : 0f);
-            block.SetFloat(FadeId, 12f);
+            block.SetFloat(FromId, band ? 5f : 22f);
+            block.SetFloat(SpanId, 40f);
+            block.SetFloat(OuterId, band ? bandEdge : 0f);
             fog.SetPropertyBlock(block);
         }
     }

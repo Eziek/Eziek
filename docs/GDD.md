@@ -78,6 +78,10 @@ Mgła ──► Nocne zdarzenia ──► Bonusy (Esencja, nasiona, odłamki)
 ### 4.1 Esencja (energia z pracy)
 Nazwa robocza: „Esencja” (alternatywy: Żar, Dusza).
 - **+1 Esencji za każdą aktywną minutę.** Ta sama aktywność napędza też wzrost roślin dnia.
+- **Tempo pracy** (prośba gracza): im więcej piszesz i ruszasz myszą, tym szybciej rosną rośliny dnia, do **x1.5**.
+  Bez globalnych hooków: co 0.2 s porównujemy znacznik ostatniego inputu (`GetLastInputInfo`) i pozycję kursora; input bez
+  ruchu kursora liczy się jako pisanie (waga 1), sam ruch myszy waga 0.35. Średnia z ostatniej minuty, pełne tempo przy
+  połowie próbek z inputem. Mnożnik widać w HUD („Tempo x1.3”) i w dymku grządki.
 - **Zbiornik („słój”):** pojemność na start ok. **60**. Nadmiar przepada. Ulepszenie słoja zwiększa pojemność.
 - UI: pasek w prawym górnym rogu (w prototypie jeszcze z ikoną zegara, docelowo słój z płomieniem).
 - Esencję zużywają **lampy, tylko w nocy**.
@@ -294,6 +298,14 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   Dzień: czosnek (80), mak (200), piołun (450); noc: wilcza jagoda (250), mandragora (600), cmentarny bluszcz (1200). Do balansu.
 - [x] Przezroczyste okno: mgła zostaje pierścieniem wokół pasa wody (zaczyna się ok. 8 px od brzegu, kończy ok. 30 px,
   dalej rozpływa się ditheringiem Bayera).
+- [x] Tempo pracy (§4.1): mnożnik tylko dla roślin dnia (Esencja bez zmian). Do balansu: wagi i maks. x1.5.
+- [x] Koło nasion pokazuje jedną kategorię (dzień albo noc); przycisk w środku przełącza (wybór zapamiętany).
+- [x] Grządkę można zasypać (PPM na grządce → „Zasyp grządkę”, roślina przepada, bez zwrotu). Budowle kupione w grze można
+  rozebrać (panel → „Rozbierz”, drugi klik potwierdza): wraca połowa monet, skrzynia sprzedaje zawartość.
+- [x] Wyjście z gry: w pierścieniu akcji i w Opcje → System (okno bez ramki nie ma przycisku X). Powiększenie okna x2..x6
+  w Opcje → Okno i Ctrl + kółko myszy.
+- [x] Przezroczyste okno: pas wody 18 px, mgła tylko nad nim (gęstnieje ku krawędzi), nad pulpitem nic (pierścień nad pulpitem
+  wyglądał jak szum).
 - [x] UI na pulpicie (§12.10): gracz wybrał **wariant C**, pierścień akcji pod PPM zamiast przycisków w rogu okna. Pasek walut
   i rytm pracy zostają na razie w rogach (do decyzji przy dalszym dopracowaniu UI w 6d).
 - [x] Cząsteczki: **własny system pikselowy** (pula sprite'ów, 12 kl./s) zamiast ParticleSystem, dla ostrych pikseli.
@@ -429,6 +441,9 @@ Obrazki referencyjne (kopie): `docs/img/`
 38. UI (wariant C z §12.10): pierścień akcji pod PPM na wyspie (Księga, Sklep, Opcje, Rozbudowa) zamiast trzech przycisków
     w prawym górnym rogu. PPM z przeciąganiem dalej przesuwa kamerę, PPM przy otwartym trybie/panelu dalej go zamyka.
     Nowy gracz dostaje co 3 min podpowiedź (toast), aż pierwszy raz otworzy pierścień.
+39. Uwagi gracza po teście: zasypywanie grządek i rozbiórka budowli, „Wyjdź z gry” (brak X w oknie bez ramki), powiększenie
+    x2..x6 + Ctrl + kółko, koło nasion z podziałem dzień / noc, mgła tylko nad pasem wody, **tempo pracy** (pisanie i mysz
+    przyspieszają rośliny dnia do x1.5, §4.1).
 
 ---
 
@@ -705,6 +720,7 @@ Cel jest podświetlony pulsem.
 - **Makiety do zrobienia:** Rytuały, Bestiariusz, Statystyki, Opcje, panel łodzi/wyprawy, handel z kupcem.
 
 ### 12.10 Do przemyślenia: UI na pulpicie (prośba gracza po Etapie 6a)
+**Stan:** pierścień ma Księgę, Sklep, Rozbudowę, Opcje i Wyjście; PPM na grządce dokłada „Zasyp grządkę”.
 Problem: HUD (waluty u góry, trzy przyciski w prawym górnym rogu, rytm na dole) przykleja się do rogów okna, a nie do wyspy.
 W przezroczystym oknie wisi „w powietrzu” nad pulpitem. **Wybrano C** (zrobione po Etapie 6b). Rozważane warianty:
 - **A. HUD przy wyspie:** jeden mały pasek nad wyspą (waluty + Esencja), pokazuje się po najechaniu na wyspę.

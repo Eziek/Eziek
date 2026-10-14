@@ -23,7 +23,7 @@ namespace Wyspa.Platform
         const int CornerMargin = 8;
         const int SnapDistance = 32;
         /// <summary>Szerokość pasa wody przy brzegu w przezroczystym oknie (piksele gry).</summary>
-        const float ShoreWaterPixels = 14f;
+        const float ShoreWaterPixels = 18f;
 
         bool frameless, topMost, transparent;
         ScreenCorner corner;
@@ -187,13 +187,13 @@ namespace Wyspa.Platform
                 cam.backgroundColor = transparent ? new Color(0f, 0f, 0f, 0f) : cameraColor;
                 cam.allowHDR = !transparent && cameraHdr;
             }
-            // morze zostaje pasem przy brzegu (shader wody), a mgła pierścieniem wokół niego
+            // morze zostaje pasem przy brzegu (shader wody), a mgła gęstnieje ku jego krawędzi
             var water = FindAnyObjectByType<WaterAnimator>();
             if (water != null)
                 water.SetShoreOnly(transparent ? ShoreWaterPixels : 0f);
             var fog = FindAnyObjectByType<FogController>();
             if (fog != null)
-                fog.SetShoreBand(transparent);
+                fog.SetShoreBand(transparent, ShoreWaterPixels);
 
             if (!Supported || Hwnd == IntPtr.Zero)
                 return;

@@ -31,7 +31,7 @@ namespace Wyspa.UI
         Item essenceItem;
         RectTransform essenceFill;
         Image rhythmIcon;
-        TextMeshProUGUI rhythmText, clockText;
+        TextMeshProUGUI rhythmText, clockText, tempoText;
         RectTransform rhythmFill;
         Vector2 lastMouse;
         float lastMove;
@@ -78,7 +78,7 @@ namespace Wyspa.UI
 
             // --- rytm pracy ---
             var rp = Ui.Img(root, "Rhythm", t.tooltip, true);
-            Ui.Place(rp.rectTransform, Ui.BottomLeft, Ui.BottomLeft, new Vector2(4, 4), new Vector2(150, 22));
+            Ui.Place(rp.rectTransform, Ui.BottomLeft, Ui.BottomLeft, new Vector2(4, 4), new Vector2(172, 22));
             rhythmIcon = Ui.Img(rp.transform, "Icon", t.Icon("focus"), false);
             Ui.Place(rhythmIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(3, -3), new Vector2(12, 12));
             rhythmText = Ui.Txt(rp.transform, "Text", t.textLight);
@@ -86,6 +86,9 @@ namespace Wyspa.UI
             rhythmFill = Ui.Bar(rp.transform, "RhythmBar", t.barFillRhythm, Ui.TopLeft, Ui.TopLeft, new Vector2(18, -12), new Vector2(90, 7));
             clockText = Ui.Txt(rp.transform, "Clock", t.textMuted, TextAlignmentOptions.TopRight);
             Ui.Place(clockText.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-4, -3), new Vector2(30, 10));
+            // tempo pracy (pisanie, mysz): mnożnik wzrostu roślin dnia pod zegarem
+            tempoText = Ui.Txt(rp.transform, "Tempo", t.textGold, TextAlignmentOptions.TopRight);
+            Ui.Place(tempoText.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(-4, -12), new Vector2(50, 10));
         }
 
         Item MakeItem(string icon, CurrencyType? currency)
@@ -171,6 +174,8 @@ namespace Wyspa.UI
                 rhythmText.text = Loc.Get("ui.rhythm.normal", r.StreakMinutes);
             Ui.SetBar(rhythmFill, r.StreakMinutes / 25f);
             clockText.text = game.Clock.Now.ToString("HH:mm");
+            float tempo = game.Activity.TempoMultiplier;
+            tempoText.text = tempo > 1.05f ? Loc.Get("ui.rhythm.tempo", tempo) : "";
         }
             // ------------------------------------------------------------ monety lecą łukiem do licznika (GDD §5.5)
 

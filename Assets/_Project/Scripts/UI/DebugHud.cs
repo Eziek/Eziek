@@ -99,6 +99,12 @@ namespace Wyspa.UI
                     foreach (var c in HarvestCrate.All.ToArray())
                         c.SellAll(wallet, game.Crops, 1f);
                 GUILayout.EndHorizontal();
+                var act = game.Activity;
+                GUILayout.BeginHorizontal();
+                GUILayout.Label($"Tempo pracy: {act.Tempo:0.00} (x{act.TempoMultiplier:0.00})");
+                if (GUILayout.Button(act.DebugTempo >= 0f ? "Tempo: zmierzone" : "Tempo: pełne"))
+                    act.DebugTempo = act.DebugTempo >= 0f ? -1f : 1f;
+                GUILayout.EndHorizontal();
                 if (GUILayout.Button("Odblokuj wszystkie nasiona"))
                     game.DebugUnlockAll();
                 GUILayout.Label($"Ogniki: {WispGardener.All.Count}, duszki: {MerchantSpirit.All.Count}, runy: {SeedRune.All.Count}");

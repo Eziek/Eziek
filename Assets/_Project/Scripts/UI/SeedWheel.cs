@@ -25,6 +25,29 @@ namespace Wyspa.UI
 
         public bool IsOpen => blocker != null && blocker.activeSelf;
 
+        // kategoria koła: nasiona dnia albo nocy (przycisk w środku przełącza, wybór zapamiętany)
+        static int nightPref = -1;
+        static bool ShowNight
+        {
+            get
+            {
+                if (nightPref < 0)
+                {
+                    var game = GameLoop.Instance;
+                    nightPref = PlayerPrefs.GetInt("wheelNight", game != null && game.Clock.IsNight ? 1 : 0);
+                }
+                return nightPref == 1;
+            }
+            set
+            {
+                nightPref = value ? 1 : 0;
+                PlayerPrefs.SetInt("wheelNight", nightPref);
+            }
+        }
+
+        static bool InCategory(CropDefinition c) => (c.kind == CropKind.Night) == ShowNight;
+        System.Action reopen;
+
         public static SeedWheel Create(RectTransform canvasRoot, TooltipView tooltip)
         {
             var view = canvasRoot.gameObject.AddComponent<SeedWheel>();
@@ -54,7 +77,7 @@ namespace Wyspa.UI
             var slots = new List<Slot>();
             foreach (var cd in game.Crops.crops)
             {
-                if (cd == null || !(game.IsUnlocked(cd) || game.Seeds.Count(cd.id) > 0))
+                if (cd == null || !InCategory(cd) || !(game.IsUnlocked(cd) || game.Seeds.Count(cd.id) > 0))
                     continue;
                 var c = cd;
                 slots.Add(new Slot
@@ -66,6 +89,7 @@ namespace Wyspa.UI
             }
             plot = target;
             picker = null;
+            reopen = () => Open(target);
             Build(target.transform.position, slots);
         }
 
@@ -82,7 +106,7 @@ namespace Wyspa.UI
             };
             foreach (var cd in game.Crops.crops)
             {
-                if (cd == null || !(game.IsUnlocked(cd) || game.Seeds.Count(cd.id) > 0))
+                if (cd == null || !InCategory(cd) || !(game.IsUnlocked(cd) || game.Seeds.Count(cd.id) > 0))
                     continue;
                 var c = cd;
                 slots.Add(new Slot { icon = c.SeedIcon, count = game.Seeds.Count(c.id), selected = rune.Seed == c.id,
@@ -92,6 +116,7 @@ namespace Wyspa.UI
                                  pick = () => rune.Seed = SeedRune.Off });
             plot = null;
             picker = rune;
+            reopen = () => OpenPicker(rune);
             Build(rune.transform.position, slots);
         }
 
@@ -157,8 +182,15 @@ namespace Wyspa.UI
                 hover.Init(tooltip, slot.tip);
                 buttons.Add((b, slot.affordable));
             }
-            var close = Ui.IconBtn(wheel, "Close", "close", new Vector2(16, 16), Close);
-            Ui.Place((RectTransform)close.transform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(16, 16));
+            // środek: przełącznik dzień / noc (zamyka klik obok koła, PPM albo Esc)
+            var again = reopen;
+            var toggle = Ui.IconBtn(wheel, "Category", ShowNight ? "sun" : "moon", new Vector2(16, 16), () =>
+            {
+                ShowNight = !ShowNight;
+                again?.Invoke();
+            });
+            Ui.Place((RectTransform)toggle.transform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(16, 16));
+            toggle.gameObject.AddComponent<HoverTip>().Init(tooltip, () => Loc.Get(ShowNight ? "ui.wheel.show_day" : "ui.wheel.show_night"));
 
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();

@@ -146,13 +146,7 @@ namespace Wyspa.UI
             Book = BookView.Create(canvasRect, Tooltip);
             Context = ContextPanel.Create(canvasRect, StartMove);
             Placement = PlacementMode.Create(transform, Tooltip);
-            Ring = ActionRing.Create(canvasRect, Tooltip, new List<ActionRing.Entry>
-            {
-                new ActionRing.Entry { icon = "book", nameKey = "term.grimoire", run = () => OpenBook(BookView.Tab.Upgrades) },
-                new ActionRing.Entry { icon = "shop", nameKey = "menu.shop", run = () => OpenBook(BookView.Tab.Shop) },
-                new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
-                new ActionRing.Entry { icon = "plus", nameKey = "menu.expand", run = () => { CloseAll(); Expansion.Toggle(); } },
-            });
+            Ring = ActionRing.Create(canvasRect, Tooltip);
             Tooltip.transform.SetAsLastSibling();
         }
 
@@ -251,10 +245,43 @@ namespace Wyspa.UI
                 if ((mouse - ringPress).sqrMagnitude <= 16f)   // przeciąganie PPM przesuwa kamerę, nie otwiera menu
                 {
                     Tooltip.Hide(plotHoverOwner);
-                    Ring.Open(mouse);
+                    Ring.Open(mouse, RingEntries(mouse));
                     PlayerPrefs.SetInt("hintRing", 1);
                 }
             }
+        }
+
+        /// <summary>Stałe menu pierścienia + akcje tego, co leży pod kursorem (grządka: zasyp).</summary>
+        List<ActionRing.Entry> RingEntries(Vector2 screen)
+        {
+            var list = new List<ActionRing.Entry>
+            {
+                new ActionRing.Entry { icon = "book", nameKey = "term.grimoire", run = () => OpenBook(BookView.Tab.Upgrades) },
+                new ActionRing.Entry { icon = "shop", nameKey = "menu.shop", run = () => OpenBook(BookView.Tab.Shop) },
+                new ActionRing.Entry { icon = "plus", nameKey = "menu.expand", run = () => { CloseAll(); Expansion.Toggle(); } },
+                new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
+                new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame },
+            };
+            var cam = Camera.main;
+            var hit = cam != null ? Wyspa.Input.ClickRouter.Pick(cam.ScreenToWorldPoint(screen)) : null;
+            if (hit != null && hit.TryGetComponent(out FarmPlot plot) && Island.Instance != null)
+                list.Insert(0, new ActionRing.Entry
+                {
+                    icon = "fill",
+                    tip = () => Loc.Get("act.fill") + (plot != null && !plot.State.IsEmpty ? "\n" + Loc.Get("ui.fill.lose", Loc.Get("crop." + plot.State.crop.id)) : ""),
+                    run = () => { if (plot != null && Island.Instance != null) Island.Instance.TryFill(plot); },
+                });
+            return list;
+        }
+
+        /// <summary>Wyjście z gry (pierścień, Opcje): zapis robi SaveSystem przy zamykaniu aplikacji.</summary>
+        public static void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         /// <summary>Dymek nad grządką (GDD §12.3): co rośnie i dlaczego nie rośnie.</summary>
@@ -323,6 +350,8 @@ namespace Wyspa.UI
             string moon = s.crop.kind == CropKind.Night && ctx.fullMoon ? "\n" + Loc.Get("ui.plot.fullmoon") : "";
             if (game.Island != null && game.Island.ZoneBonus(plot) > 1f)
                 moon += "\n" + Loc.Get("ui.plot.zone_bonus");
+            if (s.crop.kind == CropKind.Day && game.Activity.TempoMultiplier > 1.05f)
+                moon += "\n" + Loc.Get("ui.plot.tempo", game.Activity.TempoMultiplier);
             return state + "\n" + Loc.Get("ui.plot.progress", pct) + quality + moon;
         }
     }

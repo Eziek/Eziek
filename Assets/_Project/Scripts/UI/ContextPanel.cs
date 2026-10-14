@@ -43,14 +43,47 @@ namespace Wyspa.UI
         void OnEnable() => GameEvents.ContextRequested += Show;
         void OnDisable() => GameEvents.ContextRequested -= Show;
 
+        TileObject armedDismantle;   // pierwszy klik „Rozbierz” uzbraja, drugi (w tym samym panelu) rozbiera
+
+        /// <summary>„Rozbierz” dla budowli kupionych w grze; potwierdzenie drugim kliknięciem (zwrot połowy monet).</summary>
+        void AddDismantle(IContextActions what, ContextInfo info)
+        {
+            var island = Island.Instance;
+            var game = Core.GameLoop.Instance;
+            if (!(what is TileObject obj) || island == null || game == null || !island.CanDismantle(obj))
+                return;
+            if (armedDismantle == obj)
+                info.Button(Loc.Get("act.dismantle_confirm"), () =>
+                {
+                    armedDismantle = null;
+                    island.Dismantle(obj, game.Wallet, game.Crops);
+                });
+            else
+                info.Button(Loc.Get("act.dismantle"), () =>
+                {
+                    armedDismantle = obj;
+                    StartCoroutine(Reopen(obj));   // przycisk zamyka panel - otwieramy go od nowa w następnej klatce
+                });
+        }
+
+        System.Collections.IEnumerator Reopen(TileObject obj)
+        {
+            yield return null;
+            if (obj != null)
+                Show(obj);
+        }
+
         public void Show(IContextActions what)
         {
             if (what == null)
                 return;
+            if (!ReferenceEquals(what, armedDismantle))
+                armedDismantle = null;
             var info = new ContextInfo();
             what.FillContext(info);
             if (what is TileObject obj && obj.NeedsTile && obj.Placed && startMove != null)
                 info.Button(Loc.Get("act.move"), () => startMove(obj));
+            AddDismantle(what, info);
             target = what;
             anchor = info.worldAnchor;
             // najpierw aktywny: TextMeshPro źle mierzy teksty na nieaktywnych obiektach (za wąskie przyciski)

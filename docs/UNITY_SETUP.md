@@ -251,6 +251,17 @@ Sceny nie trzeba budować od nowa (UI powstaje z kodu). Przycisków w prawym gó
 4. Nowa gra (Opcje → System → Reset): po 3 s toast „Prawy klik na wyspie: …”, powtarza się co 3 min, aż użyjesz koła.
 5. Przezroczyste okno: PPM na lądzie otwiera koło; na pulpicie obok wyspy klik idzie do pulpitu.
 
+## 4m. Poprawki po teście: zasypywanie, wyjście, powiększenie, koło nasion, tempo pracy
+Po pobraniu: **Wyspa → 2** (nowe ikony: słońce, księżyc, wyjście, łopata w motywie UI), potem Play.
+1. PPM na grządce: w pierścieniu jest łopata „Zasyp grządkę” (dymek ostrzega, że roślina przepadnie). Klik = z powrotem trawa.
+2. Klik w budowlę (lampa, skrzynia, ognik, duszek, runa, ołtarz) → „Rozbierz” → „Na pewno rozebrać?” → wraca połowa monet.
+3. Pierścień → drzwi „Wyjdź z gry” (w edytorze zatrzymuje Play). Też Opcje → System → Wyjdź.
+4. Opcje → Okno → Powiększenie x2..x6; Ctrl + kółko myszy robi to samo.
+5. Koło nasion: tylko nasiona dnia albo nocy; środek koła (słońce/księżyc) przełącza. Runa siewu ma to samo.
+6. Tempo pracy: pisz albo ruszaj myszą przez minutę: w HUD obok zegara „Tempo x1.3”, w dymku grządki dnia „Tempo pracy”.
+   F1 → „Tempo: pełne” wymusza x1.5 do testu.
+7. Przezroczyste tło: mgła tylko nad pasem wody, gęstnieje ku jego krawędzi; dalej czysty pulpit.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

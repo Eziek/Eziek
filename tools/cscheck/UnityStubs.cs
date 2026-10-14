@@ -20,7 +20,7 @@ namespace UnityEngine
     public class Font : Object { }
     public static class PlayerPrefs { public static bool HasKey(string k) => false; public static float GetFloat(string k) => 0; public static float GetFloat(string k, float d) => d; public static void SetFloat(string k, float v) { } public static int GetInt(string k) => 0; public static int GetInt(string k, int d) => d; public static void SetInt(string k, int v) { } public static string GetString(string k, string d = "") => d; public static void SetString(string k, string v) { } public static void Save() { } }
     public enum SystemLanguage { Chinese, German, Japanese, Polish, English, ChineseSimplified, ChineseTraditional, Unknown }
-    public enum KeyCode { Escape, F1 }
+    public enum KeyCode { Escape, F1, LeftControl, RightControl }
     public class Renderer : Component { public int sortingOrder; public Material sharedMaterial; public Material material; public bool enabled; public void GetPropertyBlock(MaterialPropertyBlock b) { } public void SetPropertyBlock(MaterialPropertyBlock b) { } }
     public class MaterialPropertyBlock { public void SetFloat(int id, float v) { } public void SetColor(int id, Color c) { } }
     public class SpriteRenderer : Renderer { public Sprite sprite; public Color color; public bool flipX, flipY; }
@@ -36,7 +36,7 @@ namespace UnityEngine
     public enum CameraClearFlags { Skybox, SolidColor }
     public class Collider2D : Behaviour { public Vector2 offset; }
     public class BoxCollider2D : Collider2D { public Vector2 size; }
-    public static class Input { public static Vector3 mousePosition; public static bool GetMouseButtonDown(int b) => false; public static bool GetMouseButton(int b) => false; public static bool GetMouseButtonUp(int b) => false; public static bool GetKeyDown(KeyCode k) => false; }
+    public static class Input { public static Vector3 mousePosition; public static Vector2 mouseScrollDelta; public static bool GetKey(KeyCode k) => false; public static bool GetMouseButtonDown(int b) => false; public static bool GetMouseButton(int b) => false; public static bool GetMouseButtonUp(int b) => false; public static bool GetKeyDown(KeyCode k) => false; }
     public static class Physics2D { public static Collider2D OverlapPoint(Vector2 p) => null; public static Collider2D[] OverlapPointAll(Vector2 p) => null; }
     public class Coroutine { }
     public class WaitForSecondsRealtime { public WaitForSecondsRealtime(float s) { } }
@@ -49,7 +49,7 @@ namespace UnityEngine
     public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; public float xMin => x; public float yMin => y; public float xMax => x + width; public float yMax => y + height; public Vector2 size => default; public Vector2 center => default; public static Rect MinMaxRect(float a, float b, float c, float d) => default; }
     public static class Mathf { public static float Sqrt(float f) => f; public static float Pow(float f, float p) => f; public static float Atan2(float y, float x) => y; public static float Lerp(float a, float b, float t) => a; public const float PI = 3.14159265f; public static float Ceil(float f) => f; public static int CeilToInt(float f) => 0; public static float Round(float f) => f; public static float Cos(float f) => f; public static float MoveTowards(float c, float t, float d) => c; public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
     public static class Random { public static float value; public static float Range(float a, float b) => a; public static int Range(int a, int b) => a; }
-    public static class Application { public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath; public static event Action<bool> focusChanged; }
+    public static class Application { public static void Quit() { } public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath; public static event Action<bool> focusChanged; }
     public static class QualitySettings { public static int vSyncCount; }
     public static class Time { public static float unscaledDeltaTime, unscaledTime, timeSinceLevelLoad; public static int frameCount; }
     public static class Screen { public static int width, height; public static FullScreenMode fullScreenMode; public static Resolution currentResolution; public static void SetResolution(int w, int h, FullScreenMode m) { } }
@@ -98,12 +98,13 @@ namespace UnityEngine.InputSystem
     public class ButtonControl { public bool wasPressedThisFrame, wasReleasedThisFrame, isPressed; }
     public class KeyControl : ButtonControl { }
     public class Vector2Control { public UnityEngine.Vector2 ReadValue() => default; }
-    public class Mouse { public static Mouse current; public ButtonControl leftButton, rightButton; public Vector2Control position; }
-    public class Keyboard { public static Keyboard current; public KeyControl escapeKey, f1Key; }
+    public class Mouse { public static Mouse current; public ButtonControl leftButton, rightButton; public Vector2Control position, scroll; }
+    public class Keyboard { public static Keyboard current; public KeyControl escapeKey, f1Key, leftCtrlKey, rightCtrlKey; }
 }
 namespace UnityEditor
 {
     using UnityEngine;
+    public static class EditorApplication { public static bool isPlaying; }
     public class AssetImporter : UnityEngine.Object { }
     public class TextureImporter : AssetImporter { public bool sRGBTexture; public TextureImporterType textureType; public SpriteImportMode spriteImportMode; public float spritePixelsPerUnit; public FilterMode filterMode; public TextureImporterCompression textureCompression; public bool mipmapEnabled, alphaIsTransparency; public TextureWrapMode wrapMode; public void ReadTextureSettings(TextureImporterSettings s) { } public void SetTextureSettings(TextureImporterSettings s) { } }
     public class TextureImporterSettings { public SpriteMeshType spriteMeshType; public uint spriteExtrude; public int spriteAlignment; public Vector2 spritePivot; public Vector4 spriteBorder; }

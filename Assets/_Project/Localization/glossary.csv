@@ -129,3 +129,7 @@ crop.wormwood,Piołun,Wormwood,Wermut,ニガヨモギ,苦艾,dzień
 crop.belladonna,Wilcza jagoda,Belladonna,Tollkirsche,ベラドンナ,颠茄,noc
 crop.mandrake,Mandragora,Mandrake,Alraune,マンドラゴラ,曼德拉草,noc
 crop.graveivy,Cmentarny bluszcz,Grave Ivy,Grabefeu,墓場のツタ,墓地常春藤,noc
+term.work_tempo,Tempo pracy,Work tempo,Arbeitstempo,作業テンポ,工作节奏,pisanie i mysz przyspieszają rośliny dnia
+act.fill,Zasyp grządkę,Fill in the plot,Beet zuschütten,畑を埋める,填平田地,odwrotność Przekop
+act.dismantle,Rozbierz,Dismantle,Abbauen,解体,拆除,"budowle, zwrot połowy monet"
+act.quit,Wyjdź z gry,Quit the game,Spiel beenden,ゲーム終了,退出游戏,

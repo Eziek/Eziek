@@ -254,7 +254,8 @@ namespace Wyspa.Core
             var crop = plot.State.crop;
             if (!night && DuskGrowth && crop != null && crop.kind == CropKind.Night && clock.IsDusk)
                 night = true;   // zmierzch liczy się roślinom nocy jak noc
-            float dayBonus = crop != null && crop.kind == CropKind.Day ? DayGrowthMultiplier : 1f;
+            // rośliny dnia: rytuał „Głębokie korzenie” i tempo pracy (pisanie, mysz)
+            float dayBonus = crop != null && crop.kind == CropKind.Day ? DayGrowthMultiplier * activity.TempoMultiplier : 1f;
             return new GrowthContext
             {
                 playerActive = activity.IsActive,

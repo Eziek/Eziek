@@ -968,7 +968,7 @@ namespace Wyspa.UI
 
             OptLabel("ui.options.scale", y);
             float x = OptCol;
-            for (int s = 2; s <= 4; s++)
+            for (int s = 2; s <= 6; s++)
             {
                 int scale = s;
                 x += OptButton("Scale" + s, "x" + s, x, y, 20f, () => { if (view != null) view.SetScale(scale); },
@@ -1032,6 +1032,10 @@ namespace Wyspa.UI
             }, false, out _);
             if (armed)
                 b.GetComponentInChildren<TextMeshProUGUI>().color = Ui.Theme.textWarn;
+            y += OptRow + 6;
+
+            OptLabel("act.quit", y);
+            OptButton("Quit", Loc.Get("ui.options.quit_button"), OptCol, y, 40f, UiRoot.QuitGame, false);
             y += OptRow + 6;
 
             var dbg = Ui.Txt(content, "Debug", Ui.Theme.textMuted);

@@ -14,6 +14,61 @@ namespace Wyspa.Core
         [Tooltip("Do testów: gracz zawsze nieaktywny (symulacja przerwy).")]
         [SerializeField] bool forceIdle;
 
+        // ---- tempo pracy (prośba gracza): pisanie i ruch myszy przyspieszają rośliny dnia
+        const float SampleSeconds = 0.2f;
+        const int Samples = 300;                    // okno 60 s
+        const float KeyboardWeight = 1f, MouseWeight = 0.35f;
+        /// <summary>Średnia waga próbek, przy której tempo = 1 (ciągłe pisanie trafia w ok. połowę próbek).</summary>
+        const float FullTempo = 0.5f;
+        /// <summary>Największy mnożnik wzrostu roślin dnia przy pełnym tempie.</summary>
+        public const float MaxTempoBonus = 0.5f;
+
+        readonly float[] samples = new float[Samples];
+        int sampleIndex;
+        float sampleSum;
+        float sampleTimer;
+        uint lastStamp;
+        int lastCursorX, lastCursorY;
+
+        /// <summary>Do testów (HUD debugowy): stałe tempo 0..1, ujemne = mierzone naprawdę.</summary>
+        public float DebugTempo { get; set; } = -1f;
+
+        /// <summary>
+        /// Tempo pracy 0..1 z ostatniej minuty: jak często był input (pisanie liczy się w pełni, sam ruch myszy w ok. 1/3).
+        /// Bez globalnych hooków: co 0.2 s porównujemy znacznik ostatniego inputu i pozycję kursora (GDD §4.1).
+        /// </summary>
+        public float Tempo => DebugTempo >= 0f ? Mathf.Clamp01(DebugTempo) : Mathf.Clamp01(sampleSum / Samples / FullTempo);
+
+        /// <summary>Mnożnik wzrostu roślin dnia: 1 + 0.5 x tempo (tylko gdy gracz jest aktywny).</summary>
+        public float TempoMultiplier => IsActive ? 1f + MaxTempoBonus * Tempo : 1f;
+
+        void Update()
+        {
+            if (!SystemIdle.IsSupported)
+                return;
+            sampleTimer += Time.unscaledDeltaTime;
+            while (sampleTimer >= SampleSeconds)
+            {
+                sampleTimer -= SampleSeconds;
+                Sample();
+            }
+        }
+
+        void Sample()
+        {
+            uint stamp = SystemIdle.LastInputStamp();
+            SystemIdle.CursorPosition(out int cx, out int cy);
+            float w = 0f;
+            if (stamp != lastStamp && lastStamp != 0u)
+                w = cx != lastCursorX || cy != lastCursorY ? MouseWeight : KeyboardWeight;   // input bez ruchu kursora = klawiatura
+            lastStamp = stamp;
+            lastCursorX = cx;
+            lastCursorY = cy;
+            sampleSum += w - samples[sampleIndex];
+            samples[sampleIndex] = w;
+            sampleIndex = (sampleIndex + 1) % Samples;
+        }
+
         public bool IsActive { get; private set; }
         public float SecondsSinceInput { get; private set; }
 
