@@ -619,6 +619,9 @@ Obrazki referencyjne (kopie): `docs/img/`
 75. Mgła jak pixel-artowe cumulusy z referencji gracza, ale w brudnej palecie dark fantasy (§7): chmury z guzków,
     cieniowanie bryły i rąbków w 6 tonach, bez obrysu, siatka 32 px (jak woda). Zastępuje mgłę „chibi” z p. 49 i obwódkę z p. 71;
     limit zasięgu 18 px w przezroczystym oknie zostaje. Podgląd `docs/img/mgla_chmury.png` (zwykłe okno, przezroczyste, noc).
+76. Po teście mgły (prośba gracza: „więcej mgły, grubsza, dalej widoczna przy przesuwaniu, nie tylko mały pasek”):
+    przesuwanie PPM sięga 96 x 80 px dalej w mgłę (kadr nie wychodzi poza mapę), w przezroczystym oknie wał chmur grubszy
+    (chmury 0,8 zamiast 0,6, środki 4-20 px za pasem wody, limit zasięgu 34 px zamiast 18), okno ma o 16 px więcej zapasu.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę

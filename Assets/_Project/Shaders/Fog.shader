@@ -93,9 +93,9 @@ Shader "Wyspa/Fog"
             #define FOG_NB 6          // guzki na obwodzie bryły
             #define FOG_RIM 2.5       // szerokość rąbka
             #define FOG_CAP 2.0       // łuki guzków w środku bryły
-            #define FOG_BAND 0.6      // przezroczyste okno: mniejsze, gęstsze chmury (mieszczą się w FOG_REACH)
+            #define FOG_BAND 0.8      // przezroczyste okno: trochę mniejsze, gęstsze chmury (mieszczą się w FOG_REACH)
             // przezroczyste okno: mgła kończy się najdalej tyle pikseli danych za pasem wody (zawsze w kadrze)
-            #define FOG_REACH 18.0
+            #define FOG_REACH 34.0     // gruby wał (prośba gracza: „więcej mgły, nie tylko mały pasek”)
             // tony: środek, rozpiętość bryły, rąbek, łuki, głębia (ciemniej dalej od wyspy), szum, podstawa
             #define TONE_MID 2.9
             #define TONE_SPAN 2.6
@@ -199,8 +199,8 @@ Shader "Wyspa/Fog"
                 bool band = _FogOuter > 0.0;
                 // gęstsza mgła (noc, zgaszone lampy) podchodzi bliżej brzegu; w przezroczystym oknie zaczyna się przy wodzie
                 float edge = band ? _FogOuter : _FogFrom / max(0.3, _Density);
-                float lo = band ? edge + 1.0 : edge + 2.0;
-                float hi = band ? edge + 8.0 : 1e6;
+                float lo = band ? edge + 4.0 : edge + 2.0;     // w oknie przezroczystym chmury nie wchodzą na pomost i łódź
+                float hi = band ? edge + 20.0 : 1e6;
                 float scale = band ? FOG_BAND : 1.0;
                 float cellSize = FOG_CELL * scale;
                 float2 g0 = floor(p / cellSize);

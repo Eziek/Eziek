@@ -101,7 +101,9 @@ co jest nie tak (najlepiej ze zrzutem i `Player.log` przy błędach). F1 otwiera
    światełka przy dnie (nocą jasne), fale idą do brzegu i rozbijają się w pianę, kręgi. Brzeg lądu nie odstaje od piany.
 5. Mgła: kłębiaste chmury jak na `docs/img/mgla_chmury.png` (jasne czapy od lewej-góry, bliższe chmury zasłaniają dalsze,
    bez obrysu, w głębi ciemniej), drobne piksele jak woda. Powoli dryfują, bez skoku co pół minuty.
-   W przezroczystym oknie wał mniejszych chmur przy wodzie, kończy się przed krawędzią okna. Noc: ciemniejsza, ale widoczna.
+   W przezroczystym oknie gruby wał chmur (dwie warstwy) za pasem wody, nie wchodzi na pomost i łódź, kończy się przed
+   krawędzią okna. Noc: ciemniejsza, ale widoczna. Zwykłe okno: przeciąganie PPM przesuwa widok daleko w mgłę
+   (także gdy wyspa mieści się w kadrze), ale nigdy poza nią (bez pustego tła).
 6. Opcje → Okno → Powiększenie: x2, x4, x6 (piksele ostre, bez rozmycia); Ctrl + kółko skacze co jeden poziom.
 7. Wiatr: rośliny i drzewa kołyszą się o 1 piksel jak dawniej (nie za mocno), bez pionowej kreski.
 8. Noc: ćmy wokół zapalonych lamp, świecące rośliny pulsują; co jakiś czas ryba (16 px) wyskakuje z wody z pluskiem.

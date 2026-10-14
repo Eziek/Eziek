@@ -13,7 +13,7 @@ from PIL import Image
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 S = 2                                   # piksele mgły na piksel danych (siatka 32 px)
-W, H = 200, 150                         # kadr w pikselach danych (16 px)
+W, H = 240, 200                         # kadr w pikselach danych (16 px)
 
 # tony mgły od najciemniejszego (brudne, mroczne; ciepły, przybrudzony wierzch jak stary pergamin)
 TONES = np.array([[0x1b, 0x20, 0x29], [0x2a, 0x31, 0x3c], [0x3f, 0x47, 0x51], [0x5c, 0x60, 0x63],
@@ -23,7 +23,7 @@ RC = (14.0, 10.0)                       # promień bryły chmury: min, rozrzut
 NB = 6                                  # guzki na obwodzie bryły
 RIM = 2.5                               # szerokość rąbka (piksele mgły)
 LIGHT = np.array([-0.55, -0.75, 0.45]); LIGHT /= np.linalg.norm(LIGHT)   # y w dół: z lewej-góry, trochę od widza
-BAND_SCALE = 0.6                        # przezroczyste okno: mniejsze, gęstsze chmury (mieszczą się w 18 px)
+BAND_SCALE = 0.8                        # przezroczyste okno: trochę mniejsze chmury (mieszczą się w 34 px)
 CAP = 2.0                               # łuki guzków w środku bryły (piksele mgły)
 TONE_MID, TONE_SPAN, RIM_TONE, CAP_TONE, DEPTH, DEPTH_TONES, JIT, BASE_TONE = 2.9, 2.6, 1.1, 0.6, 30.0, 1.5, 0.35, 1.2
 
@@ -39,8 +39,8 @@ def hash4(x, y):
 
 def island_dist(x, y):
     """Odległość od brzegu w pikselach danych (wyspa z dwóch zaokrąglonych prostokątów, jak w fog_chibi_preview)."""
-    d1 = np.hypot(np.maximum(abs(x - 100) - 34, 0), np.maximum(abs(y - 80) - 20, 0))
-    d2 = np.hypot(np.maximum(abs(x - 80) - 14, 0), np.maximum(abs(y - 52) - 12, 0))
+    d1 = np.hypot(np.maximum(abs(x - 120) - 34, 0), np.maximum(abs(y - 105) - 20, 0))
+    d2 = np.hypot(np.maximum(abs(x - 100) - 14, 0), np.maximum(abs(y - 77) - 12, 0))
     return np.minimum(d1, d2) - 3.0 + 1.5 * np.sin(x * 0.4) * np.cos(y * 0.33)
 
 
@@ -80,18 +80,19 @@ def inner_caps(px, py, bumps, lx, ly):
     return m
 
 
-def fog(mode, edge, T):
-    """Zwraca (kolor RGB, alfa, odległość) mgły na siatce W*S x H*S. mode: 'normal' (całe morze) albo 'band' (przezroczyste okno).
+def fog(mode, edge, T, dist=None, w=W, h=H, s=S):
+    """Zwraca (kolor RGB, alfa, odległość) mgły na siatce w*s x h*s (dist: funkcja odległości, domyślnie wyspa z podglądu). mode: 'normal' (całe morze) albo 'band' (przezroczyste okno).
 
     Chmura = bryła z guzków (sylwetka kalafiora). Chmura niżej na ekranie stoi bliżej i zasłania wyższe.
     Cieniowanie na dwóch poziomach: bryła jak kula (jasna góra-lewo, ciemny dół-prawo), a na krawędzi sylwetki od światła
     jasny rąbek, od cienia ciemny (każdy guzek na brzegu dostaje swoją czapę). W środku bryły guzków nie widać.
     """
-    yy, xx = np.mgrid[0:H * S, 0:W * S].astype(float)
+    dist = dist or island_dist        # odległość od brzegu (piksele danych) w punkcie danych
+    yy, xx = np.mgrid[0:h * s, 0:w * s].astype(float)
     px, py = xx + 0.5, yy + 0.5
-    d = island_dist(px / S, py / S)
+    d = dist(px / s, py / s)
     band = mode == 'band'
-    lo, hi = (edge + 1.0, edge + 8.0) if band else (edge + 2.0, 1e9)
+    lo, hi = (edge + 4.0, edge + 20.0) if band else (edge + 2.0, 1e9)
     best_y = np.full(xx.shape, -1e9)
     big = np.zeros(xx.shape); rim = np.zeros(xx.shape); depth = np.zeros(xx.shape)
     cell = CELL * (BAND_SCALE if band else 1.0)
@@ -102,7 +103,7 @@ def fog(mode, edge, T):
           for k in (0, 1):               # dwie chmury na komórkę (gęsto, bez dziur)
             ci, cj = gx + i + 0.5 * k, gy + j + 0.5 * k
             cx, cy, rc, bumps = cluster(ci, cj, T, 41.0 * k, BAND_SCALE if band else 1.0)
-            dc = island_dist(cx / S, cy / S)
+            dc = dist(cx / s, cy / s)
             ok = (dc >= lo) & (dc <= hi)
             inside = ok & (cy > best_y) & in_cluster(px, py, bumps)
             lit_edge = ~in_cluster(px + lx * RIM, py + ly * RIM, bumps)      # tuż przy krawędzi od strony światła
@@ -124,7 +125,7 @@ def fog(mode, edge, T):
     idx = np.clip(np.floor(t), 0, 5).astype(int)
     a = np.where(has | base, 0.95, 0.0)
     if band:
-        a = np.where(d < edge + 18.0, a, 0.0)   # twardy limit zasięgu w przezroczystym oknie
+        a = np.where(d < edge + 34.0, a, 0.0)   # twardy limit zasięgu w przezroczystym oknie
     a = np.where(d > 0, a, 0.0)
     return TONES[idx], a, d
 

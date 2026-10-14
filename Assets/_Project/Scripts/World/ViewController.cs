@@ -28,10 +28,16 @@ namespace Wyspa.World
         [Tooltip("Zapas wokół lądu w pikselach (woda i mgła dookoła).")]
         [SerializeField] Vector2Int margin = new Vector2Int(48, 32);
         [Tooltip("Przezroczyste okno: dodatkowy zapas na kłęby mgły wokół wyspy (piksele).")]
-        [SerializeField] Vector2Int wideExtra = new Vector2Int(24, 40);   // woda 46 px + wał mgły (ok. 20 px) wokół lądu
+        [SerializeField] Vector2Int wideExtra = new Vector2Int(24, 40);   // woda 46 px + wał mgły wokół lądu (z WideWall)
         bool wide;
 
-        Vector2Int Margin => wide ? margin + wideExtra : margin;
+        // grubszy wał mgły w przezroczystym oknie (FOG_REACH 34 w Fog.shader): zapas ponad wideExtra zapisane w scenie
+        static readonly Vector2Int WideWall = new Vector2Int(16, 16);
+        // przesuwanie PPM sięga dalej w mgłę (prośba gracza); w przezroczystym oknie tylko trochę, bo za wałem jest pulpit
+        static readonly Vector2Int FogPan = new Vector2Int(96, 80), FogPanWide = new Vector2Int(8, 8);
+
+        Vector2Int Margin => wide ? margin + wideExtra + WideWall : margin;
+        Vector2Int PanMargin => Margin + (wide ? FogPanWide : FogPan);
 
         /// <summary>Przezroczyste okno: większy zapas wokół lądu, żeby kłęby mgły mieściły się w kadrze.</summary>
         public void SetWideMargin(bool on)
@@ -223,17 +229,22 @@ namespace Wyspa.World
         bool CanPan()
         {
             var land = LandPixels();
-            return land.width + 2 * Margin.x > view.x || land.height + 2 * Margin.y > view.y;
+            return land.width + 2 * PanMargin.x > view.x || land.height + 2 * PanMargin.y > view.y;
         }
 
-        /// <summary>Kamera na środku lądu, przesunięta o pan w granicach (wyspa + zapas), przyciągnięta do pikseli.</summary>
+        /// <summary>
+        /// Kamera na środku lądu, przesunięta o pan w granicach (wyspa + zapas + pas mgły), przyciągnięta do pikseli.
+        /// Kadr nie wychodzi poza mapę wyspy (tekstury wody i mgły), żeby za mgłą nie było pustki.
+        /// </summary>
         void Place()
         {
             var land = LandPixels();
             var c = land.center;
-            float hx = Mathf.Max(0f, (land.width + 2 * Margin.x - view.x) / 2f);
-            float hy = Mathf.Max(0f, (land.height + 2 * Margin.y - view.y) / 2f);
+            float hx = Mathf.Max(0f, (land.width + 2 * PanMargin.x - view.x) / 2f);
+            float hy = Mathf.Max(0f, (land.height + 2 * PanMargin.y - view.y) / 2f);
             pan = new Vector2(Mathf.Clamp(pan.x, -hx, hx), Mathf.Clamp(pan.y, -hy, hy));
+            float mx = Mathf.Max(0f, IslandPainter.Size / 2f - view.x / 2f), my = Mathf.Max(0f, IslandPainter.Size / 2f - view.y / 2f);
+            pan = new Vector2(Mathf.Clamp(c.x + pan.x, -mx, mx) - c.x, Mathf.Clamp(c.y + pan.y, -my, my) - c.y);
             float x = Mathf.Round(c.x + pan.x) / Ppu;
             float y = Mathf.Round(c.y + pan.y) / Ppu;
             transform.position = new Vector3(x, y, transform.position.z);
