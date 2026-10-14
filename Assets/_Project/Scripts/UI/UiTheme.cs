@@ -16,6 +16,9 @@ namespace Wyspa.UI
     public class UiTheme : ScriptableObject
     {
         public Font font;
+        [Tooltip("Fusion Pixel 8px (OFL 1.1): zapasowe fonty dla znaków japońskich i chińskich (GDD §16.2).")]
+        public Font cjkJa;
+        public Font cjkZhHans;
         public TextAsset[] tables;
 
         [Header("9-slice")]

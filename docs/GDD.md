@@ -444,6 +444,8 @@ Obrazki referencyjne (kopie): `docs/img/`
 39. Uwagi gracza po teście: zasypywanie grządek i rozbiórka budowli, „Wyjdź z gry” (brak X w oknie bez ramki), powiększenie
     x2..x6 + Ctrl + kółko, koło nasion z podziałem dzień / noc, mgła tylko nad pasem wody, **tempo pracy** (pisanie i mysz
     przyspieszają rośliny dnia do x1.5, §4.1).
+40. Fonty CJK: Fusion Pixel 8px (JA i zh-Hans) jako zapasowe dla `WyspaPixel` (§16.2). Log z buildu pokazywał kwadraciki
+    zamiast „日本語” i „简体中文” na przyciskach języków.
 
 ---
 
@@ -916,6 +918,10 @@ Pliki: `Assets/_Project/Localization/glossary.csv` (słownik terminów), `game.c
    Wstępne tłumaczenia przygotował Claude. **JA, ZH i DE wymagają weryfikacji przez native speakera** przed wydaniem.
 
 ### 16.2 Fonty
+**Stan:** Fusion Pixel **8px proportional** (wersja 2026.09.25) w `Art/Fonts/FusionPixel/` (wariant `ja` i `zh_hans`, licencja
+`OFL.txt`, bez zastrzeżonej nazwy). Pobrane ze strony projektu jako WOFF2 i rozpakowane do OTF bez zmian w glifach.
+Są **fontami zapasowymi** pikselowego `WyspaPixel` (TMP fallback, RASTER, rozmiar 8, atlas 1024); pierwszy w kolejce jest wariant
+języka gry (`UiRoot.OrderCjkFallbacks`). Wszystkie znaki z kolumn JA i ZH w CSV są w fontach (sprawdzone fontTools).
 - **JA i ZH: Fusion Pixel Font** (TakWolf), licencja **SIL OFL 1.1** (darmowa, także w grach komercyjnych).
   - Rozmiary 8 / 10 / 12 px, warianty regionalne JA, SC, TC, KR.
   - Wariant **JA** dla japońskiego i **SC** dla chińskiego. Te same znaki Han mają inne kształty w obu językach,

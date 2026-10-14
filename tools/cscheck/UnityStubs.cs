@@ -167,7 +167,7 @@ namespace TMPro
     public enum AtlasPopulationMode { Static = 0, Dynamic = 1, DynamicOS = 2 }
     public class TMP_Settings : ScriptableObject { public static TMP_Settings instance; }
     public class TMP_FontAsset : ScriptableObject
-    {
+    { public System.Collections.Generic.List<TMP_FontAsset> fallbackFontAssetTable;
         public Texture2D atlasTexture;
         public static TMP_FontAsset CreateFontAsset(Font font, int samplingPointSize, int atlasPadding, UnityEngine.TextCore.LowLevel.GlyphRenderMode renderMode, int atlasWidth, int atlasHeight, AtlasPopulationMode atlasPopulationMode = AtlasPopulationMode.Dynamic, bool enableMultiAtlasSupport = true) => null;
     }

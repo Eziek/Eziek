@@ -262,6 +262,12 @@ Po pobraniu: **Wyspa → 2** (nowe ikony: słońce, księżyc, wyjście, łopata
    F1 → „Tempo: pełne” wymusza x1.5 do testu.
 7. Przezroczyste tło: mgła tylko nad pasem wody, gęstnieje ku jego krawędzi; dalej czysty pulpit.
 
+## 4n. Fonty japońskie i chińskie (test)
+Po pobraniu: **Wyspa → 2** (motyw UI dostaje fonty Fusion Pixel z `Art/Fonts/FusionPixel/`), potem Play.
+1. Opcje → Ogólne: przyciski „日本語” i „简体中文” pokazują znaki zamiast kwadracików.
+2. Przełącz na 日本語 i 简体中文: teksty w HUD, Księdze, dymkach są czytelne (piksele 8 px, bez rozmycia).
+3. W `Player.log` nie ma już „The character … was not found in the font asset”.
+
 ## 5. Build
 Unity 6: **File → Build Profiles → Windows → Build**.
 

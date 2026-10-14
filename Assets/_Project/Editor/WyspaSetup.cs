@@ -486,6 +486,11 @@ namespace Wyspa.EditorTools
             theme.font = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
             if (theme.font == null)
                 Debug.LogWarning("[Wyspa] Brak fontu: " + FontPath);
+            // CJK: Fusion Pixel 8px (TakWolf, SIL OFL 1.1, licencja w Art/Fonts/FusionPixel/OFL.txt)
+            theme.cjkJa = AssetDatabase.LoadAssetAtPath<Font>(Root + "/Art/Fonts/FusionPixel/fusion-pixel-8px-proportional-ja.otf");
+            theme.cjkZhHans = AssetDatabase.LoadAssetAtPath<Font>(Root + "/Art/Fonts/FusionPixel/fusion-pixel-8px-proportional-zh_hans.otf");
+            if (theme.cjkJa == null || theme.cjkZhHans == null)
+                Debug.LogWarning("[Wyspa] Brak fontów Fusion Pixel w Art/Fonts/FusionPixel (japoński i chiński pokażą kwadraciki).");
             var tables = new List<TextAsset>();
             foreach (var t in LocTables)
             {

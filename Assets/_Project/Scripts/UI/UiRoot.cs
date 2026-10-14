@@ -57,6 +57,7 @@ namespace Wyspa.UI
             Ui.Theme = theme;
             Loc.Init(theme.tables);
             Ui.Font = CreateFont(theme.font);
+            SetupCjkFallbacks();
             Build();
             Instance = this;   // dopiero po zbudowaniu - grządki wołają Instance.Wheel
         }
@@ -82,11 +83,40 @@ namespace Wyspa.UI
 
         void OnDestroy()
         {
+            Loc.Changed -= OrderCjkFallbacks;
             if (Instance == this)
                 Instance = null;
         }
 
-        static TMP_FontAsset CreateFont(Font font)
+        TMP_FontAsset cjkJa, cjkZh;
+
+        /// <summary>
+        /// Znaki japońskie i chińskie (GDD §16.2): Fusion Pixel 8px jako zapasowe fonty pikselowego fontu UI.
+        /// Te same znaki Han mają w JA i ZH inne kształty, więc pierwszy w kolejce jest wariant języka gry.
+        /// </summary>
+        void SetupCjkFallbacks()
+        {
+            if (Ui.Font == null)
+                return;
+            cjkJa = CreateFont(theme.cjkJa, 1024);
+            cjkZh = CreateFont(theme.cjkZhHans, 1024);
+            OrderCjkFallbacks();
+            Loc.Changed += OrderCjkFallbacks;
+        }
+
+        void OrderCjkFallbacks()
+        {
+            if (Ui.Font == null)
+                return;
+            var list = new List<TMP_FontAsset>();
+            bool zhFirst = Loc.Language == "zh-Hans";
+            foreach (var fa in zhFirst ? new[] { cjkZh, cjkJa } : new[] { cjkJa, cjkZh })
+                if (fa != null)
+                    list.Add(fa);
+            Ui.Font.fallbackFontAssetTable = list;
+        }
+
+        static TMP_FontAsset CreateFont(Font font, int atlasSize = 256)
         {
             if (font == null)
                 return null;
@@ -101,7 +131,7 @@ namespace Wyspa.UI
             TMP_FontAsset fa;
             try
             {
-                fa = TMP_FontAsset.CreateFontAsset(font, 8, 1, GlyphRenderMode.RASTER, 256, 256, AtlasPopulationMode.Dynamic, false);
+                fa = TMP_FontAsset.CreateFontAsset(font, 8, 1, GlyphRenderMode.RASTER, atlasSize, atlasSize, AtlasPopulationMode.Dynamic, false);
             }
             catch (System.Exception e)
             {
