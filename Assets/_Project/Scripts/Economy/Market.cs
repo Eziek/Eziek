@@ -130,6 +130,8 @@ namespace Wyspa.Economy
                         * Prestige.SaleMultiplier * MomentMultiplier();
             if (crop.id == DemandCropId())
                 value *= Mathf.Max(1f, E.DemandMult);
+            if (crop.kind == CropKind.Night)
+                value *= Familiars.FamiliarSystem.NightSale;   // ćma księżycowa
             if (IsFullMoon())
                 value *= Mathf.Max(1f, E.FullMoonSale);
             return Finish(value, count);

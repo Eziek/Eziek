@@ -130,6 +130,15 @@ namespace Wyspa.Visual
                 fx.particles.Burst(cropPos + new Vector3(0f, 7f / Ppu, 0f), fx.leaves, 3, 34f, 110f, 0.7f, order + 2);
         }
 
+        /// <summary>Świecący ślad ślimaka: blada iskierka przy ziemi, która długo gaśnie.</summary>
+        public static void SlimeTrail(Vector3 at)
+        {
+            var fx = Instance;
+            if (fx == null || fx.particles == null || fx.sparkle == null || fx.sparkle.Length == 0)
+                return;
+            fx.particles.Spawn(at, new[] { fx.sparkle[0] }, Vector2.zero, 0f, 2.5f, -1350, true);
+        }
+
         /// <summary>Okruszki ziemi podskakują przy szarpaniu rośliny (przed wyrwaniem).</summary>
         public static void SoilCrumbs(Vector3 cropPos, int order)
         {

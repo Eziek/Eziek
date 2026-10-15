@@ -1113,7 +1113,7 @@ namespace Wyspa.UI
 
         // ------------------------------------------------------------------ Bestiariusz i lore (GDD §11.3 H)
 
-        int bestiarySection;   // 0 rośliny, 1 ryby, 2 zdarzenia, 3 lore
+        int bestiarySection;   // 0 rośliny, 1 ryby, 2 zdarzenia, 3 lore, 4 chowańce
         int lorePage;
         static readonly string[] FishIds = { "normal", "glow" };
         static readonly string[] EventIds = { "wisp", "star", "merchant", "monster", "fullmoon" };
@@ -1124,7 +1124,7 @@ namespace Wyspa.UI
         {
             var chronicle = Lore.Chronicle.Instance;
             float x = 0;
-            string[] sections = { "ui.bestiary.plants", "ui.bestiary.fish", "ui.bestiary.events", "ui.bestiary.lore" };
+            string[] sections = { "ui.bestiary.plants", "ui.bestiary.fish", "ui.bestiary.events", "ui.bestiary.lore", "ui.bestiary.familiars" };
             for (int i = 0; i < sections.Length; i++)
             {
                 int sec = i;
@@ -1137,6 +1137,11 @@ namespace Wyspa.UI
                 x += bw + 4;
             }
             info.text = Loc.Get("ui.bestiary.hint");
+            if (bestiarySection == 4)
+            {
+                BuildFamiliars();
+                return;
+            }
             if (chronicle == null)
                 return;
 
@@ -1229,6 +1234,48 @@ namespace Wyspa.UI
                 t.text = known ? e.label : "???";
                 float col = (i % 2) * ((W - 64) / 2f);
                 Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(col, -(y + (i / 2) * 13)), new Vector2((W - 64) / 2f - 4, 10));
+            }
+        }
+
+        /// <summary>
+        /// Chowańce: karta na każdego (obrazek, imię, bonus i więź). Nieprzybyłe: ciemna sylwetka, „???” i podpowiedź,
+        /// co zrobić, żeby przyszły (z postępem).
+        /// </summary>
+        void BuildFamiliars()
+        {
+            info.text = Loc.Get("ui.familiar.hint");
+            var art = Island.Instance != null ? Island.Instance.Art : null;
+            const int cols = 4;
+            float cw = (W - 64) / cols, ch = 88f, top = 20f;
+            var defs = Familiars.FamiliarSystem.Defs;
+            for (int i = 0; i < defs.Length; i++)
+            {
+                var d = defs[i];
+                bool has = Familiars.FamiliarSystem.Has(d.id);
+                float x = (i % cols) * cw, y = top + (i / cols) * ch;
+                var fa = art != null ? art.Familiar(d.id) : null;
+                var sprite = fa != null && fa.frames != null && fa.frames.Length > 0 ? fa.frames[0] : null;
+                if (sprite != null)
+                {
+                    var pic = Ui.Img(content, "Pic_" + d.id, sprite, false);
+                    pic.color = has ? Color.white : new Color(0.08f, 0.05f, 0.1f, 0.55f);   // nieznany: sylwetka
+                    var size = sprite.rect.size * 2f;
+                    Ui.Place(pic.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(x + (cw - size.x) / 2f, -y), size);
+                }
+                var name = Ui.Txt(content, "Name", has ? Ui.Theme.textDark : Ui.Theme.textMutedOnPage, TextAlignmentOptions.Top);
+                name.text = has ? Loc.Get("familiar." + d.id) : "???";
+                Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, -(y + 30)), new Vector2(cw - 4, 10));
+                var t = Ui.Txt(content, "Info", has ? Ui.Theme.textDark : Ui.Theme.textMutedOnPage, TextAlignmentOptions.Top);
+                t.textWrappingMode = TextWrappingModes.Normal;
+                if (has)
+                    t.text = Familiars.FamiliarSystem.BonusText(d.id) + "\n"
+                           + Loc.Get("ui.familiar.bond", Familiars.FamiliarSystem.Bond(d.id), Familiars.FamiliarSystem.MaxBond);
+                else
+                {
+                    var (have, need) = Familiars.FamiliarSystem.Progress(d.id);
+                    t.text = Loc.Get("familiar." + d.id + ".hint", Mathf.Min(have, need), need);
+                }
+                Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(x + 2, -(y + 41)), new Vector2(cw - 6, 46));
             }
         }
 

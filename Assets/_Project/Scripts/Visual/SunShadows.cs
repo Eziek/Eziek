@@ -113,6 +113,7 @@ namespace Wyspa.Visual
                     shadows[t] = Create(t, src, island);
             }
             ScanWisps(island);
+            ScanFamiliars(island);
             gone.Clear();
             foreach (var kv in shadows)
                 if (kv.Key == null || !seen.Contains(kv.Key))
@@ -174,6 +175,60 @@ namespace Wyspa.Visual
             return blob;
         }
 
+        readonly Dictionary<Familiars.Familiar, SpriteRenderer> familiarShadows = new Dictionary<Familiars.Familiar, SpriteRenderer>();
+        readonly List<Familiars.Familiar> goneFamiliars = new List<Familiars.Familiar>();
+
+        /// <summary>Chowańce: plamka cienia (na ziemi pod nimi, latające niżej i mniejsza).</summary>
+        void ScanFamiliars(Island island)
+        {
+            foreach (var f in Familiars.Familiar.All)
+                if (f != null && !familiarShadows.ContainsKey(f))
+                {
+                    var go = new GameObject("FamiliarShadow");
+                    go.transform.SetParent(transform, false);
+                    var sr = go.AddComponent<SpriteRenderer>();
+                    sr.sprite = Blob();
+                    sr.sortingOrder = Order;
+                    sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                    if (island.Art != null && island.Art.glow != null)
+                        sr.sharedMaterial = island.Art.glow;
+                    familiarShadows[f] = sr;
+                }
+            goneFamiliars.Clear();
+            foreach (var kv in familiarShadows)
+                if (kv.Key == null || !kv.Key.isActiveAndEnabled)
+                    goneFamiliars.Add(kv.Key);
+            foreach (var f in goneFamiliars)
+            {
+                if (familiarShadows[f] != null)
+                    Destroy(familiarShadows[f].gameObject);
+                familiarShadows.Remove(f);
+            }
+        }
+
+        void UpdateFamiliarShadows(Vector2 sunDir, float sunAlpha, float nightAlpha)
+        {
+            foreach (var kv in familiarShadows)
+            {
+                var f = kv.Key;
+                var sr = kv.Value;
+                if (f == null || sr == null)
+                    continue;
+                // w nocy słaby cień (od księżyca); lis-widmo i ćma (świeci) bez cienia w nocy
+                float a = (sunAlpha > 0.01f ? sunAlpha : nightAlpha) * f.Alpha;
+                if (sunAlpha <= 0.01f && (f.Kind == Familiars.FamiliarSystem.Fox || f.Kind == Familiars.FamiliarSystem.Moth))
+                    a = 0f;
+                sr.enabled = a > 0.01f;
+                if (!sr.enabled)
+                    continue;
+                var p = f.GroundPoint;
+                float x = Mathf.Round((p.x + sunDir.x * 0.1f) * 16f) / 16f, y = Mathf.Round((p.y + 0.5f / 16f) * 16f) / 16f;
+                sr.transform.position = new Vector3(x, y, 0f);
+                sr.transform.localScale = f.Flying ? new Vector3(0.9f, 1f, 1f) : new Vector3(1.4f, 1f, 1f);
+                sr.color = new Color(Shade.r, Shade.g, Shade.b, a * (f.Flying ? 0.7f : 1f));
+            }
+        }
+
         void UpdateWispShadows(Vector2 sunDir, float sunAlpha)
         {
             foreach (var kv in wispShadows)
@@ -230,6 +285,7 @@ namespace Wyspa.Visual
             float moon = 1f - Mathf.Abs(clock.MoonPhase - 0.5f) * 2f;
             float moonAlpha = clock.IsNight ? 0.1f * (0.3f + 0.7f * moon) * weather : 0f;
             UpdateWispShadows(sunDir, sunAlpha);
+            UpdateFamiliarShadows(sunDir, sunAlpha, moonAlpha * 1.5f);
 
             foreach (var kv in shadows)
             {
@@ -337,6 +393,10 @@ namespace Wyspa.Visual
                 if (kv.Value != null)
                     Destroy(kv.Value.gameObject);
             wispShadows.Clear();
+            foreach (var kv in familiarShadows)
+                if (kv.Value != null)
+                    Destroy(kv.Value.gameObject);
+            familiarShadows.Clear();
             if (blob != null)
                 Destroy(blob.texture);
         }

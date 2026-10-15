@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-14)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-101), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-102), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -28,6 +28,8 @@ Historia decyzji jest w GDD §9 (punkty 1-101), a lista testów w `docs/TEST_PLA
   `DayNightLighting` z kluczami w kodzie, snopy za słońcem. Nie testowane w Unity (ścięcie przez obrót × skalę × obrót).
 - **Ogniki między sobą** (GDD §9 p. 101, TEST_PLAN 30): `Automation/WispPlay.cs` (zabawy, mijanka, gratulacje,
   wyrywanie plonów), cienie roślin i ogników w `SunShadows`. Nie testowane w Unity.
+- **Chowańce od nowa + 4 nowe** (GDD §9 p. 102, TEST_PLAN 31): `Familiars/` (definicje póz w `FamiliarSystem.Defs`,
+  grafika `tools/pixel-proto/familiars.py`), więź i karmienie, prezenty, sekcja w Bestiariuszu. Wymaga Wyspa → 2.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,

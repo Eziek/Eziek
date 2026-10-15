@@ -218,12 +218,36 @@ potion.focus.short,Żar +50%,Ember +50%,Glut +50 %,熾火+50%,余火+50%,
 potion.light.short,lampy za darmo,free lamps,Lampen gratis,ランプ無料,灯免费,
 potion.lure.short,kupiec-widmo,Ghost Merchant,Geisterhändler,幽霊商人,幽灵商人,
 potion.fog.short,zdarzenia x2,events x2,Ereignisse x2,出来事x2,事件x2,
-familiar.cat.bonus,"Mutacje dwa razy częściej, czasem przynosi monety","Mutations twice as often, sometimes brings coins","Mutationen doppelt so oft, bringt manchmal Münzen",突然変異が2倍、時々コインを持ってくる,变异几率翻倍，有时会叼来金币,bonus chowańca
-familiar.raven.bonus,Drzewa rosną i owocują o 25% szybciej,Trees grow and fruit 25% faster,Bäume wachsen und tragen 25 % schneller,木の成長と実りが25%速い,树木生长和结果加快25%,
-familiar.toad.bonus,Rośliny nocy rosną o 15% szybciej,Night crops grow 15% faster,Nachtpflanzen wachsen 15 % schneller,夜の作物が15%速く育つ,夜间作物生长加快15%,
-familiar.bat.bonus,Lampy palą o 20% mniej Żaru,Lamps burn 20% less Ember,Lampen verbrauchen 20 % weniger Glut,ランプの熾火消費が20%減る,灯消耗的余火减少20%,
+familiar.cat.bonus,"Mutacje o {0}% częściej, raz na dobę monety","Mutations {0}% more often, coins once a day","Mutationen {0} % häufiger, einmal am Tag Münzen",突然変異+{0}%、1日1回コイン,变异+{0}%，每天一次金币,{0} = procent (rośnie z więzią)
+familiar.raven.bonus,"Drzewa rosną o {0}% szybciej, raz na dobę nasiona","Trees grow {0}% faster, seeds once a day","Bäume wachsen {0} % schneller, einmal am Tag Samen",木の成長+{0}%、1日1回種,树木生长+{0}%，每天一次种子,{0} = procent (rośnie z więzią)
+familiar.toad.bonus,Rośliny nocy rosną o {0}% szybciej,Night crops grow {0}% faster,Nachtpflanzen wachsen {0} % schneller,夜の作物の成長+{0}%,夜间作物生长+{0}%,{0} = procent (rośnie z więzią)
+familiar.bat.bonus,"Lampy palą o {0}% mniej Żaru, o świcie nawóz","Lamps burn {0}% less Ember, fertilizer at dawn","Lampen verbrauchen {0} % weniger Glut, Dünger im Morgengrauen",ランプの熾火消費-{0}%、夜明けに肥料,灯的余火消耗-{0}%，黎明时留下肥料,{0} = procent (rośnie z więzią)
 toast.familiar.arrived,Na wyspę przybył chowaniec - {0}! {1},A familiar has come to the island - {0}! {1},Ein Vertrauter ist auf die Insel gekommen - {0}! {1},使い魔が島に来た：{0}！{1},一只使魔来到了岛上：{0}！{1},"{0} = chowaniec, {1} = bonus"
 toast.familiar.gift,Kot przyniósł coś błyszczącego: +{0} {0:plural:moneta|monety|monet},The cat brought something shiny: +{0} {0:plural:coin|coins},Die Katze hat etwas Glänzendes gebracht: +{0} {0:plural:Münze|Münzen},猫が光る物を持ってきた：+{0}コイン,猫叼来了闪亮的东西：+{0}金币,raz na cykl
+familiar.moth.bonus,Rośliny nocy sprzedają się o {0}% drożej,Night crops sell for {0}% more,Nachtpflanzen bringen {0} % mehr,夜の作物の売値+{0}%,夜间作物售价+{0}%,{0} = procent (rośnie z więzią)
+familiar.owl.bonus,Ogniki zdobywają o {0}% więcej doświadczenia,Wisps gain {0}% more experience,Irrlichter erhalten {0} % mehr Erfahrung,鬼火の経験値+{0}%,鬼火经验+{0}%,{0} = procent (rośnie z więzią)
+familiar.snail.bonus,W deszczu rośliny dnia rosną o {0}% szybciej,"In the rain, day crops grow {0}% faster",Bei Regen wachsen Tagpflanzen {0} % schneller,雨の日、昼の作物の成長+{0}%,雨天时白天作物生长+{0}%,{0} = procent (rośnie z więzią)
+familiar.fox.bonus,Kupiec-widmo sprzedaje o {0}% taniej,The Ghost Merchant sells {0}% cheaper,Der Geisterhändler verkauft {0} % billiger,幽霊商人の値段-{0}%,幽灵商人售价-{0}%,{0} = procent (rośnie z więzią)
+familiar.cat.hint,Kup kafelki i postaw skrzynię ({0}/{1}),Buy tiles and place a crate ({0}/{1}),Kaufe Felder und stelle eine Kiste auf ({0}/{1}),タイルを買い、木箱を置く（{0}/{1}）,购买地块并放置箱子（{0}/{1}）,"Bestiariusz: jak sprawić, by przyszedł; {0}/{1} = postęp"
+familiar.raven.hint,Wyhoduj dorosłe drzewo owocowe,Grow a fruit tree to full size,Ziehe einen Obstbaum groß,果樹を大きく育てる,把一棵果树养大,"Bestiariusz: jak sprawić, by przyszedł; {0}/{1} = postęp"
+familiar.toad.hint,Zbieraj rośliny nocy ({0}/{1}),Harvest night crops ({0}/{1}),Ernte Nachtpflanzen ({0}/{1}),夜の作物を収穫する（{0}/{1}）,收获夜间作物（{0}/{1}）,"Bestiariusz: jak sprawić, by przyszedł; {0}/{1} = postęp"
+familiar.bat.hint,Postaw lampy ({0}/{1}),Place lamps ({0}/{1}),Stelle Lampen auf ({0}/{1}),ランプを置く（{0}/{1}）,放置灯（{0}/{1}）,"Bestiariusz: jak sprawić, by przyszedł; {0}/{1} = postęp"
+familiar.moth.hint,Zbieraj księżycowe kwiaty lub maki ({0}/{1}),Harvest moonflowers or moon poppies ({0}/{1}),Ernte Mondblumen oder Mondmohn ({0}/{1}),月光花か月のケシを収穫する（{0}/{1}）,收获月光花或月光罂粟（{0}/{1}）,"Bestiariusz: jak sprawić, by przyszedł; {0}/{1} = postęp"
+familiar.owl.hint,Niech na wyspie mieszkają ogniki ({0}/{1}),Have wisps living on the island ({0}/{1}),Lass Irrlichter auf der Insel wohnen ({0}/{1}),島に鬼火を住まわせる（{0}/{1}）,让鬼火住在岛上（{0}/{1}）,"Bestiariusz: jak sprawić, by przyszedł; {0}/{1} = postęp"
+familiar.snail.hint,Zbieraj plony w deszczu ({0}/{1}),Harvest crops in the rain ({0}/{1}),Ernte im Regen ({0}/{1}),雨の中で収穫する（{0}/{1}）,在雨中收获（{0}/{1}）,"Bestiariusz: jak sprawić, by przyszedł; {0}/{1} = postęp"
+familiar.fox.hint,Wróć z rejsu we mgłę,Return from a voyage into the mist,Kehre von einer Reise in den Nebel zurück,霧への航海から戻る,从迷雾航程中归来,"Bestiariusz: jak sprawić, by przyszedł; {0}/{1} = postęp"
+familiar.cat.treat,Rybka,Fish,Fisch,魚,鱼,przysmak do karmienia
+familiar.raven.treat,Błyskotka,Trinket,Glitzerding,光り物,小饰物,przysmak do karmienia
+familiar.toad.treat,Robaczki,Grubs,Würmchen,虫,虫子,przysmak do karmienia
+familiar.bat.treat,Dojrzały owoc,Ripe fruit,Reife Frucht,熟れた果実,熟果,przysmak do karmienia
+familiar.moth.treat,Nektar,Nectar,Nektar,花の蜜,花蜜,przysmak do karmienia
+familiar.owl.treat,Chrząszcz,Beetle,Käfer,甲虫,甲虫,przysmak do karmienia
+familiar.snail.treat,Liść sałaty,Lettuce leaf,Salatblatt,レタスの葉,生菜叶,przysmak do karmienia
+familiar.fox.treat,Mglista kość,Misty bone,Nebelknochen,霧の骨,雾骨,przysmak do karmienia
+toast.familiar.raven_gift,Kruk przyniósł nasiona: {1} x{0},The raven brought seeds: {1} x{0},Der Rabe brachte Samen: {1} x{0},ワタリガラスが種を持ってきた：{1} x{0},渡鸦带来了种子：{1} x{0},
+toast.familiar.bat_gift,Nietoperz zostawił nawóz: +{0},The bat left fertilizer: +{0},Die Fledermaus hat Dünger hinterlassen: +{0},コウモリが肥料を残した：+{0},蝙蝠留下了肥料：+{0},
+toast.familiar.fed,{0} dziękuje za przysmak,{0} thanks you for the treat,{0} dankt für den Leckerbissen,{0}はおやつに大喜び,{0}很喜欢这份零食,{0} = chowaniec
+toast.familiar.bond,Więź z chowańcem {0}: poziom {1}! {2},Bond with {0}: level {1}! {2},Bindung zu {0}: Stufe {1}! {2},{0}との絆：レベル{1}！{2},与{0}的羁绊：等级{1}！{2},{2} = nowy bonus
 toast.weather.rain,Zaczyna padać. Rośliny dnia rosną szybciej.,It starts to rain. Day crops grow faster.,Es beginnt zu regnen. Tagpflanzen wachsen schneller.,雨が降り始めた。昼の作物が速く育つ。,开始下雨了。白天作物长得更快。,pogoda
 toast.weather.storm,Nadciąga burza. Pioruny czasem zostawiają odłamki gwiazd.,A storm is coming. Lightning sometimes leaves star shards.,Ein Gewitter zieht auf. Blitze hinterlassen manchmal Sternsplitter.,嵐が来る。雷が星のかけらを残すことがある。,暴风雨来了。闪电有时会留下星之碎片。,pogoda
 toast.weather.mist,Z morza podnosi się gęsta mgła. Ogniki krążą bliżej.,Thick mist rises from the sea. Wisps drift closer.,Dichter Nebel steigt aus dem Meer. Irrlichter kommen näher.,海から濃い霧が立ち込める。鬼火が近くを漂う。,海上升起浓雾。鬼火飘得更近了。,pogoda (tylko noc)

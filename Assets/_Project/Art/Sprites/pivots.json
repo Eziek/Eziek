@@ -1033,127 +1033,437 @@
     },
     {
       "name": "familiar_bat_fly0",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_bat_fly0_glow",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_bat_fly1",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_bat_fly1_glow",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
-      "name": "familiar_bat_hang",
-      "x": 0.54167,
+      "name": "familiar_bat_fly2",
+      "x": 0.5,
       "y": 0.0
     },
     {
-      "name": "familiar_bat_hang_glow",
-      "x": 0.54167,
+      "name": "familiar_bat_fly2_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_bat_hang0",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_bat_hang0_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_bat_hang1",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_bat_hang1_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_blink",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_groom",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_pounce",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_pounce_glow",
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_cat_sit0",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_cat_sit0_glow",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_cat_sit1",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_cat_sit1_glow",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
-      "name": "familiar_cat_sleep",
-      "x": 0.54167,
+      "name": "familiar_cat_sleep0",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_sleep1",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_stretch",
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_cat_walk0",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_cat_walk0_glow",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_cat_walk1",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_cat_walk1_glow",
-      "x": 0.54167,
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_walk2",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_walk2_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_walk3",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_cat_walk3_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_curl",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_curl_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_sit0",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_sit0_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_sit1",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_sit1_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_walk0",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_walk0_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_walk1",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_walk1_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_walk2",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_walk2_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_walk3",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_fox_walk3_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_moth_fly0",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_moth_fly0_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_moth_fly1",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_moth_fly1_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_moth_fly2",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_moth_fly2_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_moth_rest",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_moth_rest_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_blink",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_fly0",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_fly0_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_fly1",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_fly1_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_hoot",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_hoot_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_look",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_look_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_sit",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_owl_sit_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_raven_caw",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_raven_caw_glow",
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_raven_fly0",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_raven_fly0_glow",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_raven_fly1",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_raven_fly1_glow",
-      "x": 0.54167,
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_raven_fly2",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_raven_fly2_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_raven_peck",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_raven_peck_glow",
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_raven_sit0",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_raven_sit0_glow",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_raven_sit1",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_raven_sit1_glow",
-      "x": 0.54167,
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_snail_crawl0",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_snail_crawl0_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_snail_crawl1",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_snail_crawl1_glow",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_snail_hide",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_toad_blink",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_toad_croak",
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_toad_crouch",
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_toad_jump",
-      "x": 0.54167,
+      "x": 0.5,
       "y": 0.0
     },
     {
       "name": "familiar_toad_sit",
-      "x": 0.54167,
+      "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "familiar_toad_tongue",
+      "x": 0.5,
       "y": 0.0
     },
     {

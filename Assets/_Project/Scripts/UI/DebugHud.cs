@@ -177,6 +177,8 @@ namespace Wyspa.UI
             GUILayout.BeginHorizontal();
             if (Wyspa.Familiars.FamiliarSystem.Instance != null && GUILayout.Button("Wszystkie chowańce"))
                 Wyspa.Familiars.FamiliarSystem.Instance.DebugArriveAll();
+            if (Wyspa.Familiars.FamiliarSystem.Instance != null && GUILayout.Button("Więź +1"))
+                Wyspa.Familiars.FamiliarSystem.Instance.DebugBondAll();
             if (Wyspa.Orders.OrderBook.Instance != null && GUILayout.Button("Zamówienie teraz"))
                 Wyspa.Orders.OrderBook.Instance.DebugNextNow();
             GUILayout.EndHorizontal();

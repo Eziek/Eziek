@@ -23,7 +23,7 @@ a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wysp�
   (DXC i biblioteki shaderów do scratchpada, instrukcja na górze `check.py`). To nie zastępuje testu w Unity.
 - Grafiki-placeholdery generuje `tools/pixel-proto/export_unity.py` (paleta mroczna), a dodatki kolejne skrypty `export_unity_*.py`
   (dopisują do `pivots.json`). Po eksporcie zawsze `tools/pixel-proto/pad_sway.py` (margines na kołysanie, bez niego wiatr ucina liście),
-  a po nim `export_unity_stages.py` (dodatkowe fazy roślin z gotowych PNG).
+  a po nim `export_unity_stages.py` (dodatkowe fazy roślin z gotowych PNG). Chowańce: `export_unity_familiars.py`.
   Grafiki świata i teren są w **16 px**, tylko woda (shader) liczy obraz w 32 px, dlatego kamera ma PPU 32 i skala okna jest parzysta.
   `tools/art32/convert32.py` (przeróbka na 32 px) gracz odrzucił, nie uruchamiać. Docelowe assety rysuje się ręcznie.
 - Gracz woli mroczną, stonowaną estetykę (odrzucił „cukierkową”). Bez postaci, animacje tylko przez shadery i cząsteczki.

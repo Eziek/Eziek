@@ -347,7 +347,8 @@ namespace Wyspa.Core
                 night = true;   // świt i zmierzch liczą się roślinom nocy jak noc (rośliny dnia rosną wtedy jak w dzień)
             // rośliny dnia: rytuał „Głębokie korzenie” i tempo pracy (pisanie, mysz)
             float dayBonus = crop != null && crop.kind == CropKind.Day
-                ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth * UpgradeEffects.DayGrowth : 1f;   // deszcz +20%
+                ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth * UpgradeEffects.DayGrowth   // deszcz +20%
+                  * (Weather.WeatherSystem.Raining ? Familiars.FamiliarSystem.RainGrowth : 1f) : 1f;   // ślimak: w deszczu jeszcze szybciej
             // mikstury z kotła: wywar wzrostu (rośliny dnia), eliksir nocy (rośliny nocy)
             if (crop != null && crop.kind == CropKind.Night)
                 dayBonus = Alchemy.Potions.NightGrowth * Familiars.FamiliarSystem.NightGrowth * UpgradeEffects.NightGrowth * Lore.Story.NightGrowth;   // + Światło Opiekunów   // eliksir nocy, ropucha

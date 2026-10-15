@@ -354,6 +354,13 @@ ui.monster.farewell,Pożegnaj,Say farewell,Abschied nehmen,別れを告げる,�
 ui.plot.replace_hint,"Kliknij, aby podmienić (nasiono wróci do worka)",Click to replace (the seed goes back to the bag),Klicken zum Ersetzen (der Samen kommt in den Beutel zurück),クリックで植え替え（種は袋に戻る）,点击替换（种子会回到袋中）,
 ui.plot.dawn_left,Świt: rośnie jeszcze {0},Dawn: still grows for {0},Morgengrauen: wächst noch {0},夜明け：あと{0}育つ,黎明：还能生长{0},"roślina nocy o świcie, {0} = czas (ui.time.*)"
 ui.plot.dusk_left,Zmierzch: rośnie jeszcze {0},Dusk: still grows for {0},Dämmerung: wächst noch {0},黄昏：あと{0}育つ,黄昏：还能生长{0},"roślina dnia o zmierzchu, {0} = czas (ui.time.*)"
+ui.familiar.bond,Więź: {0}/{1},Bond: {0}/{1},Bindung: {0}/{1},絆：{0}/{1},羁绊：{0}/{1},
+ui.familiar.next,Do następnego poziomu: {0} {0:plural:karmienie|karmienia|karmień},{0} {0:plural:feeding|feedings} to the next level,Noch {0}-mal füttern bis zur nächsten Stufe,次のレベルまであと{0}回,距下一级还需喂食{0}次,
+ui.familiar.pet,Pogłaszcz,Pet,Streicheln,なでる,抚摸,
+ui.familiar.feed,Nakarm: {0} ({1}),Feed: {0} ({1}),Füttern: {0} ({1}),おやつ：{0}（{1}）,喂食：{0}（{1}）,"{0} = przysmak, {1} = koszt"
+ui.familiar.full,Następny przysmak w kolejnej dobie,Next treat on the next game day,Nächster Leckerbissen am nächsten Spieltag,次のおやつは次の日,下一份零食要等到下一天,
+ui.familiar.hint,"Chowańce przychodzą same, gdy wyspa spełni warunek. Kliknij chowańca: pogłaszcz albo nakarm (raz na dobę), więź wzmacnia bonus.",Familiars come on their own when the island meets their condition. Click one to pet or feed it (once a day): the bond strengthens its bonus.,"Vertraute kommen von selbst, wenn die Insel ihre Bedingung erfüllt. Klicke einen an, um ihn zu streicheln oder zu füttern (einmal am Tag): Die Bindung verstärkt den Bonus.",使い魔は条件を満たすと自分からやって来る。クリックしてなでたり、おやつをあげたり（1日1回）しよう。絆が深まるとボーナスが強くなる。,使魔会在岛屿满足条件时自己前来。点击它可以抚摸或喂食（每天一次），羁绊会增强加成。,
+ui.bestiary.familiars,Chowańce,Familiars,Vertraute,使い魔,使魔,sekcja Bestiariusza
 act.dig_up,Wykop roślinę,Dig up the plant,Pflanze ausgraben,植物を掘り出す,挖出植物,pierścień akcji na grządce
 act.plant_random,Obsiej puste grządki losowo,Plant random seeds on empty plots,Leere Beete zufällig bepflanzen,空いた畑にランダムに植える,在空地随机播种,pierścień akcji: losowe sadzenie
 toast.saved,Zapisano grę,Game saved,Spiel gespeichert,セーブしました,已保存游戏,po Zapisz grę

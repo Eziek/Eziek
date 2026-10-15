@@ -37,6 +37,9 @@ namespace Wyspa.Input
             if (hits == null || hits.Length == 0)
                 return null;
             foreach (var h in hits)
+                if (h != null && h.TryGetComponent(out IPriorityClick _))
+                    return h;
+            foreach (var h in hits)
                 if (h != null && !h.TryGetComponent(out ILowPriorityClick _))
                     return h;
             return hits[0];

@@ -497,7 +497,7 @@ namespace Wyspa.Automation
             push = Vector3.ClampMagnitude(push, MaxNudge);
             nudge = Vector3.Lerp(nudge, push, 1f - Mathf.Exp(-Time.unscaledDeltaTime * 6f));
             float s = Mathf.Max(0.01f, transform.localScale.x);
-            visual.localPosition = nudge / s;
+            visual.localPosition = nudge / s + StartleOffset() / s;
         }
 
         // ------------------------------------------------------------ doświadczenie
@@ -508,7 +508,7 @@ namespace Wyspa.Automation
         void AddXp(int n)
         {
             int before = Level;
-            xp += Mathf.Max(1, Mathf.RoundToInt(n * Upgrades.UpgradeEffects.WispXp));
+            xp += Mathf.Max(1, Mathf.RoundToInt(n * Upgrades.UpgradeEffects.WispXp * Familiars.FamiliarSystem.WispXp));   // + sowa
             if (Level > before)
             {
                 ApplyLevelLook();

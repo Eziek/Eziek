@@ -21,6 +21,15 @@ namespace Wyspa.World
     }
 
     [Serializable]
+    public class FamiliarArt
+    {
+        public string id;
+        public Sprite[] frames;
+        [Tooltip("Piksele emisyjne (oczy, plamki), puste gdy poza nie świeci.")]
+        public Sprite[] glows;
+    }
+
+    [Serializable]
     public class DecoArt
     {
         public DecoKind kind;
@@ -114,14 +123,17 @@ namespace Wyspa.World
             return null;
         }
 
-        [Header("Chowańce: kot (sit0 sit1 walk0 walk1 sleep), kruk (sit0 sit1 fly0 fly1), ropucha (sit jump), nietoperz (fly0 fly1 hang)")]
-        public Sprite[] familiarCat;
-        public Sprite[] familiarCatGlow;
-        public Sprite[] familiarRaven;
-        public Sprite[] familiarRavenGlow;
-        public Sprite[] familiarToad;
-        public Sprite[] familiarBat;
-        public Sprite[] familiarBatGlow;
+        [Header("Chowańce: klatki w kolejności póz z Familiars.FamiliarSystem.Defs (familiar_<id>_<poza>.png)")]
+        public List<FamiliarArt> familiars = new List<FamiliarArt>();
+
+        public FamiliarArt Familiar(string id)
+        {
+            if (familiars == null)
+                return null;
+            foreach (var f in familiars)
+                if (f != null && f.id == id) return f;
+            return null;
+        }
 
         [Header("Kocioł alchemiczny")]
         public Sprite storehouse;   // skład: nadwyżka drewna i kamienia na monety

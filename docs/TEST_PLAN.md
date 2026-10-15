@@ -373,3 +373,21 @@ Najpierw Wyspa → 2 (nowe czasy, ceny i sprite'y faz).
 6. Awans ognika (F1: doświadczenie): wolne ogniki obok przylatują i krążą wokół niego z gwiazdką.
 7. Odpłynięcie we mgłę w trakcie zabawy: wszystkie ogniki wracają do gniazd, nikt nie zostaje zawieszony.
 
+## 31. Chowańce
+Najpierw Wyspa → 2 (nowe grafiki chowańców). F1: „Wszystkie chowańce”, „Więź +1”.
+1. Osiem chowańców na wyspie, nowe sprite'y (kot, kruk, ropucha, nietoperz, ćma, sowa, ślimak, lis-widmo w nocy).
+2. Kot: chodzi (4 klatki), siedzi z ogonem i mruganiem, myje łapkę, w nocy śpi przy gnieździe z „Z”, przeciąga się;
+   skacze na ognika lecącego nisko obok (ognik podskakuje z „!”).
+3. Kruk na drzewie/lampie dziobie i kracze, ląduje przy grządkach i skacze; kot podchodzi - kruk odlatuje.
+4. Ropucha: w nocy język (iskra), w deszczu rechot (nadęty worek). Nietoperz w dzień wisi i się kołysze, w nocy przy
+   lampach, czasem goni ćmę (ćma ucieka).
+5. Ćma w nocy przy lampach świeci (fioletowe światło), w dzień siedzi ze złożonymi skrzydłami. Sowa w dzień z zamkniętymi
+   oczami, w nocy obraca się w stronę ogników i pohukuje. Ślimak pełznie i zostawia ślad, pod kursorem chowa się.
+   Lis-widmo pojawia się o zmierzchu (półprzezroczysty, migocze), znika o świcie, w dzień nie da się go kliknąć.
+6. Klik w chowańca: panel z bonusem, „Więź: 0/4”, „Pogłaszcz” (serce, poza), „Nakarm: przysmak (koszt)”. Po
+   nakarmieniu: toast, „Następny przysmak w kolejnej dobie”; po 1, 3, 6, 10 karmieniach nowy poziom i większy bonus.
+7. Prezenty: kot monety raz na dobę, kruk nasiona, nietoperz nawóz o świcie (toasty).
+8. Bestiariusz → Chowańce: nieprzybyłe jako ciemna sylwetka, „???”, podpowiedź z postępem (np. „Postaw lampy (1/3)”);
+   przybyłe z bonusem i więzią.
+9. Zapis i wczytanie: chowańce, więź, „nakarmiony dziś”, liczniki warunków zostają.
+

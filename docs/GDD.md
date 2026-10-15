@@ -332,6 +332,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   Do oceny w grze: siła cieni (0,3 w dzień, do 0,42 przy lampie) i kolory wschodu/zachodu.
 - [x] **Cienie roślin i ogników, wyrywanie plonów, zabawy ogników** (prośba gracza; §9 p. 101): ogniki bawią się ze sobą
   (berek, wyścig, podrzucanie, taniec, drzemka), witają się w przelocie i gratulują awansu.
+- [x] **Chowańce od nowa + 4 nowe** (prośba gracza: „biednie wyglądają”; §9 p. 102): nowa grafika i zachowania, karmienie
+  i więź (0-4), prezenty, sekcja w Bestiariuszu z podpowiedziami. Nowe: ćma księżycowa, sowa, ślimak, lis-widmo.
+  Do balansu: koszty przysmaków i siła bonusów.
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
   zegara). Księżyc: 8 nocy na cykl, pełnia jedną noc (rytuał „Księżycowa rosa”: dwie). Kupiec-widmo w co trzecią noc (34%),
   w pierwszej połowie nocy, zostaje 10 min. Rośliny i drzewa rosną **x3 szybciej** (marchew 3:20, dynia 8:20); rośliny nocy
@@ -831,6 +834,26 @@ Obrazki referencyjne (kopie): `docs/img/`
     **Mijanka**: dwa ogniki w przelocie uchylają czapki albo przybijają „piątkę” (iskry). **Gratulacje**: przy awansie
     do 3 wolnych ogników obok przylatuje i krąży wokół bohatera z gwiazdkami. Nowe znaki w dymkach: serce, „Z”, gwiazdka
     (serce także jako reakcja na koniec rozmowy).
+102. **Chowańce: nowa grafika, życie, więź i 4 nowe** (prośba gracza). Grafika od nowa (`tools/pixel-proto/familiars.py`,
+    `export_unity_familiars.py`, podgląd `docs/img/chowance.png`): większe, cieniowane, z jaśniejszym brzegiem u góry
+    (widać je na ciemnej trawie), 3-12 póz na zwierzę. **Zachowania** (`Familiars/Familiar.cs`): kot spaceruje, siada
+    (ogon, mruganie), myje łapkę, w nocy śpi przy gnieździe (oddech, „Z”) i się przeciąga, skrada się i skacze na nisko
+    lecące ogniki (ognik podskakuje z „!”), odwiedza inne chowańce (kruk przed nim ucieka); kruk siada na drzewach,
+    lampach i tablicy, kracze, skacze i dziobie przy grządkach, krąży nad wyspą; ropucha skacze do grządek, w deszczu
+    i w nocy rechocze, w nocy łapie językiem świetliki; nietoperz w nocy krąży przy lampach i czasem goni ćmę, w dzień
+    wisi i się kołysze. **Nowe:** ćma księżycowa (w nocy trzepocze przy lampach i dojrzałych roślinach nocy, sama
+    świeci; warunek: 10 księżycowych kwiatów lub maków; bonus: rośliny nocy drożej o 15%), sowa (w dzień drzemie, w nocy
+    wodzi wzrokiem za ognikami, pohukuje, bezszelestnie przelatuje; warunek: 5 ogników; bonus: ogniki +25% doświadczenia),
+    ślimak (pełznie do grządek, zostawia świecący ślad, chowa się w skorupce pod kursorem, w deszczu szybszy; warunek:
+    15 plonów zebranych w deszczu; bonus: w deszczu rośliny dnia +15%), lis-widmo (pojawia się o zmierzchu, znika
+    o świcie, biega, siada na brzegu i patrzy w morze, późną nocą zwija się w kłębek; warunek: powrót z rejsu we mgłę;
+    bonus: kupiec-widmo 10% taniej). **Więź:** klik w chowańca = panel z bonusem, więzią, „Pogłaszcz” (reakcja: serce,
+    poza, podskok) i „Nakarm” (raz na dobę gry; przysmak w monetach albo plonach nocy, droższy z każdym poziomem);
+    karmienia 1/3/6/10 dają poziomy 1-4, każdy wzmacnia bonus (np. kot: mutacje +100% → +200%). **Prezenty:** kot raz
+    na dobę monety (jak wcześniej), kruk raz na dobę nasiona (2 + poziom więzi), nietoperz o świcie nawóz. Ogniki czasem
+    odwiedzają chowańca i go „głaszczą”. Chowańce mają cień (plamka). Bestiariusz: sekcja „Chowańce” (sylwetka i „???”
+    z podpowiedzią i postępem warunku, po przybyciu bonus i więź). Klik w chowańca ma pierwszeństwo przed grządką
+    pod nim (`IPriorityClick`).
 
 ---
 

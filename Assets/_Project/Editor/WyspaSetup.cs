@@ -660,21 +660,18 @@ namespace Wyspa.EditorTools
                 if (g != null)
                     art.hatGlows.Add(new NamedSprite { name = h.id, sprite = g });
             }
-            // chowańce: klatki i piksele emisyjne (oczy)
-            Sprite[] Fam(string kind, string suffix, params string[] poses)
+            // chowańce: klatki i piksele emisyjne w kolejności póz z FamiliarSystem.Defs (tools/pixel-proto/familiars.py)
+            art.familiars = new List<FamiliarArt>();
+            foreach (var d in Wyspa.Familiars.FamiliarSystem.Defs)
             {
-                var list = new Sprite[poses.Length];
-                for (int i = 0; i < poses.Length; i++)
-                    list[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Critters/familiar_{kind}_{poses[i]}{suffix}.png");
-                return list;
+                var fa = new FamiliarArt { id = d.id, frames = new Sprite[d.poses.Length], glows = new Sprite[d.poses.Length] };
+                for (int i = 0; i < d.poses.Length; i++)
+                {
+                    fa.frames[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Critters/familiar_{d.id}_{d.poses[i]}.png");
+                    fa.glows[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Critters/familiar_{d.id}_{d.poses[i]}_glow.png");
+                }
+                art.familiars.Add(fa);
             }
-            art.familiarCat = Fam("cat", "", "sit0", "sit1", "walk0", "walk1", "sleep");
-            art.familiarCatGlow = Fam("cat", "_glow", "sit0", "sit1", "walk0", "walk1", "sleep");
-            art.familiarRaven = Fam("raven", "", "sit0", "sit1", "fly0", "fly1");
-            art.familiarRavenGlow = Fam("raven", "_glow", "sit0", "sit1", "fly0", "fly1");
-            art.familiarToad = Fam("toad", "", "sit", "jump");
-            art.familiarBat = Fam("bat", "", "fly0", "fly1", "hang");
-            art.familiarBatGlow = Fam("bat", "_glow", "fly0", "fly1", "hang");
             art.cauldronBrew = new[] { Obj("cauldron_brew_0"), Obj("cauldron_brew_1"), Obj("cauldron_brew_2") };
             art.cauldronBrewGlow = new[] { Obj("cauldron_brew_0_glow"), Obj("cauldron_brew_1_glow"), Obj("cauldron_brew_2_glow") };
             art.cauldronReady = new[] { Obj("cauldron_ready_0"), Obj("cauldron_ready_1") };

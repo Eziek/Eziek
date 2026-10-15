@@ -25,7 +25,8 @@ namespace Wyspa.Sea
         static float StaySeconds => BaseStaySeconds * StayMultiplier * Upgrades.UpgradeEffects.GhostStay;   // Cierpliwy kupiec
         /// <summary>Kupiec-widmo płaci za plony x1.5 („Targ z widmem” więcej, Economy.Market).</summary>
         public const float SellMultiplier = 1.5f;
-        static int Discounted(int coins) => Mathf.Max(1, Mathf.RoundToInt(coins * (1f - Upgrades.UpgradeEffects.GhostDiscount)));   // Widmowe rabaty
+        static int Discounted(int coins) => Mathf.Max(1, Mathf.RoundToInt(coins * (1f - Upgrades.UpgradeEffects.GhostDiscount)
+                                                                           * Familiars.FamiliarSystem.MerchantPrice));   // Widmowe rabaty, lis-widmo
         const float Ppu = 16f;
 
         [SerializeField] SpriteRenderer body;

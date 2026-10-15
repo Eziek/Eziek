@@ -75,14 +75,7 @@ for f in range(3):
 for f in range(2):
     save(S6.cauldron('ready', f), "Objects", f"cauldron_ready_{f}")
 
-for pose in S6.CAT_POSES:   # chowańce
-    save(S6.cat(pose), "Critters", f"familiar_cat_{pose}")
-for pose in S6.BIRD_POSES:
-    save(S6.raven(pose), "Critters", f"familiar_raven_{pose}")
-for pose in S6.TOAD_POSES:
-    save(S6.toad(pose), "Critters", f"familiar_toad_{pose}")
-for pose in S6.BAT_POSES:
-    save(S6.bat(pose), "Critters", f"familiar_bat_{pose}")
+# chowańce: export_unity_familiars.py (familiars.py)
 
 for kind in S6.WISP_KINDS:   # rój ogników
     for f in range(4):

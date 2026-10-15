@@ -95,6 +95,64 @@ namespace Wyspa.Automation
             yield return Flight.Arc(transform, at, at + new Vector3(0f, 0.18f, 0f), Speed, 0f);
         }
 
+        // ------------------------------------------------------------ chowańce
+
+        float startleUntil;
+
+        /// <summary>Kot skoczył na ognika: ognik podskakuje z „!” (praca idzie dalej).</summary>
+        public void Startle()
+        {
+            startleUntil = Time.unscaledTime + 0.5f;
+            SayGlyph(RuneGlyphs.Exclaim);
+            if (OnScreen())
+                GameEvents.PlaySound("bubble", 0.3f);
+        }
+
+        Vector3 StartleOffset()
+        {
+            float k = startleUntil - Time.unscaledTime;
+            return k > 0f ? new Vector3(0f, Mathf.Sin(k / 0.5f * Mathf.PI) * 0.3f, 0f) : Vector3.zero;
+        }
+
+        /// <summary>Wolny ognik odwiedza chowańca: krąży nad nim, „głaszcze” (serce), chowaniec się cieszy.</summary>
+        IEnumerator VisitFamiliar()
+        {
+            Familiars.Familiar best = null;
+            float bestD = 36f;
+            foreach (var f in Familiars.Familiar.All)
+            {
+                if (f == null || !f.Visible)
+                    continue;
+                float d = (f.transform.position - transform.position).sqrMagnitude;
+                if (d < bestD) { bestD = d; best = f; }
+            }
+            if (best == null)
+                return null;
+            return Visit(best);
+        }
+
+        IEnumerator Visit(Familiars.Familiar f)
+        {
+            yield return FlyTo(f.transform.position + new Vector3(0f, 0.9f, 0f), 0.3f);
+            if (f == null)
+                yield break;
+            flying = true;
+            float phase = Random.value * 6.28f;
+            for (float t = 0f; t < 2.5f && f != null; t += Time.unscaledDeltaTime)
+            {
+                float a = phase + t * 3f;
+                var p = f.transform.position + new Vector3(Mathf.Cos(a) * 0.45f, 0.85f + Mathf.Sin(a) * 0.15f, 0f);
+                Face(p);
+                transform.position = p;
+                yield return null;
+            }
+            flying = false;
+            SayGlyph(RuneGlyphs.Heart);
+            if (f != null)
+                f.React(Familiars.Familiar.Mood.Petted);
+            yield return HoverFor(Random.Range(0.6f, 1.2f));
+        }
+
         // ------------------------------------------------------------ mijanka i gratulacje
 
         /// <summary>Dwa ogniki mijają się w locie: uchylają czapki albo przybijają „piątkę” (iskierka). Robota idzie dalej.</summary>
@@ -165,8 +223,8 @@ namespace Wyspa.Automation
             foreach (var w in All)
                 if (w != this && w != null && w.CanChat && (w.transform.position - transform.position).sqrMagnitude < PlayRange * PlayRange)
                     friends.Add(w);
-            if (friends.Count == 0)
-                return null;
+            if (friends.Count == 0 || Random.value < 0.2f)
+                return Random.value < 0.5f ? VisitFamiliar() : null;   // sam: czasem odwiedza chowańca
             friends.Sort((a, b) => (a.transform.position - transform.position).sqrMagnitude
                          .CompareTo((b.transform.position - transform.position).sqrMagnitude));
             var game = GameLoop.Instance;

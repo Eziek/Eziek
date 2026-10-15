@@ -170,6 +170,11 @@ familiar.cat,Czarny kot,Black Cat,Schwarze Katze,黒猫,黑猫,chowaniec
 familiar.raven,Kruk,Raven,Rabe,ワタリガラス,渡鸦,chowaniec
 familiar.toad,Ropucha,Toad,Kröte,ヒキガエル,蟾蜍,chowaniec
 familiar.bat,Nietoperz,Bat,Fledermaus,コウモリ,蝙蝠,chowaniec
+familiar.moth,Ćma księżycowa,Moon Moth,Mondmotte,月の蛾,月蛾,chowaniec: świeci w nocy
+familiar.owl,Sowa,Owl,Eule,フクロウ,猫头鹰,chowaniec
+familiar.snail,Ślimak,Snail,Schnecke,カタツムリ,蜗牛,chowaniec
+familiar.fox,Lis-widmo,Ghost Fox,Geisterfuchs,幽霊狐,幽灵狐,chowaniec: widoczny tylko w nocy
+term.bond,Więź,Bond,Bindung,絆,羁绊,chowaniec: poziom 0-4 z karmienia
 bld.wisp_nest,Gniazdo ogników,Wisp Nest,Irrlichtnest,鬼火の巣,鬼火巢,rój ogników: dom dla 3 ogników
 wisp.kind.gardener,Ogrodnik,Gardener,Gärtner,庭師,园丁,zawód ognika: zbiera plony i owoce
 wisp.kind.sower,Siewca,Sower,Säer,種まき,播种者,zawód ognika: sieje
