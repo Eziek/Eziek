@@ -986,6 +986,8 @@ Obrazki referencyjne (kopie): `docs/img/`
     Klik w wodę daje jeden krąg: rośnie coraz wolniej, w połowie cienieje z 2 do 1 px i płynnie gaśnie (bez migania
     na końcu), pod liliami i liśćmi na wodzie. Świecąca toń nie rysuje już pełnego turkusu bez światła: turkus jest domieszany do oświetlonej wody
     (plamy 22-40%, iskry przy brzegu 50%, grzbiety fal i piana 25-30%, ryby 55%), a plam i iskier jest mniej.
+    Rośliny pod kursorem odginają się delikatniej: najwyżej ok. 1 px u czubka (było 2,5), tylko w pasie 8 px od kursora,
+    i dopiero przy szybszym ruchu.
 
 ---
 

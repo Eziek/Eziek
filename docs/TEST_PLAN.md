@@ -484,7 +484,7 @@ Najpierw Wyspa → 2 (materiał `WaterReflection`).
 2. Nad grządką, drzewem, lampą itp. czubek płonie i miga iskrami; nad wodą jest turkusowy; podczas przeciągania widoku
    zmienia się w strzałki w 4 strony; nad Księgą i paskiem zwykły.
 3. Szybki ruch nad wyspą zostawia kilka iskierek.
-4. Przesuwany kursor odgina rośliny i korony drzew, które powoli wracają.
+4. Przesuwany kursor delikatnie (ok. 1 px) odgina rośliny i korony drzew, które powoli wracają.
 5. Klik w wodę: jeden krąg, który płynnie rośnie, cienieje i gaśnie (bez migania), lilie nad nim, bąbel, pobliskie ryby uciekają, lilie odpływają. Klik w drzewo/krzak: liście i ptaki odlatują.
    Klik w zapaloną lampę nocą: ćmy. Kliki dalej robią swoje (np. pomost łowi).
 6. Kursor nad ptakiem albo rybą: dymek z nazwą gatunku; pierwszy raz toast „Nowe w bestiariuszu: …”.

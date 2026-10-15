@@ -55,8 +55,8 @@ namespace Wyspa.Visual
             var ui = UiRoot.Instance;
             bool overWorld = cam != null && (ui == null || !ui.PointerOverUi);
             // ruch podbija siłę szybko, w bezruchu rośliny wolno się prostują
-            float target = overWorld ? Mathf.Clamp01(speed / 500f) : 0f;
-            strength = target > strength ? Mathf.MoveTowards(strength, target, Time.unscaledDeltaTime * 6f)
+            float target = overWorld ? Mathf.Clamp01(speed / 900f) : 0f;
+            strength = target > strength ? Mathf.MoveTowards(strength, target, Time.unscaledDeltaTime * 3f)
                                          : Mathf.MoveTowards(strength, target, Time.unscaledDeltaTime * 0.8f);
             if (cam == null)
                 return;

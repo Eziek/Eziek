@@ -26,7 +26,7 @@ float WyspaGust(float x)
 }
 
 // Kursor (globalnie, ustawia Visual/CursorPlay): xy = pozycja w pikselach świata, z = siła 0..1 (rośnie, gdy kursor się
-// rusza, i powoli gaśnie). Roślina, przez którą przechodzi kursor, odgina się od niego (do 2.5 px u czubka).
+// rusza, i powoli gaśnie). Roślina, przez którą przechodzi kursor, odgina się od niego (delikatnie, ok. 1 px u czubka).
 float4 _WyspaCursor;
 
 float WyspaCursorPush()
@@ -35,9 +35,9 @@ float WyspaCursorPush()
         return 0;
     float dx = _SwayX - _WyspaCursor.x;
     float dy = _WyspaCursor.y - _SwayY;
-    if (abs(dx) > 12.0 || dy < -4.0 || dy > 36.0)
+    if (abs(dx) > 8.0 || dy < -2.0 || dy > 30.0)
         return 0;
-    return sign(dx) * _WyspaCursor.z * 2.5 * (1.0 - abs(dx) / 12.0);
+    return sign(dx) * _WyspaCursor.z * 1.2 * (1.0 - abs(dx) / 8.0);
 }
 
 float2 WyspaSwayUV(float2 uv)
