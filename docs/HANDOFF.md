@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-128), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-129), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -60,6 +60,9 @@ Historia decyzji jest w GDD §9 (punkty 1-128), a lista testów w `docs/TEST_PLA
   eksportów) + `Visual/SeasonalSprites.cs`, teren `World/SeasonPalette.cs`, lód w `Water.shader`, śnieg w `WeatherSystem`.
   Wymaga Wyspa → 2. Nie testowane w Unity. Grafiki sezonowe to placeholdery. Chowańce tylko po lądzie: `World/LandGrid.cs`, GDD §9 p. 125. Poziomy ulepszeń czytelniej: GDD §9 p. 123. Dym z pieca i para nad
   kotłem: `Visual/Plume.cs`, GDD §9 p. 124.
+- **Rośliny sezonowe** (GDD §9 p. 129, TEST_PLAN 49): 16 roślin jednej pory (spec w `WyspaSetup.CropSpecs`, maski
+  w `CropSeasons`), grafika `tools/pixel-proto/seasonal_crops.py` + `export_unity_seasonal_crops.py`. Wymaga Wyspa → 2.
+  Nie testowane w Unity. Dzicz bez Żaru (czerwony koszt, odmowa): GDD §9 p. 128.
 - **Ścinanie seriami kliknięć** (GDD §9 p. 121, TEST_PLAN 43): `World/ChopProgress.cs`, `Decoration.OnClick`,
   `FruitTree.TryClick`; szczegóły drzewa owocowego w pierścieniu PPM. Panel „Usuń” dekoracji nie otwiera się już z kliku.
 - **Horyzont, cienie chmur, poranna mgiełka** (GDD §9 p. 120, TEST_PLAN 42): `Visual/HorizonSights.cs`,

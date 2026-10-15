@@ -275,7 +275,7 @@ namespace Wyspa.Economy
                 return null;
             var pool = new List<CropDefinition>();
             foreach (var c in game.Crops.crops)
-                if (c != null && !c.hybrid)
+                if (c != null && !c.hybrid && Farming.CropSeasons.Now(c))   // tylko to, co da się teraz zasiać (pory roku)
                     pool.Add(c);
             if (pool.Count == 0)
                 return null;

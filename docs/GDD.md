@@ -456,6 +456,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] **Pory roku** (wybór gracza, §9 p. 127): pora = 6 cykli gry (rok = 24 h gry), rośliny sezonowe (siew tylko
   w swoich porach), zmienia się wygląd drzew i krzaków, terenu i wody, budowli i lamp (śnieg), pogoda i cząsteczki.
   Grafiki sezonowe to placeholdery ze skryptu; docelowe rysuje się ręcznie (pliki `<nazwa>__<pora>.png`).
+- [x] **Rośliny sezonowe** (prośba gracza, §9 p. 129): 16 nowych roślin, po 4 na porę (2 dnia, 2 nocy), siew tylko
+  w swojej porze, odblokowanie w Sklep → Nasiona. Grafiki to placeholdery ze skryptu (`seasonal_crops.py`).
 
 ---
 
@@ -1080,6 +1082,22 @@ Obrazki referencyjne (kopie): `docs/img/`
 128. **Dzicz bez Żaru** (zgłoszenie gracza: drzew i kamieni z nowych kafelków nie da się ściąć). Przyczyna: kamień
     kosztuje 6 Żaru, drzewo 5; bez Żaru kliknięcie dawało tylko krótki toast. Teraz dymek pokazuje koszt na czerwono
     „(masz X)”, a kliknięcie bez Żaru: wyraźne drgnięcie odmowy i toast „Za mało Żaru: potrzeba X, masz Y”.
+129. **Rośliny sezonowe** (prośba gracza: „4 na każdą porę”). 16 roślin, które da się zasiać tylko w jednej porze roku
+    (`CropSeasons`), po 2 dnia i 2 nocy na porę; odblokowanie monetami w Sklep → Nasiona (150-3500). Rośliny nocy dojrzewają
+    w jedną noc (do 9 min ciemności).
+    | Pora | Dnia (s / nasiono / cena / odblok.) | Nocy (s / nasiono / cena / odblok.) |
+    |---|---|---|
+    | wiosna | rzodkiew 25/1/4/150, krwisty rabarbar 150/7/26/1500 | tojad 150/5/20/600, kwiat paproci 420/14/70/3000 |
+    | lato | lawenda cieni 60/3/11/400, żałobny słonecznik 240/10/42/2000 | nocny jaśmin 120/4/16/500, lampion 360/11/55/2600 |
+    | jesień | rzepa 40/2/7/250, wrzos 200/8/34/1700 | czarcia purchawka 100/4/14/450, kocie oczy 480/14/75/3200 |
+    | zima | jarmuż 50/2/8/300, ciemiernik 220/9/38/1900 | szronik 160/6/24/700, jemioła 540/16/90/3500 |
+
+    Ceny nieco wyższe od roślin całorocznych o podobnym czasie (sezonowość to ograniczenie). Id lampionu to `lanternfruit`
+    (`lantern` to lampa). Poza swoją porą roślina jednej pory nie pojawia się w kole nasion przy grządce (chyba że są jej
+    nasiona w worku), żeby koło nie było pełne szarych pól; rośliny kilku pór nadal są tam wygaszone. Popyt dnia
+    (ulepszenie targu) losuje tylko z roślin, które da się teraz zasiać. Rośliny sezonowe nie należą do grup ulepszeń cen
+    (Korzenny targ itd.). Grafiki: `tools/pixel-proto/seasonal_crops.py`, eksport `export_unity_seasonal_crops.py`
+    (przed `pad_sway.py`), podgląd `docs/img/rosliny_sezonowe.png`.
 
 ---
 

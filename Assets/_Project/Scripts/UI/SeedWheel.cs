@@ -96,6 +96,9 @@ namespace Wyspa.UI
             {
                 if (cd == null || !InCategory(cd) || !(game.IsUnlocked(cd) || game.Seeds.Count(cd.id) > 0))
                     continue;
+                // rośliny jednej pory (p. 129) poza swoją porą tylko z nasionami w worku, inaczej koło byłoby pełne szarych pól
+                if (Farming.CropSeasons.SingleSeason(cd) && !Farming.CropSeasons.Now(cd) && game.Seeds.Count(cd.id) == 0)
+                    continue;
                 var c = cd;
                 slots.Add(new Slot
                 {

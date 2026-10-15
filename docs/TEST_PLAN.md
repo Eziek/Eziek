@@ -575,3 +575,14 @@ Najpierw Wyspa → 2 (rejestr wariantów sezonowych). F1: „Pora roku: następn
 4. Zmiana pory w trakcie gry: drzewa, budowle, teren i odbicie brzegu w wodzie zmieniają się od razu, lód narasta kilka sekund.
 5. Ścinanie drzewa zimą: klatki przewracania też ze śniegiem; owoce na drzewie widać w każdej porze.
 6. Stary zapis (sprzed pór roku): po wczytaniu wiosna, dzień 1.
+
+## 49. Rośliny sezonowe
+Najpierw Wyspa → 2 (16 nowych roślin i ikon nasion). F1: „Pora roku: następna”.
+1. Sklep → Nasiona: 16 nowych pozycji (od rzodkwi za 150 do jemioły za 3500), każda z ikoną i opisem „Siew: <pora>”.
+2. Wiosną w kole przy grządce (dzień) są rzodkiew i krwisty rabarbar, w nocy tojad i kwiat paproci; rośliny innych pór
+   się nie pojawiają. Po zmianie pory (F1) koło pokazuje rośliny nowej pory.
+3. Nasiona rośliny spoza pory w worku (np. z wyprawy): pole w kole jest, ale wygaszone, z opisem „Nie teraz!”.
+4. Każda z 16 roślin przechodzi 6 faz (nasiono, kiełek, 1, 2, niedojrzała, dojrzała); kwiat paproci, lampion, kocie oczy,
+   szronik, jemioła i nocny jaśmin świecą w nocy; kołysanie na wietrze bez uciętych liści.
+5. Ognik-siewca i losowe sadzenie nie sieją roślin spoza pory; popyt dnia wskazuje tylko roślinę z bieżącej pory.
+

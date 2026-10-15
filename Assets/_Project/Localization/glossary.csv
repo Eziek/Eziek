@@ -210,6 +210,22 @@ crop.ashwheat,Popielne zboże,Ashen Wheat,Aschweizen,灰の麦,灰烬麦,hybryda
 crop.moonpoppy,Księżycowy mak,Moon Poppy,Mondmohn,月のケシ,月光罂粟,hybryda: mak + księżycowy kwiat
 crop.screamgarlic,Wrzeszczący czosnek,Screaming Garlic,Schreiknoblauch,叫ぶニンニク,尖叫大蒜,hybryda: czosnek + mandragora
 crop.bloodwormwood,Krwawy piołun,Blood Wormwood,Blutwermut,血のニガヨモギ,血苦艾,"hybryda: piołun + krwawa róża, tylko pełnia"
+crop.radish,Rzodkiew,Radish,Rettich,ラディッシュ,小萝卜,"dzień, tylko wiosna"
+crop.rhubarb,Krwisty rabarbar,Blood Rhubarb,Blutrhabarber,血のルバーブ,血大黄,"dzień, tylko wiosna"
+crop.wolfsbane,Tojad,Wolfsbane,Eisenhut,トリカブト,乌头,"noc, tylko wiosna"
+crop.fernflower,Kwiat paproci,Fern Flower,Farnblüte,シダの花,蕨花,"noc, tylko wiosna; z legendy słowiańskiej"
+crop.lavender,Lawenda cieni,Shade Lavender,Schattenlavendel,影のラベンダー,影薰衣草,"dzień, tylko lato"
+crop.sunflower,Żałobny słonecznik,Mourning Sunflower,Trauersonnenblume,喪のひまわり,哀悼向日葵,"dzień, tylko lato"
+crop.nightjasmine,Nocny jaśmin,Night Jasmine,Nachtjasmin,夜のジャスミン,夜茉莉,"noc, tylko lato"
+crop.lanternfruit,Lampion,Lantern Fruit,Laternenfrucht,ランタンの実,灯笼果,"noc, tylko lato; owoc jak miechunka (nie lampa lamp.lantern)"
+crop.turnip,Rzepa,Turnip,Rübe,カブ,芜菁,"dzień, tylko jesień"
+crop.heather,Wrzos,Heather,Heidekraut,ヒース,帚石楠,"dzień, tylko jesień"
+crop.puffball,Czarcia purchawka,Devil's Puffball,Teufelsbovist,悪魔のホコリタケ,魔鬼马勃,"noc, tylko jesień; grzyb"
+crop.catseye,Kocie oczy,Cat's Eyes,Katzenaugen,猫目の実,猫眼果,"noc, tylko jesień; świecące jagody"
+crop.kale,Jarmuż,Kale,Grünkohl,ケール,羽衣甘蓝,"dzień, tylko zima"
+crop.hellebore,Ciemiernik,Hellebore,Nieswurz,クリスマスローズ,嚏根草,"dzień, tylko zima"
+crop.frostbloom,Szronik,Frostbloom,Frostblüte,霜の花,霜花,"noc, tylko zima"
+crop.mistletoe,Jemioła,Mistletoe,Mistel,ヤドリギ,槲寄生,"noc, tylko zima"
 exp.wreck,"Wrak ""Czapli""",Wreck of the Heron,Wrack der Reiher,アオサギ号の難破船,苍鹭号残骸,cel wyprawy; Czapla = statek zaopatrzenia Łańcucha
 exp.reef,Kościana rafa,Bone Reef,Knochenriff,骨の礁,白骨礁,cel wyprawy
 exp.tower,Zatopiona latarnia,Drowned Lighthouse,Versunkener Leuchtturm,沈んだ灯台,沉没灯塔,cel wyprawy

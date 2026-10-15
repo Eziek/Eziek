@@ -26,7 +26,7 @@ a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wysp�
   a po nim `export_unity_stages.py` (dodatkowe fazy roślin z gotowych PNG). Chowańce: `export_unity_familiars.py`, domki i budowle ogników: `export_unity_homes.py`.
   Drzewa: `export_unity_trees2.py` (nadpisuje starsze drzewa z `export_unity.py`, `export_unity_trees.py` i `export_unity_zones.py`, więc idzie po nich, przed `pad_sway.py`),
   ozdobniki na wodzie: `export_unity_water.py`, monumenty wysp fabularnych: `export_unity_story.py` (rysunki w `monuments.py`),
-  generatory Żaru: `export_unity_ember.py`, ptaki: `export_unity_birds.py`.
+  generatory Żaru: `export_unity_ember.py`, ptaki: `export_unity_birds.py`, rośliny sezonowe: `export_unity_seasonal_crops.py` (przed `pad_sway.py`).
   Na samym końcu, po wszystkich eksportach: `export_unity_seasons.py` (warianty pór roku `<nazwa>__spring/autumn/winter.png`
   z gotowych PNG; bez tego po nowym eksporcie warianty byłyby nieaktualne).
   Grafiki świata i teren są w **16 px**, tylko woda (shader) liczy obraz w 32 px, dlatego kamera ma PPU 32 i skala okna jest parzysta.
