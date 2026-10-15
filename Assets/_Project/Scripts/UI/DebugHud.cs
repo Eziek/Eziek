@@ -256,6 +256,7 @@ namespace Wyspa.UI
                 if (GUILayout.Button("+10 kafelków")) island.DebugBuyRandom(10);
                 if (GUILayout.Button("Do wysepki")) island.DebugTowardIslet();
                 if (GUILayout.Button("Monument: etap")) island.DebugAdvanceMonuments();
+                if (GUILayout.Button("Rzadka noc") && Visual.RareNights.Instance != null) Visual.RareNights.Instance.DebugNext();
                 GUILayout.EndHorizontal();
                 if (GUILayout.Button("Nowy świat (nowe ziarno)"))
                     island.NewWorld(GameLoop.NewSeed());

@@ -21,6 +21,7 @@ namespace Wyspa.World
     public static class FishKinds
     {
         public const int Common = 0, School = 1, Eel = 2, Ray = 3, Carp = 4, Jelly = 5, Angler = 6;
+        public const int Count = 7;
         static readonly int[] W = { 10, 12, 16, 14, 15, 7, 10 };
         static readonly int[] H = { 4, 7, 5, 6, 5, 6, 6 };
         static readonly int[] Top = { 0, 0, 0, 0, 0, 0, -1 };   // żabnica: przynęta wystaje nad ramkę

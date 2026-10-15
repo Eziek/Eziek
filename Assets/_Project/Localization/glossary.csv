@@ -229,3 +229,23 @@ story.observatory.building,Gwiezdne obserwatorium,Star Observatory,Sternwarte,�
 obj.monument,Monument,Monument,Monument,モニュメント,纪念建筑,"wielka budowla na wysepce fabularnej (3x2 kafelki), odbudowywana etapami"
 bld.ember_kiln,Piec Żaru,Ember Kiln,Glutofen,熾火の窯,余火窑,generator Żaru: spala drewno na Żar
 bld.ember_crystal,Kryształ Żaru,Ember Crystal,Glutkristall,熾火の水晶,余火水晶,"generator Żaru: sam oddaje Żar, powiększa słój"
+bird.crow,Wrona,Crow,Krähe,カラス,乌鸦,ptak (Widziane w bestiariuszu)
+bird.finch,Zięba,Finch,Buchfink,アトリ,燕雀,ptak (Widziane w bestiariuszu)
+bird.magpie,Sroka,Magpie,Elster,カササギ,喜鹊,ptak (Widziane w bestiariuszu)
+bird.bullfinch,Gil,Bullfinch,Gimpel,ウソ,红腹灰雀,ptak (Widziane w bestiariuszu)
+bird.tit,Sikorka,Tit,Meise,シジュウカラ,山雀,ptak (Widziane w bestiariuszu)
+bird.gull,Mewa,Gull,Möwe,カモメ,海鸥,ptak (Widziane w bestiariuszu)
+bird.heron,Czapla,Heron,Reiher,サギ,苍鹭,ptak (Widziane w bestiariuszu)
+fishkind.0,Płotka,Roach,Plötze,小魚,小鱼,gatunek ryby (Widziane)
+fishkind.1,Ławica,Shoal,Schwarm,魚群,鱼群,gatunek ryby (Widziane)
+fishkind.2,Węgorz,Eel,Aal,ウナギ,鳗鱼,gatunek ryby (Widziane)
+fishkind.3,Płaszczka,Ray,Rochen,エイ,鳐鱼,gatunek ryby (Widziane)
+fishkind.4,Karp,Carp,Karpfen,コイ,鲤鱼,gatunek ryby (Widziane)
+fishkind.5,Meduza,Jellyfish,Qualle,クラゲ,水母,gatunek ryby (Widziane)
+fishkind.6,Żabnica,Anglerfish,Seeteufel,アンコウ,鮟鱇鱼,gatunek ryby (Widziane)
+sight.biolum,Świecąca toń,Glowing Tide,Leuchtende Flut,光る潮,荧光潮,rzadka noc: woda świeci od fal i ryb
+sight.stars,Deszcz gwiazd,Star Shower,Sternschnuppenregen,流星群,流星雨,rzadka noc: spadające gwiazdy
+sight.aurora,Zorza,Aurora,Polarlicht,オーロラ,极光,rzadka noc: zorza nad wyspą
+sight.procession,Korowód ogników,Wisp Procession,Irrlichtzug,鬼火の行列,鬼火游行,rzadka noc: blade ogniki płyną nad wodą
+sight.bloodmoon,Krwawy księżyc,Blood Moon,Blutmond,血の月,血月,"rzadka noc: tylko w pełni, czerwone światło"
+ui.bestiary.seen,Widziane,Sightings,Gesichtet,目撃,目击,"sekcja Bestiariusza: ptaki i ryby wskazane kursorem, rzadkie noce"

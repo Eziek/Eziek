@@ -26,6 +26,8 @@ namespace Wyspa.Visual
         static readonly Color RingColor = new Color32(0x84, 0x8e, 0x9b, 0xd0);
 
         readonly List<Sprite> rings = new List<Sprite>();
+        object spotted;          // ptak albo ryba, nad którą ostatnio był kursor (licznik „Widziane” raz na spotkanie)
+        WaterAnimator water;
         Vector2 lastMouse;
         float strength;
 
@@ -55,6 +57,60 @@ namespace Wyspa.Visual
                 return;
             Vector2 world = cam.ScreenToWorldPoint(mouse);
             Shader.SetGlobalVector(CursorId, new Vector4(world.x * Ppu, world.y * Ppu, strength, 0f));
+            Spot(world, overWorld);
+        }
+
+        // ------------------------------------------------------------ podpisy: ptak albo ryba pod kursorem
+
+        /// <summary>
+        /// Kursor nad ptakiem albo rybą: dymek z nazwą; pierwsze spotkanie gatunku trafia do bestiariusza („Widziane”)
+        /// z toastem, każde kolejne spotkanie podbija licznik.
+        /// </summary>
+        void Spot(Vector2 world, bool overWorld)
+        {
+            var tip = UiRoot.Instance != null ? UiRoot.Instance.Tooltip : null;
+            if (tip == null)
+                return;
+            string id = null, name = null;
+            object who = null;
+            if (overWorld && AmbientBirds.Instance != null)
+            {
+                string bird = AmbientBirds.Instance.BirdAt(world, out who);
+                if (bird != null)
+                {
+                    id = "bird:" + bird;
+                    name = Localization.Loc.Get("bird." + bird);
+                }
+            }
+            if (id == null && overWorld)
+            {
+                if (water == null)
+                    water = FindAnyObjectByType<WaterAnimator>();
+                int i = water != null ? water.AnyFishAt(world) : -1;
+                if (i >= 0)
+                {
+                    int kind = water.KindOf(i);
+                    id = "species:" + kind;
+                    name = Localization.Loc.Get("fishkind." + kind);
+                    who = water.FishKey(i);
+                }
+            }
+            if (id == null)
+            {
+                if (spotted != null)
+                    tip.Hide(this);
+                spotted = null;
+                return;
+            }
+            tip.Show(this, name);
+            if (Equals(who, spotted))
+                return;
+            spotted = who;
+            var chronicle = Lore.Chronicle.Instance;
+            if (chronicle != null && !chronicle.Found(id))
+                GameEvents.RaiseToast("toast.seen.new", name);
+            Lore.Chronicle.Note(id);
+            Lore.Chronicle.Count("seen:" + id);
         }
 
         // ------------------------------------------------------------ kliknięcia

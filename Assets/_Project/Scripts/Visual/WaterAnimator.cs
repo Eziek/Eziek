@@ -152,6 +152,26 @@ namespace Wyspa.Visual
             return best;
         }
 
+        /// <summary>Ryba pod kursorem (do podpisu i „Widzianego”): indeks albo -1. Także meduza.</summary>
+        public int AnyFishAt(Vector2 world)
+        {
+            float now = Time.timeSinceLevelLoad;
+            for (int i = 0; i < fish.Count; i++)
+            {
+                if (hiddenUntil != null && i < hiddenUntil.Length && hiddenUntil[i] > now)
+                    continue;
+                float r = Mathf.Max(0.4f, FishKinds.Width(fish[i].kind) / 2f / 16f + 0.15f);
+                if (Vector2.Distance(FishCenter(i), world) <= r)
+                    return i;
+            }
+            return -1;
+        }
+
+        /// <summary>Stały klucz ryby (do rozpoznania tego samego spotkania).</summary>
+        public object FishKey(int i) => i;
+
+        public int KindOf(int i) => i >= 0 && i < fish.Count ? fish[i].kind : 0;
+
         public bool IsGlowing(int i) => i >= 0 && i < fish.Count && fish[i].glow;
         public Vector2 FishPosition(int i) => FishCenter(i);
 

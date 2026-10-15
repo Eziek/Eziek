@@ -465,3 +465,32 @@ Najpierw Wyspa → 2. W dzień, kilka minut obserwacji (pomost ułatwia mewy).
    co chwilę uderza dziobem w wodę, plusk).
 2. Ptaki nie siadają na lądzie w wodzie ani na pomoście w złym miejscu; czapla nie stoi na trawie.
 3. Kursor blisko ptaka płoszy go; nocą ptaków nie ma; o świcie z drzew zrywa się kilka ptaków (bez mew i czapli).
+
+## 38. Odbicia w wodzie
+Najpierw Wyspa → 2 (materiał `WaterReflection`).
+1. Drzewa, lampy, budowle, pomost i łódź przy brzegu mają odwrócone odbicie na wodzie, falujące i słabnące w głąb;
+   odbicie nie wchodzi na ląd ani na klif. Obiekty kilka kafelków od brzegu odbicia nie mają.
+2. Ognik i chowaniec nad wodą albo przy brzegu odbijają się na bieżąco (z animacją).
+3. Nocą odbicia są ciemne, ale okna, lampy i oczy świecą na wodzie.
+4. Po rozbiórce obiektu albo dokupieniu kafelka przy brzegu odbicie znika albo przesuwa się w ciągu pół sekundy.
+
+## 39. Kursor i zabawa kursorem
+1. Kursor to pikselowa strzałka z żarzącym się czubkiem (ostry, bez rozmycia, przy każdej skali okna).
+2. Nad grządką, drzewem, lampą itp. czubek płonie i miga iskrami; nad wodą jest turkusowy; podczas przeciągania widoku
+   zmienia się w strzałki w 4 strony; nad Księgą i paskiem zwykły.
+3. Szybki ruch nad wyspą zostawia kilka iskierek.
+4. Przesuwany kursor odgina rośliny i korony drzew, które powoli wracają.
+5. Klik w wodę: dwa kręgi, bąbel, pobliskie ryby uciekają, lilie odpływają. Klik w drzewo/krzak: liście i ptaki odlatują.
+   Klik w zapaloną lampę nocą: ćmy. Kliki dalej robią swoje (np. pomost łowi).
+6. Kursor nad ptakiem albo rybą: dymek z nazwą gatunku; pierwszy raz toast „Nowe w bestiariuszu: …”.
+
+## 40. Rzadkie noce i „Widziane”
+F1: „Rzadka noc” uruchamia kolejne zjawisko (po kolei, każde do świtu albo do następnego kliknięcia).
+1. Świecąca toń: brzeg i grzbiety fal skrzą się turkusem, ryby świecą.
+2. Deszcz gwiazd: co chwilę przez niebo przelatuje spadająca gwiazda (nad mgłą).
+3. Zorza: falujące kurtyny u góry kadru, pikselowe, przy przesuwaniu widoku zostają u góry.
+4. Korowód ogników: 5-7 bladych ogników sunie gęsiego po wodzie pod wyspą, wyłaniając się i znikając przy krawędziach.
+5. Krwawy księżyc: noc wyraźnie czerwona; o świcie kolory wracają.
+6. Każde zjawisko pokazuje toast i wpis w Bestiariuszu → „Widziane”; kolejne razy dodają „×N”.
+7. Bez F1: kilka nocy pod rząd; mniej więcej co trzecia ma zjawisko. Wczytanie gry nocą nie losuje drugi raz.
+8. Bestiariusz po niemiecku: zakładki działów mieszczą się (w razie potrzeby w dwóch rzędach), treść ich nie zasłania.

@@ -44,6 +44,9 @@ namespace Wyspa.Lighting
             (24f, Night, 0.34f),
         };
 
+        /// <summary>Barwa nocnego światła (krwawy księżyc w Visual/RareNights); biały = bez zmian.</summary>
+        public static Color NightTint = Color.white;
+
         void Update()
         {
             if (clock == null || globalLight == null)
@@ -51,6 +54,9 @@ namespace Wyspa.Lighting
             Sample(clock.Hour, out var color, out float intensity);
             // pogoda: deszcz przyciemnia, piorun na chwilę rozjaśnia wszystko na biało
             float flash = Weather.WeatherSystem.Flash;
+            // rzadka noc: krwawy księżyc barwi nocne światło (RareNights), poza tym biały mnożnik
+            if (clock.IsNight)
+                color *= NightTint;
             globalLight.color = Color.Lerp(color, new Color(0.85f, 0.9f, 1f), flash);
             globalLight.intensity = Mathf.Max(minBrightness, intensity) * Weather.WeatherSystem.LightMultiplier + flash;
         }

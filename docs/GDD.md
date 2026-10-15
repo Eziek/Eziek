@@ -445,6 +445,10 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   fazami budowy; gotowy monument daje walutę przy pracy. Koszty i tempo wstępne, do balansu.
 - [x] Generatory Żaru (gracz: „za mało Żaru”, §9 p. 109): piec Żaru (drewno → Żar) i kryształ Żaru (Żar bez pracy,
   większy słój), w sklepie budowli od początku gry. Liczby wstępne, do balansu.
+- [x] „Fun to see” (wybór gracza z listy pomysłów, §9 p. 114-116): **odbicia w wodzie** obiektów przy brzegu,
+  **własny kursor** (pikselowa strzałka z żarem, stany) i **zabawa kursorem** (rośliny się odginają, kręgi na wodzie,
+  liście z drzew, ćmy z lamp, nazwy ptaków i ryb), **rzadkie noce** (świecąca toń, deszcz gwiazd, zorza, korowód
+  ogników, krwawy księżyc) i dział **„Widziane”** w Bestiariuszu. Tylko wygląd, bez wpływu na ekonomię.
 
 ---
 
@@ -948,6 +952,29 @@ Obrazki referencyjne (kopie): `docs/img/`
     czapla (brodzi na płyciźnie, co kilka sekund uderza dziobem w wodę z pluskiem, długo zostaje, wolno macha skrzydłami).
     Gromadki przylatują z jednej strony, naraz do 3 ptaków (z gromadką 5), częściej niż dotąd. Grafika
     `tools/pixel-proto/birds2.py` + `export_unity_birds.py` (podgląd `docs/img/ptaki.png`), kod `Visual/AmbientBirds.cs`.
+114. **Odbicia w wodzie** (wybór gracza). Każdy obiekt przy brzegu (drzewa, budowle, lampy, monumenty, pomost, łódź,
+    rośliny) i każdy ognik czy chowaniec ma odwróconą kopię pod linią brzegu. Oś lustra to pierwszy piksel wody pod
+    podstawą obiektu (najwyżej 28 px niżej), więc obiekty daleko od wody odbicia nie mają. Shader `WaterReflection`
+    rysuje kopię tylko nad wodą (maska z tekstury danych wody), faluje ją wierszami, wygasza w głąb i przecina pasami
+    zmarszczek. Piksele emisyjne (lampy, okna, oczy) mają odbicie bez oświetlenia, więc nocą świecą na wodzie.
+    Kod `Visual/WaterReflections.cs` (kopie sprite'ów co klatkę, więc animacje też się odbijają), materiał
+    `WaterReflection` tworzy Wyspa → 2.
+115. **Własny kursor i zabawa kursorem** (wybór gracza: „trzeba zrobić jakiś ciekawy kursor”). Kursor to pikselowa
+    strzałka z kamienia z żarzącym się czubkiem (rysowana z map znaków w kodzie, 16x16 powiększone x2). Stany: zwykły,
+    nad czymś klikalnym (czubek płonie, iskry w 2 klatkach), nad wodą (turkusowy czubek), przeciąganie widoku (strzałki
+    w 4 strony). Przy szybkim ruchu zostawia iskierki. Zabawa (same efekty): rośliny i drzewa odginają się od
+    przesuwanego kursora (shader kołysania, `_WyspaCursor`); klik w wodę daje dwa rozchodzące się kręgi, ryby w pobliżu
+    uciekają, lilie i liście odpływają; klik w drzewo albo krzak sypie liście i płoszy siedzące ptaki; klik w zapaloną
+    lampę nocą wypuszcza ćmy. Kursor nad ptakiem albo rybą pokazuje dymek z nazwą gatunku (pierwsze spotkanie: toast
+    „Nowe w bestiariuszu”). Kod `Visual/GameCursor.cs`, `Visual/CursorPlay.cs`.
+116. **Rzadkie noce i „Widziane”** (wybór gracza). Na początku nocy z szansą 30% (w pełnię 50%) zdarza się jedno
+    zjawisko, do świtu: **świecąca toń** (brzeg, fale i wszystkie ryby jarzą się turkusem), **deszcz gwiazd**, **zorza**
+    nad mgłą (pikselowe kurtyny z ditheringiem, turkus w fiolet), **korowód ogników** (5-7 bladych ogników sunie po
+    wodzie pod wyspą, raz albo dwa razy na noc) i **krwawy księżyc** (tylko w pełnię, 35%: czerwone nocne światło).
+    Toast na początku zjawiska; wczytanie gry w środku nocy nie losuje ponownie. Bestiariusz ma nowy dział **„Widziane”**:
+    7 ptaków, 7 gatunków ryb (wskazane kursorem) i 5 rzadkich nocy, z licznikiem spotkań (×N); pełna strona daje
+    3 punkty księżyca. Tylko wygląd. Kod `Visual/RareNights.cs`, świecąca toń w `Water.shader` (`_WyspaBiolum`),
+    krwawy księżyc przez `DayNightLighting.NightTint`. F1: „Rzadka noc” (kolejne zjawiska po kolei).
 
 ---
 
@@ -1003,6 +1030,9 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Platform/WinApi.cs`, `DesktopWindow.cs` | okno na pulpicie (tylko build Windows): ramka, na wierzchu, róg ekranu, przeciąganie, przezroczystość z klikiem przez tło, `Autostart` (HKCU\Run) |
 | `Scripts/Farming/FruitTree.cs` | drzewa owocowe: `TreeSpecies` (dane 5 gatunków), `TreeArt`, `FruitTree` (wzrost, owoce, zbiór kliknięciem, ścinanie, świecenie) |
 | `Scripts/Visual/AmbientBirds.cs` | ptaki: przylot po łuku, siadanie na drzewie lub kafelku, dziobanie, podskoki, odlot, płoszenie kursorem |
+| `Scripts/Visual/WaterReflections.cs` | odbicia w wodzie: kopie sprite'ów obiektów przy brzegu, ogników i chowańców (shader `WaterReflection`) |
+| `Scripts/Visual/GameCursor.cs`, `CursorPlay.cs` | własny kursor (stany, iskierki) i zabawa kursorem: odginanie roślin, kręgi na wodzie, liście, ćmy, nazwy ptaków i ryb |
+| `Scripts/Visual/RareNights.cs` | rzadkie noce: świecąca toń, deszcz gwiazd, zorza, korowód ogników, krwawy księżyc |
 | `Scripts/Visual/LightShafts.cs`, `NightGlow.cs` | snopy słońca/księżyca (Sprite Light 2D z wolumetrią, za kamerą), nocna poświata ogników, duszków i run |
 | `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |

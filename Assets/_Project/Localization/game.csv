@@ -466,3 +466,9 @@ lore.story.observatory.4,"Ostatnia notatka astronoma: „Mgła nie przychodzi z 
 lore.story.observatory.end,"Luneta znów patrzy w górę. Gdy gwiazda spada w mgłę, obserwatorium łapie jej odłamek.","The telescope looks up again. When a star falls into the fog, the observatory catches a shard of it.","Das Fernrohr blickt wieder nach oben. Fällt ein Stern in den Nebel, fängt die Sternwarte einen Splitter davon.",望遠鏡は再び空を見上げる。星が霧に落ちるとき、天文台はそのかけらを捕まえる。,望远镜再次仰望。每当星星坠入迷雾，天文台便接住它的碎片。,zapisek: zakończenie
 toast.monument.started,Ogniki zaczynają budowę: {0},The wisps start building: {0},Die Irrlichter beginnen zu bauen: {0},鬼火たちが建設を始めた：{0},鬼火们开始建造：{0},toast
 toast.monument.phase,Ukończono etap {1}/{2}. {0},Stage {1}/{2} complete. {0},Abschnitt {1}/{2} fertig. {0},段階{1}/{2}完了。{0},阶段{1}/{2}完成。{0},toast; {0} = zapisek historii
+toast.sight.biolum,Woda zaczyna świecić. Świecąca toń!,The water begins to glow. A Glowing Tide!,Das Wasser beginnt zu leuchten. Leuchtende Flut!,水が光りはじめた。光る潮だ！,水面开始发光。荧光潮！,toast; rzadka noc
+toast.sight.stars,Niebo pęka od spadających gwiazd.,The sky cracks with falling stars.,Der Himmel zerspringt vor Sternschnuppen.,流れ星が空を裂いていく。,流星划破夜空。,toast; rzadka noc
+toast.sight.aurora,Nad mgłą rozlewa się zorza.,An aurora spills over the fog.,Über dem Nebel ergießt sich ein Polarlicht.,霧の上にオーロラが広がる。,极光在迷雾上方流淌。,toast; rzadka noc
+toast.sight.procession,Korowód bladych ogników płynie przez wodę.,A procession of pale wisps drifts across the water.,Ein Zug blasser Irrlichter treibt über das Wasser.,青白い鬼火の行列が水面を渡っていく。,一列苍白的鬼火飘过水面。,toast; rzadka noc
+toast.sight.bloodmoon,Księżyc nabiera barwy krwi.,The moon turns the colour of blood.,Der Mond färbt sich blutrot.,月が血の色に染まる。,月亮染上了血色。,toast; rzadka noc
+toast.seen.new,Nowe w bestiariuszu: {0},New in the bestiary: {0},Neu im Bestiarium: {0},図鑑に追加：{0},图鉴新增：{0},toast; {0} = nazwa ptaka albo ryby

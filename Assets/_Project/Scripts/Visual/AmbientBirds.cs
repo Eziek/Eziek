@@ -23,6 +23,7 @@ namespace Wyspa.Visual
 
         class Kind
         {
+            public string id;         // crow, finch, magpie, ... (bird.<id> w tabelach, „Widziane” w bestiariuszu)
             public Sprite[] frames;   // sit0, sit1, fly0, fly1
             public Habitat habitat;
             public float weight, speed, stayMin, stayMax;
@@ -59,20 +60,35 @@ namespace Wyspa.Visual
             kinds.Clear();
             if (art == null)
                 return;
-            Add(art.birdCrow, Habitat.Any, 3f, 4f, 8f, 18f, 1);
-            Add(art.birdFinch, Habitat.Any, 3f, 4.5f, 8f, 16f, 3);
-            Add(art.Bird("magpie"), Habitat.Ground, 2f, 4f, 10f, 20f, 1);
-            Add(art.Bird("bullfinch"), Habitat.Tree, 2f, 4.5f, 8f, 18f, 3);
-            Add(art.Bird("tit"), Habitat.Tree, 2f, 5f, 6f, 14f, 2);
-            Add(art.Bird("gull"), Habitat.Shore, 2f, 3.5f, 12f, 25f, 2);
-            Add(art.Bird("heron"), Habitat.Wader, 1f, 2.5f, 20f, 40f, 1);
+            Add("crow", art.birdCrow, Habitat.Any, 3f, 4f, 8f, 18f, 1);
+            Add("finch", art.birdFinch, Habitat.Any, 3f, 4.5f, 8f, 16f, 3);
+            Add("magpie", art.Bird("magpie"), Habitat.Ground, 2f, 4f, 10f, 20f, 1);
+            Add("bullfinch", art.Bird("bullfinch"), Habitat.Tree, 2f, 4.5f, 8f, 18f, 3);
+            Add("tit", art.Bird("tit"), Habitat.Tree, 2f, 5f, 6f, 14f, 2);
+            Add("gull", art.Bird("gull"), Habitat.Shore, 2f, 3.5f, 12f, 25f, 2);
+            Add("heron", art.Bird("heron"), Habitat.Wader, 1f, 2.5f, 20f, 40f, 1);
         }
 
-        void Add(Sprite[] frames, Habitat habitat, float weight, float speed, float stayMin, float stayMax, int flockMax)
+        public static readonly string[] Ids = { "crow", "finch", "magpie", "bullfinch", "tit", "gull", "heron" };
+
+        /// <summary>Ptak pod kursorem (id rodzaju i sam ptak), null gdy żadnego.</summary>
+        public string BirdAt(Vector2 world, out object who)
+        {
+            who = null;
+            foreach (var b in birds)
+                if (b.sr != null && b.sr.sprite != null && ((Vector2)b.sr.bounds.center - world).sqrMagnitude < 0.45f * 0.45f)
+                {
+                    who = b;
+                    return b.kind.id;
+                }
+            return null;
+        }
+
+        void Add(string id, Sprite[] frames, Habitat habitat, float weight, float speed, float stayMin, float stayMax, int flockMax)
         {
             if (frames == null || frames.Length < 4 || frames[0] == null)
                 return;
-            kinds.Add(new Kind { frames = frames, habitat = habitat, weight = weight, speed = speed, stayMin = stayMin, stayMax = stayMax, flockMax = flockMax });
+            kinds.Add(new Kind { id = id, frames = frames, habitat = habitat, weight = weight, speed = speed, stayMin = stayMin, stayMax = stayMax, flockMax = flockMax });
         }
 
         Kind PickKind(bool treesOnly = false)

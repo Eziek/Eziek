@@ -123,6 +123,12 @@ namespace Wyspa.World
         {
             EnsureLightShafts();
             EnsureSunShadows();
+            if (FindAnyObjectByType<RareNights>() == null)
+            {
+                var rare = new GameObject("RareNights");   // rzadkie noce: przypływ, gwiazdy, zorza, procesja, krwawy księżyc
+                rare.transform.SetParent(transform.parent, false);
+                rare.AddComponent<RareNights>();
+            }
             if (art != null && art.reflection != null)
             {
                 var refl = new GameObject("WaterReflections");

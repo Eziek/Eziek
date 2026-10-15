@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-113), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-116), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -17,7 +17,7 @@ Historia decyzji jest w GDD §9 (punkty 1-113), a lista testów w `docs/TEST_PLA
 - **Scena gry: `MainLevel.unity`** (dawniej Prototype). UI: czytelna czcionka Fusion Pixel 8px (opcja), poprawki z przeglądu
   kodu UI (GDD §9 p. 79, TEST_PLAN 10). Komentarze w kodzie bez historii rozmów; commity bez stopek o asystencie.
 - **Ostatnio (wybór gracza):** scenka rejsu, świt/zmierzch, narzędzia ogników, sklep z czapkami (GDD §9 p. 84, 86-88).
-  Następne z listy propozycji: zdarzenia na horyzoncie z sekcją „Widziane” w Bestiariuszu (gracz jeszcze nie wybrał).
+  Sekcja „Widziane” w Bestiariuszu zrobiona razem z rzadkimi nocami (p. 116).
 - **Menu główne uproszczone** (GDD §9 p. 96, §12.11, TEST_PLAN 25): Start / Ustawienia / Wyjdź, jeden zapis (bez slotów),
   „Zapisz grę” w pierścieniu i Ctrl+S, burza w tle menu (`Visual/MenuStorm.cs`). Pierścień akcji z podmenu „Menu” (p. 97, TEST_PLAN 26). Nie testowane w Unity.
 - **Balans: krótki wzrost** (GDD §9 p. 98, TEST_PLAN 27): rośliny 20 s - 10 min, drzewa 4-10 min, mniejsze ceny,
@@ -47,6 +47,12 @@ Historia decyzji jest w GDD §9 (punkty 1-113), a lista testów w `docs/TEST_PLA
   Liczby do balansu. Nie testowane w Unity.
 - **Gatunki ryb** (GDD §9 p. 112, TEST_PLAN 36): 7 gatunków w `Water.shader` (`FishPixel`), do 16 ryb. Nie testowane w Unity.
 - **Ptaki** (GDD §9 p. 113, TEST_PLAN 37): sroka, gil, sikora, mewa, czapla (`tools/pixel-proto/birds2.py`, `Visual/AmbientBirds.cs`). Wymaga Wyspa → 2. Nie testowane w Unity.
+- **Odbicia w wodzie** (GDD §9 p. 114, TEST_PLAN 38): `Visual/WaterReflections.cs`, `Shaders/WaterReflection.shader`.
+  Wymaga Wyspa → 2. Nie testowane w Unity.
+- **Własny kursor i zabawa kursorem** (GDD §9 p. 115, TEST_PLAN 39): `Visual/GameCursor.cs`, `Visual/CursorPlay.cs`,
+  `_WyspaCursor` w `WyspaSway.hlsl`, zdarzenie `ClickRouter.Clicked`. Nie testowane w Unity.
+- **Rzadkie noce i „Widziane”** (GDD §9 p. 116, TEST_PLAN 40): `Visual/RareNights.cs`, `_WyspaBiolum` w `Water.shader`,
+  dział 5 w Bestiariuszu (`BookView.BuildBestiary`). F1: „Rzadka noc”. Nie testowane w Unity.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,

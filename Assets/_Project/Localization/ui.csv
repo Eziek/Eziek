@@ -414,3 +414,4 @@ ui.kiln.toggle,Piec: {0},Kiln: {0},Ofen: {0},窯：{0},窑：{0},{0} = wł./wył
 ui.crystal.desc,"Oddaje 1 Żar co {0} min, także nocą i gdy nie pracujesz. Słój większy o {1}.","Gives 1 Ember every {0} min, also at night and while you are away. Jar +{1}.","Gibt alle {0} Min. 1 Glut ab, auch nachts und wenn du nicht arbeitest. Glas +{1}.",{0}分ごとに熾火1を生む（夜も作業していなくても）。瓶+{1}。,每{0}分钟产出1余火（夜间和不工作时也会）。余火罐+{1}。,
 ui.kiln.fuel,W palenisku: {0}/{1} drewna,In the firebox: {0}/{1} wood,In der Feuerung: {0}/{1} Holz,火床：木材{0}/{1},炉膛：{0}/{1}木材,polana wrzucone przez ogniki
 ui.kiln.waiting,"Czeka, aż ognik przyniesie drewno.",Waiting for a wisp to bring wood.,"Wartet, bis ein Irrlicht Holz bringt.",鬼火が木材を運んでくるのを待っている。,等待鬼火送来木材。,
+ui.bestiary.seen.count,{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{1} = ile razy widziane

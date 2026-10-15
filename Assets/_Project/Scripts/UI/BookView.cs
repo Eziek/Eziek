@@ -1126,18 +1126,20 @@ namespace Wyspa.UI
 
         // ------------------------------------------------------------------ Bestiariusz i lore (GDD §11.3 H)
 
-        int bestiarySection;   // 0 rośliny, 1 ryby, 2 zdarzenia, 3 lore, 4 chowańce
+        int bestiarySection;   // 0 rośliny, 1 ryby, 2 zdarzenia, 3 lore, 4 chowańce, 5 widziane
         int lorePage;
+        float tabsTop;         // przesunięcie treści, gdy zakładki działów zajmują dwa rzędy
         static readonly string[] FishIds = { "normal", "glow" };
         static readonly string[] EventIds = { "wisp", "star", "merchant", "monster", "fullmoon" };
         // nagroda za ukończenie kategorii (punkty księżyca)
-        static readonly int[] CategoryReward = { 2, 1, 2, 3 };
+        static readonly int[] CategoryReward = { 2, 1, 2, 3, 0, 3 };   // 4 chowańce: bez nagrody
 
         void BuildBestiary()
         {
             var chronicle = Lore.Chronicle.Instance;
             float x = 0;
-            string[] sections = { "ui.bestiary.plants", "ui.bestiary.fish", "ui.bestiary.events", "ui.bestiary.lore", "ui.bestiary.familiars" };
+            tabsTop = 0f;
+            string[] sections = { "ui.bestiary.plants", "ui.bestiary.fish", "ui.bestiary.events", "ui.bestiary.lore", "ui.bestiary.familiars", "ui.bestiary.seen" };
             for (int i = 0; i < sections.Length; i++)
             {
                 int sec = i;
@@ -1145,8 +1147,13 @@ namespace Wyspa.UI
                 var label = Ui.Txt(b.transform, "Text", sec == bestiarySection ? Ui.Theme.textGold : Ui.Theme.textLight, TextAlignmentOptions.Center);
                 label.text = Loc.Get(sections[i]);
                 float bw = Mathf.Max(40f, Ui.Width(label) + 12f);
+                if (x > 0f && x + bw > W - 64)
+                {
+                    x = 0f;                // zakładki nie mieszczą się w rzędzie (np. po niemiecku): drugi rząd
+                    tabsTop += 18f;
+                }
                 Ui.Stretch(label.rectTransform);
-                Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, 0), new Vector2(bw, 14));
+                Ui.Place((RectTransform)b.transform, Ui.TopLeft, Ui.TopLeft, new Vector2(x, -tabsTop), new Vector2(bw, 14));
                 x += bw + 4;
             }
             info.text = Loc.Get("ui.bestiary.hint");
@@ -1174,6 +1181,12 @@ namespace Wyspa.UI
                 case 2:
                     foreach (var e in EventIds) entries.Add(("event:" + e, Loc.Get("ui.event." + e)));
                     break;
+                case 5:
+                    // widziane (GDD §9 p. 116): ptaki i ryby wskazane kursorem, rzadkie noce; z licznikiem spotkań
+                    foreach (var b in Visual.AmbientBirds.Ids) entries.Add(("bird:" + b, Seen("bird." + b, chronicle.Stat("seen:bird:" + b))));
+                    for (int k = 0; k < FishKinds.Count; k++) entries.Add(("species:" + k, Seen("fishkind." + k, chronicle.Stat("seen:species:" + k))));
+                    foreach (var r in Visual.RareNights.Ids) entries.Add(("sight:" + r, Seen("sight." + r, chronicle.Stat("seen:sight:" + r))));
+                    break;
                 default:
                     foreach (var l in Lore.LoreBook.All) entries.Add(("lore:" + l, Loc.Get(l)));
                     break;
@@ -1181,7 +1194,7 @@ namespace Wyspa.UI
             int found = 0;
             foreach (var e in entries)
                 if (chronicle.Found(e.id)) found++;
-            float y = 20;
+            float y = 20 + tabsTop;
             var progress = Ui.Txt(content, "Progress", Ui.Theme.textDark);
             progress.text = Loc.Get("ui.bestiary.progress", found, entries.Count);
             Ui.Place(progress.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(120, 10));
@@ -1238,17 +1251,21 @@ namespace Wyspa.UI
                 }
                 return;
             }
-            // pozostałe kategorie: dwie kolumny nazw, nieodkryte jako „???”
+            // pozostałe kategorie: kolumny nazw (dwie, przy długiej liście trzy), nieodkryte jako „???”
+            int cols = entries.Count > 14 ? 3 : 2;
+            float colW = (W - 64) / cols;
             for (int i = 0; i < entries.Count; i++)
             {
                 var e = entries[i];
                 bool known = chronicle.Found(e.id);
                 var t = Ui.Txt(content, "Entry", known ? Ui.Theme.textDark : Ui.Theme.textMutedOnPage);
                 t.text = known ? e.label : "???";
-                float col = (i % 2) * ((W - 64) / 2f);
-                Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(col, -(y + (i / 2) * 13)), new Vector2((W - 64) / 2f - 4, 10));
+                Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2((i % cols) * colW, -(y + (i / cols) * 13)), new Vector2(colW - 4, 10));
             }
         }
+
+        /// <summary>Nazwa w „Widzianych” z liczbą spotkań (od drugiego).</summary>
+        static string Seen(string key, int count) => count > 1 ? Loc.Get("ui.bestiary.seen.count", Loc.Get(key), count) : Loc.Get(key);
 
         /// <summary>
         /// Chowańce: karta na każdego (obrazek, imię, bonus i więź). Nieprzybyłe: ciemna sylwetka, „???” i podpowiedź,
@@ -1259,7 +1276,7 @@ namespace Wyspa.UI
             info.text = Loc.Get("ui.familiar.hint");
             var art = Island.Instance != null ? Island.Instance.Art : null;
             const int cols = 4;
-            float cw = (W - 64) / cols, ch = 88f, top = 20f;
+            float cw = (W - 64) / cols, ch = 88f, top = 20f + tabsTop;
             var defs = Familiars.FamiliarSystem.Defs;
             for (int i = 0; i < defs.Length; i++)
             {
