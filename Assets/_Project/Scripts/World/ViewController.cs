@@ -5,9 +5,11 @@ using Wyspa.UI;
 namespace Wyspa.World
 {
     /// <summary>
-    /// Kadr i okno (GDD §13.6): natywny kadr rośnie z wyspą krokami po 16 px (start 144x112), skala okna zostaje całkowita.
-    /// Gdy wyspa przerośnie limit (część ekranu), kamera przewija się przeciąganiem PPM. Okno zmienia rozmiar tylko w buildzie,
-    /// w edytorze rośnie sam kadr (okno Game ma rozmiar ustawiony w edytorze).
+    /// Kadr i okno (GDD §13.6, §9 p. 133): okno ma stały rozmiar (rozmiar z Opcji albo przeciągnięty za ramkę, zapamiętany),
+    /// a kadr to okno podzielone przez przybliżenie (parzyste x2-x8, kółko myszy, w stronę kursora). Okno nie zmienia się samo
+    /// przy rozbudowie wyspy ani po otwarciu Księgi (rośnie na chwilę tylko, gdy Księga nie mieści się nawet w skali x1, np. w mini-trybie).
+    /// Wyspa większa niż kadr: przewijanie przeciąganiem PPM. Rozmiar okna zmienia się tylko w buildzie, w edytorze kadr
+    /// liczy się z okna Game.
     /// </summary>
     [RequireComponent(typeof(Camera))]
     [DefaultExecutionOrder(-50)]   // przed trybami stawiania i rozbudowy, które czytają LastRightWasDrag w tej samej klatce
@@ -22,7 +24,8 @@ namespace Wyspa.World
         /// żeby piksel wody 32 px był całym pikselem ekranu (x2, x4, x6).
         /// </summary>
         public const int ArtScale = 2;
-        static int Even(int s) => Mathf.Clamp(s + (s & 1), 2, 6);
+        public const int MaxZoom = 8;
+        static int Even(int s) => Mathf.Clamp(s + (s & 1), 2, MaxZoom);
 
         [SerializeField] PixelPerfectCamera pixelCamera;
         [SerializeField] Vector2Int minView = new Vector2Int(144, 112);
@@ -48,9 +51,16 @@ namespace Wyspa.World
             wide = on;
             Refit();
         }
-        [Tooltip("Największa część ekranu, jaką może zająć okno (szerokość, wysokość).")]
+        [Tooltip("Największa część ekranu, jaką może zająć okno (szerokość, wysokość): rozmiar „duży”.")]
         [SerializeField] Vector2 maxScreenFraction = new Vector2(0.6f, 0.7f);
-        [SerializeField] int windowScale = 3;
+        [SerializeField] int windowScale = 3;   // przybliżenie: piksele ekranu na piksel grafik 16 px
+
+        /// <summary>Rozmiary okna z Opcji: część ekranu (szerokość, wysokość); ostatni = maxScreenFraction.</summary>
+        static readonly Vector2[] SizeFractions = { new Vector2(0.3f, 0.38f), new Vector2(0.45f, 0.55f) };
+        public const int SizePresets = 3;
+        Vector2Int windowSize;       // obszar gry w pikselach ekranu (zapis: winW, winH)
+        int sizePreset = 1;          // -1 = rozmiar przeciągnięty przez gracza
+        float ownResizeUntil;        // po naszej zmianie rozmiaru Unity przez chwilę zgłasza stary rozmiar: to nie gracz
 
         Vector2Int view;
         Vector2 pan;                 // przesunięcie kamery w pikselach, gdy wyspa jest większa niż kadr
@@ -69,7 +79,10 @@ namespace Wyspa.World
         bool mini;
 
         public Vector2Int View => view;
+        /// <summary>Przybliżenie (piksele ekranu na piksel grafik 16 px): x2, x4, x6, x8.</summary>
         public int Scale => windowScale;
+        /// <summary>Rozmiar okna z Opcji: 0 mały, 1 średni, 2 duży, -1 własny (przeciągnięty za ramkę).</summary>
+        public int SizePreset => sizePreset;
         /// <summary>Mini-tryb (GDD §12.7): najmniejszy kadr w skali x2, np. w rogu ekranu.</summary>
         public bool Mini
         {
@@ -96,6 +109,10 @@ namespace Wyspa.World
             Instance = this;
             windowScale = Even(PlayerPrefs.GetInt("viewScale", windowScale));
             mini = PlayerPrefs.GetInt("viewMini", 0) == 1;
+            sizePreset = Mathf.Clamp(PlayerPrefs.GetInt("winPreset", 1), -1, SizePresets - 1);
+            windowSize = new Vector2Int(PlayerPrefs.GetInt("winW", 0), PlayerPrefs.GetInt("winH", 0));
+            if (sizePreset >= 0 || windowSize.x <= 0 || windowSize.y <= 0)
+                windowSize = PresetSize(Mathf.Max(0, sizePreset));
             if (GetComponent<Wyspa.Platform.DesktopWindow>() == null)
                 gameObject.AddComponent<Wyspa.Platform.DesktopWindow>();
             view = minView;
@@ -138,20 +155,63 @@ namespace Wyspa.World
             Apply(true);
         }
 
-        public void SetScale(int scale)
+        /// <summary>Przybliżenie z Opcji (względem środka okna).</summary>
+        public void SetScale(int scale) => ZoomTo(scale, new Vector2(Screen.width / 2f, Screen.height / 2f));
+
+        /// <summary>
+        /// Przybliżenie z punktem pod kursorem w miejscu: przesunięcie kamery o różnicę odległości kursora od środka okna
+        /// w pikselach gry przed i po zmianie skali.
+        /// </summary>
+        void ZoomTo(int scale, Vector2 screenPoint)
         {
-            windowScale = Even(scale);
+            int old = windowScale;
+            int next = Mathf.Max(Even(scale), MinZoom());
+            if (next != old)
+            {
+                var off = screenPoint - new Vector2(Screen.width / 2f, Screen.height / 2f);
+                pan += off * (1f / old - 1f / next);
+            }
+            windowScale = next;
             PlayerPrefs.SetInt("viewScale", windowScale);
             Refit();
         }
 
-        Vector2Int MaxView()
+        /// <summary>Najmniejsze przybliżenie, przy którym kadr nie wychodzi poza mapę wyspy (za nią byłaby pustka).</summary>
+        int MinZoom()
+        {
+            var w = WindowSize;
+            for (int s = 2; s < MaxZoom; s += 2)
+                if (w.x / s <= IslandPainter.Size && w.y / s <= IslandPainter.Size)
+                    return s;
+            return MaxZoom;
+        }
+
+        /// <summary>Rozmiar okna z Opcji: mały, średni, duży (część ekranu, wielokrotność 16 px).</summary>
+        public void SetSizePreset(int preset)
+        {
+            sizePreset = Mathf.Clamp(preset, 0, SizePresets - 1);
+            windowSize = PresetSize(sizePreset);
+            SaveWindowSize();
+            Refit();
+        }
+
+        Vector2Int PresetSize(int preset)
         {
             var res = Screen.currentResolution;
-            int w = Mathf.FloorToInt(res.width * maxScreenFraction.x / EffectiveScale / 16f) * 16;
-            int h = Mathf.FloorToInt(res.height * maxScreenFraction.y / EffectiveScale / 16f) * 16;
-            return new Vector2Int(Mathf.Max(minView.x, w), Mathf.Max(minView.y, h));
+            var f = preset < SizeFractions.Length ? SizeFractions[preset] : maxScreenFraction;
+            int w = Mathf.FloorToInt(res.width * f.x / 16f) * 16, h = Mathf.FloorToInt(res.height * f.y / 16f) * 16;
+            return new Vector2Int(Mathf.Max(minView.x * 2, w), Mathf.Max(minView.y * 2, h));
         }
+
+        void SaveWindowSize()
+        {
+            PlayerPrefs.SetInt("winPreset", sizePreset);
+            PlayerPrefs.SetInt("winW", windowSize.x);
+            PlayerPrefs.SetInt("winH", windowSize.y);
+        }
+
+        /// <summary>Obszar gry bez wymagań Księgi: mini-tryb ma najmniejszy kadr w x2.</summary>
+        Vector2Int WindowSize => mini ? minView * 2 : windowSize;
 
         Rect LandPixels()
         {
@@ -160,7 +220,7 @@ namespace Wyspa.World
             return new Rect(r.x * Ppu, r.y * Ppu, r.width * Ppu, r.height * Ppu);
         }
 
-        /// <summary>Po rozbudowie: kadr dopasowany do lądu (krokami po 16 px, w granicach limitu).</summary>
+        /// <summary>Kadr = okno podzielone przez przybliżenie (w edytorze: okno Game). Rozbudowa wyspy nie zmienia okna.</summary>
         void Refit()
         {
             if (mini)
@@ -169,11 +229,14 @@ namespace Wyspa.World
                 Apply(true);
                 return;
             }
-            var land = LandPixels();
-            var max = MaxView();
-            int w = Mathf.CeilToInt((land.width + 2 * Margin.x) / 16f) * 16;
-            int h = Mathf.CeilToInt((land.height + 2 * Margin.y) / 16f) * 16;
-            view = new Vector2Int(Mathf.Clamp(w, minView.x, max.x), Mathf.Clamp(h, minView.y, max.y));
+#if UNITY_EDITOR
+            var win = new Vector2Int(Screen.width, Screen.height);
+#else
+            // pełny ekran: kadr z całego ekranu (inaczej Pixel Perfect Camera powiększyłaby obraz ponad przybliżenie)
+            var win = Screen.fullScreenMode == FullScreenMode.Windowed ? WindowSize : new Vector2Int(Screen.width, Screen.height);
+#endif
+            windowScale = Mathf.Max(windowScale, MinZoom());
+            view = new Vector2Int(Mathf.Max(32, win.x / windowScale), Mathf.Max(32, win.y / windowScale));
             Apply(true);
         }
 
@@ -191,6 +254,7 @@ namespace Wyspa.World
             if (Screen.fullScreenMode == FullScreenMode.Windowed && want != lastWindow)
             {
                 lastWindow = want;
+                ownResizeUntil = Time.unscaledTime + 1f;
                 // okno bez ramki i w rogu ekranu zmienia rozmiar przez WinAPI (Screen.SetResolution przywróciłby ramkę)
                 var desktop = Wyspa.Platform.DesktopWindow.Instance;
                 if (desktop == null || !desktop.SetClientSize(want))
@@ -202,13 +266,50 @@ namespace Wyspa.World
 
         void Update()
         {
-            // Ctrl + kółko myszy: powiększenie okna (x1..x3 w pikselach 32 px, jak w Opcjach)
+            // kółko myszy: przybliżenie (x2-x8) w stronę kursora; nie nad UI (przewijanie list) i nie przy otwartej Księdze
             int scroll = UiInput.Scroll;
-            if (!Locked && scroll != 0 && UiInput.CtrlHeld && !mini)
-                SetScale(Mathf.Clamp(windowScale + scroll * 2, 2, 6));
+            if (!Locked && scroll != 0 && !mini && !OverUi())
+                ZoomTo(windowScale + scroll * 2, UiInput.MousePosition);
+            WatchWindow();
             if (!Locked)
                 HandleDrag();
             Place();
+        }
+
+        static bool OverUi()
+        {
+            var ui = UiRoot.Instance;
+            return ui != null && (ui.PointerOverUi || (ui.Book != null && ui.Book.IsOpen));
+        }
+
+        Vector2Int seenScreen;
+
+        /// <summary>
+        /// Gracz zmienił rozmiar okna (przeciągnięcie ramki): nowy rozmiar zostaje i jest zapamiętany, kadr się dopasowuje.
+        /// W edytorze: zmiana okna Game. Nasze własne zmiany rozmiaru (i chwilę po nich) się nie liczą.
+        /// </summary>
+        void WatchWindow()
+        {
+            var now = new Vector2Int(Screen.width, Screen.height);
+            if (now == seenScreen)
+                return;
+            seenScreen = now;
+#if UNITY_EDITOR
+            Refit();
+#else
+            if (Screen.fullScreenMode != FullScreenMode.Windowed)
+            {
+                Refit();
+                return;
+            }
+            if (mini || requiredWindow != Vector2Int.zero || Time.unscaledTime < ownResizeUntil || now == lastWindow)
+                return;
+            windowSize = now;
+            sizePreset = -1;
+            lastWindow = now;
+            SaveWindowSize();
+            Refit();
+#endif
         }
 
         void HandleDrag()

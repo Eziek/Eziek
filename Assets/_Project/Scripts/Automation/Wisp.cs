@@ -1079,6 +1079,9 @@ namespace Wyspa.Automation
                 return null;
             bool random = mode == WispNest.Random;   // losowo: osobne losowanie dla każdej grządki
             var chosen = mode == WispNest.Memory || random || game.Crops == null ? null : game.Crops.Find(mode);
+            // pamięć ziemi bez rośliny tej pory (np. nocą same dzienne w pamięci): puste grządki dostają roślinę wybraną
+            // na drugą porę (np. dynię z ustawienia dnia); wzejdzie, gdy przyjdzie jej pora albo pod lampą (§9 p. 133)
+            var other = chosen == null && !random && game.Crops != null ? game.Crops.Find(nest.SeedFor(!night)) : null;
             var route = new List<(FarmPlot plot, CropDefinition crop)>();
             foreach (var plot in FarmPlot.All)
             {
@@ -1087,14 +1090,22 @@ namespace Wyspa.Automation
                 if (reserved.Contains(plot) || !InRange(plot.Cell.x, plot.Cell.y))
                     continue;
                 CropDefinition crop;
+                bool fallback = false;
                 if (plot.State.IsEmpty)
+                {
                     crop = random ? game.RandomSeed(night) : chosen != null ? chosen : plot.LastCrop;
+                    if (other != null && (crop == null || (crop.kind == CropKind.Night) != night || !CropSeasons.Now(crop)))
+                    {
+                        crop = other;
+                        fallback = true;
+                    }
+                }
                 else if (nest.Swap && (chosen != null || random) && plot.Swappable(night, game.Clock.IsTwilight, game.ContextFor(plot, night).lit))
                     crop = random ? game.RandomSeed(night) : chosen;   // podmiana: stara roślina wraca do worka jako nasiono
                 else
                     continue;
                 // nie sadzimy rośliny, która o tej porze i tak by nie rosła (np. pamięć ziemi z nocną o świcie)
-                if (crop == null || (crop.kind == CropKind.Night) != night || crop == plot.State.crop || !CropSeasons.Now(crop))
+                if (crop == null || (!fallback && (crop.kind == CropKind.Night) != night) || crop == plot.State.crop || !CropSeasons.Now(crop))
                     continue;   // poza porą roku siewca tego nie sieje (pamięć ziemi z poprzedniej pory też nie)
                 if (game.Seeds.Count(crop.id) <= 0 && (crop.hybrid || game.Wallet.Coins < Economy.Market.SeedPrice(crop)))
                     continue;
@@ -1104,8 +1115,8 @@ namespace Wyspa.Automation
             // wybrana roślina, a nic do posiania z jej powodu (pora roku, monety, nasiona hybrydy): toast z powodem raz
             if (route.Count > 0)
                 nest.ReportSowerProblem(null);
-            else if (chosen != null && nest.HasFreePlot())
-                nest.ReportSowerProblem(nest.SowerProblem(night));
+            else if ((chosen != null || other != null) && nest.HasFreePlot())
+                nest.ReportSowerProblem(nest.SowerProblem(chosen != null ? night : !night));
             return route.Count > 0 ? SowTrip(route) : null;
         }
 

@@ -111,10 +111,9 @@ namespace Wyspa.UI
         public void Open(Tab tab)
         {
             GameEvents.PlaySound("book");
-            // mały kadr (start 144x112) nie mieści Księgi: okno na chwilę rośnie (tylko w buildzie)
+            // Księga dopasowuje skalę UI do okna; okno rośnie na chwilę tylko, gdy nie mieści jej nawet w x1 (mini-tryb, tylko w buildzie)
             if (ViewController.Instance != null)
-                ViewController.Instance.RequireWindow(new Vector2Int(
-                    Mathf.CeilToInt((W + 16) * UiRoot.DesiredUiScale()), Mathf.CeilToInt((H + 16) * UiRoot.DesiredUiScale())));
+                ViewController.Instance.RequireWindow(new Vector2Int((int)W + 16, (int)H + 16));
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();
             // menu główne (Ustawienia): same opcje, bez kolumny zakładek (reszta Księgi dotyczy gry); Księga węższa o kolumnę
@@ -752,7 +751,8 @@ namespace Wyspa.UI
                 seaItems.Add(new ShopItem
                 {
                     nameKey = "crop." + c.id, icon = c.SeedIcon, buyKey = "ui.shop.unlock",
-                    desc = time + ", " + Loc.Get("ui.seed.sell", c.sellPrice) + "\n" + Loc.Get("ui.seed.seasons", Farming.CropSeasons.Text(c)),
+                    // jedna linia (wiersz sklepu ma miejsce na jedną; za długa skraca się „...”, całość w dymku)
+                    desc = Loc.Get("ui.seed.seasons", Farming.CropSeasons.Text(c)) + ", " + time + ", " + Loc.Get("ui.seed.sell", c.sellPrice),
                     cost = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, c.unlockPrice) },
                     blockedKey = _ => game.IsUnlocked(crop) ? "ui.shop.unlocked" : null,
                     buy = _ => { if (game.TryUnlock(crop)) Show(Tab.Shop); },
@@ -1559,11 +1559,21 @@ namespace Wyspa.UI
 
             OptLabel("ui.options.scale", y);
             float x = OptCol;
-            for (int s = 2; s <= 6; s += 2)   // skala parzysta (woda w 32 px): x2, x4, x6 w pikselach grafik 16 px
+            for (int s = 2; s <= ViewController.MaxZoom; s += 2)   // przybliżenie parzyste (woda w 32 px), też kółko myszy
             {
                 int scale = s;
                 x += OptButton("Scale" + s, "x" + s, x, y, 20f, () => { if (view != null) view.SetScale(scale); },
                                view != null && view.Scale == s) + 4;
+            }
+            y += OptRow;
+
+            OptLabel("ui.options.window_size", y);
+            x = OptCol;
+            for (int p = 0; p < ViewController.SizePresets; p++)   // własny rozmiar (przeciągnięta ramka): żaden nie zaznaczony
+            {
+                int preset = p;
+                x += OptButton("WinSize" + p, Loc.Get("ui.options.window_size." + p), x, y, 20f, () => { if (view != null) view.SetSizePreset(preset); },
+                               view != null && view.SizePreset == p) + 4;
             }
             y += OptRow;
 

@@ -188,7 +188,11 @@ ui.options.system,System,System,System,システム,系统,
 ui.options.idle,Próg bezczynności,Idle after,Inaktiv nach,放置判定,闲置判定,
 ui.options.seconds,{0} s,{0} s,{0} s,{0}秒,{0}秒,{0} = sekundy
 ui.options.idle_hint,"Rośliny dnia rosną, gdy pracujesz. Bez myszy i klawiatury dłużej niż próg = przerwa.",Day crops grow while you work. No mouse or keyboard for longer than the limit = a break.,"Tagpflanzen wachsen, während du arbeitest. Länger ohne Maus und Tastatur = Pause.",昼の作物は作業中に育つ。設定時間より長く操作がないと休憩扱い。,你工作时白天作物会生长。超过设定时间没有操作即视为休息。,
-ui.options.scale,Powiększenie,Zoom,Vergrößerung,拡大,放大,"skala okna x2-x6, też Ctrl + kółko myszy"
+ui.options.scale,Przybliżenie,Zoom,Zoom,拡大,缩放,"przybliżenie x2-x8, też kółko myszy (okno zostaje tej samej wielkości)"
+ui.options.window_size,Rozmiar okna,Window size,Fenstergröße,ウィンドウサイズ,窗口大小,mały / średni / duży (część ekranu)
+ui.options.window_size.0,Mały,Small,Klein,小,小,
+ui.options.window_size.1,Średni,Medium,Mittel,中,中,
+ui.options.window_size.2,Duży,Large,Groß,大,大,
 ui.options.ui_size,Rozmiar interfejsu,Interface size,Oberflächengröße,UIの大きさ,界面大小,auto zależy od rozdzielczości monitora
 ui.options.ui_size.auto,auto,auto,auto,自動,自动,
 ui.options.mini,Mini-tryb,Mini mode,Minimodus,ミニモード,迷你模式,
@@ -201,7 +205,7 @@ ui.options.corner.tl,LG,TL,OL,左上,左上,lewy górny
 ui.options.corner.tr,PG,TR,OR,右上,右上,prawy górny
 ui.options.corner.bl,LD,BL,UL,左下,左下,lewy dolny
 ui.options.corner.br,PD,BR,UR,右下,右下,prawy dolny
-ui.options.window_hint,"Ctrl + kółko myszy: powiększenie. Bez ramki: przeciągnij okno za puste miejsce, puść przy rogu ekranu.","Ctrl + mouse wheel: zoom. Frameless: drag the window by an empty spot, release near a screen corner.","Strg + Mausrad: Zoom. Ohne Rahmen: an leerer Stelle ziehen, nahe einer Ecke loslassen.",Ctrl+ホイール：拡大。枠なし：空いている所をドラッグ、画面の角で離す。,Ctrl+滚轮：缩放。无边框：拖动空白处，在屏幕角落松开。,
+ui.options.window_hint,"Kółko myszy: przybliżenie. Z ramką: przeciągnij brzeg okna, by zmienić rozmiar. Bez ramki: przeciągnij okno za puste miejsce, puść przy rogu ekranu.","Mouse wheel: zoom. With a frame: drag the window edge to resize. Frameless: drag the window by an empty spot, release near a screen corner.","Mausrad: Zoom. Mit Rahmen: Fensterrand ziehen, um die Größe zu ändern. Ohne Rahmen: an leerer Stelle ziehen, nahe einer Ecke loslassen.",ホイール：拡大。枠あり：端をドラッグしてサイズ変更。枠なし：空いている所をドラッグ、画面の角で離す。,滚轮：缩放。有边框：拖动窗口边缘调整大小。无边框：拖动空白处，在屏幕角落松开。,
 ui.options.window_build,"Ramka, wierzch, róg i autostart działają w zbudowanej grze na Windows.","Frame, on top, corner and autostart work in the built game on Windows.","Rahmen, Vordergrund, Ecke und Autostart gehen im fertigen Spiel unter Windows.",枠・最前面・角・自動起動はWindows版のビルドで動作。,边框、置顶、角落和自启动仅在Windows版游戏中生效。,
 ui.options.autostart,Start z Windows,Start with Windows,Mit Windows starten,Windowsと起動,随Windows启动,
 ui.options.reset,Reset zapisu,Reset save,Spielstand löschen,セーブをリセット,重置存档,

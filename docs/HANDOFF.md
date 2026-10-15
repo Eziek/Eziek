@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-132), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-133), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -68,6 +68,10 @@ Historia decyzji jest w GDD §9 (punkty 1-132), a lista testów w `docs/TEST_PLA
 - **Siewca: powody czekania** (GDD §9 p. 131, TEST_PLAN 51): `WispNest.SowerProblem/HasFreePlot/ReportSowerProblem`,
   koło siewcy bez przełącznika dzień/noc (`SeedWheel.lockCategory`). Nie testowane w Unity.
 - **Wolne grzędy chowańców** (GDD §9 p. 132, TEST_PLAN 52): `Familiar.RandomPerch/Taken`, nietoperz tylko pod koronami.
+- **Okno stałej wielkości, przybliżenie kółkiem** (GDD §9 p. 133, TEST_PLAN 53): `ViewController` (rozmiar okna z Opcji
+  albo z ramki, `ZoomTo`, `WatchWindow`), siewca nocą bierze roślinę z ustawienia dnia, opis w sklepie nasion w jednej linii.
+  Nie testowane w Unity (zwłaszcza zmiana rozmiaru okna przez WinAPI i Pixel Perfect Camera przy oknie niebędącym
+  wielokrotnością kadru).
 - **Ścinanie seriami kliknięć** (GDD §9 p. 121, TEST_PLAN 43): `World/ChopProgress.cs`, `Decoration.OnClick`,
   `FruitTree.TryClick`; szczegóły drzewa owocowego w pierścieniu PPM. Panel „Usuń” dekoracji nie otwiera się już z kliku.
 - **Horyzont, cienie chmur, poranna mgiełka** (GDD §9 p. 120, TEST_PLAN 42): `Visual/HorizonSights.cs`,

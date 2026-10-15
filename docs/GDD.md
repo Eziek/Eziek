@@ -458,6 +458,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   Grafiki sezonowe to placeholdery ze skryptu; docelowe rysuje się ręcznie (pliki `<nazwa>__<pora>.png`).
 - [x] **Rośliny sezonowe** (prośba gracza, §9 p. 129): 16 nowych roślin, po 4 na porę (2 dnia, 2 nocy), siew tylko
   w swojej porze, odblokowanie w Sklep → Nasiona. Grafiki to placeholdery ze skryptu (`seasonal_crops.py`).
+- [x] **Okno stałej wielkości i przybliżenie kółkiem myszy** (prośba gracza, §9 p. 133).
 - [x] **Mutacje w Bestiariuszu** (prośba gracza, §9 p. 130): dział „Mutacje” z odkrywaniem hybryd (ślad, potem pełny wpis),
   pierwsze odkrycie daje 2 nasiona.
 
@@ -1124,6 +1125,18 @@ Obrazki referencyjne (kopie): `docs/img/`
     na środku deski). Grzędy (korony drzew, tablica, lampy) są teraz zajmowane: chowaniec nie wybiera grzędy, na której
     ktoś siedzi albo do której leci; gdy wszystkie zajęte, leci do swojego domku. Nietoperz wisi tylko pod koronami
     drzew (pod tablicą i lampą wisiał na desce albo słupie).
+133. **Siewca nocą, sklep nasion, okno i przybliżenie** (zgłoszenia gracza).
+    - Siewca: noc, w ustawieniu dnia dynia, w ustawieniu nocy pamięć ziemi bez nocnej rośliny: siewca nie siał nic. Teraz
+      puste grządki dostają wtedy roślinę z drugiego ustawienia (dynię); wzejdzie rano albo od razu pod lampą. To samo
+      w dzień z rośliną nocy. Ustawienie „nic” nadal znaczy nic, podmiana roślin bez zmian.
+    - Sklep → Nasiona: opis z porą roku był w dwóch liniach i nachodził na kolejny wiersz; teraz jedna linia
+      („Siew: …, czas, cena”), za długa skraca się „...”, całość w dymku.
+    - **Okno nie zmienia się samo.** Wcześniej okno rosło z wyspą (kadr dopasowany do lądu), przy otwarciu Księgi
+      i po przełączeniu przezroczystości. Teraz okno ma stały rozmiar: Opcje → Okno → Rozmiar okna (mały, średni, duży:
+      część ekranu) albo przeciągnięcie ramki (zapamiętany, `winW`/`winH`). Kadr = okno / przybliżenie; wyspa większa niż
+      kadr: przewijanie PPM. Księga dopasowuje skalę UI do okna, okno rośnie tylko, gdy nie mieści jej nawet w x1 (mini-tryb).
+    - **Przybliżenie kółkiem myszy** (bez Ctrl): x2, x4, x6, x8 (parzyste, bo woda liczy obraz w 32 px), w stronę kursora;
+      nie nad UI i nie przy otwartej Księdze. Najmniejsze przybliżenie nie pokazuje nic poza mapą wyspy. Opcje: przybliżenie x2-x8.
 
 ---
 

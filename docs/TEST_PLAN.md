@@ -610,3 +610,14 @@ F1: „Mutacje zawsze”.
 2. Nietoperz w dzień wisi pod koroną drzewa albo w domku, nigdy na tablicy ogłoszeń ani na lampie.
 3. Mało drzew i lamp: chowańce, dla których brak wolnej grzędy, siedzą w domkach.
 
+## 53. Okno, przybliżenie, siewca nocą, sklep nasion
+Test w buildzie (w edytorze kadr liczy się z okna Game).
+1. Kółko myszy nad wyspą: przybliżenie x2/x4/x6/x8, punkt pod kursorem zostaje w miejscu; rozmiar okna się nie zmienia.
+   Nad Księgą, kołem nasion czy panelem kółko przewija UI, nie przybliża.
+2. Zakup kafelka, otwarcie i zamknięcie Księgi, włączenie przezroczystości: okno ma stale ten sam rozmiar.
+3. Opcje → Okno → Rozmiar okna: mały, średni, duży zmieniają okno; z ramką przeciągnięcie brzegu zmienia rozmiar,
+   po ponownym uruchomieniu gry rozmiar zostaje (w Opcjach wtedy żaden rozmiar nie jest zaznaczony).
+4. Mini-tryb: małe okno x2; otwarcie Księgi na chwilę je powiększa, zamknięcie przywraca.
+5. Noc, siewca: dzień = Dynia, noc = Pamięć ziemi (same dzienne w pamięci): siewca sieje dynię na pustych grządkach.
+6. Sklep → Nasiona: każdy wiersz w jednej linii, nic nie nachodzi na wiersz niżej; dymek nad opisem pokazuje całość.
+
