@@ -873,6 +873,15 @@ Obrazki referencyjne (kopie): `docs/img/`
     rozmowy i zabawy najszybciej; poniżej 60 ognik pracuje wolniej (do 60% tempa), poniżej 20 musi odpocząć do 85
     (przygasa, „Z”, potem gwiazdka). Rozmowy i zabawy dają też po 1 punkcie doświadczenia (integracja). Panel gniazda:
     nastrój i tempo pracy przy każdym ogniku, „odpoczywa”, podpowiedź o ognisku i senniku.
+104. **Przegląd kodu (4 obszary) i poprawki.** Ogniki: zabawa nie wywraca się po zniknięciu towarzysza (blokowała
+    zabawy do restartu), plon w rękach od razu po wyrwaniu, przerwane wyrywanie i podrzucanie sprzątają po sobie,
+    siewca nie wykopuje rośliny bez nasion i monet, przeniesiony ognik nie zostaje w cudzej zabawie; tłok: przy ognisku
+    krąg 6 miejsc, spacery wokół własnego gniazda, miejsca nad pniem symetryczne. Chowańce: na koronie drzewa, lampie
+    i tablicy rysują się przed nią; klik w chowańca wygrywa tylko blisko jego środka (nie zasłania grządek i lamp);
+    prezenty także bez grafiki; **chowańce i więź płyną z graczem przez rejs we mgłę** (domki stawia się od nowa).
+    Czas i światło: długa klatka (uśpiony komputer) nie przelicza godzin naraz (rośliny nocy dostają przespaną noc jak
+    offline), snopy obracają się płynnie, cienie znikają od razu z obiektem i uwzględniają przysiad roślin, wyciek
+    sprite'a pioruna w menu, uszkodzony zapis zaczyna rano. Ekonomia: „Obfite noce” znów +1 plon nocy za roślinę.
 
 ---
 

@@ -105,14 +105,14 @@ namespace Wyspa.Economy
         public const float NightYieldSeconds = 600f;
 
         /// <summary>
-        /// Plony nocy (waluta) za count roślin nocy („Obfite noce” więcej). Średnio (plon + premia) × wzrost / 10 min,
+        /// Plony nocy (waluta) za count roślin nocy („Obfite noce” więcej). Średnio plon × wzrost / 10 min + premia,
         /// reszta ułamkowa losowana (trupi grzyb: 1 co piąty zbiór, upiorna dynia: 3 na 5, cmentarny bluszcz: 1).
         /// </summary>
         public static int NightYield(CropDefinition c, int count = 1)
         {
             if (c == null || c.kind != CropKind.Night || count <= 0)
                 return 0;
-            float expected = count * (c.nightHarvestYield + E.NightYieldBonus) * c.growSeconds / NightYieldSeconds;
+            float expected = count * (c.nightHarvestYield * c.growSeconds / NightYieldSeconds + E.NightYieldBonus);   // „Obfite noce”: +N za każdą
             int whole = Mathf.FloorToInt(expected);
             return whole + (UnityEngine.Random.value < expected - whole ? 1 : 0);
         }

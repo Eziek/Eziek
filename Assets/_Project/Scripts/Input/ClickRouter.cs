@@ -36,8 +36,9 @@ namespace Wyspa.Input
             var hits = Physics2D.OverlapPointAll(world);
             if (hits == null || hits.Length == 0)
                 return null;
+            // chowaniec wygrywa tylko klik blisko środka (nie zasłania grządki ani lampy, przy której akurat siedzi)
             foreach (var h in hits)
-                if (h != null && h.TryGetComponent(out IPriorityClick _))
+                if (h != null && h.TryGetComponent(out IPriorityClick _) && ((Vector2)h.bounds.center - world).sqrMagnitude < 0.3f * 0.3f)
                     return h;
             foreach (var h in hits)
                 if (h != null && !h.TryGetComponent(out ILowPriorityClick _))

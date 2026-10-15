@@ -446,6 +446,7 @@ namespace Wyspa.Save
                 mist = true,
                 mistUnlocks = game.SnapshotUnlocks(),
                 summary = summary,
+                familiars = Familiars.FamiliarSystem.Instance != null ? Familiars.FamiliarSystem.Instance.Snapshot() : null,   // chowańce płyną z graczem
             };
             owner = null;   // bez autozapisu starej wyspy w tej klatce
             WriteTo(FilePath, data);
@@ -541,6 +542,7 @@ namespace Wyspa.Save
                 essence = Prestige.Level(Prestige.EmberReserve) > 0 ? 1e6f : 0f,   // przycięte do pojemności słoja
                 clockOffset = GameClock.MorningOffset(),   // nowa wyspa zaczyna się rano
                 arrival = true,                            // scenka przypłynięcia
+                familiars = Familiars.FamiliarSystem.ForNewIsland(old.familiars),   // chowańce i więź zostają (domki trzeba postawić od nowa)
             };
             data.coins = Prestige.StartCurrencies()[0].amount;
             int slot = MistSlot;
@@ -617,11 +619,13 @@ namespace Wyspa.Save
             {
                 Debug.LogError($"[Wyspa] Uszkodzony zapis, start od zera (kopia: *.corrupt.json): {e.Message}");
                 BackupCorrupt();
+                GameClock.SaveOffsetSeconds = GameClock.MorningOffset();   // nowa wyspa od rana
                 return;
             }
             if (data == null)
             {
                 BackupCorrupt();
+                GameClock.SaveOffsetSeconds = GameClock.MorningOffset();
                 return;
             }
             if (!string.IsNullOrEmpty(data.slotName))

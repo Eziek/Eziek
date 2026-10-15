@@ -271,11 +271,37 @@ namespace Wyspa.Core
 
         void Update()
         {
-            accumulator += Time.unscaledDeltaTime;
+            float frame = Time.unscaledDeltaTime;
+            if (frame > 60f)
+            {
+                // uśpiony komputer albo długie zawieszenie: rośliny nocy dostają przespaną noc jak offline,
+                // reszta nie przelicza godzin w jednej klatce (bez spalania Żaru i nagłego dojrzewania)
+                CatchUpNight(frame);
+                frame = tickInterval;
+            }
+            accumulator = Mathf.Min(accumulator + frame, 5f);
             while (accumulator >= tickInterval)
             {
                 accumulator -= tickInterval;
                 Tick(tickInterval * debugTimeScale);
+            }
+        }
+
+        /// <summary>Wzrost roślin nocy za przerwę w działaniu gry (jak przy wczytaniu zapisu: noc, świt, zmierzch, pełnia x2).</summary>
+        void CatchUpNight(float gapSeconds)
+        {
+            var now = System.DateTime.Now;
+            float night = clock.NightCropSecondsBetween(now.AddSeconds(-gapSeconds), now);
+            if (night <= 0f)
+                return;
+            bool fullMoon = clock.IsFullMoon;
+            foreach (var plot in FarmPlot.All)
+            {
+                var c = plot != null ? plot.State.crop : null;
+                if (c == null || c.kind != CropKind.Night || (c.requiresFullMoon && !fullMoon))
+                    continue;
+                plot.State.growth = Mathf.Min(c.growSeconds, plot.State.growth + night * (fullMoon ? 2f : 1f));
+                plot.RefreshVisual();
             }
         }
 

@@ -36,6 +36,7 @@ namespace Wyspa.Visual
 
         const float WispGround = 0.42f;     // plamka cienia tyle pod ognikiem (ziemia pod nim)
         readonly Dictionary<Transform, Shadow> shadows = new Dictionary<Transform, Shadow>();
+        readonly HashSet<Transform> seen = new HashSet<Transform>();
         readonly Dictionary<Wisp, SpriteRenderer> wispShadows = new Dictionary<Wisp, SpriteRenderer>();
         readonly List<Wisp> goneWisps = new List<Wisp>();
         Sprite blob;
@@ -92,9 +93,11 @@ namespace Wyspa.Visual
             var root = island != null ? island.DecoRoot : null;
             if (root == null)
                 return;
-            var seen = new HashSet<Transform>();
-            foreach (Transform t in root)
+            var seen = this.seen;
+            seen.Clear();
+            for (int i = 0; i < root.childCount; i++)
             {
+                var t = root.GetChild(i);
                 if (t == null || !t.gameObject.activeInHierarchy || !t.TryGetComponent(out SpriteRenderer src))
                     continue;
                 seen.Add(t);
@@ -213,7 +216,10 @@ namespace Wyspa.Visual
                 var f = kv.Key;
                 var sr = kv.Value;
                 if (f == null || sr == null)
+                {
+                    if (sr != null) sr.enabled = false;
                     continue;
+                }
                 // w nocy słaby cień (od księżyca); lis-widmo i ćma (świeci) bez cienia w nocy
                 float a = (sunAlpha > 0.01f ? sunAlpha : nightAlpha) * f.Alpha;
                 if (sunAlpha <= 0.01f && (f.Kind == Familiars.FamiliarSystem.Fox || f.Kind == Familiars.FamiliarSystem.Moth))
@@ -236,7 +242,10 @@ namespace Wyspa.Visual
                 var w = kv.Key;
                 var sr = kv.Value;
                 if (w == null || sr == null)
+                {
+                    if (sr != null) sr.enabled = false;
                     continue;
+                }
                 float a = sunAlpha * 0.85f;
                 sr.enabled = a > 0.01f;
                 if (!sr.enabled)
@@ -284,6 +293,7 @@ namespace Wyspa.Visual
             float sunAlpha = day ? 0.3f * Mathf.Clamp01(height / 0.12f) * weather : 0f;
             float moon = 1f - Mathf.Abs(clock.MoonPhase - 0.5f) * 2f;
             float moonAlpha = clock.IsNight ? 0.1f * (0.3f + 0.7f * moon) * weather : 0f;
+            bool darkish = clock.IsNight || clock.IsTwilight;   // raz na klatkę, nie dla każdego obiektu
             UpdateWispShadows(sunDir, sunAlpha);
             UpdateFamiliarShadows(sunDir, sunAlpha, moonAlpha * 1.5f);
 
@@ -292,7 +302,10 @@ namespace Wyspa.Visual
                 var s = kv.Value;
                 var src = s.source;
                 if (kv.Key == null || src == null || s.sr == null)
+                {
+                    if (s.sr != null) s.sr.enabled = false;   // zniszczony obiekt: cień znika od razu, nie przy skanowaniu
                     continue;
+                }
                 var sprite = src.sprite;
                 if (sprite == null || !src.enabled || sprite.rect.height < MinHeightPx)
                 {
@@ -302,7 +315,7 @@ namespace Wyspa.Visual
                 Vector2 basePos = kv.Key.position;
                 Vector2 dir = sunDir;
                 float alpha = sunAlpha;
-                if (clock.IsNight || clock.IsTwilight)
+                if (darkish)
                 {
                     // lampa: najbliższa zapalona w zasięgu (cień od niej w przeciwną stronę)
                     if (NearestLamp(basePos, s.lamp, out var away, out float closeness) && 0.42f * closeness * weather > alpha)
@@ -322,14 +335,14 @@ namespace Wyspa.Visual
                     continue;
                 }
                 s.sr.enabled = true;
-                s.sr.sprite = sprite;
+                if (s.sr.sprite != sprite) s.sr.sprite = sprite;
                 s.sr.flipX = src.flipX;
                 s.sr.color = new Color(Shade.r, Shade.g, Shade.b, alpha);
                 // pionowa składowa nie może zniknąć (cień zmieniłby się w kreskę)
                 if (Mathf.Abs(dir.y) < 0.18f)
                     dir.y = dir.y < 0f ? -0.18f : 0.18f;
-                float scaleX = Mathf.Abs(kv.Key.lossyScale.x);
-                Apply(s, basePos, scaleX, dir);
+                var ls = kv.Key.lossyScale;
+                Apply(s, basePos, Mathf.Abs(ls.x), dir * Mathf.Abs(ls.y));   // przysiad rośliny, potrząsanie drzewa
             }
         }
 

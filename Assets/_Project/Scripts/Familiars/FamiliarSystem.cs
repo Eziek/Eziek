@@ -214,9 +214,12 @@ namespace Wyspa.Familiars
             {
                 int coins = Mathf.RoundToInt((UnityEngine.Random.Range(8, 21) + game.Island.Map.Purchased / 2) * (1f + 0.25f * Bond(Cat)));
                 game.Wallet.Add(coins);
-                GameEvents.RaiseCurrencyGained(cat.transform.position + new Vector3(0f, 0.4f, 0f), CurrencyType.Coins, coins);
+                if (cat != null)
+                {
+                    GameEvents.RaiseCurrencyGained(cat.transform.position + new Vector3(0f, 0.4f, 0f), CurrencyType.Coins, coins);
+                    cat.React(Familiar.Mood.Happy);
+                }
                 GameEvents.RaiseToast("toast.familiar.gift", coins);
-                cat.React(Familiar.Mood.Happy);
             }
             // kruk: raz na dobę garść nasion (odblokowana roślina, nie hybryda)
             if (Ready(Raven, ref ravenGiftCycle, cycle, out var raven) && game.Crops != null)
@@ -228,7 +231,7 @@ namespace Wyspa.Familiars
                     int n = 2 + Bond(Raven);
                     game.Seeds.Add(c.id, n);
                     GameEvents.RaiseToast("toast.familiar.raven_gift", n, Loc.Get("crop." + c.id));
-                    raven.React(Familiar.Mood.Happy);
+                    if (raven != null) raven.React(Familiar.Mood.Happy);
                 }
             }
             // nietoperz: o świcie nawóz (po nocy łowów)
@@ -237,7 +240,7 @@ namespace Wyspa.Familiars
                 int n = 1 + (Bond(Bat) >= 3 ? 1 : 0);
                 game.AddFertilizer(n);
                 GameEvents.RaiseToast("toast.familiar.bat_gift", n);
-                bat.React(Familiar.Mood.Happy);
+                if (bat != null) bat.React(Familiar.Mood.Happy);
             }
         }
 
@@ -245,10 +248,11 @@ namespace Wyspa.Familiars
         bool Ready(string kind, ref long last, long cycle, out Familiar f)
         {
             f = null;
-            if (!arrived.Contains(kind) || !spawned.TryGetValue(kind, out f) || f == null)
-                return false;
-            if (last < 0)
-                last = cycle;
+            if (!arrived.Contains(kind))
+                return false;   // prezent także bez grafiki chowańca (przed Wyspa → 2)
+            spawned.TryGetValue(kind, out f);
+            if (last <= 0)
+                last = cycle;   // pierwsze sprawdzenie (też stary zapis bez tego pola): prezent dopiero w następnej dobie
             if (cycle <= last)
                 return false;
             last = cycle;
@@ -348,6 +352,18 @@ namespace Wyspa.Familiars
             foreach (var d in Defs)
                 if (arrived.Contains(d.id))
                     feeds[d.id] = Feeds(d.id) + 1;
+        }
+
+        /// <summary>Chowańce na nową wyspę po rejsie: przybyłe i więź zostają, prezenty liczą się od nowa.</summary>
+        public static FamiliarSave ForNewIsland(FamiliarSave old)
+        {
+            if (old == null)
+                return null;
+            old.lastGiftCycle = old.ravenGiftCycle = old.batGiftCycle = -1;
+            if (old.bondFed != null)
+                for (int i = 0; i < old.bondFed.Count; i++)
+                    old.bondFed[i] = -1;   // nowa wyspa: można nakarmić od razu
+            return old;
         }
 
         // ---- zapis

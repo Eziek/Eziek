@@ -532,9 +532,9 @@ namespace Wyspa.UI
             if (s.crop.kind == CropKind.Day && Weather.WeatherSystem.Raining)
                 moon += "\n" + Loc.Get("ui.plot.rain");
             // świt: roślina nocy rośnie jeszcze chwilę; zmierzch: roślina dnia jeszcze chwilę (potem pora drugiej)
-            if (s.crop.kind == CropKind.Night && game.Clock.IsDawn)
+            if (s.crop.kind == CropKind.Night && game.Clock.IsDawn && s.CanGrow(ctx))
                 moon += "\n" + Loc.Get("ui.plot.dawn_left", Ui.Duration(game.Clock.SecondsToNextPhase));
-            else if (s.crop.kind == CropKind.Day && game.Clock.IsDusk)
+            else if (s.crop.kind == CropKind.Day && game.Clock.IsDusk && s.CanGrow(ctx))
                 moon += "\n" + Loc.Get("ui.plot.dusk_left", Ui.Duration(game.Clock.SecondsToNextPhase));
             // roślina nie pasuje do pory (nocna w dzień, dzienna nocą bez lampy): podpowiedź, że da się ją podmienić
             string swap = plot.OutOfSeason(night, game.Clock.IsTwilight, ctx.lit) ? "\n" + Loc.Get("ui.plot.replace_hint") : "";

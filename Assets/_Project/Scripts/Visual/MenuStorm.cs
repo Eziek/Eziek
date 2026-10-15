@@ -102,6 +102,7 @@ namespace Wyspa.Visual
             }
             Destroy(go);
             Destroy(sprite.texture);
+            Destroy(sprite);
             // grzmot dochodzi chwilę później (daleko za wyspą)
             yield return new WaitForSecondsRealtime(Random.Range(0.2f, 0.7f));
             GameEvents.PlaySound("thunder", 0.6f);

@@ -29,6 +29,7 @@ namespace Wyspa.Visual
         [SerializeField] float nightVolume = 0.18f;
 
         Light2D shaft;
+        float tilt = float.NaN;
         Color color;
         float intensity = -1f, volume;
         float timer;
@@ -105,7 +106,9 @@ namespace Wyspa.Visual
             if (clock != null)
             {
                 float u = clock.IsNight ? 0.25f : clock.Second / GameClock.DaySeconds;
-                float tilt = Mathf.Lerp(-45f, 20f, u);   // obraz snopów pada z lewej góry: -45° = z prawej, +20° = mocniej z lewej
+                float target = Mathf.Lerp(-45f, 20f, u);   // obraz snopów pada z lewej góry: -45° = z prawej, +20° = mocniej z lewej
+                // płynnie (o zmroku i świcie bez skoku kąta)
+                tilt = float.IsNaN(tilt) ? target : Mathf.Lerp(tilt, target, 1f - Mathf.Exp(-Time.unscaledDeltaTime * 0.3f));
                 shaft.transform.localRotation = Quaternion.Euler(0f, 0f, tilt);
             }
 

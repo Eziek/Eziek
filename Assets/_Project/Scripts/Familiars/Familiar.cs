@@ -161,6 +161,8 @@ namespace Wyspa.Familiars
             var home = Home;
             if (!flying && home != null && (transform.position - home.Spot).sqrMagnitude < 0.02f)
                 order = home.FrontOrder;   // w domku (kosz, dziupla, grzęda): przed budowlą
+            else if (!flying && perchOrder != 0 && (transform.position - perchAt).sqrMagnitude < 0.02f)
+                order = Mathf.Max(order, perchOrder);   // na koronie drzewa, lampie, tablicy: przed nimi
             body.sortingOrder = order;
             if (glow != null) glow.sortingOrder = order + 1;
             // podskok przy reakcji (tylko sprite)
@@ -330,7 +332,7 @@ namespace Wyspa.Familiars
         /// <summary>Spacer: zwykle w pobliżu domku, czasem dalej po wyspie.</summary>
         Vector3 Wander() => HomeChance(0.6f) ? Home.Around() : RandomLand();
         Vector3 PlotOrHome() => HomeChance(0.35f) ? Home.Spot : NearPlot();
-        Vector3 PerchOrHome(float below = 0f) => HomeChance(0.4f) ? Home.Spot : RandomPerch() - new Vector3(0f, below, 0f);
+        Vector3 PerchOrHome(float below = 0f) => HomeChance(0.4f) ? Home.Spot : RandomPerch(below);
         Vector3 SleepSpot() => Home != null ? Home.Spot : CozySpot();
 
         /// <summary>Miejsce obok grządki (ropucha, kruk, ślimak).</summary>
@@ -352,14 +354,15 @@ namespace Wyspa.Familiars
         }
 
         /// <summary>Gdzie może usiąść ptak: korony drzew (owocowych i dzikich), tablica, lampy.</summary>
-        static List<Vector3> Perches()
+        /// <summary>Grzędy z kolejnością rysowania budowli, na której się siedzi (żeby ptak był przed koroną, nie za nią).</summary>
+        static List<(Vector3 at, int order)> Perches()
         {
-            var list = new List<Vector3>();
+            var list = new List<(Vector3, int)>();
             foreach (var t in FruitTree.All)
             {
                 var sr = t != null ? t.GetComponent<SpriteRenderer>() : null;
                 if (t != null && t.Adult && sr != null)
-                    list.Add(new Vector3(sr.bounds.center.x + Random.Range(-0.3f, 0.3f), sr.bounds.max.y - 0.45f, 0f));
+                    list.Add((new Vector3(sr.bounds.center.x + Random.Range(-0.3f, 0.3f), sr.bounds.max.y - 0.45f, 0f), sr.sortingOrder + 3));
             }
             var island = Island.Instance;
             if (island != null)
@@ -368,23 +371,35 @@ namespace Wyspa.Familiars
                 {
                     var sr = tr != null ? tr.GetComponent<SpriteRenderer>() : null;
                     if (sr != null)
-                        list.Add(new Vector3(sr.bounds.center.x, sr.bounds.max.y - 0.5f, 0f));
+                        list.Add((new Vector3(sr.bounds.center.x, sr.bounds.max.y - 0.5f, 0f), sr.sortingOrder + 3));
                 }
                 var board = island.Board;
                 if (board != null)
-                    list.Add(board.transform.position + new Vector3(0f, 1.1f, 0f));
+                    list.Add((board.transform.position + new Vector3(0f, 1.1f, 0f), Order(board.gameObject)));
             }
             foreach (var l in Lamp.All)
                 if (l != null)
-                    list.Add(l.transform.position + new Vector3(0f, 1.4f, 0f));
+                    list.Add((l.transform.position + new Vector3(0f, 1.4f, 0f), Order(l.gameObject)));
             return list;
         }
 
-        static Vector3 RandomPerch()
+        static int Order(GameObject go) => go.TryGetComponent(out SpriteRenderer sr) ? sr.sortingOrder + 3 : 0;
+
+        Vector3 perchAt;
+        int perchOrder;
+
+        /// <summary>Losowa grzęda; zapamiętuje, przed czym ma się rysować, gdy na niej siedzi.</summary>
+        Vector3 RandomPerch(float below = 0f)
         {
             var p = Perches();
-            return p.Count > 0 ? p[Random.Range(0, p.Count)] : RandomLand() + new Vector3(0f, 0.8f, 0f);
+            if (p.Count == 0)
+                return RandomLand() + new Vector3(0f, 0.8f, 0f);
+            var (at, order) = p[Random.Range(0, p.Count)];
+            perchAt = at - new Vector3(0f, below, 0f);
+            perchOrder = order;
+            return perchAt;
         }
+
 
         IEnumerator Walk(Vector3 to, float speed, float fps, params string[] poses)
         {
@@ -673,7 +688,7 @@ namespace Wyspa.Familiars
 
         IEnumerator BatLife()
         {
-            transform.position = RandomPerch() - new Vector3(0f, 0.55f, 0f);
+            transform.position = RandomPerch(0.55f);
             while (true)
             {
                 if (Night && Lamp.All.Count > 0)
