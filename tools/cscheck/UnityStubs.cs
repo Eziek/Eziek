@@ -120,7 +120,7 @@ namespace UnityEngine.InputSystem
     public class KeyControl : ButtonControl { }
     public class Vector2Control { public UnityEngine.Vector2 ReadValue() => default; }
     public class Mouse { public static Mouse current; public ButtonControl leftButton, rightButton; public Vector2Control position, scroll; }
-    public class Keyboard { public static Keyboard current; public KeyControl escapeKey, f1Key, leftCtrlKey, rightCtrlKey; }
+    public class Keyboard { public static Keyboard current; public KeyControl escapeKey, f1Key, leftCtrlKey, rightCtrlKey, sKey; }
 }
 namespace UnityEditor
 {
@@ -195,9 +195,10 @@ namespace UnityEngine.EventSystems
     public class BaseInputModule : UIBehaviour { }
     public class StandaloneInputModule : BaseInputModule { }
     public class BaseEventData { }
-    public class PointerEventData : BaseEventData { public PointerEventData(EventSystem es) { } public UnityEngine.Vector2 position; }
+    public class PointerEventData : BaseEventData { public PointerEventData(EventSystem es) { } public UnityEngine.Vector2 position; public RaycastResult pointerCurrentRaycast { get; set; } }
     public interface IEventSystemHandler { }
     public interface IPointerEnterHandler : IEventSystemHandler { void OnPointerEnter(PointerEventData e); }
+    public interface IPointerClickHandler : IEventSystemHandler { void OnPointerClick(PointerEventData e); }
     public interface IPointerExitHandler : IEventSystemHandler { void OnPointerExit(PointerEventData e); }
 }
 namespace UnityEngine.UI

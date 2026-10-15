@@ -115,6 +115,12 @@ namespace Wyspa.UI
                     Mathf.CeilToInt((W + 16) * UiRoot.DesiredUiScale()), Mathf.CeilToInt((H + 16) * UiRoot.DesiredUiScale())));
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();
+            // menu główne (Ustawienia): tylko zakładka opcji, reszta Księgi dotyczy gry
+            bool menu = Wyspa.Save.SaveSystem.InMenu;
+            foreach (var (tb, img) in tabImages)
+                img.gameObject.SetActive(!menu || tb == Tab.Options);
+            if (menu)
+                tab = Tab.Options;
             Show(tab);
             if (tab == Tab.Upgrades)
                 CenterTree();   // drzewko jest duże: po otwarciu Księgi zawsze od środka
@@ -1444,6 +1450,12 @@ namespace Wyspa.UI
                    v => Wyspa.Platform.TrayIcon.NotificationsEnabled = v);
             y += OptRow;
 
+            if (Wyspa.Save.SaveSystem.InMenu)
+            {
+                // menu główne: bez resetu zapisu (nie ma wczytanej gry)
+                info.text = Loc.Get(Wyspa.Platform.Autostart.Supported ? "ui.options.reset_hint" : "ui.options.window_build");
+                return;
+            }
             OptLabel("ui.options.reset", y);
             bool armed = Time.unscaledTime < resetArmedUntil;
             var b = OptButtonRef("Reset", Loc.Get(armed ? "ui.options.reset_confirm" : "ui.options.reset_button"), OptCol, y, 40f, () =>

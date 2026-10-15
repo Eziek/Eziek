@@ -319,8 +319,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   chmury z guzków (sylwetka kalafiora), bliższa zasłania dalszą, bryła cieniowana jak kula, jasny rąbek od światła
   z lewej-góry, łuki guzków w środku, 6 tonów od granatowo-szarego do brudnego pergaminu, bez obrysu, w głąb mgły
   ciemniej. Siatka 32 px jak woda. Podgląd: `docs/img/mgla_chmury.png`, `tools/pixel-proto/fog_clouds_preview.py`.
-- [x] **Menu główne i 3 sloty zapisu** (prośba gracza): nazwa do 10 znaków, data i godzina zapisu, usuwanie z potwierdzeniem,
-  powrót do menu z pierścienia akcji (§12.11).
+- [x] **Menu główne: Start, Ustawienia, Wyjdź** (prośba gracza; wcześniej 3 sloty zapisu z nazwami, wycofane): jeden zapis,
+  przycisk „Zapisz grę” w pierścieniu akcji i Ctrl+S, w tle burza nad wyspą (pioruny za wyspą, klik w tło = piorun),
+  powrót do menu z pierścienia akcji (§12.11, §9 p. 96).
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
   zegara). Księżyc: 8 nocy na cykl, pełnia jedną noc (rytuał „Księżycowa rosa”: dwie). Kupiec-widmo w co trzecią noc (34%),
   w pierwszej połowie nocy, zostaje 10 min. Rośliny i drzewa rosną **x3 szybciej** (marchew 3:20, dynia 8:20); rośliny nocy
@@ -748,6 +749,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     przywołanie). Gniazdo ogników: zakładki Ogniki (zasięg, lista z poziomami), Czapki (gdy jakąś masz; klik = następna
     czapka, można klikać dalej), Siewca (gdy jest siewca: nasiona dnia i nocy, podmiana), Przywołaj; Przenieś i Rozbierz
     pod każdą zakładką.
+96. **Menu główne: Start, Ustawienia, Wyjdź i burza w tle** (prośba gracza): bez slotów (jeden zapis: Start wczytuje
+    najnowszy plik albo zaczyna nową wyspę), Ustawienia = Księga tylko z Opcjami. Przycisk „Zapisz grę” w pierścieniu akcji
+    i Ctrl+S. Interaktywne tło: burza nad wyspą, pioruny co kilka sekund w morze za wyspą (rozbłysk, piana, grzmot), klik
+    w tło = piorun w to miejsce (§12.11).
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -1024,8 +1029,8 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
   ziarno świata, inne strefy we mgle).
 - **Jak:** Księga → zakładka Rejs (ikona perły) → „Odpłyń we mgłę” (drugi klik potwierdza) → **Przystań we mgle**: ekran
   między rejsami (wyspa w tle jak w menu głównym). Tam gracz wydaje perły na losowania darów, a dopiero „Wypłyń na nową
-  wyspę” zaczyna grę z wylosowanymi darami. Zamknięcie gry w Przystani niczego nie gubi: slot w menu ma dopisek „We mgle”,
-  a „Graj” wraca do Przystani. Z Przystani można wyjść do menu głównego.
+  wyspę” zaczyna grę z wylosowanymi darami. Zamknięcie gry w Przystani niczego nie gubi: „Start” w menu
+  głównym wraca do Przystani. Z Przystani można wyjść do menu głównego.
 - **Perły Mgły** = pierwiastek z (monety zarobione w tym rejsie / 10 000): 10 tys. = 1, 40 tys. = 2, 1 mln = 10.
   Zarobek liczy każda moneta wpadająca do portfela (sprzedaż, zamówienia, odsetki, wyprawy). Niewydane perły zostają.
 - **Blask pereł:** każda kiedykolwiek zdobyta perła +2% do wszystkich cen i dochodów (na zawsze, także po wydaniu perły).
@@ -1209,14 +1214,18 @@ Krok zapisany w `SaveData.intro` (v8); zapisy sprzed v8 kończą wprowadzenie od
   - rozmiar tekstu w UI = 8 × skala.
 - **Makiety do zrobienia:** Rytuały, Bestiariusz, Statystyki, Opcje, panel łodzi/wyprawy, handel z kupcem.
 
-### 12.11 Menu główne i zapisy (prośba gracza, po 6d)
-- Gra startuje w **menu głównym**: panel z drewna na tle przyciemnionej wyspy (stała wyspa z ziarna, bez zapisu, bez HUD-u
+### 12.11 Menu główne i zapis (prośba gracza, po 6d; przebudowa §9 p. 96)
+- Gra startuje w **menu głównym**: logo i trzy przyciski na tle wyspy (stała wyspa z ziarna, bez zapisu, bez HUD-u
   i powiadomień). `UI/MainMenuView.cs`, stan w `SaveSystem.CurrentSlot` (-1 = menu).
-- **3 sloty zapisu** (`save_1.json`..`save_3.json`). Slot pokazuje nazwę i **datę z godziną zapisu** (format języka gry).
-  Pełny: „Graj” i „Usuń” (drugi klik w 4 s potwierdza). Pusty: „Nowa gra” → pole na **nazwę do 10 znaków** (domyślnie
-  „Wyspa N”), Enter albo „Start”. Wybór slotu ładuje scenę od nowa już z tym zapisem.
-- Na dole: język (klik = następny) i wyjście z gry. W grze pierścień akcji ma „Menu główne” (zapis i powrót do menu).
-- Stary `save.json` przenosi się sam do slotu 1. Reset zapisu w Opcjach czyści tylko bieżący slot (nazwa zostaje).
+- **Start**: jeden zapis. Wczytuje ostatnio zapisany plik (`save_N.json`; po starych slotach zostaje ten najnowszy),
+  a gdy go nie ma, zaczyna nową wyspę. Gra w Przystani we mgle wraca do Przystani. Scena ładuje się od nowa z zapisem.
+- **Ustawienia**: Księga otwarta tylko na Opcjach (bez innych zakładek, bez resetu zapisu i bez „Wyjdź” na stronie).
+- **Wyjdź**: wyjście z gry.
+- **Tło: burza** (`Visual/MenuStorm.cs`): w menu zawsze deszcz i przyciemnienie, co 3,5-8 s piorun (rysowany od nowa
+  za każdym razem, z odnogami) uderza w morze za wyspą: dwa mignięcia, rozbłysk sceny, piana, grzmot z opóźnieniem.
+  Klik w tło przywołuje piorun w to miejsce.
+- W grze: „Zapisz grę” w pierścieniu akcji i **Ctrl+S** (toast „Zapisano grę”, autozapis liczy od nowa), „Menu główne”
+  (zapis i powrót do menu).
 
 ### 12.10 Do przemyślenia: UI na pulpicie (prośba gracza po Etapie 6a)
 **Stan:** pierścień ma Księgę, Sklep, Rozbudowę, Opcje i Wyjście; PPM na grządce dokłada „Zasyp grządkę”.

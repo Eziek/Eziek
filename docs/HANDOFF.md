@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-14)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-95), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-96), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -18,6 +18,8 @@ Historia decyzji jest w GDD §9 (punkty 1-95), a lista testów w `docs/TEST_PLAN
   kodu UI (GDD §9 p. 79, TEST_PLAN 10). Komentarze w kodzie bez historii rozmów; commity bez stopek o asystencie.
 - **Ostatnio (wybór gracza):** scenka rejsu, świt/zmierzch, narzędzia ogników, sklep z czapkami (GDD §9 p. 84, 86-88).
   Następne z listy propozycji: zdarzenia na horyzoncie z sekcją „Widziane” w Bestiariuszu (gracz jeszcze nie wybrał).
+- **Menu główne uproszczone** (GDD §9 p. 96, §12.11, TEST_PLAN 25): Start / Ustawienia / Wyjdź, jeden zapis (bez slotów),
+  „Zapisz grę” w pierścieniu i Ctrl+S, burza w tle menu (`Visual/MenuStorm.cs`). Nie testowane w Unity.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,

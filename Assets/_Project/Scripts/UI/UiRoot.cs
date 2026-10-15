@@ -328,6 +328,8 @@ namespace Wyspa.UI
         void Update()
         {
             UpdateRingTrigger();
+            if (UiInput.SavePressed && !Save.SaveSystem.InMenu && !VoyageScene.Playing)
+                SaveGame();
             scaler.scaleFactor = Book.IsOpen ? BookScale() : UiScale();
             Hud.ForceVisible = Book.IsOpen || Wheel.IsOpen || Ring.IsOpen || Expansion.IsActive || PlacementMode.Active;
             UpdatePlotTooltip();
@@ -372,6 +374,7 @@ namespace Wyspa.UI
                 new ActionRing.Entry { icon = "shop", nameKey = "menu.shop", run = () => OpenBook(BookView.Tab.Shop) },
                 new ActionRing.Entry { icon = "plus", nameKey = "menu.expand", run = () => { CloseAll(); Expansion.Toggle(); } },
                 new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
+                new ActionRing.Entry { icon = "save", nameKey = "act.save", run = SaveGame },
                 new ActionRing.Entry { icon = "menu", nameKey = "menu.main", run = BackToMenu },
                 new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame },
             };
@@ -409,6 +412,17 @@ namespace Wyspa.UI
                     run = () => { if (plot != null && Island.Instance != null) Island.Instance.TryFill(plot); },
                 });
             return list;
+        }
+
+        /// <summary>Zapis gry (pierścień akcji, Ctrl+S): toast „Zapisano”.</summary>
+        void SaveGame()
+        {
+            var save = FindAnyObjectByType<Save.SaveSystem>();
+            if (save != null && save.SaveNow())
+            {
+                GameEvents.RaiseToast("toast.saved");
+                GameEvents.PlaySound("book", 0.6f);
+            }
         }
 
         /// <summary>Powrót do menu głównego (pierścień): gra zapisuje się, scena ładuje się od nowa z menu.</summary>

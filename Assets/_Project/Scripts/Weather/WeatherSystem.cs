@@ -45,6 +45,16 @@ namespace Wyspa.Weather
         Transform root;
 
         void Awake() => Instance = this;
+
+        /// <summary>Menu główne: burza w tle (pioruny rzuca Visual.MenuStorm). Przystań we mgle bez burzy.</summary>
+        static bool MenuStorm => Save.SaveSystem.InMenu && !Save.SaveSystem.InMist;
+
+        /// <summary>Rozbłysk sceny jak przy piorunie (dwa mignięcia), bez grzmotu.</summary>
+        public static void TriggerFlash()
+        {
+            if (Instance != null)
+                Instance.flashTime = 0f;
+        }
         void OnDestroy()
         {
             if (Instance == this) Instance = null;
@@ -84,10 +94,10 @@ namespace Wyspa.Weather
             float dt = Time.unscaledDeltaTime;
             int segment = Mathf.Min(2, Mathf.FloorToInt(game.Clock.Second / 1200f));
             long key = game.Clock.CycleNumber * 3 + segment;
-            var next = DebugForce ?? Roll(game.Clock.CycleNumber, segment);
+            var next = DebugForce ?? (MenuStorm ? WeatherKind.Storm : Roll(game.Clock.CycleNumber, segment));
             if (key != lastSegmentKey || next != Current)
             {
-                bool announce = lastSegmentKey != long.MinValue && next != Current && next != WeatherKind.Clear;
+                bool announce = lastSegmentKey != long.MinValue && next != Current && next != WeatherKind.Clear && !Save.SaveSystem.InMenu;
                 lastSegmentKey = key;
                 Current = next;
                 if (announce)
@@ -97,7 +107,7 @@ namespace Wyspa.Weather
             // światło: deszcz przyciemnia, piorun błyska (krótko, dwa razy)
             float targetLight = Current == WeatherKind.Storm ? 0.75f : Current == WeatherKind.Rain ? 0.88f : 1f;
             LightMultiplier = Mathf.MoveTowards(LightMultiplier, targetLight, dt * 0.2f);
-            if (Current == WeatherKind.Storm)
+            if (Current == WeatherKind.Storm && !MenuStorm)   // w menu pioruny z widocznym błyskiem rzuca MenuStorm
             {
                 nextBolt -= dt;
                 if (nextBolt <= 0f)

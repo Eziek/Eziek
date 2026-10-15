@@ -211,6 +211,33 @@ namespace Wyspa.Save
             }
         }
 
+        /// <summary>
+        /// Jeden zapis (prośba gracza: bez wyboru slotów). Start w menu głównym gra na zapisie zapisanym najpóźniej
+        /// (starsze gry ze slotów 2 i 3 nie przepadają: liczy się ten, w który grano ostatnio), a bez zapisów na slocie 1.
+        /// </summary>
+        public static void PlayMain()
+        {
+            int best = 0;
+            long newest = long.MinValue;
+            foreach (var s in ListSlots())
+                if (s.exists && s.savedAtUtcTicks > newest)
+                {
+                    newest = s.savedAtUtcTicks;
+                    best = s.index;
+                }
+            Play(best);
+        }
+
+        /// <summary>Zapis teraz (pierścień akcji, Ctrl+S). False = nie ma czego zapisać (menu, Przystań).</summary>
+        public bool SaveNow()
+        {
+            if (owner == null || InMenu)
+                return false;
+            Save(owner);
+            timer = 0f;   // autozapis liczy od nowa
+            return true;
+        }
+
         /// <summary>Gra na slocie (wczytanie albo nowa wyspa, gdy plik nie istnieje): scena ładuje się od nowa.</summary>
         public static void Play(int slot, string newName = null)
         {

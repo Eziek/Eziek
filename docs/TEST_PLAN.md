@@ -302,3 +302,15 @@ Najpierw **Wyspa → 2** (grafiki czapek).
 3. Siewca: „Podmiana o świcie i zmroku” przełącza się bez zamykania; wybór nasion otwiera koło nasion (panel się zamyka).
 4. Przywołaj: przywołany ognik od razu widać w zakładce Ogniki po przełączeniu; panel zostaje otwarty; pełne gniazdo = napis.
 5. Zamknij panel i otwórz to samo gniazdo: ta sama zakładka; inne gniazdo: pierwsza zakładka.
+
+## 25. Menu główne, zapis i burza
+1. Start gry: menu ma logo i tylko Start, Ustawienia, Wyjdź. W tle deszcz, co kilka sekund piorun za wyspą (w morze,
+   nie w ląd), rozbłysk sceny i grzmot chwilę później. Góra pioruna chowa się w chmurach mgły.
+2. Klik w tło (poza przyciskami): piorun w to miejsce. Klik w przycisk nie wywołuje pioruna.
+3. Ustawienia: Księga tylko z zakładką Opcje, bez resetu zapisu i bez „Wyjdź” na stronie; zamknięcie wraca do menu.
+4. Start bez żadnego zapisu: nowa wyspa (07:00). Start z zapisem: wczytuje ostatnio grany zapis (także po starych slotach
+   2-3 ten najnowszy). Start po zamknięciu gry w Przystani: Przystań we mgle.
+5. W grze: PPM → „Zapisz grę” (ikona zwoju z pieczęcią po Wyspa → 2): toast „Zapisano grę”. Ctrl+S robi to samo.
+   Ctrl+S w menu i podczas scenki rejsu nic nie robi.
+6. Menu główne z pierścienia: powrót do menu z burzą; Start wraca do tej samej wyspy.
+

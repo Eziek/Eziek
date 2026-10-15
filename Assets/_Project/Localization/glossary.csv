@@ -142,6 +142,7 @@ term.work_tempo,Tempo pracy,Work tempo,Arbeitstempo,作業テンポ,工作节奏
 act.fill,Zasyp grządkę,Fill in the plot,Beet zuschütten,畑を埋める,填平田地,odwrotność Przekop
 act.dismantle,Rozbierz,Dismantle,Abbauen,解体,拆除,"budowle, zwrot połowy monet"
 act.quit,Wyjdź z gry,Quit the game,Spiel beenden,ゲーム終了,退出游戏,
+act.save,Zapisz grę,Save game,Spiel speichern,セーブ,保存游戏,"pierścień akcji, Ctrl+S"
 term.fruit_tree,Drzewo owocowe,Fruit tree,Obstbaum,果樹,果树,"sadzonka ze sklepu, owocuje cyklicznie"
 fruit.apple,Jabłko,Apple,Apfel,リンゴ,苹果,
 fruit.elder,Jagoda bzu,Elderberry,Holunderbeere,ニワトコの実,接骨木果,
