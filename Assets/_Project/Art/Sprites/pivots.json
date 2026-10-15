@@ -6,6 +6,11 @@
       "y": 0.04545
     },
     {
+      "name": "altar__winter",
+      "x": 0.51923,
+      "y": 0.04545
+    },
+    {
       "name": "altar_glow",
       "x": 0.51923,
       "y": 0.04545
@@ -156,12 +161,22 @@
       "y": 0.0625
     },
     {
+      "name": "boat__winter",
+      "x": 0.51667,
+      "y": 0.0625
+    },
+    {
       "name": "boat_glow",
       "x": 0.51667,
       "y": 0.0625
     },
     {
       "name": "bonfire_0",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "bonfire_0__winter",
       "x": 0.525,
       "y": 0.0
     },
@@ -176,6 +191,11 @@
       "y": 0.0
     },
     {
+      "name": "bonfire_1__winter",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
       "name": "bonfire_1_glow",
       "x": 0.525,
       "y": 0.0
@@ -186,12 +206,22 @@
       "y": 0.0
     },
     {
+      "name": "bonfire_2__winter",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
       "name": "bonfire_2_glow",
       "x": 0.525,
       "y": 0.0
     },
     {
       "name": "broken_pillar",
+      "x": 0.53571,
+      "y": 0.03571
+    },
+    {
+      "name": "broken_pillar__winter",
       "x": 0.53571,
       "y": 0.03571
     },
@@ -207,12 +237,47 @@
       "pad": 6
     },
     {
+      "name": "bush__autumn",
+      "x": 0.51562,
+      "y": 0.06667
+    },
+    {
+      "name": "bush__spring",
+      "x": 0.51562,
+      "y": 0.06667
+    },
+    {
+      "name": "bush__winter",
+      "x": 0.51562,
+      "y": 0.06667
+    },
+    {
       "name": "bush_cut",
       "x": 0.52778,
       "y": 0.1
     },
     {
+      "name": "bush_cut__autumn",
+      "x": 0.52778,
+      "y": 0.1
+    },
+    {
+      "name": "bush_cut__spring",
+      "x": 0.52778,
+      "y": 0.1
+    },
+    {
+      "name": "bush_cut__winter",
+      "x": 0.52778,
+      "y": 0.1
+    },
+    {
       "name": "cauldron_brew_0",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_brew_0__winter",
       "x": 0.53125,
       "y": 0.05
     },
@@ -227,12 +292,22 @@
       "y": 0.05
     },
     {
+      "name": "cauldron_brew_1__winter",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
       "name": "cauldron_brew_1_glow",
       "x": 0.53125,
       "y": 0.05
     },
     {
       "name": "cauldron_brew_2",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_brew_2__winter",
       "x": 0.53125,
       "y": 0.05
     },
@@ -247,7 +322,17 @@
       "y": 0.05
     },
     {
+      "name": "cauldron_idle__winter",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
       "name": "cauldron_ready_0",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_ready_0__winter",
       "x": 0.53125,
       "y": 0.05
     },
@@ -258,6 +343,11 @@
     },
     {
       "name": "cauldron_ready_1",
+      "x": 0.53125,
+      "y": 0.05
+    },
+    {
+      "name": "cauldron_ready_1__winter",
       "x": 0.53125,
       "y": 0.05
     },
@@ -342,7 +432,17 @@
       "y": 0.05556
     },
     {
+      "name": "compost__winter",
+      "x": 0.52273,
+      "y": 0.05556
+    },
+    {
       "name": "crate",
+      "x": 0.525,
+      "y": 0.05556
+    },
+    {
+      "name": "crate__winter",
       "x": 0.525,
       "y": 0.05556
     },
@@ -1102,7 +1202,17 @@
       "y": 0.02273
     },
     {
+      "name": "dead_tree__winter",
+      "x": 0.51562,
+      "y": 0.02273
+    },
+    {
       "name": "dreamhouse",
+      "x": 0.52273,
+      "y": 0.0
+    },
+    {
+      "name": "dreamhouse__winter",
       "x": 0.52273,
       "y": 0.0
     },
@@ -1117,12 +1227,22 @@
       "y": 0.0
     },
     {
+      "name": "ember_crystal__winter",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
       "name": "ember_crystal_glow",
       "x": 0.53125,
       "y": 0.0
     },
     {
       "name": "ember_kiln_0",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "ember_kiln_0__winter",
       "x": 0.52083,
       "y": 0.0
     },
@@ -1137,12 +1257,22 @@
       "y": 0.0
     },
     {
+      "name": "ember_kiln_1__winter",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
       "name": "ember_kiln_1_glow",
       "x": 0.52083,
       "y": 0.0
     },
     {
       "name": "ember_kiln_2",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "ember_kiln_2__winter",
       "x": 0.52083,
       "y": 0.0
     },
@@ -1157,6 +1287,11 @@
       "y": 0.0
     },
     {
+      "name": "essence_jar_l__winter",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
       "name": "essence_jar_l_glow",
       "x": 0.52778,
       "y": 0.0
@@ -1167,12 +1302,22 @@
       "y": 0.0
     },
     {
+      "name": "essence_jar_m__winter",
+      "x": 0.53571,
+      "y": 0.0
+    },
+    {
       "name": "essence_jar_m_glow",
       "x": 0.53571,
       "y": 0.0
     },
     {
       "name": "essence_jar_s",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "essence_jar_s__winter",
       "x": 0.54167,
       "y": 0.0
     },
@@ -1777,12 +1922,87 @@
       "y": 0.5
     },
     {
+      "name": "fx_leaf_0__autumn",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_0__spring",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_0__winter",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "fx_leaf_1",
       "x": 0.5,
       "y": 0.5
     },
     {
+      "name": "fx_leaf_1__autumn",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_1__spring",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_1__winter",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf__autumn",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf__spring",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf__winter",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
       "name": "fx_leaf_fall",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_fall__autumn",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_fall__autumn",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_fall__spring",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_fall__spring",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_fall__winter",
+      "x": 0.5,
+      "y": 0.5
+    },
+    {
+      "name": "fx_leaf_fall__winter",
       "x": 0.5,
       "y": 0.5
     },
@@ -1837,7 +2057,17 @@
       "y": 0.05556
     },
     {
+      "name": "gravestone_0__winter",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
       "name": "gravestone_1",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
+      "name": "gravestone_1__winter",
       "x": 0.53571,
       "y": 0.05556
     },
@@ -1847,7 +2077,17 @@
       "y": 0.05556
     },
     {
+      "name": "gravestone_2__winter",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
       "name": "gravestone_broken",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
+      "name": "gravestone_broken__winter",
       "x": 0.53571,
       "y": 0.05556
     },
@@ -1902,12 +2142,27 @@
       "y": 0.05556
     },
     {
+      "name": "harvest_crate_0__winter",
+      "x": 0.53125,
+      "y": 0.05556
+    },
+    {
       "name": "harvest_crate_1",
       "x": 0.53125,
       "y": 0.05556
     },
     {
+      "name": "harvest_crate_1__winter",
+      "x": 0.53125,
+      "y": 0.05556
+    },
+    {
       "name": "harvest_crate_2",
+      "x": 0.53125,
+      "y": 0.05556
+    },
+    {
+      "name": "harvest_crate_2__winter",
       "x": 0.53125,
       "y": 0.05556
     },
@@ -2017,12 +2272,27 @@
       "y": 0.0
     },
     {
+      "name": "home_bat__winter",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
       "name": "home_cat",
       "x": 0.525,
       "y": 0.0
     },
     {
+      "name": "home_cat__winter",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
       "name": "home_fox",
+      "x": 0.52273,
+      "y": 0.0
+    },
+    {
+      "name": "home_fox__winter",
       "x": 0.52273,
       "y": 0.0
     },
@@ -2037,6 +2307,11 @@
       "y": 0.0
     },
     {
+      "name": "home_moth__winter",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
       "name": "home_moth_glow",
       "x": 0.54167,
       "y": 0.0
@@ -2047,12 +2322,27 @@
       "y": 0.0
     },
     {
+      "name": "home_owl__winter",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
       "name": "home_raven",
       "x": 0.53125,
       "y": 0.0
     },
     {
+      "name": "home_raven__winter",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
       "name": "home_snail",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "home_snail__winter",
       "x": 0.525,
       "y": 0.0
     },
@@ -2063,6 +2353,11 @@
     },
     {
       "name": "home_toad",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "home_toad__winter",
       "x": 0.52083,
       "y": 0.0
     },
@@ -2587,12 +2882,22 @@
       "y": 0.07143
     },
     {
+      "name": "iron_fence__winter",
+      "x": 0.52778,
+      "y": 0.07143
+    },
+    {
       "name": "island",
       "x": 0.5,
       "y": 0.5
     },
     {
       "name": "lamp_lantern",
+      "x": 0.36111,
+      "y": 0.02941
+    },
+    {
+      "name": "lamp_lantern__winter",
       "x": 0.36111,
       "y": 0.02941
     },
@@ -2607,12 +2912,22 @@
       "y": 0.07143
     },
     {
+      "name": "lamp_mushrooms__winter",
+      "x": 0.525,
+      "y": 0.07143
+    },
+    {
       "name": "lamp_mushrooms_glow",
       "x": 0.525,
       "y": 0.07143
     },
     {
       "name": "lamp_skull",
+      "x": 0.53571,
+      "y": 0.04545
+    },
+    {
+      "name": "lamp_skull__winter",
       "x": 0.53571,
       "y": 0.04545
     },
@@ -2627,12 +2942,22 @@
       "y": 0.03333
     },
     {
+      "name": "lamp_wisp__winter",
+      "x": 0.53125,
+      "y": 0.03333
+    },
+    {
       "name": "lamp_wisp_glow",
       "x": 0.53125,
       "y": 0.03333
     },
     {
       "name": "lighthouse",
+      "x": 0.51923,
+      "y": 0.01724
+    },
+    {
+      "name": "lighthouse__winter",
       "x": 0.51923,
       "y": 0.01724
     },
@@ -2647,12 +2972,22 @@
       "y": 0.05
     },
     {
+      "name": "merchant_chest__winter",
+      "x": 0.52273,
+      "y": 0.05
+    },
+    {
       "name": "merchant_chest_glow",
       "x": 0.52273,
       "y": 0.05
     },
     {
       "name": "merchant_chest_open",
+      "x": 0.52273,
+      "y": 0.05
+    },
+    {
+      "name": "merchant_chest_open__winter",
       "x": 0.52273,
       "y": 0.05
     },
@@ -2727,7 +3062,17 @@
       "y": 0.0
     },
     {
+      "name": "monument_chapel_0__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_chapel_1",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_chapel_1__winter",
       "x": 0.50962,
       "y": 0.0
     },
@@ -2737,12 +3082,27 @@
       "y": 0.0
     },
     {
+      "name": "monument_chapel_2__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_chapel_3",
       "x": 0.50962,
       "y": 0.0
     },
     {
+      "name": "monument_chapel_3__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_chapel_4",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_chapel_4__winter",
       "x": 0.50962,
       "y": 0.0
     },
@@ -2757,7 +3117,17 @@
       "y": 0.0
     },
     {
+      "name": "monument_observatory_0__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_observatory_1",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_observatory_1__winter",
       "x": 0.50962,
       "y": 0.0
     },
@@ -2767,12 +3137,27 @@
       "y": 0.0
     },
     {
+      "name": "monument_observatory_2__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_observatory_3",
       "x": 0.50962,
       "y": 0.0
     },
     {
+      "name": "monument_observatory_3__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_observatory_4",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_observatory_4__winter",
       "x": 0.50962,
       "y": 0.0
     },
@@ -2787,7 +3172,17 @@
       "y": 0.0
     },
     {
+      "name": "monument_sawmill_0__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_sawmill_1",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_sawmill_1__winter",
       "x": 0.50962,
       "y": 0.0
     },
@@ -2797,12 +3192,27 @@
       "y": 0.0
     },
     {
+      "name": "monument_sawmill_2__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_sawmill_3",
       "x": 0.50962,
       "y": 0.0
     },
     {
+      "name": "monument_sawmill_3__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_sawmill_4",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_sawmill_4__winter",
       "x": 0.50962,
       "y": 0.0
     },
@@ -2817,7 +3227,17 @@
       "y": 0.0
     },
     {
+      "name": "monument_watch_0__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_watch_1",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_watch_1__winter",
       "x": 0.50962,
       "y": 0.0
     },
@@ -2827,12 +3247,27 @@
       "y": 0.0
     },
     {
+      "name": "monument_watch_2__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_watch_3",
       "x": 0.50962,
       "y": 0.0
     },
     {
+      "name": "monument_watch_3__winter",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "monument_watch_4",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_watch_4__winter",
       "x": 0.50962,
       "y": 0.0
     },
@@ -2857,7 +3292,17 @@
       "y": 0.14286
     },
     {
+      "name": "net_buoy__winter",
+      "x": 0.53125,
+      "y": 0.14286
+    },
+    {
       "name": "notice_board",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
+      "name": "notice_board__winter",
       "x": 0.53125,
       "y": 0.04545
     },
@@ -2867,7 +3312,17 @@
       "y": 0.04545
     },
     {
+      "name": "notice_board_empty__winter",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
       "name": "pier",
+      "x": 0.06579,
+      "y": 0.34615
+    },
+    {
+      "name": "pier__winter",
       "x": 0.06579,
       "y": 0.34615
     },
@@ -2887,7 +3342,17 @@
       "y": 0.05556
     },
     {
+      "name": "reeds__winter",
+      "x": 0.53571,
+      "y": 0.05556
+    },
+    {
       "name": "rock",
+      "x": 0.52778,
+      "y": 0.07143
+    },
+    {
+      "name": "rock__winter",
       "x": 0.52778,
       "y": 0.07143
     },
@@ -2897,12 +3362,27 @@
       "y": 0.07143
     },
     {
+      "name": "rock_cracked__winter",
+      "x": 0.52778,
+      "y": 0.07143
+    },
+    {
       "name": "rubble",
       "x": 0.52778,
       "y": 0.1
     },
     {
+      "name": "rubble__winter",
+      "x": 0.52778,
+      "y": 0.1
+    },
+    {
       "name": "ruined_arch",
+      "x": 0.51389,
+      "y": 0.03125
+    },
+    {
+      "name": "ruined_arch__winter",
       "x": 0.51389,
       "y": 0.03125
     },
@@ -2962,6 +3442,11 @@
       "y": 0.05
     },
     {
+      "name": "rune_stone__winter",
+      "x": 0.53571,
+      "y": 0.05
+    },
+    {
       "name": "rune_stone_glow",
       "x": 0.53571,
       "y": 0.05
@@ -2982,7 +3467,17 @@
       "y": 0.04545
     },
     {
+      "name": "storehouse__winter",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
       "name": "stump_dead",
+      "x": 0.53125,
+      "y": 0.08333
+    },
+    {
+      "name": "stump_dead__winter",
       "x": 0.53125,
       "y": 0.08333
     },
@@ -2992,7 +3487,17 @@
       "y": 0.08333
     },
     {
+      "name": "stump_round__winter",
+      "x": 0.53125,
+      "y": 0.08333
+    },
+    {
       "name": "stump_spruce",
+      "x": 0.53125,
+      "y": 0.08333
+    },
+    {
+      "name": "stump_spruce__winter",
       "x": 0.53125,
       "y": 0.08333
     },
@@ -3168,10 +3673,40 @@
       "pad": 6
     },
     {
+      "name": "tree_apple_0__autumn",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_apple_0__spring",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_apple_0__winter",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
       "name": "tree_apple_1",
       "x": 0.51316,
       "y": 0.03125,
       "pad": 6
+    },
+    {
+      "name": "tree_apple_1__autumn",
+      "x": 0.51316,
+      "y": 0.03125
+    },
+    {
+      "name": "tree_apple_1__spring",
+      "x": 0.51316,
+      "y": 0.03125
+    },
+    {
+      "name": "tree_apple_1__winter",
+      "x": 0.51316,
+      "y": 0.03125
     },
     {
       "name": "tree_apple_2",
@@ -3180,10 +3715,40 @@
       "pad": 6
     },
     {
+      "name": "tree_apple_2__autumn",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_apple_2__spring",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_apple_2__winter",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
       "name": "tree_apple_3",
       "x": 0.51042,
       "y": 0.02273,
       "pad": 6
+    },
+    {
+      "name": "tree_apple_3__autumn",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_apple_3__spring",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_apple_3__winter",
+      "x": 0.51042,
+      "y": 0.02273
     },
     {
       "name": "tree_apple_fall_0",
@@ -3192,10 +3757,40 @@
       "pad": 6
     },
     {
+      "name": "tree_apple_fall_0__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_apple_fall_0__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_apple_fall_0__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_apple_fall_1",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_apple_fall_1__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_apple_fall_1__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_apple_fall_1__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_apple_fall_2",
@@ -3204,10 +3799,40 @@
       "pad": 6
     },
     {
+      "name": "tree_apple_fall_2__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_apple_fall_2__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_apple_fall_2__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_apple_fall_3",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_apple_fall_3__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_apple_fall_3__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_apple_fall_3__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_elder_0",
@@ -3216,10 +3841,40 @@
       "pad": 6
     },
     {
+      "name": "tree_elder_0__autumn",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_elder_0__spring",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_elder_0__winter",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
       "name": "tree_elder_1",
       "x": 0.51316,
       "y": 0.03125,
       "pad": 6
+    },
+    {
+      "name": "tree_elder_1__autumn",
+      "x": 0.51316,
+      "y": 0.03125
+    },
+    {
+      "name": "tree_elder_1__spring",
+      "x": 0.51316,
+      "y": 0.03125
+    },
+    {
+      "name": "tree_elder_1__winter",
+      "x": 0.51316,
+      "y": 0.03125
     },
     {
       "name": "tree_elder_2",
@@ -3228,10 +3883,40 @@
       "pad": 6
     },
     {
+      "name": "tree_elder_2__autumn",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_elder_2__spring",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_elder_2__winter",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
       "name": "tree_elder_3",
       "x": 0.51042,
       "y": 0.02273,
       "pad": 6
+    },
+    {
+      "name": "tree_elder_3__autumn",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_elder_3__spring",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_elder_3__winter",
+      "x": 0.51042,
+      "y": 0.02273
     },
     {
       "name": "tree_elder_fall_0",
@@ -3240,10 +3925,40 @@
       "pad": 6
     },
     {
+      "name": "tree_elder_fall_0__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_elder_fall_0__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_elder_fall_0__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_elder_fall_1",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_elder_fall_1__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_elder_fall_1__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_elder_fall_1__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_elder_fall_2",
@@ -3252,10 +3967,40 @@
       "pad": 6
     },
     {
+      "name": "tree_elder_fall_2__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_elder_fall_2__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_elder_fall_2__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_elder_fall_3",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_elder_fall_3__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_elder_fall_3__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_elder_fall_3__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_ghostpear_0",
@@ -3264,10 +4009,20 @@
       "pad": 6
     },
     {
+      "name": "tree_ghostpear_0__winter",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
       "name": "tree_ghostpear_1",
       "x": 0.51316,
       "y": 0.03125,
       "pad": 6
+    },
+    {
+      "name": "tree_ghostpear_1__winter",
+      "x": 0.51316,
+      "y": 0.03125
     },
     {
       "name": "tree_ghostpear_2",
@@ -3276,10 +4031,30 @@
       "pad": 6
     },
     {
+      "name": "tree_ghostpear_2__winter",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
       "name": "tree_ghostpear_3",
       "x": 0.51042,
       "y": 0.02273,
       "pad": 6
+    },
+    {
+      "name": "tree_ghostpear_3__autumn",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_ghostpear_3__spring",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_ghostpear_3__winter",
+      "x": 0.51042,
+      "y": 0.02273
     },
     {
       "name": "tree_ghostpear_3_glow",
@@ -3294,10 +4069,20 @@
       "pad": 6
     },
     {
+      "name": "tree_ghostpear_fall_0__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_ghostpear_fall_1",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_ghostpear_fall_1__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_ghostpear_fall_2",
@@ -3306,10 +4091,20 @@
       "pad": 6
     },
     {
+      "name": "tree_ghostpear_fall_2__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_ghostpear_fall_3",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_ghostpear_fall_3__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_moon_0",
@@ -3318,10 +4113,20 @@
       "pad": 6
     },
     {
+      "name": "tree_moon_0__winter",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
       "name": "tree_moon_1",
       "x": 0.51316,
       "y": 0.03125,
       "pad": 6
+    },
+    {
+      "name": "tree_moon_1__winter",
+      "x": 0.51316,
+      "y": 0.03125
     },
     {
       "name": "tree_moon_2",
@@ -3330,10 +4135,30 @@
       "pad": 6
     },
     {
+      "name": "tree_moon_2__winter",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
       "name": "tree_moon_3",
       "x": 0.51042,
       "y": 0.02273,
       "pad": 6
+    },
+    {
+      "name": "tree_moon_3__autumn",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_moon_3__spring",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_moon_3__winter",
+      "x": 0.51042,
+      "y": 0.02273
     },
     {
       "name": "tree_moon_3_glow",
@@ -3348,10 +4173,20 @@
       "pad": 6
     },
     {
+      "name": "tree_moon_fall_0__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_moon_fall_1",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_moon_fall_1__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_moon_fall_2",
@@ -3360,10 +4195,20 @@
       "pad": 6
     },
     {
+      "name": "tree_moon_fall_2__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_moon_fall_3",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_moon_fall_3__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_round",
@@ -3372,7 +4217,37 @@
       "pad": 6
     },
     {
+      "name": "tree_round__autumn",
+      "x": 0.51087,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_round__spring",
+      "x": 0.51087,
+      "y": 0.02381
+    },
+    {
+      "name": "tree_round__winter",
+      "x": 0.51087,
+      "y": 0.02381
+    },
+    {
       "name": "tree_round_fall_0",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_0__autumn",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_0__spring",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_0__winter",
       "x": 0.50676,
       "y": 0.21154
     },
@@ -3382,12 +4257,57 @@
       "y": 0.21154
     },
     {
+      "name": "tree_round_fall_1__autumn",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_1__spring",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_1__winter",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
       "name": "tree_round_fall_2",
       "x": 0.50676,
       "y": 0.21154
     },
     {
+      "name": "tree_round_fall_2__autumn",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_2__spring",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_2__winter",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
       "name": "tree_round_fall_3",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_3__autumn",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_3__spring",
+      "x": 0.50676,
+      "y": 0.21154
+    },
+    {
+      "name": "tree_round_fall_3__winter",
       "x": 0.50676,
       "y": 0.21154
     },
@@ -3398,10 +4318,40 @@
       "pad": 6
     },
     {
+      "name": "tree_rowan_0__autumn",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_rowan_0__spring",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
+      "name": "tree_rowan_0__winter",
+      "x": 0.51923,
+      "y": 0.0625
+    },
+    {
       "name": "tree_rowan_1",
       "x": 0.51316,
       "y": 0.03125,
       "pad": 6
+    },
+    {
+      "name": "tree_rowan_1__autumn",
+      "x": 0.51316,
+      "y": 0.03125
+    },
+    {
+      "name": "tree_rowan_1__spring",
+      "x": 0.51316,
+      "y": 0.03125
+    },
+    {
+      "name": "tree_rowan_1__winter",
+      "x": 0.51316,
+      "y": 0.03125
     },
     {
       "name": "tree_rowan_2",
@@ -3410,10 +4360,40 @@
       "pad": 6
     },
     {
+      "name": "tree_rowan_2__autumn",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_rowan_2__spring",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_rowan_2__winter",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
       "name": "tree_rowan_3",
       "x": 0.51042,
       "y": 0.02273,
       "pad": 6
+    },
+    {
+      "name": "tree_rowan_3__autumn",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_rowan_3__spring",
+      "x": 0.51042,
+      "y": 0.02273
+    },
+    {
+      "name": "tree_rowan_3__winter",
+      "x": 0.51042,
+      "y": 0.02273
     },
     {
       "name": "tree_rowan_fall_0",
@@ -3422,10 +4402,40 @@
       "pad": 6
     },
     {
+      "name": "tree_rowan_fall_0__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_rowan_fall_0__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_rowan_fall_0__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_rowan_fall_1",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
+    },
+    {
+      "name": "tree_rowan_fall_1__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_rowan_fall_1__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_rowan_fall_1__winter",
+      "x": 0.50568,
+      "y": 0.2037
     },
     {
       "name": "tree_rowan_fall_2",
@@ -3434,16 +4444,51 @@
       "pad": 6
     },
     {
+      "name": "tree_rowan_fall_2__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_rowan_fall_2__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_rowan_fall_2__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_rowan_fall_3",
       "x": 0.50568,
       "y": 0.2037,
       "pad": 6
     },
     {
+      "name": "tree_rowan_fall_3__autumn",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_rowan_fall_3__spring",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
+      "name": "tree_rowan_fall_3__winter",
+      "x": 0.50568,
+      "y": 0.2037
+    },
+    {
       "name": "tree_spruce",
       "x": 0.51389,
       "y": 0.02381,
       "pad": 6
+    },
+    {
+      "name": "tree_spruce__winter",
+      "x": 0.51389,
+      "y": 0.02381
     },
     {
       "name": "ui_bar_fill_essence",
@@ -3805,12 +4850,22 @@
       "y": 0.04545
     },
     {
+      "name": "wisp_nest_0__winter",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
       "name": "wisp_nest_0_glow",
       "x": 0.53125,
       "y": 0.04545
     },
     {
       "name": "wisp_nest_1",
+      "x": 0.53125,
+      "y": 0.04545
+    },
+    {
+      "name": "wisp_nest_1__winter",
       "x": 0.53125,
       "y": 0.04545
     },

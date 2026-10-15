@@ -61,13 +61,17 @@ namespace Wyspa.Visual
             glowBlock.SetFloat(StrengthId, GlowStrength);
             glowBlock.SetFloat(UnlitId, 1f);
             island.Rebuilt += BuildLand;
+            island.LandRecolored += BuildLand;   // pora roku: odbity brzeg w kolorach pory (zimą śnieg)
             BuildLand();
         }
 
         void OnDestroy()
         {
             if (island != null)
+            {
                 island.Rebuilt -= BuildLand;
+                island.LandRecolored -= BuildLand;
+            }
         }
 
         // ------------------------------------------------------------ odbity brzeg
@@ -106,7 +110,7 @@ namespace Wyspa.Visual
             land.transform.position = src.transform.position;
             land.transform.localScale = src.transform.lossyScale;
             System.Array.Clear(landPx, 0, landPx.Length);
-            var img = pic.island;
+            var img = island.LandPixels ?? pic.island;
             // wiersze tablic od dołu obrazu (jak tekstura): wiersz r - 1 leży pod wierszem r
             bool Land(int x, int r) => img[(r * w + x) * 4 + 3] > 200;
             for (int x = 0; x < w; x++)

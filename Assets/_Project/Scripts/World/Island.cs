@@ -137,6 +137,12 @@ namespace Wyspa.World
                 horizon.transform.SetParent(transform.parent, false);
                 horizon.AddComponent<HorizonSights>();
             }
+            if (art != null && art.seasonal != null && art.seasonal.Count > 0 && FindAnyObjectByType<SeasonalSprites>() == null)
+            {
+                var seasonal = new GameObject("SeasonalSprites");   // pory roku: warianty sprite'ów (kwiaty, rude liście, śnieg)
+                seasonal.transform.SetParent(transform.parent, false);
+                seasonal.AddComponent<SeasonalSprites>().Setup(art);
+            }
             if (art != null && art.atmosphere != null)
             {
                 var atmo = new GameObject("Atmosphere");   // cienie chmur, poranna mgiełka, rosa
@@ -971,8 +977,7 @@ namespace Wyspa.World
             }
             landMaskTex.LoadRawTextureData(picture.landMask);
             landMaskTex.Apply(false);
-            islandTex.LoadRawTextureData(picture.island);
-            islandTex.Apply(false);
+            UploadLand();
             waterTex.LoadRawTextureData(picture.waterBase);
             waterTex.Apply(false);
             dataTex.LoadRawTextureData(picture.data);
@@ -981,6 +986,36 @@ namespace Wyspa.World
                 water.SetData(dataTex, picture);
             Rebuilt?.Invoke();
         }
+
+        byte[] landPixels;
+        Season landSeason;
+
+        /// <summary>Obraz lądu w kolorach bieżącej pory roku (odbicie brzegu w wodzie też go używa).</summary>
+        public byte[] LandPixels => landPixels ?? (picture != null ? picture.island : null);
+
+        /// <summary>Ląd przemalowany na nową porę roku (bez przebudowy wyspy).</summary>
+        public event Action LandRecolored;
+
+        void UploadLand()
+        {
+            if (picture == null || islandTex == null)
+                return;
+            landSeason = Seasons.Current;
+            landPixels = SeasonPalette.Recolor(picture.island, landSeason);
+            islandTex.LoadRawTextureData(landPixels);
+            islandTex.Apply(false);
+        }
+
+        void OnSeasonChanged(Season s)
+        {
+            if (picture == null || s == landSeason && landPixels != null)
+                return;
+            UploadLand();
+            LandRecolored?.Invoke();
+        }
+
+        void OnEnable() => Seasons.Changed += OnSeasonChanged;
+        void OnDisable() => Seasons.Changed -= OnSeasonChanged;
 
         static Texture2D NewTexture(int size, bool linear, string name)
         {

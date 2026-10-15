@@ -55,8 +55,10 @@ Historia decyzji jest w GDD §9 (punkty 1-128), a lista testów w `docs/TEST_PLA
   `WaterAnimator.UpdateSky`, podgląd `tools/pixel-proto/water_effects_preview.py`. Nie testowane w Unity.
 - **Przegląd kodu p. 114-121** (GDD §9 p. 122): poprawki bez zmian w rozgrywce. Seria p. 114-121 czeka na test gracza
   w Unity (TEST_PLAN 38-47), najpierw Wyspa → 2. Stawianie seriami: GDD §9 p. 126.
-- **Pory roku W TOKU** (GDD §9 p. 127): rdzeń (`GameClock.Season`, `Core/Seasons.cs`) i rośliny sezonowe gotowe;
-  dalej: sprite'y sezonowe (skrypt z gotowych PNG + podmiana), teren, woda, pogoda, cząsteczki. Chowańce tylko po lądzie: `World/LandGrid.cs`, GDD §9 p. 125. Poziomy ulepszeń czytelniej: GDD §9 p. 123. Dym z pieca i para nad
+- **Pory roku** (GDD §9 p. 127, TEST_PLAN 48): `GameClock.Season` (6 cykli na porę, zapis `seasonStart`), `Core/Seasons.cs`,
+  rośliny sezonowe `Farming/CropSeasons.cs`, sprite'y `tools/pixel-proto/export_unity_seasons.py` (uruchamiać na końcu
+  eksportów) + `Visual/SeasonalSprites.cs`, teren `World/SeasonPalette.cs`, lód w `Water.shader`, śnieg w `WeatherSystem`.
+  Wymaga Wyspa → 2. Nie testowane w Unity. Grafiki sezonowe to placeholdery. Chowańce tylko po lądzie: `World/LandGrid.cs`, GDD §9 p. 125. Poziomy ulepszeń czytelniej: GDD §9 p. 123. Dym z pieca i para nad
   kotłem: `Visual/Plume.cs`, GDD §9 p. 124.
 - **Ścinanie seriami kliknięć** (GDD §9 p. 121, TEST_PLAN 43): `World/ChopProgress.cs`, `Decoration.OnClick`,
   `FruitTree.TryClick`; szczegóły drzewa owocowego w pierścieniu PPM. Panel „Usuń” dekoracji nie otwiera się już z kliku.

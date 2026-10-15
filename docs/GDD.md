@@ -453,6 +453,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Woda (wybór gracza, §9 p. 119): księżycowa ścieżka, kółka od deszczu, refleksy słońca i wodorosty na płyciznach,
   smugi wiatru. Potem (§9 p. 120) sylwetki we mgle (wieloryb, wąż morski, statek-widmo), cienie chmur, poranna mgiełka
   z rosą, dym z pieca i para nad kotłem (p. 124). Tęczę, motyle, ważki i tryb zdjęcia gracz odrzucił.
+- [x] **Pory roku** (wybór gracza, §9 p. 127): pora = 6 cykli gry (rok = 24 h gry), rośliny sezonowe (siew tylko
+  w swoich porach), zmienia się wygląd drzew i krzaków, terenu i wody, budowli i lamp (śnieg), pogoda i cząsteczki.
+  Grafiki sezonowe to placeholdery ze skryptu; docelowe rysuje się ręcznie (pliki `<nazwa>__<pora>.png`).
 
 ---
 
@@ -1061,7 +1064,19 @@ Obrazki referencyjne (kopie): `docs/img/`
     czosnek (jesień-wiosna), mak (wiosna, lato), piołun (lato-zima). Noc: trupi grzyb (lato-zima), księżycowy kwiat
     (wiosna, lato, zima), upiorna dynia (jesień-wiosna), wilcza jagoda (lato, jesień), mandragora (zima, wiosna);
     cały rok: cmentarny bluszcz, krwawa róża, hybrydy. W każdej porze co najmniej 2 startowe rośliny dnia i 2 nocy.
-    Wygląd pór roku: w toku (sprite'y sezonowe, teren, woda, pogoda).
+    **Wygląd:** sprite'y sezonowe z `tools/pixel-proto/export_unity_seasons.py` (z gotowych PNG, uruchamiany na końcu
+    eksportów; 211 wariantów `<nazwa>__spring/autumn/winter.png`, lato = oryginał; podgląd `docs/img/pory_roku.png`):
+    drzewa liściaste i owocowe (wszystkie fazy i klatki ścinania), okrągłe drzewo i krzak: wiosną jaśniejsza zieleń
+    i kwiaty (blady róż i biel), jesienią rdzawe i miedziane liście, zimą zbrązowiałe liście z grubą czapą śniegu;
+    świerk, budowle, lampy, skrzynie, domki, monumenty, pomost, łódź, kamienie, pnie i nagrobki: zimą czapy śniegu
+    pod ciemnym konturem; liście-cząsteczki: wiosną różowe płatki, jesienią rude, zimą brązowe. Rejestr robi Wyspa → 2
+    (`IslandArt.seasonal`), podmianę `Visual/SeasonalSprites` (co klatkę po animacjach, przed odbiciami i cieniami).
+    **Teren** (`World/SeasonPalette.cs`): trawa przemalowana przy wgrywaniu obrazu wyspy: wiosna świeższa, jesień
+    oliwkowo-brunatna, zima przygaszony śnieg (podgląd `docs/img/pory_roku_teren.png`); odbity brzeg w wodzie też.
+    **Woda**: zimą przy brzegu lód z pęknięciami i nierówną krą (narasta ok. 20 s, `_WyspaWinter` w `Water.shader`).
+    **Pogoda**: zimą zamiast deszczu śnieg (wolne płatki kołyszą się i chwilę leżą), burza to zamieć bez piorunów,
+    płatki prawie bez kółek na wodzie; toasty „Pada śnieg”, „Zamieć!”. **Liście**: jesienią spadają 3 razy częściej,
+    zimą prawie wcale.
 128. **Dzicz bez Żaru** (zgłoszenie gracza: drzew i kamieni z nowych kafelków nie da się ściąć). Przyczyna: kamień
     kosztuje 6 Żaru, drzewo 5; bez Żaru kliknięcie dawało tylko krótki toast. Teraz dymek pokazuje koszt na czerwono
     „(masz X)”, a kliknięcie bez Żaru: wyraźne drgnięcie odmowy i toast „Za mało Żaru: potrzeba X, masz Y”.
@@ -1124,6 +1139,8 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Visual/GameCursor.cs`, `CursorPlay.cs` | własny kursor (stany, iskierki) i zabawa kursorem: odginanie roślin, kręgi na wodzie, liście, ćmy, nazwy ptaków i ryb |
 | `Scripts/Visual/RareNights.cs` | rzadkie noce: świecąca toń, deszcz gwiazd, zorza, korowód ogników, krwawy księżyc |
 | `Scripts/Visual/HorizonSights.cs` | sylwetki na horyzoncie we mgle: wieloryb, wąż morski, statek-widmo |
+| `Scripts/Core/Seasons.cs`, `Scripts/Farming/CropSeasons.cs` | pory roku: bieżąca pora i zdarzenie zmiany, kiedy można siać którą roślinę |
+| `Scripts/Visual/SeasonalSprites.cs`, `Scripts/World/SeasonPalette.cs` | sprite'y w kolorach pory roku (warianty z `export_unity_seasons.py`), kolory lądu w porach roku |
 | `Scripts/Visual/Plume.cs` | dym z pieca Żaru i para nad kotłem: kłęby z kodu, znoszone wiatrem i podmuchami |
 | `Scripts/Visual/Atmosphere.cs` | cienie chmur, poranna mgiełka i rosa (sprite z obrazem lądu, `Atmosphere.shader`) |
 | `Scripts/Visual/LightShafts.cs`, `NightGlow.cs` | snopy słońca/księżyca (Sprite Light 2D z wolumetrią, za kamerą), nocna poświata ogników, duszków i run |

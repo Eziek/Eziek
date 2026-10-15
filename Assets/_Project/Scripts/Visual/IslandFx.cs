@@ -246,6 +246,9 @@ namespace Wyspa.Visual
                 // każde drzewo gubi liść średnio co ok. 8 s (nocą rzadziej), w podmuchu wiatru kilka razy częściej
                 int trees = CollectTrees();
                 float every = Random.Range(5f, 11f) / Mathf.Max(1, trees) * (night ? 2f : 1f) / (gusting ? 1f + 3f * gustPower : 1f);
+                // pory roku: jesienią liście lecą trzy razy częściej, zimą prawie wcale (wiosną płatki: wariant sprite'a liścia)
+                var season = Core.Seasons.Current;
+                every *= season == Core.Season.Autumn ? 0.33f : season == Core.Season.Winter ? 4f : 1f;
                 leafTimer = Mathf.Max(0.25f, every);
                 DropLeaf();
             }

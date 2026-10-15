@@ -27,6 +27,8 @@ a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wysp�
   Drzewa: `export_unity_trees2.py` (nadpisuje starsze drzewa z `export_unity.py`, `export_unity_trees.py` i `export_unity_zones.py`, więc idzie po nich, przed `pad_sway.py`),
   ozdobniki na wodzie: `export_unity_water.py`, monumenty wysp fabularnych: `export_unity_story.py` (rysunki w `monuments.py`),
   generatory Żaru: `export_unity_ember.py`, ptaki: `export_unity_birds.py`.
+  Na samym końcu, po wszystkich eksportach: `export_unity_seasons.py` (warianty pór roku `<nazwa>__spring/autumn/winter.png`
+  z gotowych PNG; bez tego po nowym eksporcie warianty byłyby nieaktualne).
   Grafiki świata i teren są w **16 px**, tylko woda (shader) liczy obraz w 32 px, dlatego kamera ma PPU 32 i skala okna jest parzysta.
   `tools/art32/convert32.py` (przeróbka na 32 px) gracz odrzucił, nie uruchamiać. Docelowe assety rysuje się ręcznie.
 - Gracz woli mroczną, stonowaną estetykę (odrzucił „cukierkową”). Bez postaci, animacje tylko przez shadery i cząsteczki.

@@ -34,10 +34,13 @@ namespace Wyspa.Weather
         /// <summary>Do testów (HUD debugowy): wymuszona pogoda, null = z cyklu.</summary>
         public static WeatherKind? DebugForce;
 
-        class Drop { public SpriteRenderer sr; public Vector2 pos; public float endY; public float splash; public bool alive; }
+        class Drop { public SpriteRenderer sr; public Vector2 pos; public float endY; public float splash; public bool alive; public float seed; }
 
         readonly List<Drop> drops = new List<Drop>();
-        Sprite dropSprite, splashSprite;
+        Sprite dropSprite, splashSprite, flakeSprite, flakeBigSprite;
+
+        /// <summary>Zima (pory roku): zamiast deszczu pada śnieg, burza to zamieć (bez piorunów).</summary>
+        static bool Snowing => Seasons.Current == Season.Winter;
         float spawnAcc;
         float nextBolt = 8f;
         float flashTime = 10f;   // bez błysku na starcie
@@ -101,13 +104,15 @@ namespace Wyspa.Weather
                 lastSegmentKey = key;
                 Current = next;
                 if (announce)
-                    GameEvents.RaiseToast("toast.weather." + next.ToString().ToLowerInvariant());
+                    GameEvents.RaiseToast(Snowing && next == WeatherKind.Rain ? "toast.weather.snow"
+                                          : Snowing && next == WeatherKind.Storm ? "toast.weather.blizzard"
+                                          : "toast.weather." + next.ToString().ToLowerInvariant());
             }
 
             // światło: deszcz przyciemnia, piorun błyska (krótko, dwa razy)
             float targetLight = Current == WeatherKind.Storm ? 0.75f : Current == WeatherKind.Rain ? 0.88f : 1f;
             LightMultiplier = Mathf.MoveTowards(LightMultiplier, targetLight, dt * 0.2f);
-            if (Current == WeatherKind.Storm && !MenuStorm)   // w menu pioruny z widocznym błyskiem rzuca MenuStorm
+            if (Current == WeatherKind.Storm && !MenuStorm && !Snowing)   // w menu pioruny rzuca MenuStorm; zamieć bez piorunów
             {
                 nextBolt -= dt;
                 if (nextBolt <= 0f)
@@ -128,11 +133,14 @@ namespace Wyspa.Weather
 
         void UpdateRain(Island island, float dt)
         {
-            int rate = Current == WeatherKind.Storm ? 90 : Current == WeatherKind.Rain ? 40 : 0;   // kropel na sekundę
+            bool snow = Snowing && !Save.SaveSystem.InMenu;
+            int rate = Current == WeatherKind.Storm ? (snow ? 70 : 90) : Current == WeatherKind.Rain ? (snow ? 30 : 40) : 0;   // kropel (płatków) na sekundę
             if (dropSprite == null)
             {
                 dropSprite = MakeSprite(1, 3, new Color32(170, 190, 220, 160));
                 splashSprite = MakeSprite(3, 1, new Color32(170, 190, 220, 140));
+                flakeSprite = MakeSprite(1, 1, new Color32(214, 222, 230, 230));
+                flakeBigSprite = MakeSprite(2, 1, new Color32(196, 206, 216, 210));
             }
             if (root == null)
             {
@@ -152,14 +160,16 @@ namespace Wyspa.Weather
                 float endX = Random.Range(land.xMin, land.xMax) * Ppu;
                 d.endY = Random.Range(land.yMin + 0.2f, land.yMax) * Ppu;
                 float fall = Random.Range(40f, 80f);
-                d.pos = new Vector2(endX - fall * 0.35f, d.endY + fall);
+                d.pos = new Vector2(endX - fall * (snow ? 0.1f : 0.35f), d.endY + fall);
                 d.splash = 0f;
                 d.alive = true;
-                d.sr.sprite = dropSprite;
+                d.seed = Random.value * 6.28f;
+                d.sr.sprite = snow ? (Random.value < 0.3f ? flakeBigSprite : flakeSprite) : dropSprite;
                 d.sr.sortingOrder = 4400;
                 d.sr.gameObject.SetActive(true);
             }
-            float speed = Current == WeatherKind.Storm ? 210f : 160f;
+            float speed = snow ? (Current == WeatherKind.Storm ? 55f : 24f) : Current == WeatherKind.Storm ? 210f : 160f;
+            float t = Time.unscaledTime;
             foreach (var d in drops)
             {
                 if (!d.alive)
@@ -170,12 +180,21 @@ namespace Wyspa.Weather
                     if (d.splash <= 0f) { d.alive = false; d.sr.gameObject.SetActive(false); }
                     continue;
                 }
-                d.pos += new Vector2(0.35f, -1f) * speed * dt;
+                if (d.sr.sprite == flakeSprite || d.sr.sprite == flakeBigSprite)
+                {
+                    // płatek: wolno, kołysze się na boki; w zamieci gna w prawo
+                    float sway = Mathf.Sin(t * 2.2f + d.seed) * 7f + (Current == WeatherKind.Storm ? 45f : 3f);
+                    d.pos += new Vector2(sway, -speed) * dt;
+                }
+                else
+                    d.pos += new Vector2(0.35f, -1f) * speed * dt;
                 if (d.pos.y <= d.endY)
                 {
                     d.pos.y = d.endY;
-                    d.splash = 0.12f;                  // krótki rozprysk na ziemi
-                    d.sr.sprite = splashSprite;
+                    bool flake = d.sr.sprite == flakeSprite || d.sr.sprite == flakeBigSprite;
+                    d.splash = flake ? 0.7f : 0.12f;   // płatek chwilę leży, kropla krótko pryska
+                    if (!flake)
+                        d.sr.sprite = splashSprite;
                 }
                 d.sr.transform.position = new Vector3(Mathf.Round(d.pos.x) / Ppu, Mathf.Round(d.pos.y) / Ppu, 0f);
             }

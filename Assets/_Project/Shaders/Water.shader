@@ -88,6 +88,7 @@ Shader "Wyspa/Water"
             float _WyspaSunlight;   // 0..1: słońce nad wodą (refleksy na płyciznach)
             float _WyspaWindFront;  // podmuch wiatru (IslandFx, jak w WyspaSway.hlsl): czoło w pikselach świata
             float _WyspaWindPower;
+            float _WyspaWinter;     // 0..1: zima (pory roku, WaterAnimator): lód i kra przy brzegu
 
             Varyings WaterVertex(Attributes input)
             {
@@ -545,6 +546,20 @@ Shader "Wyspa/Water"
                 {
                     emit = false;
                     tideMix = glowTide && cls >= 6 && pulse ? 0.3 : 0;   // piana lekko jarzy się w rytm przyboju
+                }
+
+                // --- zima: przy brzegu lód (blady, z ciemniejszymi pęknięciami), nierówny brzeg kry; szerokość rośnie z _WyspaWinter
+                if (_WyspaWinter > 0.01 && cls >= 1 && cls <= 7)
+                {
+                    float iceEdge = (3.0 + 5.0 * WNoise(float2(X, Y) / 9.0 + 31.0)) * _WyspaWinter;
+                    if (d < iceEdge)
+                    {
+                        float2 cellI = floor(float2(X, Y) / float2(7.0, 4.0));
+                        bool crack = WyspaHash(cellI + 5.3).x < 0.35 && (fmod(X, 7.0) == 0.0 || fmod(Y, 4.0) == 0.0);
+                        col = crack ? _ColB3.rgb : (d > iceEdge - 1.0 && th < 0.5 ? _ColFo.rgb : half3(0.66, 0.71, 0.75));
+                        emit = false;
+                        tideMix = 0;
+                    }
                 }
 
                 half alpha = cls > 0 ? input.color.a : 0;

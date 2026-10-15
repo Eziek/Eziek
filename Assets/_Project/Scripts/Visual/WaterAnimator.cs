@@ -29,6 +29,7 @@ namespace Wyspa.Visual
         static readonly int CloudShadowId = Shader.PropertyToID("_WyspaCloudShadow");
         static readonly int MorningMistId = Shader.PropertyToID("_WyspaMorningMist");
         static readonly int ShoreRangeGlobalId = Shader.PropertyToID("_WyspaShoreRange");
+        static readonly int WinterId = Shader.PropertyToID("_WyspaWinter");
 
         [SerializeField] SpriteRenderer water;
         [SerializeField] GameClock clock;
@@ -37,7 +38,7 @@ namespace Wyspa.Visual
 
         Material material;
         float timer;
-        float moonPath, rain, sunlight, cloudShadow, morningMist;
+        float moonPath, rain, sunlight, cloudShadow, morningMist, winter;
 
         /// <summary>Przezroczyste okno: woda widoczna tylko do tylu pikseli od brzegu (0 = całe morze).</summary>
         public float ShoreRange => shoreRange;
@@ -280,7 +281,10 @@ namespace Wyspa.Visual
                 float u = Mathf.Clamp01(sec / GameClock.DaySeconds);
                 sunTarget = Mathf.Clamp01(Mathf.Sin(u * Mathf.PI) / 0.35f) * (raining ? 0.2f : 1f);
             }
-            float rainTarget = weather == Weather.WeatherKind.Storm ? 1f : raining ? 0.6f : 0f;
+            bool snowy = Seasons.Current == Season.Winter;
+            // zimą pada śnieg: płatki prawie nie zostawiają kółek na wodzie
+            float rainTarget = (weather == Weather.WeatherKind.Storm ? 1f : raining ? 0.6f : 0f) * (snowy ? 0.2f : 1f);
+            winter = Mathf.MoveTowards(winter, snowy ? 1f : 0f, dt * 0.05f);   // lód przy brzegu narasta przez ok. 20 s
             // cienie chmur: w dzień przy pogodzie (w deszczu niebo całe zasnute); mgiełka: od 6:00 do 8:00, najgęstsza o świcie
             float shadowTarget = !clock.IsNight && !raining ? 1f : 0f;
             float mistTarget = 0f;
@@ -299,6 +303,7 @@ namespace Wyspa.Visual
             Shader.SetGlobalFloat(SunlightId, sunlight);
             Shader.SetGlobalFloat(CloudShadowId, cloudShadow);
             Shader.SetGlobalFloat(MorningMistId, morningMist);
+            Shader.SetGlobalFloat(WinterId, winter);
         }
 
         void UpdateNight()

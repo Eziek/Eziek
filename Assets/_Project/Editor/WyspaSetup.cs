@@ -743,6 +743,7 @@ namespace Wyspa.EditorTools
             art.floatMat = FxMaterialAsset("Float", "SpriteFloat", null);   // łodzie i boja w wodzie (Visual/Floating)
             art.reflection = FxMaterialAsset("WaterReflection", "WaterReflection", null);   // odbicia w wodzie (Visual/WaterReflections)
             art.atmosphere = FxMaterialAsset("Atmosphere", "Atmosphere", null);   // cienie chmur, mgiełka o świcie, rosa (Visual/Atmosphere)
+            art.seasonal = SeasonalSets();   // pory roku: warianty <nazwa>__spring/autumn/winter (export_unity_seasons.py)
             EditorUtility.SetDirty(art);
             return art;
         }
@@ -1051,6 +1052,34 @@ namespace Wyspa.EditorTools
             if (glowMat != null)
                 glow.sharedMaterial = glowMat;
             return glow;
+        }
+
+        /// <summary>Warianty sezonowe: każdy plik <nazwa>__<pora>.png dopięty do oryginału <nazwa>.png w tym samym folderze.</summary>
+        static List<SeasonalSet> SeasonalSets()
+        {
+            var sets = new Dictionary<string, SeasonalSet>();
+            foreach (var guid in AssetDatabase.FindAssets("t:Sprite", new[] { Sprites.TrimEnd('/') }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                string file = Path.GetFileNameWithoutExtension(path);
+                int cut = file.IndexOf("__", StringComparison.Ordinal);
+                if (cut < 0)
+                    continue;
+                string season = file.Substring(cut + 2);
+                string basePath = Path.Combine(Path.GetDirectoryName(path), file.Substring(0, cut) + ".png").Replace('\\', '/');
+                if (!sets.TryGetValue(basePath, out var set))
+                {
+                    var summer = AssetDatabase.LoadAssetAtPath<Sprite>(basePath);
+                    if (summer == null)
+                        continue;
+                    set = sets[basePath] = new SeasonalSet { summer = summer };
+                }
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                if (season == "spring") set.spring = sprite;
+                else if (season == "autumn") set.autumn = sprite;
+                else if (season == "winter") set.winter = sprite;
+            }
+            return new List<SeasonalSet>(sets.Values);
         }
 
         static Sprite LoadSprite(string relative)

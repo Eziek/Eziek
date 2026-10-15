@@ -6,6 +6,16 @@ using Wyspa.Lighting;
 
 namespace Wyspa.World
 {
+    /// <summary>Sprite w czterech porach roku (GDD §9 p. 127): brak wariantu = oryginał (lato).</summary>
+    [Serializable]
+    public class SeasonalSet
+    {
+        public Sprite summer, spring, autumn, winter;
+
+        public Sprite For(Core.Season s) =>
+            (s == Core.Season.Spring ? spring : s == Core.Season.Autumn ? autumn : s == Core.Season.Winter ? winter : null) ?? summer;
+    }
+
     public enum RemoveAnim { Poof, Fall, Crack, Cut }
 
     /// <summary>Klatki ognika danego zawodu (rój ogników).</summary>
@@ -256,6 +266,8 @@ namespace Wyspa.World
         public Material reflection;
         [Tooltip("Cienie chmur, poranna mgiełka i rosa (Atmosphere.shader, Visual/Atmosphere).")]
         public Material atmosphere;
+        [Tooltip("Pory roku: warianty sprite'ów (tools/pixel-proto/export_unity_seasons.py), lato = oryginał. Visual/SeasonalSprites.")]
+        public List<SeasonalSet> seasonal = new List<SeasonalSet>();
 
         public LampDefinition Lamp(string id)
         {

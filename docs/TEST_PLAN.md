@@ -563,3 +563,15 @@ Najpierw Wyspa → 2 (materiał `Atmosphere`). F1: „Horyzont” pokazuje kolej
 3. Domek chowańca: po postawieniu tryb się kończy (tylko jeden). Duszek-handlarz: seria trwa, dopóki są skrzynie bez duszka.
 4. Sadzonki drzew owocowych: kilka pod rząd.
 5. PPM (bez przeciągania) albo Esc kończy serię w każdej chwili; zajęty kafelek: duch czerwony, klik nic nie robi.
+
+## 48. Pory roku
+Najpierw Wyspa → 2 (rejestr wariantów sezonowych). F1: „Pora roku: następna” (wymuszona), „Pora roku: z cyklu”.
+1. HUD obok zegara: „Wiosna 1/6”; nowa gra zaczyna się wiosną; po 6 cyklach toast „Pora roku: Lato”.
+2. Koło nasion: rośliny spoza pory wygaszone, w opisie „Nie teraz! Siew: …”; w porze „Siew: …”. Losowe sadzenie, ognik-siewca
+   i zamówienia biorą tylko rośliny z bieżącej pory. Posadzone wcześniej rosną dalej po zmianie pory.
+3. Wiosna: drzewa jaśniejsze, kwiatki na koronach, z drzew lecą różowe płatki. Jesień: rude korony, liście lecą
+   częściej, trawa oliwkowo-brunatna. Zima: śnieg na trawie, koronach, dachach, lampach, skrzyniach, kamieniach;
+   świerk zielony ze śniegiem; przy brzegu lód z pęknięciami; deszcz to śnieg, burza to zamieć bez piorunów.
+4. Zmiana pory w trakcie gry: drzewa, budowle, teren i odbicie brzegu w wodzie zmieniają się od razu, lód narasta kilka sekund.
+5. Ścinanie drzewa zimą: klatki przewracania też ze śniegiem; owoce na drzewie widać w każdej porze.
+6. Stary zapis (sprzed pór roku): po wczytaniu wiosna, dzień 1.
