@@ -21,7 +21,7 @@ namespace Wyspa.Visual
     {
         const float Ppu = 16f;
         const float RipplePpu = 32f;      // kręgi w siatce wody (32 px na kafelek)
-        const int RippleOrder = -1955;    // nad ozdobnikami na wodzie, pod lądem
+        const int RippleOrder = -1970;    // nad wodą i odbiciami (-1985), pod liliami (-1960) i lądem
         static readonly int CursorId = Shader.PropertyToID("_WyspaCursor");
         static readonly Color RingColor = new Color32(0x84, 0x8e, 0x9b, 0xd0);
 

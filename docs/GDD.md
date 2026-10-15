@@ -984,7 +984,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     lądem ani klifem). Czapla ma cienkie (1 px), czerwone nogi ze stawem i palcami zamiast grubych brązowych.
 118. **Kręgi i świecąca toń łagodniej** (uwagi gracza: kręgi „wyglądają jakby były 3, migają”, turkus „za mocny”).
     Klik w wodę daje jeden krąg: rośnie coraz wolniej, w połowie cienieje z 2 do 1 px i płynnie gaśnie (bez migania
-    na końcu). Świecąca toń nie rysuje już pełnego turkusu bez światła: turkus jest domieszany do oświetlonej wody
+    na końcu), pod liliami i liśćmi na wodzie. Świecąca toń nie rysuje już pełnego turkusu bez światła: turkus jest domieszany do oświetlonej wody
     (plamy 22-40%, iskry przy brzegu 50%, grzbiety fal i piana 25-30%, ryby 55%), a plam i iskier jest mniej.
 
 ---
