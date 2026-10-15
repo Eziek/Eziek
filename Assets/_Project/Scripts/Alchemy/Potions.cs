@@ -48,7 +48,7 @@ namespace Wyspa.Alchemy
 
     /// <summary>
     /// Działające mikstury (kocioł alchemiczny): czas liczony w prawdziwym czasie (UTC), więc mija też offline.
-    /// Inne systemy pytają o mnożniki: wzrost roślin dnia i nocy, Esencja z pracy, lampy bez Esencji, zdarzenia nocne,
+    /// Inne systemy pytają o mnożniki: wzrost roślin dnia i nocy, przypływ Żaru, lampy bez Esencji, zdarzenia nocne,
     /// wabik na kupca-widmo (zużywa się, gdy kupiec przypłynie).
     /// </summary>
     public static class Potions

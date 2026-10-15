@@ -16,7 +16,7 @@ namespace Wyspa.Farming
         public string id;
         public int saplingCoins;
         public CurrencyAmount extraCost;         // np. odłamki gwiazd za drzewo księżyca
-        public float growSeconds;                // sekundy aktywnej pracy do dorosłego drzewa
+        public float growSeconds;                // sekundy (przy włączonej grze) do dorosłego drzewa
         public float fruitSeconds;               // odrastanie owoców (warunek zależny od gatunku)
         public int fruitCount, fruitPrice;
         public bool fruitsAtNight;               // upiorna grusza: owoce dojrzewają w ciemności
@@ -81,7 +81,7 @@ namespace Wyspa.Farming
     }
 
     /// <summary>
-    /// Drzewo owocowe (GDD §15.1): sadzonka rośnie od pracy przy komputerze (jak rośliny dnia, z tempem pracy),
+    /// Drzewo owocowe (GDD §15.1): sadzonka rośnie cały czas przy włączonej grze (§9 p. 134), owoce dnia za dnia,
     /// dorosłe owocuje cyklicznie. Klik w owocujące drzewo = zbiór (monety); kilka kolejnych szybkich kliknięć ścina drzewo
     /// (GDD §9 p. 121, ChopProgress), przerwa kasuje serię. Panel (PPM → pierścień): stan, „Zetnij”, „Przenieś”.
     /// Upiorna grusza i drzewo księżyca, gdy owocują w nocy, świecą jak mała lampa (liczy się do wzrostu roślin).
@@ -269,20 +269,19 @@ namespace Wyspa.Farming
 
         int Stage => !Adult ? (growth < species.growSeconds * 0.25f ? 0 : 1) : (Fruiting ? 3 : 2);
 
-        /// <summary>Tick z GameLoop. active = gracz pracuje; multiplier = tempo pracy i bonus strefy.</summary>
-        public void Tick(float dt, bool active, bool night, bool fullMoon, float multiplier)
+        /// <summary>Tick z GameLoop (tylko przy włączonej grze). multiplier = bonus strefy, kruk, ulepszenia.</summary>
+        public void Tick(float dt, bool night, bool fullMoon, float multiplier)
         {
             if (species == null || chopping)
                 return;
             int before = Stage;
             if (!Adult)
             {
-                if (active)
-                    growth = Mathf.Min(species.growSeconds, growth + dt * multiplier);
+                growth = Mathf.Min(species.growSeconds, growth + dt * multiplier);   // sadzonka rośnie cały czas
             }
             else if (!Fruiting)
             {
-                bool grows = species.fruitsAtFullMoon ? night && fullMoon : species.fruitsAtNight ? night : active;
+                bool grows = species.fruitsAtFullMoon ? night && fullMoon : species.fruitsAtNight ? night : !night;   // owoce dnia: za dnia
                 if (grows)
                     fruit = Mathf.Min(species.fruitSeconds, fruit + dt * (species.fruitsAtNight ? 1f : multiplier));
             }
@@ -426,7 +425,7 @@ namespace Wyspa.Farming
                 return Loc.Get("ui.tree.fruiting", species.fruitCount, Loc.Get(species.FruitKey));
             int pct = Mathf.FloorToInt(100f * fruit / species.fruitSeconds);
             string when = species.fruitsAtFullMoon ? Loc.Get("ui.tree.when_fullmoon")
-                        : species.fruitsAtNight ? Loc.Get("ui.tree.when_night") : Loc.Get("ui.tree.when_work");
+                        : species.fruitsAtNight ? Loc.Get("ui.tree.when_night") : Loc.Get("ui.tree.when_day");
             return Loc.Get("ui.tree.fruit_progress", pct) + " " + when;
         }
 

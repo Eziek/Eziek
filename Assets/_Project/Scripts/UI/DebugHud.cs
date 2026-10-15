@@ -61,14 +61,7 @@ namespace Wyspa.UI
             GUILayout.Label($"Esencja: {game.Essence.Amount:0.0} / {game.Essence.Capacity:0}");
             DrawBar(game.Essence.Normalized);
 
-            var r = game.Rhythm;
-            string state = r.FatigueLevel == 2 ? "duże zmęczenie" : (r.FatigueLevel == 1 ? "zmęczenie" : "");
-            if (r.Refreshed) state += (state.Length > 0 ? ", " : "") + $"odświeżony {r.RefreshedMinutesLeft:0} min";
-            GUILayout.Label($"Seria: {r.StreakMinutes:0} min{(r.StreakBonusActive ? " (+25%)" : "")}");
-            GUILayout.Label($"Dziś: {r.DailyActiveHours:0.0} h  x{r.EssenceMultiplier:0.00} {state}");
-
             GUILayout.Label($"Godzina: {clock.Now:HH:mm}  {(clock.IsNight ? "NOC" : "dzień")}");
-            GUILayout.Label($"Aktywny: {(game.Activity.IsActive ? "tak" : "nie")} ({game.Activity.SecondsSinceInput:0}s / próg {game.Activity.IdleThresholdSeconds:0}s, czas rzeczywisty)");
             GUILayout.Label(PlotUnderMouse(game));
             GUILayout.Label($"Księżyc: {clock.MoonPhase:0.00}{(clock.IsFullMoon ? "  PEŁNIA" : "")}   Pogoda: {Weather.WeatherSystem.Current}");
             GUILayout.Label($"Pora roku: {clock.Season}, dzień {clock.SeasonDay}/{GameClock.SeasonCycles}{(GameClock.DebugSeason != null ? " (wymuszona)" : "")}");
@@ -105,12 +98,6 @@ namespace Wyspa.UI
                 if (GUILayout.Button("Sprzedaj"))
                     foreach (var c in HarvestCrate.All.ToArray())
                         c.SellAll(wallet, game.Crops, Wyspa.Economy.SaleChannel.Crate);
-                GUILayout.EndHorizontal();
-                var act = game.Activity;
-                GUILayout.BeginHorizontal();
-                GUILayout.Label($"Tempo pracy: {act.Tempo:0.00} (x{act.TempoMultiplier:0.00})");
-                if (GUILayout.Button(act.DebugTempo >= 0f ? "Tempo: zmierzone" : "Tempo: pełne"))
-                    act.DebugTempo = act.DebugTempo >= 0f ? -1f : 1f;
                 GUILayout.EndHorizontal();
                 if (FruitTree.All.Count > 0 && GUILayout.Button($"Drzewa ({FruitTree.All.Count}): dorosłe z owocami"))
                     foreach (var t in FruitTree.All.ToArray())
@@ -187,12 +174,7 @@ namespace Wyspa.UI
             if (Wyspa.Orders.OrderBook.Instance != null && GUILayout.Button("Zamówienie teraz"))
                 Wyspa.Orders.OrderBook.Instance.DebugNextNow();
             GUILayout.EndHorizontal();
-            bool fa = GUILayout.Toggle(game.Activity.ForceActive, "Wymuś aktywność");
-            if (fa != game.Activity.ForceActive) game.Activity.ForceActive = fa;
-            bool fi = GUILayout.Toggle(game.Activity.ForceIdle, "Wymuś bezczynność (przerwa)");
-            if (fi != game.Activity.ForceIdle) game.Activity.ForceIdle = fi;
             Lamp.DebugAllOff = GUILayout.Toggle(Lamp.DebugAllOff, "Zgaś lampy (test roślin nocy)");
-            r.RhythmEnabled = GUILayout.Toggle(r.RhythmEnabled, "Rytm pracy (seria/przerwa/zmęczenie)");
             GameClock.DebugFullMoon = GUILayout.Toggle(GameClock.DebugFullMoon, "Wymuś pełnię (rośliny nocy x2, krwawa róża)");
             GameLoop.DebugAlwaysMutate = GUILayout.Toggle(GameLoop.DebugAlwaysMutate, "Mutacje zawsze (zamiast 3%)");
             bool fx = GUILayout.Toggle(FxMaterial.Enabled, "Shadery efektów (woda, mgła, kołysanie)");

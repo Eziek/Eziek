@@ -4,7 +4,7 @@ using Wyspa.UI;
 
 namespace Wyspa.Input
 {
-    /// <summary>Klik myszą -> Collider2D pod kursorem -> IClickable. Działa z Input System i starym Input.</summary>
+    /// <summary>Klik myszą albo stuknięcie palcem -> Collider2D pod kursorem -> IClickable. Działa z Input System i starym Input.</summary>
     public class ClickRouter : MonoBehaviour
     {
         [SerializeField] Camera targetCamera;
@@ -65,21 +65,11 @@ namespace Wyspa.Input
             return hits[0];
         }
 
+        /// <summary>Klik w świat: lewy przycisk myszy albo stuknięcie palcem (UiInput, dotyk przy puszczeniu palca).</summary>
         static bool PointerPressed(out Vector2 screenPos)
         {
-#if ENABLE_INPUT_SYSTEM
-            var mouse = UnityEngine.InputSystem.Mouse.current;
-            if (mouse != null && mouse.leftButton.wasPressedThisFrame)
-            {
-                screenPos = mouse.position.ReadValue();
-                return true;
-            }
-            screenPos = default;
-            return false;
-#else
-            screenPos = UnityEngine.Input.mousePosition;
-            return UnityEngine.Input.GetMouseButtonDown(0);
-#endif
+            screenPos = UiInput.MousePosition;
+            return UiInput.LeftPressed;
         }
     }
 }

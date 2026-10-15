@@ -2,23 +2,23 @@
 
 > **Status:** Etap 1: szkielet systemów w C# (`Assets/_Project/`) gotowy do skopiowania do Unity,
 > instrukcja w `docs/UNITY_SETUP.md`. Prototyp wizualny: `tools/pixel-proto/` i `docs/img/`.
-> **Ostatnia aktualizacja:** 2026-10-13
+> **Ostatnia aktualizacja:** 2026-10-15
 
 ---
 
 ## 1. Koncept
 
-Mała gra **idle w okienku na pulpicie**, w klimacie **dark fantasy**. Gracz ma małą wyspę na morzu,
-sadzi na niej rośliny i czeka, aż urosną. **Rośliny dnia rosną tylko wtedy, gdy gracz pracuje przy komputerze**
-(wykrywana aktywność myszy i klawiatury). Plony się zbiera i sprzedaje, a za monety kupuje nasiona, lampy,
-ulepszenia i powiększenie wyspy.
+Mała gra **idle** w klimacie **dark fantasy**: w okienku na pulpicie (Windows), docelowo też **na telefonie**. Gracz ma
+małą wyspę na morzu, sadzi na niej rośliny i czeka, aż urosną. **Wszystko dzieje się samo z czasem, gdy gra jest
+włączona** (od §9 p. 134; wcześniej rośliny dnia i Żar szły tylko od pracy przy komputerze). Plony się zbiera i sprzedaje,
+a za monety kupuje nasiona, lampy, ulepszenia i powiększenie wyspy.
 
 **Wyróżniki:**
-- Nagroda za coś, co gracz i tak robi: pracę przy komputerze.
+- Spokojna wyspa „do czuwania”: włączona w tle albo na telefonie, rośnie i świeci sama, gracz zagląda, zbiera i rozbudowuje.
 - **Cykl gry** steruje porą dnia (od Etapu 6d+, zamiast zegara komputera): doba trwa 1 h, 40 min dnia i 20 min nocy, i idzie
-  także offline. W nocy na wyspie robi się ciemno i trzeba ją oświetlić lampami.
-- Lampy zasila **Esencja**, czyli energia zdobywana pracą.
-- Dwa typy roślin: **dnia** (rosną od aktywności, w świetle) i **nocy** (rosną w ciemności, także gdy gracz śpi).
+  także offline. W nocy na wyspie robi się ciemno i trzeba ją oświetlić lampami. Do tego pory roku (6 cykli każda, §9 p. 127).
+- Lampy zasila **Żar** (w kodzie Esencja): płynie sam z czasu, a piec i kryształy dokładają więcej.
+- Dwa typy roślin: **dnia** (rosną w świetle: za dnia albo pod lampą) i **nocy** (rosną w ciemności, także gdy gra jest wyłączona).
 
 **Bez postaci.** Nie ma bohatera ani animacji klatkowych postaci. Życie świata dają shadery, cząsteczki i
 stworzenia w tle (ryby, coś w głębinie, ogniki).
@@ -32,20 +32,20 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 | Temat | Decyzja |
 |---|---|
 | Silnik | **Unity 6.6 (`6000.6.5f1`)**, szablon **Universal 2D** (URP z 2D Rendererem), Shader Graph, Input System |
-| Platforma | **Windows** (na start) |
-| Wykrywanie aktywności | `GetLastInputInfo` (user32.dll), czyli czas od ostatniego inputu w całym systemie. Bez globalnych hooków, więc antywirusy nie reagują. Gracz jest „aktywny”, gdy od ostatniego inputu minęło < ~60 s |
+| Platforma | **Windows** (na start), potem **Android/iOS** (sterowanie dotykiem już jest, §2.1) |
+| Wykrywanie aktywności | **Usunięte (§9 p. 134).** Wcześniej `GetLastInputInfo` i tempo pracy; teraz gra nie patrzy, czy gracz pracuje |
 | Okno | Zwykłe małe okno albo (opcje, Etap 6a) bez ramki / zawsze na wierzchu / w rogu ekranu / przezroczyste. **Własny kod WinAPI** (`Scripts/Platform/`), bez paczki UniWindowController |
 | Praca w tle | `Application.runInBackground = true` |
 | Wydajność (krytyczna, gra działa godzinami) | **Zmiana po teście (§9, 42):** opcja Płynność, domyślnie 60/30 kl./s, ruch płynny. Pierwotnie: animacje skokowe ok. **10 kl./s**, więc `targetFrameRate` 10–15 w tle i ~30 przy hoverze. `vSyncCount = 0`. Rozważyć `OnDemandRendering`. Symulacja w tickach (np. co 1 s), nie w każdym `Update` |
 | Batching | Jeden materiał dla roślin. Faza kołysania liczona z pozycji w świecie, a nie z właściwości per-renderer |
 | Zapis | JSON w `Application.persistentDataPath`, autosave co ~1 min i przy wyjściu |
-| Postęp offline | Przy starcie liczymy, ile **nocnych godzin** minęło od zamknięcia, i doliczamy wzrost roślin nocy. Rośliny dnia offline **nie** rosną |
+| Postęp offline | Przy starcie liczymy, ile **nocnych godzin** minęło od zamknięcia, i doliczamy wzrost roślin nocy. Reszta (rośliny dnia, drzewa, Żar, rejs, monumenty) idzie **tylko przy włączonej grze** (decyzja gracza, §9 p. 134) |
 | Czas | `System.DateTime.Now`. Opcjonalnie później prawdziwy wschód i zachód słońca (z szerokości geograficznej) albo godziny ustawiane w opcjach |
 | Faza księżyca | Z cyklu gry: 8 nocy od nowiu do nowiu, pełnia co ósmą noc (bonus, patrz zdarzenia) |
 
 **Architektura (zaimplementowana w Etapie 1, namespace `Wyspa.*`, szczegóły w §10):**
-- `ActivityTracker`: co 1 s sprawdza `SystemIdle`, emituje „aktywne sekundy”
-- `EssenceStore`: Esencja (przychód z aktywności, zużycie przez lampy, pojemność)
+- ~~`ActivityTracker`~~ (usunięty w §9 p. 134 razem z `WorkRhythm` i `SystemIdle`)
+- `EssenceStore`: Esencja/Żar (przychód z czasu, piec i kryształy, zużycie przez lampy, pojemność)
 - `DayNightClock`: pora dnia z zegara, gradient koloru otoczenia, czy jest noc
 - `CropDefinition` (ScriptableObject): typ (dzień/noc), czas wzrostu, fazy (sprite'y), ceny
 - `FarmPlot` / `IslandGrid`: pola i stan roślin (dane w czystych klasach C#, osobno od MonoBehaviour)
@@ -56,19 +56,33 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 
 ---
 
+## 2.1 Telefony (plan, §9 p. 134)
+
+- **Sterowanie dotykiem (zrobione, `UI/UiInput`):** stuknięcie = lewy klik (przy puszczeniu palca), przytrzymanie w miejscu
+  ~0,45 s = prawy klik (pierścień akcji, czyli Księga, sklep, rozbudowa), przeciągnięcie jednym palcem = przesuwanie widoku,
+  dwa palce: przesuwanie i szczypanie (przybliżenie x2-x8). Dymki pokazują się w miejscu ostatniego dotyku. Na Windows
+  z ekranem dotykowym udawane kliknięcia myszy są pomijane (bez podwójnych kliknięć).
+- **Telefon w Opcjach:** tylko przybliżenie i rozmiar UI (bez rozmiaru okna, mini-trybu, ramki, rogu i przezroczystości);
+  kadr z całego ekranu. Funkcje Windows (okno na pulpicie, zasobnik, autostart) są tylko w buildzie na Windows.
+- **Do zrobienia przy porcie:** ustawienia buildu Android/iOS (orientacja pozioma na start), większe pola dotyku w UI
+  (min. ok. 9 mm), dymki po przytrzymaniu zamiast najechania (grządka, drzewo), powiadomienia (dojrzałe plony nocy,
+  powrót łodzi), zapis przy `OnApplicationPause`, test wydajności (shadery wody i mgły na słabszych GPU).
+
+---
+
 ## 3. Pętla rozgrywki
 
 ```
-Praca przy komputerze ──► Esencja ──► Lampy (noc) ──► rośliny dnia rosną też w nocy
-        │                                   │
-        ▼                                   ▼ (cień poza lampami)
-Rośliny dnia rosną ──► Zbiór ──► Monety ──► Nasiona / Lampy / Słój / Wyspa
+Czas (gra włączona) ──► Żar ──► Lampy (noc) ──► rośliny dnia rosną też w nocy
+   piec, kryształy ──┘                 │
+                                       ▼ (cień poza lampami)
+Dzień ──► Rośliny dnia ──► Zbiór ──► Monety ──► Nasiona / Lampy / Słój / Wyspa
                                                    ▲
-Noc / sen ──► Rośliny nocy ──► Rzadkie surowce ────┘
-Mgła ──► Nocne zdarzenia ──► Bonusy (Esencja, nasiona, odłamki)
+Noc (też offline) ──► Rośliny nocy ──► Rzadkie surowce ┘
+Mgła ──► Nocne zdarzenia ──► Bonusy (Żar, nasiona, odłamki)
 ```
 
-- **Gracz dzienny:** rośliny dnia rosną od pracy, a nocne same, kiedy śpi (postęp offline).
+- **Za dnia:** rośliny dnia rosną same w świetle, a nocne nocą, także gdy gra jest wyłączona (postęp offline).
 - **Nocny marek:** lampy pozwalają roślinom dnia rosnąć w nocy, **ale gdzie jest światło, tam nocne nie rosną**.
   Decyzja, które grządki oświetlić, to główny wybór taktyczny.
 
@@ -76,13 +90,11 @@ Mgła ──► Nocne zdarzenia ──► Bonusy (Esencja, nasiona, odłamki)
 
 ## 4. Systemy
 
-### 4.1 Esencja (energia z pracy)
-Nazwa robocza: „Esencja” (alternatywy: Żar, Dusza).
-- **+1 Esencji za każdą aktywną minutę.** Ta sama aktywność napędza też wzrost roślin dnia.
-- **Tempo pracy** (prośba gracza): im więcej piszesz i ruszasz myszą, tym szybciej rosną rośliny dnia, do **x1.5**.
-  Bez globalnych hooków: co 0.2 s porównujemy znacznik ostatniego inputu (`GetLastInputInfo`) i pozycję kursora; input bez
-  ruchu kursora liczy się jako pisanie (waga 1), sam ruch myszy waga 0.35. Średnia z ostatnich 15 s, pełne tempo przy
-  połowie próbek z inputem. Mnożnik widać w HUD („Tempo x1.3”) i w dymku grządki.
+### 4.1 Żar (w kodzie Esencja)
+- **+1 Żaru na minutę przy włączonej grze** (§9 p. 134; wcześniej za aktywną minutę pracy). Mnożą go Rozpałka, Nocny żar
+  (w nocy), Napar żaru i dar Żar Opiekunów. **Piec Żaru** (drewno na Żar) i **kryształy** (Żar sam, większy słój) dokładają
+  osobno; Żarliwe palenisko daje im więcej. Offline Żar nie przybywa.
+- ~~Tempo pracy~~ i rytm pracy (seria, przerwa, zmęczenie) usunięte w §9 p. 134.
 - **Zbiornik („słój”):** pojemność na start ok. **60**. Nadmiar przepada. Ulepszenie słoja zwiększa pojemność.
 - UI: pasek w prawym górnym rogu (w prototypie jeszcze z ikoną zegara, docelowo słój z płomieniem).
 - Esencję zużywają **lampy, tylko w nocy**.
@@ -94,15 +106,15 @@ Nazwa robocza: „Esencja” (alternatywy: Żar, Dusza).
 | | Rośliny dnia | Rośliny nocy |
 |---|---|---|
 | Przykłady | marchew, zboże, dynia | księżycowy kwiat, upiorna dynia, trupi grzyb, krwawa róża (tylko w pełnię) |
-| Rosną, gdy | gracz jest **aktywny** i pole jest **oświetlone** (dzień albo lampa) | jest **noc** i pole jest **w ciemności** (poza zasięgiem lamp) |
-| Wymagają aktywności | tak | **nie** (rosną też offline) |
+| Rosną, gdy | pole jest **oświetlone** (dzień albo lampa), gra włączona | jest **noc** i pole jest **w ciemności** (poza zasięgiem lamp) |
+| Offline | **nie** rosną | **rosną** (noc między zamknięciem a otwarciem gry) |
 | Charakter | szybkie, tanie, stały dochód | wolne, rzadkie, cenne, surowce do ulepszeń |
 
 - Każda roślina ma **6 faz**: nasiono, kiełek, sadzonka, rośnie, niedojrzała (kształt dojrzałej w kolorach liści),
   dojrzała (§9 p. 98; wcześniej 4 fazy).
 - **Sylwetki muszą się różnić** (uwaga z review): marchew to szeroki wachlarz pierzastych liści i pomarańczowa
   główka, a zboże to pionowe wąskie źdźbła, potem zielone kłosy, potem złote kłosy z **ościami**.
-- Zmiana fazy ma „pop”: squash & stretch plus wybuch listków (nagroda za pracę).
+- Zmiana fazy ma „pop”: squash & stretch plus wybuch listków.
 - Dojrzała roślina: iskierki i lekki puls (pokazuje „gotowe do zbioru”).
 
 ### 4.3 Lampy
@@ -365,7 +377,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [ ] Pasma światła lamp z ditheringiem Bayera (§4.4): przesunięte na później (wymaga własnego światła 2D albo post-processu).
 - [x] Krzywa cen kafelków: kwadratowa, mocniejsza od 6d (§13.2).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
-- [ ] Progi rytmu pracy (seria 25 min, przerwa 5 min, zmęczenie 8 h/10 h) do sprawdzenia w praktyce.
+- [x] ~~Progi rytmu pracy~~: rytm usunięty (§9 p. 134).
 - [x] Mutacje (wybór gracza: 5 nowych hybryd, razem 6): pary w §11.3 D (dane w `CropDefinition.parentA/B`, `WyspaSetup.CropSpecs`).
 - [x] Nasiona spoza sklepu (hybrydy, kupiec-widmo, wyprawy) trafiają do **worka nasion**; koło nasion najpierw bierze z worka.
 - [x] Nawóz (+1 jakości) na razie tylko od kupca-widma i z wypraw, zużywany automatycznie przy sadzeniu. Kompostownik później.
@@ -458,6 +470,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   Grafiki sezonowe to placeholdery ze skryptu; docelowe rysuje się ręcznie (pliki `<nazwa>__<pora>.png`).
 - [x] **Rośliny sezonowe** (prośba gracza, §9 p. 129): 16 nowych roślin, po 4 na porę (2 dnia, 2 nocy), siew tylko
   w swojej porze, odblokowanie w Sklep → Nasiona. Grafiki to placeholdery ze skryptu (`seasonal_crops.py`).
+- [x] **Bez pracy i rytmu: wszystko z czasem przy włączonej grze** (decyzja gracza, §9 p. 134). Sterowanie dotykiem
+  gotowe; port na telefony (build, UI pod dotyk, powiadomienia) do zrobienia (§2.1).
 - [x] **Okno stałej wielkości i przybliżenie kółkiem myszy** (prośba gracza, §9 p. 133).
 - [x] **Mutacje w Bestiariuszu** (prośba gracza, §9 p. 130): dział „Mutacje” z odkrywaniem hybryd (ślad, potem pełny wpis),
   pierwsze odkrycie daje 2 nasiona.
@@ -485,7 +499,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `wisp_hats.py` + `export_unity_hats.py` | czapki ogników (15, pivot = środek dołu) → `Automation/hat_*.png` |
 | `wisp_tools.py` + `export_unity_wisp_tools.py` | narzędzia ogników (6 zawodów, po 2 klatki, pivot = chwyt) → `Automation/tool_*.png` |
 | `gift_icons.py` + `export_unity_gifts.py` | ikony 37 Darów Mgły (12 px) → `UI/Icons/icon_gift_<id>.png`, arkusz `docs/img/ikony_darow.png` |
-| `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze; argument = co ile minut gracz zagląda (domyślnie 20) |
+| `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze; argument = co ile minut gracz zagląda (domyślnie 20). **Nieaktualna od §9 p. 134** (liczy godziny pracy; teraz czas przy włączonej grze), do przerobienia przy balansie |
 | `shadow_preview.py` | podgląd słońca i cieni (wzory jak w `SunShadows.cs` i `DayNightLighting.cs`) → `docs/img/cienie_pory_dnia.png` |
 | `familiars.py` + `export_unity_familiars.py` | chowańce (8 rodzajów, pozy) → `Critters/familiar_<id>_<poza>.png`, podgląd `docs/img/chowance.png` |
 | `homes.py` + `export_unity_homes.py` | domki chowańców, ognisko ogników (3 klatki), sennik → `Objects/`, podgląd `docs/img/domki.png` |
@@ -1137,6 +1151,25 @@ Obrazki referencyjne (kopie): `docs/img/`
       kadr: przewijanie PPM. Księga dopasowuje skalę UI do okna, okno rośnie tylko, gdy nie mieści jej nawet w x1 (mini-tryb).
     - **Przybliżenie kółkiem myszy** (bez Ctrl): x2, x4, x6, x8 (parzyste, bo woda liczy obraz w 32 px), w stronę kursora;
       nie nad UI i nie przy otwartej Księdze. Najmniejsze przybliżenie nie pokazuje nic poza mapą wyspy. Opcje: przybliżenie x2-x8.
+134. **Nowa koncepcja: bez pracy, wszystko z czasem; przygotowanie pod telefony** (decyzja gracza: „bez rytmu pracy
+    i pracy, wszystko bez tego mnożnika; pomyśleć o komórkach”). Odpowiedzi gracza: Żar sam z czasu i z budowli; wzrost
+    tylko przy włączonej grze; ulepszenia pracy zamienić na nowe; telefony: na razie sterowanie dotykiem.
+    - **Usunięte:** `ActivityTracker`, `WorkRhythm`, `SystemIdle` (wykrywanie inputu w Windows), tempo pracy, seria,
+      przerwa, zmęczenie; w HUD pasek rytmu i lampki klawiatury/myszy; w Opcjach próg bezczynności i rytm; zapis rytmu.
+    - **Żar:** +1/min przy włączonej grze (x Rozpałka, Nocny żar w nocy, Napar żaru, Żar Opiekunów); piec i kryształy bez zmian
+      (+ Żarliwe palenisko). Offline nie przybywa. Nadmiar ponad słój: Żar w złoto; Dniówka = monety za minutę gry.
+    - **Wzrost:** rośliny dnia w świetle (dzień albo lampa), bez warunku aktywności; sadzonki drzew cały czas, owoce dnia
+      za dnia (nocne i pełni jak dawniej). Rejs łodzią, budowa monumentów i dary wysp fabularnych: czas przy włączonej grze
+      (wcześniej godziny pracy, więc teraz w praktyce szybciej). Offline: jak dawniej tylko rośliny nocy.
+    - **Ulepszenia (te same id, nowe efekty):** Rozpałka = Żar szybciej; Drugi oddech → **Nocny żar** (w nocy +25/50%);
+      Głębokie skupienie → **Żarliwe palenisko** (piec i kryształy +25/50%); Pracowite ręce → **Sezonowy targ** (rośliny
+      jednej pory +10/20% ceny); Dniówka = minuta gry; Skupiony sprzedawca → **Deszczowy kupiec** (w deszczu i burzy +10/20%);
+      Wypoczęty kupiec → **Zimowy jarmark** (zimą +15/30%). Dary: Żar Opiekunów = Żar szybciej; Niezmordowany = słój +10/20%;
+      Dniówka z mgły = monety za minutę gry. Mikstura Napar skupienia → **Napar żaru** (Żar +50%, 2 cykle).
+    - **Lore:** zamiast pracy „czuwanie” (wyspa oddaje Żar temu, kto przy niej czuwa): lore.1, lore.2, wrak 2, latarnia 2,
+      przybycie 6.
+    - **Telefony:** sterowanie dotykiem (§2.1), Opcje bez ustawień okna na telefonie. Build Android/iOS później.
+    - Wymaga **Wyspa → 2** (nowe wartości ulepszeń). Scena: komponent `ActivityTracker` usunięty z `MainLevel.unity`.
 
 ---
 
@@ -1146,10 +1179,9 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | Plik | Rola |
 |---|---|
 | `Scripts/Core/SystemIdle.cs` | `GetLastInputInfo` (Windows), czas od ostatniego inputu w systemie |
-| `Scripts/Core/ActivityTracker.cs` | aktywny, gdy input < 60 s (do testów `forceActive`) |
 | `Scripts/Core/GameClock.cs` | noc 20:00–6:00 (do ustawienia), debug godzina, faza księżyca, sekundy nocy między datami (offline) |
-| `Scripts/Core/EssenceStore.cs` | Esencja: +1 za minutę aktywności, pojemność 60 |
-| `Scripts/Core/GameLoop.cs` | tick co 1 s: aktywność, Esencja, lampy (najtańsze pierwsze), wzrost roślin. `debugTimeScale` |
+| `Scripts/Core/EssenceStore.cs` | Esencja/Żar: +1 na minutę przy włączonej grze (§9 p. 134), pojemność 60 |
+| `Scripts/Core/GameLoop.cs` | tick co 1 s: Żar z czasu, lampy (najtańsze pierwsze), wzrost roślin i drzew. `debugTimeScale` |
 | `Scripts/Core/AppPerformance.cs` | runInBackground, vSync 0, 30 kl./s z fokusem, 12 w tle |
 | `Scripts/Farming/CropDefinition.cs`, `CropDatabase.cs` | ScriptableObjecty roślin (Day/Night, czas, 6 sprite'ów faz, ceny) |
 | `Scripts/Farming/PlotState.cs` | czyste dane pola + reguły wzrostu (`GrowthContext`) |
@@ -1159,19 +1191,18 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Lighting/DayNightLighting.cs` | Global Light 2D: kolor (Gradient) i jasność (krzywa) wg godziny, `minBrightness` |
 | `Scripts/Economy/Currency.cs`, `Wallet.cs` | waluty (§11.2: monety, plony nocy, odłamki, łuski, dary, drewno, kamień), portfel na wszystkie, start 50 monet |
 | `Scripts/Upgrades/*` | `UpgradeDefinition` (poziomy z kosztem w wielu walutach + wartość efektu, wymagania), `UpgradeDatabase`, `UpgradeState` (posiadane poziomy, zakup), `UpgradeIds` |
-| `Scripts/Core/WorkRhythm.cs` | rytm pracy: seria skupienia, „odświeżony” po przerwie, zmęczenie; mnożnik Esencji |
 | `Scripts/Automation/*` | budowle w wielu egzemplarzach (Etap 6b): `HarvestCrate` (20 miejsc, klik = sprzedaż 100%), `WispGardener` (zasięg 5x5, do najbliższej skrzyni), `MerchantSpirit` (sprzedaje najpełniejszą skrzynię po 90%), `SeedRune` (sieje 3x3, wybór nasion w kole), `AutomationSystem` (darmowa pierwsza sztuka, ceny, ticki); stawia je `Island.SpawnBuilding` |
 | `Scripts/Save/SaveSystem.cs` | JSON w persistentDataPath, autosave co 60 s, offline: rośliny nocy rosną za godziny nocy |
 | `Scripts/Input/ClickRouter.cs` | klik, potem Collider2D, potem `IClickable` (Input System albo stary Input) |
-| `Scripts/UI/DebugHud.cs` | HUD debugowy IMGUI (F1): waluty, rytm, ulepszenia, przełączniki testowe, czas x60, cheat |
+| `Scripts/UI/DebugHud.cs` | HUD debugowy IMGUI (F1): waluty, ulepszenia, przełączniki testowe, czas x60, cheat |
 | `Scripts/Core/GameEvents.cs` | zdarzenia dla UI (toast = klucz lokalizacji + argumenty) |
 | `Scripts/Localization/LocCore.cs`, `Loc.cs` | lokalizacja: tabele CSV, fallback en, potem pl, `{0}`, `{0:N0}`, `{0:plural:a\|b\|c}` (CLDR), liczby wg kultury; `Loc` = wybór języka (PlayerPrefs `lang`, przy pierwszym starcie język systemu) |
 | `Scripts/UI/UiRoot.cs` | korzeń UI: Canvas (Constant Pixel Size, skala UI = skala świata − 1), EventSystem, font TMP tworzony w locie z `WyspaPixel.ttf`, dymek nad grządką |
 | `Scripts/UI/Ui.cs`, `UiTheme.cs`, `UiInput.cs`, `LocText.cs` | fabryka elementów (9-slice, tekst, przycisk, pasek), motyw (sprite'y, ikony, kolory, tabele), wejście, tekst z klucza odświeżany po zmianie języka |
-| `Scripts/UI/HudView.cs` | HUD: waluty (pokazane po zdobyciu), Esencja, rytm pracy, zegar; chowa się po 5 s bez ruchu myszy |
+| `Scripts/UI/HudView.cs` | HUD: waluty (pokazane po zdobyciu), Esencja, zegar i pora roku; chowa się po 5 s bez ruchu myszy |
 | `Scripts/UI/ActionRing.cs` | pierścień akcji (PPM na wyspie): Księga, Sklep, Rozbudowa, Menu (podmenu: Opcje, Zapisz, Menu główne, Wyjdź); wyzwalany w `UiRoot` (bez przeciągania, gdy nic nie jest otwarte) |
 | `Scripts/UI/SeedWheel.cs` | koło nasion wokół pustej grządki, dymki z opisem, PPM/Esc zamyka |
-| `Scripts/UI/BookView.cs` | Księga: zakładki Sklep (Lampy, Morze), Ulepszenia, Rytuały, Bestiariusz, Statystyki, Opcje (język, jasność nocy, rytm pracy) |
+| `Scripts/UI/BookView.cs` | Księga: zakładki Sklep (Lampy, Morze), Ulepszenia, Rytuały, Bestiariusz, Statystyki, Opcje (język, jasność nocy, okno, przybliżenie) |
 | `Scripts/UI/ToastView.cs`, `TooltipView.cs` | toasty (maks. 3, 4 s) i dymek przy kursorze |
 | `Localization/*.csv` | tabele: `glossary` (słownik terminów), `game` (teksty gry), `ui` (interfejs) |
 | `Shaders/SpriteSway.shader`, `SpriteSwayUnlit.shader` | sprite oświetlany (jak Sprite-Lit-Default URP 17.6) + kołysanie wierszy pikseli + kontur; wersja bez oświetlenia dla `*_glow` |
@@ -1186,7 +1217,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Farming/SeedBag.cs` | worek nasion (hybrydy, kupiec, wyprawy); jakość i mutacje w `PlotState`, `CropDefinition`, `GameLoop.TryMutate` |
 | `Scripts/Sea/GhostMerchant.cs` | kupiec-widmo: harmonogram nocy, oferta, skup skrzyni |
 | `Scripts/Sea/Pier.cs`, `FishingNets.cs` | pomost i łowisko (ryby liczone tak jak w `Water.shader`), sieci co godzinę |
-| `Scripts/Sea/Expedition.cs` | łódź i wyprawy (postęp z aktywnej pracy, łup) |
+| `Scripts/Sea/Expedition.cs` | łódź i wyprawy (postęp z czasu przy włączonej grze, łup) |
 | `Scripts/Sea/NightEvents.cs`, `WillOWisp.cs`, `StarPickup.cs`, `MonsterEvent.cs`, `Altar.cs` | nocne zdarzenia (harmonogram, ogniki, gwiazdy, potwór), ołtarz |
 | `Scripts/Lore/Chronicle.cs`, `Rituals.cs` | kronika: liczniki cyklu, punkty księżyca przy nowiu, odkrycia do bestiariusza, rytuały i ich efekty (statyczne mnożniki) |
 | `Scripts/Platform/WinApi.cs`, `DesktopWindow.cs` | okno na pulpicie (tylko build Windows): ramka, na wierzchu, róg ekranu, przeciąganie, przezroczystość z klikiem przez tło, `Autostart` (HKCU\Run) |
@@ -1221,7 +1252,7 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 ### 11.1 Zasady
 1. **Każde ulepszenie widać na wyspie** (nowy obiekt, efekt, światło). Gracz zerka na okienko i widzi postęp.
 2. **Wybory zamiast samych liczb** (np. lampa: zasięg ALBO oszczędność).
-3. **Tempo w dniach i tygodniach pracy**, nie w minutach.
+3. **Tempo w dniach i tygodniach gry** (czas przy włączonej grze), nie w minutach.
 4. **Zero kar i FOMO.** Przegapione nie przepada.
 5. **Gra nie nagradza przepracowania** (zmęczenie, bonus za przerwy).
 
@@ -1229,7 +1260,7 @@ Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5)
 | Waluta | Źródło | Zastosowanie |
 |---|---|---|
 | Monety | sprzedaż plonów dnia | podstawowe zakupy |
-| Esencja | aktywna praca | lampy, rytuały, przyspieszenia |
+| Esencja (Żar) | czas przy włączonej grze, piec, kryształy | lampy, rytuały, przyspieszenia |
 | Plony nocy | rośliny nocne | ulepszenia magiczne, automatyzacja |
 | Odłamki gwiazd | spadające gwiazdy | lampy wyższego poziomu, latarnia morska |
 | Łuski / świecące ryby | łowienie, sieci | klatka z ognikiem, latarnia morska |
@@ -1254,7 +1285,7 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 | | Bystre ogniki | +50% doświadczenia | siewca |
 | | Pojemne skrzynie | 30 / 40 miejsc | gniazdo |
 | Żar (lewo) | Słój Żaru | 120 / 240 / 480 | ogrodnik |
-| | Rozpałka | praca +10/20/30% Żaru | słój |
+| | Rozpałka | Żar płynie +10/20/30% | słój |
 | | Drugi oddech | zmęczenie: Żar do 65% / 80% | rozpałka |
 | | Głębokie skupienie | seria +35% / +50% | rozpałka |
 | | Pajęcze knoty | lampy -15% / -30% Żaru | słój |
@@ -1271,12 +1302,11 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 - **Strefy:** cmentarzysko (rośliny nocy ×1.5), bagno (grzyby, dziwne zioła), ruiny (miejsce na ołtarz). **Nie kupuje się ich, tylko odkrywa** rozbudową w ich stronę (§13.4).
 - **Kompostownik:** niesprzedane i zepsute plony zamienia w nawóz (+25% szybkości wzrostu na jedną uprawę, +1 gwiazdka jakości).
 
-**B. Esencja i rytm pracy (wyróżnik gry)**
+**B. Żar (dawniej: Esencja i rytm pracy; rytm usunięty w §9 p. 134)**
 - **Słój:** pojemność 60, potem 120, 240, 480. Koszt: 100 / 400 / 1500 monet.
-- **Seria skupienia:** po 25 min pracy bez przerwy (przerwy < 2 min się nie liczą) Esencja +25%, aż do przerwy.
-- **Bonus za przerwę („odświeżony”):** przerwa 5–30 min daje +15% Esencji przez następne 25 min.
-- **Zmęczenie:** po 8 h aktywności w dobie Esencja ×0.5, po 10 h ×0.25. Doba resetuje się o 4:00. Łagodnie, bez kar.
-- **Statystyki:** przepracowane dziś / w tygodniu, najdłuższa seria, liczba przerw.
+- **Rozpałka:** Żar płynie +10/20/30%. **Nocny żar** (id `second_wind`): w nocy +25/50%. **Żarliwe palenisko**
+  (id `focus_streak`): piec i kryształy +25/50%. Dawne węzły rytmu (Drugi oddech, Głębokie skupienie) mają te miejsca w drzewku.
+- **Statystyki:** Żar teraz (na minutę), zarobek i zbiory w tym rejsie.
 
 **C. Lampy:** każda ma 3 kierunki ulepszeń (gracz wybiera):
 - **Knot:** zużycie −30% / −50%.
@@ -1336,7 +1366,7 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 **F. Morze**
 - **Pomost** (400 monet): łowienie (klik w rybę przy brzegu). Klik w deski (bez ryby): panel z „Przenieś” (za darmo,
   te same warunki co przy budowie); sieci i łódź płyną razem z nim, łódź zachowuje wyprawę, sieci odliczanie połowu.
-- **Łódź i wyprawy** (800 monet): łódź płynie w mgłę na N godzin **aktywnej pracy** i wraca z łupem. Jedna wyprawa naraz.
+- **Łódź i wyprawy** (800 monet): łódź płynie w mgłę na N godzin (czas przy włączonej grze, §9 p. 134) i wraca z łupem. Jedna wyprawa naraz.
   **Cele wypraw** (wybór gracza; dane w `Sea/Destinations.cs`): każda wyprawa daje kolejny zapisek z tego miejsca i 2-6 losowań
   z tabeli celu (wagi), dalekie cele jeszcze jedno rzadkie (odłamek albo hybryda).
   | Cel | Czas | Odblokowanie | Łup (główne) |
@@ -1358,7 +1388,7 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 - **Bestiariusz:** ryby, rośliny, hybrydy, zdarzenia, potwór. Ukończenie kategorii daje nagrody.
 - **Lore z wypraw i wraków** stopniowo odsłania historię wyspy, mgły i potwora (narracja bez postaci i dialogów).
   **„Ostatnia latarnia”** (wybór gracza; `Lore/LoreBook.cs`, teksty `lore.*` w game.csv). Świat zjadła mgła. Kiedyś trzymał ją
-  w ryzach **Łańcuch Latarni**: wyspy, których lampy palą się od pracy opiekunów (stąd Esencja z pracy gracza). Latarnie gasły
+  w ryzach **Łańcuch Latarni**: wyspy, których lampy palą się Żarem oddawanym czuwającym opiekunom (stąd Żar, gdy gracz „czuwa”, czyli gra jest włączona; §9 p. 134). Latarnie gasły
   jedna po drugiej. Wyspa gracza jest ostatnia. Poprzedni **Opiekun** (podpis „O.”) zostawił zapiski i popłynął w mgłę.
   Na końcu okazuje się, że potwór-oko to **Pierwszy Opiekun**: od stu lat trzyma mgłę na dnie. Lampy dają mu siłę, a ofiary
   na ołtarzu są dla niego łykiem powietrza. Poprzedni Opiekun został z nim („Pal światło, a my utrzymamy resztę”).
@@ -1385,7 +1415,7 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 
 ### 11.5 Priorytety (kolejność wdrażania)
 1. Automatyzacja (ognik-ogrodnik, pamięć ziemi).
-2. Rytm pracy (seria, przerwa, zmęczenie).
+2. ~~Rytm pracy~~ (usunięty, §9 p. 134).
 3. Rozbudowa wyspy kafelkami i cofanie mgły (§13).
 4. Wyprawy łodzią.
 5. Mutacje.
@@ -1395,9 +1425,8 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 - `UpgradeState`: posiadane poziomy (w zapisie). Efekty jako małe klasy/strategie odpytywane przez systemy
   (np. `EssenceStore` pyta o mnożnik, `Lamp` o zużycie i zasięg), żeby nie rozsiewać `if`-ów po kodzie.
 - `Currencies`: jeden portfel na wiele walut (enum), zamiast osobnych klas.
-- `WorkRhythm`: śledzi serię, przerwę i dzienną sumę aktywności, zwraca mnożnik Esencji.
 - `HarvestCrate` + `WispGardener`: automatyczny zbiór do skrzyni, `AutoSeller`.
-- `Expedition`: stan łodzi (licznik aktywnych sekund, tabela łupów).
+- `Expedition`: stan łodzi (licznik sekund rejsu, tabela łupów).
 - `Mutation`: tabela par roślin i hybrydy, rzut przy zbiorze.
 
 ### 11.8 Prestiż: Rejs we mgłę (Etap 8, przebudowa: Przystań we mgle i losowane dary)
@@ -1442,7 +1471,7 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 | zwykły | Mądre ogniki | doświadczenie ogników +15/30/45% |
 | zwykły | Nawóz z mgły | start z 3 / 6 / 10 porcjami nawozu |
 | niezwykły | Wierny ognik | ognik-ogrodnik od startu |
-| niezwykły | Żar Opiekunów | Żar z pracy +10/20/30% |
+| niezwykły | Żar Opiekunów | Żar płynie +10/20/30% |
 | niezwykły | Zielone ręce | wzrost roślin +10/20/30% |
 | niezwykły | Szczodry duszek | duszek-handlarz i ogniki +3/6/9% ceny |
 | niezwykły | Znajomy widma | kupiec-widmo -5/10/15% |
@@ -1459,7 +1488,7 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 | rzadki | Skarbonka | odsetki o świcie +0,5/1% |
 | rzadki | Pełna tablica | +1 zamówienie na tablicy |
 | rzadki | Niezmordowany | zmęczenie spowalnia o 10/20% mniej |
-| rzadki | Dniówka z mgły | +1/2 monety za minutę pracy |
+| rzadki | Dniówka z mgły | +1/2 monety za minutę gry |
 | epicki | Perłowe szczęście | złoty interes +3/6/9% szansy |
 | epicki | Złote runo | mnożnik złotego interesu +0,5/1 |
 | epicki | Gwiezdny traf | odłamek gwiazdy przy sprzedaży +2/4% |
@@ -1524,27 +1553,26 @@ Makiety: `docs/img/ui_hud.png`, `ui_ksiega_sklep.png`, `ui_ksiega_ulepszenia.png
 
 ### 12.2 HUD
 - **Pasek nad wyspą (Etap 6d):** górny wiersz: monety, Esencja (ikona + pasek + liczby), plony nocy, odłamki gwiazd, drewno, kamień
-  (waluty pojawiają się dopiero po zdobyciu); dolny wiersz: rytm pracy, pasek serii, tempo, zegar. Pasek idzie za lądem.
+  (waluty pojawiają się dopiero po zdobyciu); dolny wiersz: zegar gry i pora roku (rytm pracy usunięty, §9 p. 134). Pasek idzie za lądem.
 - **Menu:** pierścień akcji pod prawym klikiem na wyspie (Księga, Sklep, Rozbudowa, Menu z podmenu: Opcje, Zapisz grę,
   Menu główne, Wyjdź; do tego akcje tego, co pod kursorem), §12.10, §9 p. 97. Przycisków w rogu okna już nie ma.
-- Rytm pracy (dolny wiersz paska): ikona stanu (seria / odświeżony / zmęczenie), opis („SERIA 32 MIN +25%”), pasek, zegar.
 - **Mini-tryb:** HUD całkiem ukryty, zostaje tylko wyspa.
 
 ### 12.3 Interakcje na wyspie
 - **Klik pustej grządki:** **koło nasion** (menu radialne) z paczkami nasion. Najechanie pokazuje tooltip
   (nazwa, cena, sprzedaż, czas wzrostu). Środek koła lub PPM = anuluj. Niedostępne nasiona są wyszarzone.
 - **Klik dojrzałej:** zbiór (cząsteczki, monety lecą do licznika).
-- **Najechanie na rosnącą:** tooltip z fazą, czasem do dojrzenia i **warunkami** (czy ma światło, czy gracz jest aktywny, czy noc).
+- **Najechanie na rosnącą:** tooltip z fazą, czasem do dojrzenia i **warunkami** (czy ma światło, czy noc).
 - **Obiekty** (skrzynia, łódź, ołtarz, kupiec, słój) otwierają małe panele kontekstowe przy obiekcie.
 
 ### 12.4 Księga (główne menu)
 Lewa kolumna: zakładki-ikony. Prawa strona to pergamin z treścią. Na dole pasek opisu zaznaczonego elementu i przycisk **KUP + cena**.
 - **Sklep:** podzakładki Nasiona / Lampy / Budowle / Morze. Siatka slotów z ceną, a zablokowane mają kłódkę.
-- **Ulepszenia:** kolumny drzewek (Automatyka, Rytm pracy, Wyspa, Lampy, …). Węzły: posiadane (złota ramka),
+- **Ulepszenia:** kolumny drzewek (Automatyka, Żar, Wyspa, Lampy, …). Węzły: posiadane (złota ramka),
   dostępne (zwykła), zablokowane (kłódka, linia przerywana). Pasek opisu zawiera wymagania.
 - **Rytuały:** Księga rytuałów + postęp bieżącego cyklu księżyca (faza, punkty).
 - **Bestiariusz:** kolekcje (ryby, rośliny, hybrydy, zdarzenia, potwór) i fragmenty lore.
-- **Statystyki:** praca dziś / w tygodniu, najdłuższa seria, liczba przerw, wykres godzinowy.
+- **Statystyki:** Żar (stan i przypływ na minutę), zarobek i zbiory w tym rejsie (§9 p. 134).
 - **Opcje** (patrz 12.7).
 
 ### 12.5 Tryb stawiania (lampy, budowle)
@@ -1562,16 +1590,15 @@ półprzezroczysty (alfa, nie dithering), okrąg zasięgu i licznik grządek jak
 **Stan (Etap 6a):** sekcje Ogólne / Okno / System jak niżej, bez dźwięku (6b). Godziny nocy krokami po 1 h.
 - **Okno:** skala ×2/×3, zawsze na wierzchu, przezroczyste tło, przyklejenie do rogu ekranu, mini-tryb.
 - **Noc:** godziny nocy, minimalna jasność (suwak).
-- **Praca:** próg bezczynności (domyślnie 60 s), rytm pracy i zmęczenie (włącz/wyłącz).
 - **Dźwięk:** ambient, efekty.
 - **System:** start z Windows, język (PL, później EN), reset zapisu (z potwierdzeniem).
 
 ### 12.8 Wprowadzenie (bez postaci)
-Karteczki przybite do skrzyni i tablicy na wyspie, 3–4 kroki: posadź, pracuj (patrz jak rośnie), zbierz, kup lampę.
+Karteczki przybite do skrzyni i tablicy na wyspie, 3–4 kroki: posadź, patrz jak rośnie, zbierz, kup lampę.
 Cel jest podświetlony pulsem.
 
 **Stan (Etap 6d):** `UI/IntroNotes.cs` + `UI/NoticeBoard.cs`. Tablica stoi na nowej wyspie (Island.SpawnBoard), kroki:
-1. posadź (strzałka nad pustą grządką), 2. pracuj, aż urośnie (strzałka nad rośliną), 3. zbierz, 4. dokup kafelek
+1. posadź (strzałka nad pustą grządką), 2. poczekaj, aż urośnie (strzałka nad rośliną), 3. zbierz, 4. dokup kafelek
 (prawy klik → Rozbudowa; ten krok uczy pierścienia akcji), 5. kup lampę i postaw ją na nowym kafelku, 6. „gotowe”
 (strzałka nad tablicą). Kafelek przed lampą (po teście): na wyspie 2x2 (2 grządki, tablica, latarnia) nie ma wolnego miejsca.
 Po wykonanym kroku karteczka odpada (iskierki) i przybija się nowa. Karteczka z treścią wisi pod wyspą (pasek HUD jest nad nią)
@@ -1735,12 +1762,12 @@ podgląd `docs/img/monumenty.png`.
   Przed przyłączeniem widać ruinę; po przyłączeniu klik otwiera panel.
 - **Odbudowa w 4 etapach.** Etap trzeba opłacić (tabela: koszt pierwszego, każdy kolejny +40%), potem budują go
   **wolne ogniki**: wypoczęty ognik bez pracy (nastrój ≥ 60) leci na rusztowanie, stuka pół minuty, potem może go zmienić
-  inny; najwyżej 3 naraz. Etap trwa ok. **10 min pracy gracza** z jednym ognikiem (2 ogniki: x1.3, 3: x1.6); bez pracy
+  inny; najwyżej 3 naraz. Etap trwa ok. **10 min** (przy włączonej grze) z jednym ognikiem (2 ogniki: x1.3, 3: x1.6); bez pracy
   gracza budowa stoi, bez ognika na rusztowaniu też (wyjątek: na wyspie nie ma ani jednego ognika, wtedy idzie sama, x0.5).
 - **Fazy wyglądu:** 0 ruina (poszarpany kikut, gruz, mech), 1-3 mur rośnie od dołu (45/65/85% wysokości) w rusztowaniu
   z żurawiem i stosem materiałów, 4 gotowy (świecące okna, poświata nocą). Każdy ukończony etap odsłania zapisek historii.
 
-| Monument (ruina) | Gotowy | Koszt 1. etapu (kolejne +40%) | Daje (tylko w czasie pracy, z tempem pracy) |
+| Monument (ruina) | Gotowy | Koszt 1. etapu (kolejne +40%) | Daje (przy włączonej grze) |
 |---|---|---|---|
 | Zatopiona kaplica | Kaplica Dzwonu | 40 drewna, 20 kamienia, 200 monet | +2 plony nocy co 8 min |
 | Rozbita strażnica | Strażnica Łańcucha | 30 drewna, 40 kamienia, 250 monet | +80 monet co 5 min |
@@ -1797,7 +1824,7 @@ dekoracji na kafelku. Nagrobki i dekoracje stref przyjdą ze strefami (Etap 5).
 ### 15.1 Drzewa do sadzenia i owoce
 - **Sadzonki różnych drzew** kupowane w sklepie albo znajdowane (gniazdo pod wyciętym drzewem, wyprawy).
   Drzewo zajmuje 1 kafelek.
-- **Wzrost długi** (dni aktywnej pracy, np. 2–5). Fazy: sadzonka, młode drzewo, dorosłe, owocujące.
+- **Wzrost długi** (pierwotnie dni aktywnej pracy, np. 2–5; od §9 p. 134 czas przy włączonej grze). Fazy: sadzonka, młode drzewo, dorosłe, owocujące.
 - **Owoce odrastają cyklicznie** z dojrzałego drzewa: zbiór kliknięciem, a później przez ognika-ogrodnika. Drzewo się nie zużywa.
 - **Wycięcie dorosłego drzewa** daje więcej drewna niż dzikie. To odnawialne źródło drewna, ale tracisz owoce.
 - Szkic gatunków w klimacie dark fantasy (do decyzji):
@@ -1817,13 +1844,13 @@ dekoracji na kafelku. Nagrobki i dekoracje stref przyjdą ze strefami (Etap 5).
   - drzewo księżyca: lawenda `(0.9, 0.85, 1.25)`, promień 40 px.
 
   W Unity to Point Light 2D na drzewie, włączany w nocy, gdy drzewo owocuje.
-  **Decyzja: światło drzew liczy się jak lampa dla wzrostu roślin.** W zasięgu rosną rośliny dnia (gdy gracz jest aktywny),
+  **Decyzja: światło drzew liczy się jak lampa dla wzrostu roślin.** W zasięgu rosną rośliny dnia,
   a rośliny nocy nie rosną. Drzewo nie zużywa Esencji, bo to nagroda za długi wzrost.
   Świeci tylko w nocy, kiedy owocuje (po zebraniu owoców gaśnie do czasu odrośnięcia).
   W kodzie: `Illumination.IsLit` uwzględnia owocujące świecące drzewa obok lamp.
 - **Stan (zrobione na prośbę gracza):** Sklep → Drzewa (sadzonka stawiana jak lampa), `Farming/FruitTree.cs` + dane
-  `TreeSpecies`. Wzrost w **godzinach** aktywnej pracy zamiast dni (szybsza nagroda, do balansu), z tempem pracy.
-  Owoce: zwykłe drzewa odrastają od pracy, upiorna grusza nocą, drzewo księżyca tylko w pełnię. **Klik w owocujące drzewo =
+  `TreeSpecies`. Wzrost w **godzinach** (od §9 p. 134 czas przy włączonej grze, bez tempa pracy) zamiast dni (szybsza nagroda, do balansu).
+  Owoce: zwykłe drzewa odrastają za dnia (dawniej od pracy), upiorna grusza nocą, drzewo księżyca tylko w pełnię. **Klik w owocujące drzewo =
   zbiór od razu (monety)**, klik w inne = panel ze stanem i „Zetnij” (drugi klik potwierdza; drewno: dorosłe 6, młode 2).
   Krwawa jarzębina na cmentarzu rośnie x1.5. Świecące owoce: Point Light 2D z wolumetrią + `Illumination.IsLit`.
   Ognik jeszcze nie zbiera owoców (później). Ceny: jabłoń 120 (4x8 co 30 min), bez 200 (5x10 co 40 min), jarzębina 250

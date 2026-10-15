@@ -3095,7 +3095,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1409575639}
-  - component: {fileID: 1409575638}
   - component: {fileID: 1409575637}
   - component: {fileID: 1409575636}
   - component: {fileID: 1409575635}
@@ -3278,7 +3277,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec76f42745526b24097f65023dcacab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Core.GameLoop
-  activity: {fileID: 1409575638}
   clock: {fileID: 1409575637}
   essence: {fileID: 1409575636}
   wallet: {fileID: 1409575635}
@@ -3343,20 +3341,6 @@ MonoBehaviour:
   nightEndsAt: 6
   useDebugHour: 0
   debugHour: 12
---- !u!114 &1409575638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1409575628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2ca6caa03981d94eae7186b96e86430, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Core.ActivityTracker
-  idleThresholdSeconds: 60
-  forceActive: 0
 --- !u!4 &1409575639
 Transform:
   m_ObjectHideFlags: 0

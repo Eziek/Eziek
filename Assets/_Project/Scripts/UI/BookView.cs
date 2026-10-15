@@ -760,7 +760,7 @@ namespace Wyspa.UI
             }
         }
 
-        // ---- Drzewa owocowe (GDD §15.1): sadzonka stawiana jak lampa, rośnie od pracy, owocuje cyklicznie
+        // ---- Drzewa owocowe (GDD §15.1): sadzonka stawiana jak lampa, rośnie z czasem, owocuje cyklicznie
 
         void BuildTreeShop()
         {
@@ -1406,12 +1406,15 @@ namespace Wyspa.UI
             var game = GameLoop.Instance;
             if (game == null)
                 return;
-            var r = game.Rhythm;
             float y = 0;
-            Line("ui.stats.today", ref y, r.DailyActiveHours);
-            Line("ui.stats.streak", ref y, r.StreakMinutes);
-            Line("ui.stats.multiplier", ref y, r.EssenceMultiplier);
             Line("ui.stats.essence", ref y, Mathf.FloorToInt(game.Essence.Amount + 0.001f), game.Essence.Capacity);   // w dół, jak w HUD
+            // Żar na minutę teraz (§9 p. 134: płynie sam z czasu; piec i kryształy osobno)
+            bool night = game.Clock != null && game.Clock.IsNight;
+            float rate = game.Essence.PerMinute * Alchemy.Potions.Essence * Economy.Prestige.EmberMultiplier
+                       * (UpgradeEffects.EssenceRate + (night ? UpgradeEffects.NightEssence : 0f));
+            Line("ui.stats.ember_rate", ref y, rate.ToString("0.##"));
+            Line("ui.stats.run_coins", ref y, Market.RunCoins);
+            Line("ui.stats.run_harvests", ref y, Market.RunHarvests);
         }
 
         void Line(string key, ref float y, params object[] args)
@@ -1435,7 +1438,6 @@ namespace Wyspa.UI
         int optionsSection;   // 0 ogólne, 1 okno, 2 system, 3 dźwięk (GDD §12.7)
         float resetArmedUntil = -1f;
         const float OptCol = 124f, OptRow = 19f;
-        static readonly int[] IdleSteps = { 15, 30, 60, 120, 300, 600 };
 
         void BuildOptions()
         {
@@ -1514,28 +1516,6 @@ namespace Wyspa.UI
             });
             y += OptRow;
 
-            if (game != null)
-            {
-                OptLabel("ui.options.rhythm", y);
-                Toggle(OptCol, y, game.Rhythm.RhythmEnabled, true, v =>
-                {
-                    game.Rhythm.RhythmEnabled = v;
-                    PlayerPrefs.SetInt("rhythm", v ? 1 : 0);
-                });
-                y += OptRow;
-
-                OptLabel("ui.options.idle", y);
-                var activity = game.Activity;
-                int seconds = Mathf.RoundToInt(activity.IdleThresholdSeconds);
-                Stepper(OptCol, y, Loc.Get("ui.options.seconds", seconds), 34f, d =>
-                {
-                    int i = 0;
-                    while (i < IdleSteps.Length - 1 && IdleSteps[i] < seconds) i++;
-                    activity.IdleThresholdSeconds = IdleSteps[Mathf.Clamp(i + d, 0, IdleSteps.Length - 1)];
-                });
-            }
-            y += OptRow;
-
             // płynność animacji = liczba klatek na sekundę (z fokusem / w tle)
             var perf = AppPerformance.Instance;
             if (perf != null)
@@ -1548,7 +1528,7 @@ namespace Wyspa.UI
                     x2 += OptButton("Smooth" + p, Loc.Get("ui.options.smooth." + p), x2, y, 24f, () => perf.Profile = prof, perf.Profile == p) + 3;
                 }
             }
-            info.text = Loc.Get("ui.options.idle_hint");
+            info.text = Loc.Get("ui.options.general_hint");
         }
 
         void BuildWindowOptions(float y)
@@ -1567,15 +1547,19 @@ namespace Wyspa.UI
             }
             y += OptRow;
 
-            OptLabel("ui.options.window_size", y);
-            x = OptCol;
-            for (int p = 0; p < ViewController.SizePresets; p++)   // własny rozmiar (przeciągnięta ramka): żaden nie zaznaczony
+            bool mobile = Application.isMobilePlatform;   // telefon: pełny ekran, bez okna na pulpicie (§9 p. 134)
+            if (!mobile)
             {
-                int preset = p;
-                x += OptButton("WinSize" + p, Loc.Get("ui.options.window_size." + p), x, y, 20f, () => { if (view != null) view.SetSizePreset(preset); },
-                               view != null && view.SizePreset == p) + 4;
+                OptLabel("ui.options.window_size", y);
+                x = OptCol;
+                for (int p = 0; p < ViewController.SizePresets; p++)   // własny rozmiar (przeciągnięta ramka): żaden nie zaznaczony
+                {
+                    int preset = p;
+                    x += OptButton("WinSize" + p, Loc.Get("ui.options.window_size." + p), x, y, 20f, () => { if (view != null) view.SetSizePreset(preset); },
+                                   view != null && view.SizePreset == p) + 4;
+                }
+                y += OptRow;
             }
-            y += OptRow;
 
             OptLabel("ui.options.ui_size", y);
             x = OptCol;
@@ -1586,6 +1570,11 @@ namespace Wyspa.UI
                                () => UiRoot.UiScaleSetting = size, UiRoot.UiScaleSetting == s) + 4;
             }
             y += OptRow;
+            if (mobile)
+            {
+                info.text = Loc.Get("ui.options.touch_hint");
+                return;
+            }
 
             OptLabel("ui.options.mini", y);
             Toggle(OptCol, y, view != null && view.Mini, view != null, v => view.Mini = v);

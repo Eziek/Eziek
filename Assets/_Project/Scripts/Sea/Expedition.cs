@@ -16,7 +16,7 @@ namespace Wyspa.Sea
     public class ExpeditionSave
     {
         public int state;          // 0 przy pomoście, 1 w drodze, 2 wróciła z łupem
-        public float progress;     // sekundy aktywnej pracy
+        public float progress;     // sekundy rejsu (przy włączonej grze)
         public float need;
         public bool longTrip;      // zapisy sprzed celów wypraw
         public string dest;        // v13: cel wyprawy (Destinations)
@@ -24,7 +24,7 @@ namespace Wyspa.Sea
     }
 
     /// <summary>
-    /// Łódź i wyprawy (GDD §11.3 F): łódź płynie w mgłę na N godzin AKTYWNEJ pracy i wraca z łupem. Gracz wybiera cel
+    /// Łódź i wyprawy (GDD §11.3 F): łódź płynie w mgłę na N godzin (czas przy włączonej grze, §9 p. 134) i wraca z łupem. Gracz wybiera cel
     /// (wrak, rafa, zatopiona latarnia, cmentarzysko statków, Serce mgły): każdy ma własny czas, tabelę łupów i zapiski lore
     /// (jeden nowy na wyprawę, po kolei). Jedna wyprawa naraz.
     /// </summary>
@@ -80,7 +80,7 @@ namespace Wyspa.Sea
             transform.position = dock;
         }
 
-        // --------------------------------------------------------- postęp: liczy się tylko aktywna praca
+        // --------------------------------------------------------- postęp: czas przy włączonej grze
 
         void Update()
         {
@@ -92,7 +92,7 @@ namespace Wyspa.Sea
                 return;
             }
             var game = GameLoop.Instance;
-            if (game == null || !game.Activity.IsActive)
+            if (game == null)
                 return;
             progress += Time.unscaledDeltaTime * Mathf.Max(0f, game.DebugTimeScale);
             if (progress >= need && !animating)

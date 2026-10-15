@@ -182,12 +182,12 @@ namespace Wyspa.World
 
         // ------------------------------------------------------------ budowa i dary
 
-        /// <summary>Tick z AutomationSystem: budowa idzie przy pracy gracza i z ognikami na rusztowaniu; gotowy daje walutę.</summary>
+        /// <summary>Tick z AutomationSystem: budowa idzie z ognikami na rusztowaniu (przy włączonej grze); gotowy daje walutę.</summary>
         public void Tick(float dt, GameLoop game)
         {
-            if (game == null || game.Activity == null || !game.Activity.IsActive)
+            if (game == null)
                 return;
-            float tempo = game.Activity.TempoMultiplier;
+            const float tempo = 1f;
             if (Building)
             {
                 int n = Working();

@@ -46,18 +46,17 @@ ui.upgrade.requires,Wymaga: {0},Requires: {0},Benötigt: {0},必要：{0},需要
 ui.toast.upgrade_bought,Kupiono: {0},Bought: {0},Gekauft: {0},購入：{0},已购买：{0},
 ui.seed.price,Cena: {0},Price: {0},Preis: {0},価格：{0},价格：{0},
 ui.seed.sell,Sprzedaż: {0},Sells for: {0},Verkauf: {0},売値：{0},售价：{0},
-ui.seed.time_work,{0} pracy,{0} of work,{0} Arbeit,作業{0},工作{0},{0} = czas (ui.time.*)
+ui.seed.time_light,{0} w świetle,{0} in light,{0} im Licht,光の中で{0},光照{0},{0} = czas (ui.time.*); rośliny dnia: dzień albo lampa
 ui.seed.time_night,{0} nocy,{0} of night,{0} Nacht,夜{0},夜晚{0},{0} = czas (ui.time.*)
 ui.time.sec,{0} s,{0} s,{0} Sek.,{0}秒,{0}秒,czas trwania
 ui.time.min,{0} min,{0} min,{0} Min.,{0}分,{0}分钟,czas trwania
 ui.time.min_sec,{0} min {1} s,{0} min {1} s,{0} Min. {1} Sek.,{0}分{1}秒,{0}分{1}秒,czas trwania
-ui.seed.kind_day,"Roślina dnia: rośnie, gdy pracujesz",Day crop: grows while you work,"Tagpflanze: wächst, während du arbeitest",昼の作物：作業中に育つ,日间作物：工作时生长,
+ui.seed.kind_day,Roślina dnia: rośnie w świetle (dzień albo lampa),Day crop: grows in light (day or a lamp),Tagpflanze: wächst im Licht (Tag oder Lampe),昼の作物：光の中で育つ（昼かランプ）,日间作物：在光照下生长（白天或灯下）,
 ui.seed.kind_night,Roślina nocy: rośnie w ciemności,Night crop: grows in darkness,Nachtpflanze: wächst im Dunkeln,夜の作物：暗闇で育つ,夜间作物：在黑暗中生长,
 ui.plot.empty,"Pusta grządka: kliknij, aby posadzić",Empty plot: click to plant,Leeres Beet: klicken zum Pflanzen,空いた畑：クリックで植える,空田地：点击种植,
 ui.plot.ripe,"{0}: dojrzałe, kliknij, aby zebrać","{0}: ripe, click to harvest","{0}: reif, klicken zum Ernten",{0}：実った、クリックで収穫,{0}：已成熟，点击收获,{0} = nazwa rośliny
 ui.plot.growing,{0}: rośnie,{0}: growing,{0}: wächst,{0}：成長中,{0}：生长中,
 ui.plot.need_light,{0}: potrzebuje światła,{0}: needs light,{0}: braucht Licht,{0}：光が必要,{0}：需要光照,
-ui.plot.need_work,"{0}: rośnie, gdy pracujesz",{0}: grows while you work,"{0}: wächst, während du arbeitest",{0}：作業中に育つ,{0}：工作时生长,
 ui.plot.need_night,{0}: czeka na noc,{0}: waiting for night,{0}: wartet auf die Nacht,{0}：夜を待っている,{0}：等待夜晚,
 ui.plot.too_bright,{0}: za jasno (lampa),{0}: too bright (lamp),{0}: zu hell (Lampe),{0}：明るすぎる（ランプ）,{0}：太亮了（灯）,
 ui.plot.progress,{0}%,{0}%,{0} %,{0}%,{0}%,postęp wzrostu
@@ -66,16 +65,13 @@ ui.options.brightness,Jasność nocy,Night brightness,Nachthelligkeit,夜の明�
 ui.options.font,Czcionka,Font,Schrift,フォント,字体,
 ui.options.font_readable,Czytelna,Readable,Lesbar,読みやすい,易读,
 ui.options.font_pixel,Pikselowa 3x5,Pixel 3x5,Pixel 3x5,ピクセル3x5,像素3x5,
-ui.options.rhythm,Rytm pracy,Work rhythm,Arbeitsrhythmus,作業リズム,工作节奏,"seria, przerwa, zmęczenie"
 ui.options.debug,HUD debugowy: klawisz F1,Debug HUD: F1 key,Debug-HUD: Taste F1,デバッグHUD：F1キー,调试HUD：F1键,
 ui.on,Wł.,On,An,オン,开,
 ui.off,Wył.,Off,Aus,オフ,关,
-ui.stats.today,Dziś: {0:0.0} h pracy,Today: {0:0.0} h of work,Heute: {0:0.0} Std. Arbeit,今日の作業：{0:0.0}時間,今日工作：{0:0.0}小时,
-ui.stats.streak,Obecna seria: {0:0} min,Current streak: {0:0} min,Aktuelle Serie: {0:0} Min.,現在の連続：{0:0}分,当前连续：{0:0}分钟,
 ui.stats.essence,Żar: {0:0}/{1:0},Ember: {0:0}/{1:0},Glut: {0:0}/{1:0},熾火：{0:0}/{1:0},余火：{0:0}/{1:0},
-ui.stats.multiplier,Mnożnik Żaru: ×{0:0.00},Ember multiplier: ×{0:0.00},Glut-Multiplikator: ×{0:0.00},熾火倍率：×{0:0.00},余火倍率：×{0:0.00},
-ui.rhythm.normal,Praca: {0:0} min,Working: {0:0} min,Arbeit: {0:0} Min.,作業：{0:0}分,工作：{0:0}分钟,HUD
-ui.rhythm.idle,Przerwa,On a break,Pause,休憩中,休息中,HUD
+ui.stats.ember_rate,Żar teraz: +{0} na minutę,Ember now: +{0} per minute,Glut gerade: +{0} pro Minute,熾火：毎分+{0},余火：每分钟+{0},bez pieca i kryształów
+ui.stats.run_coins,Zarobek w tym rejsie: {0},Earned this voyage: {0},Verdienst dieser Fahrt: {0},この航海の稼ぎ：{0},本次航行收入：{0},
+ui.stats.run_harvests,Zbiory w tym rejsie: {0},Harvests this voyage: {0},Ernten dieser Fahrt: {0},この航海の収穫：{0},本次航行收获：{0},
 ui.expand.title,Nowy kafelek,New land tile,Neues Landstück,新しい土地マス,新的土地格,
 ui.expand.cost,{0} {0:plural:moneta|monety|monet} i {1} Żaru,{0} {0:plural:coin|coins} and {1} Ember,{0} {0:plural:Münze|Münzen} und {1} Glut,{0}コインと{1}熾火,{0}金币和{1}余火,
 ui.expand.find,Coś błyszczy we mgle...,Something glimmers in the fog...,Etwas schimmert im Nebel ...,霧の中で何かが光っている…,迷雾中有东西在闪烁……,znalezisko
@@ -149,7 +145,7 @@ ui.pier.info,Łowisko wokół końca pomostu: klik w rybę,Fishing spot around t
 ui.pier.moves_all,Sieci i łódź popłyną razem z pomostem.,The nets and the boat move along with the pier.,Netze und Boot ziehen mit dem Steg um.,漁網と小舟も桟橋と一緒に移動する。,渔网和小船会随栈桥一起移动。,
 ui.nets.next,Następny połów za {0} min,Next catch in {0} min,Nächster Fang in {0} Min.,次の漁獲まで{0}分,{0}分钟后下一次捕获,
 ui.nets.moves_with_pier,Sieci stoją przy pomoście: przenosi się je razem z nim.,The nets belong to the pier: they move together with it.,Die Netze gehören zum Steg: sie ziehen mit ihm um.,漁網は桟橋に付属：桟橋と一緒に移動する。,渔网属于栈桥：随栈桥一起移动。,
-ui.boat.away,W mgle: jeszcze {0:0.0} h pracy,In the fog: {0:0.0} h of work left,Im Nebel: noch {0:0.0} Std. Arbeit,霧の中：残り作業{0:0.0}時間,迷雾中：还需工作{0:0.0}小时,
+ui.boat.away,W mgle: jeszcze {0:0.0} h,In the fog: {0:0.0} h left,Im Nebel: noch {0:0.0} Std.,霧の中：残り{0:0.0}時間,迷雾中：还需{0:0.0}小时,czas przy włączonej grze
 ui.boat.returned,Wróciła z łupem!,Back with loot!,Mit Beute zurück!,戦利品を持って帰ってきた！,满载而归！,
 ui.boat.unload,Rozładuj,Unload,Entladen,荷下ろし,卸货,
 ui.loot.title,Łup z wyprawy,Expedition loot,Beute der Fahrt,遠征の戦利品,远航战利品,
@@ -185,9 +181,8 @@ ui.event.fullmoon,Pełnia,Full moon,Vollmond,満月,满月,
 ui.options.general,Ogólne,General,Allgemein,一般,常规,
 ui.options.window,Okno,Window,Fenster,ウィンドウ,窗口,
 ui.options.system,System,System,System,システム,系统,
-ui.options.idle,Próg bezczynności,Idle after,Inaktiv nach,放置判定,闲置判定,
 ui.options.seconds,{0} s,{0} s,{0} s,{0}秒,{0}秒,{0} = sekundy
-ui.options.idle_hint,"Rośliny dnia rosną, gdy pracujesz. Bez myszy i klawiatury dłużej niż próg = przerwa.",Day crops grow while you work. No mouse or keyboard for longer than the limit = a break.,"Tagpflanzen wachsen, während du arbeitest. Länger ohne Maus und Tastatur = Pause.",昼の作物は作業中に育つ。設定時間より長く操作がないと休憩扱い。,你工作时白天作物会生长。超过设定时间没有操作即视为休息。,
+ui.options.general_hint,"Rośliny dnia rosną w świetle, nocne w ciemności. Gdy gra jest wyłączona, rosną tylko rośliny nocy.","Day crops grow in light, night crops in darkness. While the game is closed, only night crops grow.","Tagpflanzen wachsen im Licht, Nachtpflanzen im Dunkeln. Ist das Spiel geschlossen, wachsen nur Nachtpflanzen.",昼の作物は光の中で、夜の作物は暗闇で育つ。ゲームを閉じている間は夜の作物だけが育つ。,日间作物在光照下生长，夜间作物在黑暗中生长。游戏关闭时只有夜间作物会生长。,Opcje → Ogólne
 ui.options.scale,Przybliżenie,Zoom,Zoom,拡大,缩放,"przybliżenie x2-x8, też kółko myszy (okno zostaje tej samej wielkości)"
 ui.options.window_size,Rozmiar okna,Window size,Fenstergröße,ウィンドウサイズ,窗口大小,mały / średni / duży (część ekranu)
 ui.options.window_size.0,Mały,Small,Klein,小,小,
@@ -206,6 +201,7 @@ ui.options.corner.tr,PG,TR,OR,右上,右上,prawy górny
 ui.options.corner.bl,LD,BL,UL,左下,左下,lewy dolny
 ui.options.corner.br,PD,BR,UR,右下,右下,prawy dolny
 ui.options.window_hint,"Kółko myszy: przybliżenie. Z ramką: przeciągnij brzeg okna, by zmienić rozmiar. Bez ramki: przeciągnij okno za puste miejsce, puść przy rogu ekranu.","Mouse wheel: zoom. With a frame: drag the window edge to resize. Frameless: drag the window by an empty spot, release near a screen corner.","Mausrad: Zoom. Mit Rahmen: Fensterrand ziehen, um die Größe zu ändern. Ohne Rahmen: an leerer Stelle ziehen, nahe einer Ecke loslassen.",ホイール：拡大。枠あり：端をドラッグしてサイズ変更。枠なし：空いている所をドラッグ、画面の角で離す。,滚轮：缩放。有边框：拖动窗口边缘调整大小。无边框：拖动空白处，在屏幕角落松开。,
+ui.options.touch_hint,"Stuknięcie = klik, przytrzymanie = menu akcji, przeciągnięcie palcem = przesunięcie widoku, dwa palce = przybliżenie.","Tap = click, hold = action menu, drag a finger = move the view, two fingers = zoom.","Tippen = Klick, Halten = Aktionsmenü, mit dem Finger ziehen = Ansicht verschieben, zwei Finger = Zoom.",タップ＝クリック、長押し＝アクションメニュー、指でドラッグ＝視点移動、2本指＝拡大。,点击＝单击，长按＝操作菜单，手指拖动＝移动视角，双指＝缩放。,telefon: Opcje → Okno
 ui.options.window_build,"Ramka, wierzch, róg i autostart działają w zbudowanej grze na Windows.","Frame, on top, corner and autostart work in the built game on Windows.","Rahmen, Vordergrund, Ecke und Autostart gehen im fertigen Spiel unter Windows.",枠・最前面・角・自動起動はWindows版のビルドで動作。,边框、置顶、角落和自启动仅在Windows版游戏中生效。,
 ui.options.autostart,Start z Windows,Start with Windows,Mit Windows starten,Windowsと起動,随Windows启动,
 ui.options.reset,Reset zapisu,Reset save,Spielstand löschen,セーブをリセット,重置存档,
@@ -246,20 +242,18 @@ ui.wheel.show_night,Pokaż nasiona nocy,Show night seeds,Nachtsamen zeigen,夜�
 ui.wheel.random,Losowe nasiono,Random seed,Zufälliger Samen,ランダムな種,随机种子,
 ui.wheel.random_day,Teraz dzień: losowa roślina dnia,It's day: a random day plant,Es ist Tag: eine zufällige Tagpflanze,今は昼：ランダムな昼の植物,现在是白天：随机白天植物,
 ui.wheel.random_night,Teraz noc: losowa roślina nocy,It's night: a random night plant,Es ist Nacht: eine zufällige Nachtpflanze,今は夜：ランダムな夜の植物,现在是夜晚：随机夜间植物,
-ui.plot.tempo,Tempo pracy: x{0:0.0},Work tempo: x{0:0.0},Arbeitstempo: x{0:0.0},作業テンポ：x{0:0.0},工作节奏：x{0:0.0},
-ui.rhythm.tempo,Tempo x{0:0.0},Tempo x{0:0.0},Tempo x{0:0.0},テンポ x{0:0.0},节奏 x{0:0.0},mnożnik roślin dnia
 ui.wisp.flying,W locie: niesie {0},In flight: carrying {0},Unterwegs: trägt {0},飛行中：{0}個運搬,飞行中：携带{0}个,{0} = plony
 ui.options.smooth,Płynność,Smoothness,Flüssigkeit,なめらかさ,流畅度,klatki na sekundę
 ui.options.smooth.0,Eko,Eco,Eco,省電力,节能,30 / 12 kl./s
 ui.options.smooth.1,Płynna,Smooth,Flüssig,なめらか,流畅,60 / 30 kl./s (domyślnie)
 ui.options.smooth.2,Max,Max,Max,最大,最高,60 / 60 kl./s
 ui.shop.trees,Drzewa,Trees,Bäume,木,树木,
-ui.shop.trees_hint,"Sadzonka rośnie od pracy, potem owocuje co jakiś czas. Klik w owoce = zbiór.","Saplings grow while you work, then bear fruit again and again. Click the fruit to pick it.",Setzlinge wachsen beim Arbeiten und tragen dann immer wieder Früchte. Klick = ernten.,苗木は作業中に育ち、その後くり返し実をつける。クリックで収穫。,树苗在你工作时生长，之后反复结果。点击即可采摘。,
+ui.shop.trees_hint,"Sadzonka rośnie z czasem, potem owocuje co jakiś czas. Klik w owoce = zbiór.","Saplings grow over time, then bear fruit again and again. Click the fruit to pick it.",Setzlinge wachsen mit der Zeit und tragen dann immer wieder Früchte. Klick = ernten.,苗木は時間とともに育ち、その後くり返し実をつける。クリックで収穫。,树苗随时间生长，之后反复结果。点击即可采摘。,
 ui.shop.tree.desc,{0}x {1} po {2},{0}x {1} at {2},{0}x {1} je {2},{1}x{0}・各{2},{0}个{1}，每个{2},"{0} = owoce, {1} = nazwa, {2} = cena"
-ui.tree.growing,Rośnie: {0}% (od pracy),Growing: {0}% (while you work),Wächst: {0}% (beim Arbeiten),成長：{0}%（作業中）,生长：{0}%（工作时）,
+ui.tree.growing,Rośnie: {0}%,Growing: {0}%,Wächst: {0}%,成長：{0}%,生长：{0}%,
 ui.tree.fruiting,"Owoce: {0}x {1}, kliknij, żeby zebrać","Fruit: {0}x {1}, click to pick","Früchte: {0}x {1}, klicken zum Ernten",実：{1}x{0}、クリックで収穫,果实：{0}个{1}，点击采摘,
 ui.tree.fruit_progress,Owoce: {0}%,Fruit: {0}%,Früchte: {0}%,実：{0}%,果实：{0}%,
-ui.tree.when_work,(rosną od pracy),(grow while you work),(wachsen beim Arbeiten),（作業中に育つ）,（工作时生长）,
+ui.tree.when_day,(rosną za dnia),(grow by day),(wachsen tagsüber),（昼に育つ）,（白天生长）,owoce dnia
 ui.tree.when_night,(dojrzewają nocą),(ripen at night),(reifen nachts),（夜に熟す）,（夜间成熟）,
 ui.tree.when_fullmoon,(tylko w pełnię),(only at full moon),(nur bei Vollmond),（満月の夜だけ）,（仅在满月）,
 ui.tree.harvest,Zbierz (+{0}),Pick (+{0}),Ernten (+{0}),収穫（+{0}）,采摘（+{0}）,{0} = monety
@@ -337,8 +331,8 @@ ui.rune.wild,"Wokół runy wyrastają dzikie drzewa, krzaki i kamienie","Wild tr
 ui.rune.next,Coś wyrośnie za {0},Something grows in {0},Nächstes Wachstum in {0},あと{0}で何かが生える,{0}后长出新东西,{0} = m:ss
 ui.rune.full,Wokół runy nie ma wolnego miejsca,No free space around the rune,Kein freier Platz um die Rune,ルーンの周りに空きがない,符文周围没有空地,
 ui.shop.nest.desc,"Dom 3 ogników, pole 7x7","Home for 3 wisps, 7x7 area","Heim für 3 Irrlichter, 7x7",鬼火3体の巣、7x7,3只鬼火的巢，7x7,
-ui.boat.choose,"Dokąd płyniemy? (godziny pracy, znalezione zapiski)","Where to? (hours of work, notes found)","Wohin? (Arbeitsstunden, gefundene Notizen)",どこへ行く？（作業時間・見つけた手記）,去哪里？（工作小时，已找到的手记）,
-ui.boat.dest,"{0} ({1:0.#} h, {2}/{3})","{0} ({1:0.#} h, {2}/{3})","{0} ({1:0.#} Std., {2}/{3})",{0}（{1:0.#}時間、{2}/{3}）,{0}（{1:0.#}小时，{2}/{3}）,"{0} cel, {1} godziny pracy, {2}/{3} zapiski"
+ui.boat.choose,"Dokąd płyniemy? (godziny rejsu, znalezione zapiski)","Where to? (hours at sea, notes found)","Wohin? (Fahrtstunden, gefundene Notizen)",どこへ行く？（航海時間・見つけた手記）,去哪里？（航行小时，已找到的手记）,godziny przy włączonej grze
+ui.boat.dest,"{0} ({1:0.#} h, {2}/{3})","{0} ({1:0.#} h, {2}/{3})","{0} ({1:0.#} Std., {2}/{3})",{0}（{1:0.#}時間、{2}/{3}）,{0}（{1:0.#}小时，{2}/{3}）,"{0} cel, {1} godziny rejsu, {2}/{3} zapiski"
 ui.boat.locked,{0}: za {1} {1:plural:wyprawę|wyprawy|wypraw},{0}: after {1} more {1:plural:trip|trips},{0}: noch {1} {1:plural:Fahrt|Fahrten},{0}：あと{1}回の遠征で解放,{0}：再远航{1}次解锁,
 ui.boat.locked_lore,{0}: przeczytaj zapiski z innych wypraw ({1}/{2}),{0}: read the notes from all other trips ({1}/{2}),{0}: lies die Notizen aller anderen Fahrten ({1}/{2}),{0}：他の遠征の手記をすべて読むこと（{1}/{2}）,{0}：读完其他远航的全部手记（{1}/{2}）,
 ui.boat.target,Cel: {0},Destination: {0},Ziel: {0},行き先：{0},目的地：{0},
@@ -407,15 +401,15 @@ ui.islet.gap,Od wyspy dzieli ją {0} {0:plural:kafelek|kafelki|kafelków} wody,{
 ui.islet.expand,Rozbudowa,Expand,Ausbauen,拡張,扩建,otwiera tryb rozbudowy
 ui.expand.islet,Przyłączy wysepkę za darmo!,Connects an islet for free!,Schließt ein Inselchen kostenlos an!,小島が無料でつながる！,免费连接一座小岛！,podpowiedź nad kafelkiem
 ui.islet.ruin,Na wysepce stoi zrujnowany monument: {0},A ruined monument stands on the islet: {0},Auf dem Inselchen steht ein verfallenes Monument: {0},小島に崩れたモニュメントがある：{0},小岛上矗立着一座废墟纪念建筑：{0},{0} = nazwa szczątków
-ui.story.next,Następny dar za ok. {0} min pracy,Next gift in about {0} min of work,Nächste Gabe in etwa {0} Min. Arbeit,次の贈り物まで作業約{0}分,下一份馈赠约需工作{0}分钟,
-ui.monument.desc,"Ruina monumentu „{0}”. Odbudowa ma 4 etapy: każdy opłacasz surowcami, potem budują go wolne ogniki (ok. 10 min Twojej pracy).","The ruin of the {0}. Rebuilding takes 4 stages: you pay for each with materials, then free wisps build it (about 10 min of your work).","Die Ruine: {0}. Der Wiederaufbau hat 4 Abschnitte: Jeden bezahlst du mit Material, dann bauen freie Irrlichter daran (etwa 10 Min. deiner Arbeit).",「{0}」の廃墟。再建は4段階：各段階を資材で支払うと、手の空いた鬼火が建てる（あなたの作業で約10分）。,“{0}”的废墟。重建分4个阶段：每个阶段用材料支付，然后空闲的鬼火来建造（约需你工作10分钟）。,{0} = nazwa budowli
+ui.story.next,Następny dar za ok. {0} min,Next gift in about {0} min,Nächste Gabe in etwa {0} Min.,次の贈り物まで約{0}分,下一份馈赠约需{0}分钟,czas przy włączonej grze
+ui.monument.desc,"Ruina monumentu „{0}”. Odbudowa ma 4 etapy: każdy opłacasz surowcami, potem budują go wolne ogniki (ok. 10 min).","The ruin of the {0}. Rebuilding takes 4 stages: you pay for each with materials, then free wisps build it (about 10 min).","Die Ruine: {0}. Der Wiederaufbau hat 4 Abschnitte: Jeden bezahlst du mit Material, dann bauen freie Irrlichter daran (etwa 10 Min.).",「{0}」の廃墟。再建は4段階：各段階を資材で支払うと、手の空いた鬼火が建てる（約10分）。,“{0}”的废墟。重建分4个阶段：每个阶段用材料支付，然后空闲的鬼火来建造（约10分钟）。,{0} = nazwa budowli
 ui.monument.phase,Etap odbudowy: {0}/{1},Rebuilding stage: {0}/{1},Bauabschnitt: {0}/{1},再建段階：{0}/{1},重建阶段：{0}/{1},
 ui.monument.cost,"Następny etap: {0} drewna, {1} kamienia, {2} {2:plural:moneta|monety|monet}","Next stage: {0} wood, {1} stone, {2} {2:plural:coin|coins}","Nächster Abschnitt: {0} Holz, {1} Stein, {2} {2:plural:Münze|Münzen}",次の段階：木材{0}、石材{1}、{2}コイン,下一阶段：{0}木材、{1}石料、{2}金币,
 ui.monument.building,Budowa: {0}% (ogniki na rusztowaniu: {1}/{2}),Building: {0}% (wisps on the scaffold: {1}/{2}),Bau: {0} % (Irrlichter am Gerüst: {1}/{2}),建設中：{0}%（足場の鬼火：{1}/{2}）,建造中：{0}%（脚手架上的鬼火：{1}/{2}）,postęp etapu; budowa idzie tylko przy pracy gracza
-ui.monument.waiting,"Czeka na wolne ogniki. Budowa idzie, gdy pracujesz.",Waiting for free wisps. Building goes on while you work.,"Wartet auf freie Irrlichter. Gebaut wird, während du arbeitest.",手の空いた鬼火を待っている。作業中に建設が進む。,等待空闲的鬼火。你工作时建造才会推进。,
+ui.monument.waiting,Czeka na wolne ogniki.,Waiting for free wisps.,Wartet auf freie Irrlichter.,手の空いた鬼火を待っている。,等待空闲的鬼火。,
 ui.monument.no_wisps,"Na wyspie nie ma ogników, więc budowa idzie sama, wolniej. Gniazdo ogników ją przyspieszy.","There are no wisps on the island, so building goes on by itself, slowly. A wisp nest will speed it up.","Auf der Insel gibt es keine Irrlichter, also geht der Bau von allein, langsamer. Ein Irrlichtnest beschleunigt ihn.",島に鬼火がいないので、建設はひとりでにゆっくり進む。鬼火の巣があれば速くなる。,岛上没有鬼火，所以建造会自行缓慢推进。鬼火巢能加快速度。,
-ui.shop.ember_kiln.desc,"Ogniki wrzucają do niego drewno, a on zamienia je w Żar (także gdy nie pracujesz)",Wisps toss wood into it and it turns it into Ember (even while you are away),"Irrlichter werfen Holz hinein, und er macht daraus Glut (auch wenn du nicht arbeitest)",鬼火が木材を投げ入れ、窯が熾火に変える（作業していなくても）,鬼火把木材扔进去，它把木材变成余火（不工作时也会）,
-ui.shop.ember_crystal.desc,Sam oddaje Żar (także nocą i bez pracy) i powiększa słój,Gives Ember by itself (also at night and while idle) and enlarges the jar,Gibt von selbst Glut ab (auch nachts und ohne Arbeit) und vergrößert das Glas,ひとりでに熾火を生み（夜も放置中も）、瓶を大きくする,自行产出余火（夜间和闲置时也会），并扩大余火罐,
+ui.shop.ember_kiln.desc,"Ogniki wrzucają do niego drewno, a on zamienia je w Żar",Wisps toss wood into it and it turns it into Ember,"Irrlichter werfen Holz hinein, und er macht daraus Glut",鬼火が木材を投げ入れ、窯が熾火に変える,鬼火把木材扔进去，它把木材变成余火,
+ui.shop.ember_crystal.desc,Sam oddaje Żar (także nocą) i powiększa słój,Gives Ember by itself (also at night) and enlarges the jar,Gibt von selbst Glut ab (auch nachts) und vergrößert das Glas,ひとりでに熾火を生み（夜も）、瓶を大きくする,自行产出余火（夜间也会），并扩大余火罐,
 ui.kiln.desc,"Spala {0} drewna na 1 Żar co {1} s. Nie pali, gdy słój jest pełny.",Burns {0} wood into 1 Ember every {1} s. Stops when the jar is full.,"Verbrennt alle {1} s {0} Holz zu 1 Glut. Hält an, wenn das Glas voll ist.",{1}秒ごとに木材{0}を熾火1にする。瓶が満杯なら止まる。,每{1}秒把{0}木材烧成1余火。罐满时停止。,
 ui.kiln.reserve,Zostawia drewna: {0},Keeps wood: {0},Behält Holz: {0},残す木材：{0},保留木材：{0},rezerwa na budowle
 ui.kiln.burning,Pali się.,Burning.,Brennt.,燃えている。,燃烧中。,
@@ -423,7 +417,7 @@ ui.kiln.off,Wygaszony.,Put out.,Gelöscht.,火を落としている。,已熄火
 ui.kiln.full,"Słój pełny, piec czeka.","The jar is full, the kiln waits.","Das Glas ist voll, der Ofen wartet.",瓶が満杯なので窯は待っている。,余火罐已满，窑在等待。,
 ui.kiln.no_wood,Skład nie ma drewna ponad rezerwę.,The store has no wood above the reserve.,Im Lager ist kein Holz über der Reserve.,倉庫に予備を超える木材がない。,仓库里没有超出储备的木材。,
 ui.kiln.toggle,Piec: {0},Kiln: {0},Ofen: {0},窯：{0},窑：{0},{0} = wł./wył.
-ui.crystal.desc,"Oddaje 1 Żar co {0} min, także nocą i gdy nie pracujesz. Słój większy o {1}.","Gives 1 Ember every {0} min, also at night and while you are away. Jar +{1}.","Gibt alle {0} Min. 1 Glut ab, auch nachts und wenn du nicht arbeitest. Glas +{1}.",{0}分ごとに熾火1を生む（夜も作業していなくても）。瓶+{1}。,每{0}分钟产出1余火（夜间和不工作时也会）。余火罐+{1}。,
+ui.crystal.desc,"Oddaje 1 Żar co {0} min, także nocą. Słój większy o {1}.","Gives 1 Ember every {0} min, also at night. Jar +{1}.","Gibt alle {0} Min. 1 Glut ab, auch nachts. Glas +{1}.",{0}分ごとに熾火1を生む（夜も）。瓶+{1}。,每{0}分钟产出1余火（夜间也会）。余火罐+{1}。,
 ui.kiln.fuel,W palenisku: {0}/{1} drewna,In the firebox: {0}/{1} wood,In der Feuerung: {0}/{1} Holz,火床：木材{0}/{1},炉膛：{0}/{1}木材,polana wrzucone przez ogniki
 ui.kiln.waiting,"Czeka, aż ognik przyniesie drewno.",Waiting for a wisp to bring wood.,"Wartet, bis ein Irrlicht Holz bringt.",鬼火が木材を運んでくるのを待っている。,等待鬼火送来木材。,
 ui.bestiary.seen.count,{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{1} = ile razy widziane

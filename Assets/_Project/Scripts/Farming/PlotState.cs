@@ -5,7 +5,6 @@ namespace Wyspa.Farming
 {
     public struct GrowthContext
     {
-        public bool playerActive;
         public bool night;
         public bool lit;
         /// <summary>Np. klatka z ognikiem przyspiesza wzrost w swoim świetle.</summary>
@@ -14,7 +13,7 @@ namespace Wyspa.Farming
         public bool fullMoon;
         /// <summary>
         /// Przyspieszenie od samego światła lampy (klatka z ognikiem, nocą). Tylko ono liczy się do jakości: inne premie
-        /// w multiplier (tempo pracy, deszcz, ulepszenia, dary) przyspieszają wzrost, ale jakości nie podnoszą.
+        /// w multiplier (deszcz, ulepszenia, dary) przyspieszają wzrost, ale jakości nie podnoszą.
         /// </summary>
         public float lightBoost;
     }
@@ -68,7 +67,7 @@ namespace Wyspa.Farming
             if (crop == null || IsRipe)
                 return false;
             if (crop.kind == CropKind.Day)
-                return ctx.playerActive && ctx.lit;
+                return ctx.lit;   // dzień albo lampa (§9 p. 134: bez warunku pracy)
             return ctx.night && !ctx.lit && (!crop.requiresFullMoon || ctx.fullMoon);
         }
 

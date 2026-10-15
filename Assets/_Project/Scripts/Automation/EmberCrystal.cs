@@ -45,7 +45,7 @@ namespace Wyspa.Automation
                 return;
             var essence = game.Essence;
             if (essence.Amount < essence.Capacity)
-                essence.Set(essence.Amount + dt / SecondsPerEmber);
+                essence.Set(essence.Amount + dt / SecondsPerEmber * Upgrades.UpgradeEffects.HearthBoost);   // Żarliwe palenisko
         }
 
         void Update()

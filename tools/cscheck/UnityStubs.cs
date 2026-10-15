@@ -21,7 +21,7 @@ namespace UnityEngine
     public class Font : Object { }
     public static class PlayerPrefs { public static bool HasKey(string k) => false; public static float GetFloat(string k) => 0; public static float GetFloat(string k, float d) => d; public static void SetFloat(string k, float v) { } public static int GetInt(string k) => 0; public static int GetInt(string k, int d) => d; public static void SetInt(string k, int v) { } public static string GetString(string k, string d = "") => d; public static void SetString(string k, string v) { } public static void Save() { } }
     public enum SystemLanguage { Chinese, German, Japanese, Polish, English, ChineseSimplified, ChineseTraditional, Unknown }
-    public enum KeyCode { Escape, F1, LeftControl, RightControl }
+    public enum KeyCode { S = 115, Escape = 27, F1 = 282, RightControl = 305, LeftControl = 306 }
     public class Renderer : Component { public Bounds bounds; public int sortingOrder; public Material sharedMaterial; public Material material; public bool enabled; public void GetPropertyBlock(MaterialPropertyBlock b) { } public void SetPropertyBlock(MaterialPropertyBlock b) { } }
     public class MaterialPropertyBlock { public void SetFloat(int id, float v) { } public void SetColor(int id, Color c) { } }
     public class SpriteRenderer : Renderer { public Sprite sprite; public Color color; public bool flipX, flipY; public SpriteMaskInteraction maskInteraction { get; set; } }
@@ -55,7 +55,7 @@ namespace UnityEngine
     public struct Rect { public float x, y, width, height; public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; } public bool Contains(Vector2 p) => false; public float xMin => x; public float yMin => y; public float xMax => x + width; public float yMax => y + height; public Vector2 size => default; public Vector2 center => default; public static Rect MinMaxRect(float a, float b, float c, float d) => default; }
     public static class Mathf { public static float Sqrt(float f) => f; public static float Exp(float f) => f; public static float Pow(float f, float p) => f; public const float Rad2Deg = 57.29578f; public static float InverseLerp(float a, float b, float v) => 0f; public static float Atan2(float y, float x) => y; public static float Lerp(float a, float b, float t) => a; public const float PI = 3.14159265f; public static float Ceil(float f) => f; public static int CeilToInt(float f) => 0; public static float Round(float f) => f; public static float Cos(float f) => f; public static float MoveTowards(float c, float t, float d) => c; public static float Clamp(float v, float a, float b) => v; public static int Clamp(int v, int a, int b) => v; public static float Clamp01(float v) => v; public static float Min(float a, float b) => a; public static int Min(int a, int b) => a; public static float Max(float a, float b) => a; public static int Max(int a, int b) => a; public static float Floor(float f) => f; public static int FloorToInt(float f) => 0; public static int RoundToInt(float f) => 0; public static float Sin(float f) => f; public static float Abs(float f) => f; public static float Repeat(float t, float l) => t; public static bool Approximately(float a, float b) => false; }
     public static class Random { public static float value; public static Vector2 insideUnitCircle; public static float Range(float a, float b) => a; public static int Range(int a, int b) => a; }
-    public static class Application { public static void Quit() { } public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath, version; public static event Action<bool> focusChanged; }
+    public static class Application { public static void Quit() { } public static bool isMobilePlatform => false; public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath, version; public static event Action<bool> focusChanged; }
     public static class QualitySettings { public static int vSyncCount; }
     public static class Time { public static float unscaledDeltaTime, unscaledTime, timeSinceLevelLoad; public static int frameCount; }
     public static class Screen { public static int width, height; public static FullScreenMode fullScreenMode; public static Resolution currentResolution; public static void SetResolution(int w, int h, FullScreenMode m) { } }
@@ -125,7 +125,10 @@ namespace UnityEngine.InputSystem
     public class Vector2Control { public UnityEngine.Vector2 ReadValue() => default; }
     public class Mouse { public static Mouse current; public ButtonControl leftButton, rightButton; public Vector2Control position, scroll; }
     public class Keyboard { public static Keyboard current; public KeyControl escapeKey, f1Key, leftCtrlKey, rightCtrlKey, sKey; }
+    public class Touchscreen { public static Touchscreen current; public UnityEngine.InputSystem.Utilities.ReadOnlyArray<UnityEngine.InputSystem.Controls.TouchControl> touches; public UnityEngine.InputSystem.Controls.TouchControl primaryTouch; }
 }
+namespace UnityEngine.InputSystem.Controls { public class TouchControl { public UnityEngine.InputSystem.ButtonControl press; public UnityEngine.InputSystem.Vector2Control position; } }
+namespace UnityEngine.InputSystem.Utilities { public struct ReadOnlyArray<TValue> { public int Count => 0; public TValue this[int index] => default; } }
 namespace UnityEditor
 {
     using UnityEngine;
@@ -265,4 +268,10 @@ namespace TMPro
         public SubmitEvent onSubmit { get; set; }
         public void ActivateInputField() { }
     }
+}
+
+namespace UnityEngine.Serialization
+{
+    [System.AttributeUsage(System.AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
+    public class FormerlySerializedAsAttribute : System.Attribute { public FormerlySerializedAsAttribute(string oldName) { } public string oldName => null; }
 }

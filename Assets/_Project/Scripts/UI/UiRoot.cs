@@ -247,9 +247,6 @@ namespace Wyspa.UI
             var lighting = FindAnyObjectByType<DayNightLighting>();
             if (lighting != null && PlayerPrefs.HasKey("minBrightness"))
                 lighting.MinBrightness = PlayerPrefs.GetFloat("minBrightness");
-            var game = GameLoop.Instance;
-            if (game != null && game.Rhythm != null && PlayerPrefs.HasKey("rhythm"))
-                game.Rhythm.RhythmEnabled = PlayerPrefs.GetInt("rhythm") == 1;
         }
 
         /// <summary>Rozmiar interfejsu z Opcji: 0 = automatyczny, 1-4 = stała skala.</summary>
@@ -544,7 +541,7 @@ namespace Wyspa.UI
             if (s.CanGrow(ctx))
                 state = Loc.Get("ui.plot.growing", name);
             else if (s.crop.kind == CropKind.Day)
-                state = Loc.Get(!ctx.lit ? "ui.plot.need_light" : "ui.plot.need_work", name);
+                state = Loc.Get("ui.plot.need_light", name);
             else if (!night)
                 state = Loc.Get("ui.plot.need_night", name);
             else if (ctx.lit)
@@ -555,8 +552,6 @@ namespace Wyspa.UI
             string moon = s.crop.kind == CropKind.Night && ctx.fullMoon ? "\n" + Loc.Get("ui.plot.fullmoon") : "";
             if (game.Island != null && game.Island.ZoneBonus(plot) > 1f)
                 moon += "\n" + Loc.Get("ui.plot.zone_bonus");
-            if (s.crop.kind == CropKind.Day && game.Activity.TempoMultiplier > 1.05f)
-                moon += "\n" + Loc.Get("ui.plot.tempo", game.Activity.TempoMultiplier);
             if (s.crop.kind == CropKind.Day && Weather.WeatherSystem.Raining)
                 moon += "\n" + Loc.Get("ui.plot.rain");
             // świt: roślina nocy rośnie jeszcze chwilę; zmierzch: roślina dnia jeszcze chwilę (potem pora drugiej)

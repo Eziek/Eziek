@@ -109,7 +109,7 @@ namespace Wyspa.Automation
             fuel = Mathf.Clamp(savedFuel, 0, FuelMax);
         }
 
-        /// <summary>Tick z AutomationSystem (czas gry, niezależnie od pracy gracza).</summary>
+        /// <summary>Tick z AutomationSystem (czas gry).</summary>
         public void Tick(float dt, GameLoop game)
         {
             if (game == null)
@@ -127,7 +127,7 @@ namespace Wyspa.Automation
                 return;
             timer = 0f;
             fuel -= Wood;
-            essence.Set(essence.Amount + 1f);
+            essence.Set(Mathf.Min(essence.Capacity, essence.Amount + Upgrades.UpgradeEffects.HearthBoost));   // Żarliwe palenisko
             Sparks(5);
         }
 

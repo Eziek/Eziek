@@ -4,7 +4,7 @@ namespace Wyspa.Farming
 {
     public enum CropKind
     {
-        /// <summary>Rośnie, gdy gracz jest aktywny i pole jest oświetlone (dzień albo lampa).</summary>
+        /// <summary>Rośnie, gdy pole jest oświetlone (dzień albo lampa) i gra jest włączona.</summary>
         Day,
         /// <summary>Rośnie w nocy, w ciemności (poza lampami) - także gdy gracz śpi.</summary>
         Night,
@@ -17,7 +17,7 @@ namespace Wyspa.Farming
         public string displayName;
         public CropKind kind = CropKind.Day;
 
-        [Tooltip("Dzień: sekundy aktywności w świetle. Noc: sekundy ciemności.")]
+        [Tooltip("Dzień: sekundy w świetle. Noc: sekundy ciemności.")]
         public float growSeconds = 600f;
 
         [Tooltip("Fazy od nasiona do dojrzałej (ostatnia). Teraz 6: nasiono, kiełek, sadzonka, rośnie, niedojrzała, dojrzała.")]

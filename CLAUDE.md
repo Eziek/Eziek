@@ -1,7 +1,9 @@
 # CLAUDE.md
 
-**Misty Packland** (do 2026-10 nazwa robocza Pockland): gra w Unity, idle w okienku na pulpicie, wyspa w klimacie dark fantasy. Rośliny rosną od pracy gracza przy komputerze,
-a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wyspę w nocy (pora dnia z cyklu gry: 1 h = 40 min dnia + 20 min nocy).
+**Misty Packland** (do 2026-10 nazwa robocza Pockland): gra w Unity, idle w okienku na pulpicie (docelowo też na telefonie), wyspa w klimacie dark fantasy.
+Wszystko dzieje się samo z czasem przy włączonej grze (od 2026-10 bez wykrywania pracy i rytmu pracy, GDD §9 p. 134): rośliny dnia rosną w świetle,
+nocne w ciemności (także offline), a lampy zasilane Żarem (płynie sam z czasu, plus piec i kryształy; w kodzie `Essence`) oświetlają wyspę w nocy
+(pora dnia z cyklu gry: 1 h = 40 min dnia + 20 min nocy). Wejście (mysz i dotyk) idzie tylko przez `UI/UiInput.cs`.
 
 ## Zanim cokolwiek zrobisz
 - **Przeczytaj `docs/HANDOFF.md`**: stan po ostatniej sesji i otwarte decyzje (m.in. grafika 32 px, której gracz nie zaakceptował).

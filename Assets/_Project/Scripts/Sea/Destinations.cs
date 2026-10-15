@@ -6,7 +6,7 @@ namespace Wyspa.Sea
     public enum LootKind { NightSeeds, Wood, Stone, Coins, Fertilizer, Shard, Hybrid }
 
     /// <summary>
-    /// Cel wyprawy łodzią: czas w godzinach aktywnej pracy, liczba losowań,
+    /// Cel wyprawy łodzią: czas w godzinach (przy włączonej grze), liczba losowań,
     /// tabela łupów z wagami i własna pula zapisków lore (jeden nowy zapisek na wyprawę, po kolei). Kolejne cele odblokowują
     /// się liczbą odbytych wypraw, a Serce mgły - zapiskami ze wszystkich pozostałych celów.
     /// </summary>

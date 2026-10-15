@@ -34,9 +34,9 @@ namespace Wyspa.Upgrades
             { UpgradeIds.BigCrates, new Node { cell = new Vector2Int(13, 6), icon = "crate", show = Same } },
             // Żar
             { UpgradeIds.EssenceJar, new Node { cell = new Vector2Int(11, 9), icon = "essence", show = Same } },
-            { UpgradeIds.Kindling, new Node { cell = new Vector2Int(10, 9), icon = "keys", show = Percent } },
-            { UpgradeIds.SecondWind, new Node { cell = new Vector2Int(9, 8), icon = "fatigue", show = Whole } },
-            { UpgradeIds.FocusStreak, new Node { cell = new Vector2Int(9, 10), icon = "focus", show = Whole } },
+            { UpgradeIds.Kindling, new Node { cell = new Vector2Int(10, 9), icon = "essence", show = Percent } },
+            { UpgradeIds.SecondWind, new Node { cell = new Vector2Int(9, 8), icon = "moon", show = Whole } },
+            { UpgradeIds.FocusStreak, new Node { cell = new Vector2Int(9, 10), icon = "fill", show = Whole } },
             { UpgradeIds.SpiderWicks, new Node { cell = new Vector2Int(11, 11), icon = "lamp", show = Less } },
             // ziemia
             { UpgradeIds.FertileSoil, new Node { cell = new Vector2Int(15, 9), icon = "sun", show = Percent } },
@@ -78,7 +78,7 @@ namespace Wyspa.Upgrades
             { UpgradeIds.WispTips, new Node { cell = new Vector2Int(12, 4), icon = "coin", show = Same } },
             { UpgradeIds.SunHarvest, new Node { cell = new Vector2Int(15, 8), icon = "sun", show = Whole } },
             { UpgradeIds.FreshPicked, new Node { cell = new Vector2Int(15, 7), icon = "sapling", show = Whole } },
-            { UpgradeIds.BusyHands, new Node { cell = new Vector2Int(16, 8), icon = "keys", show = Whole } },
+            { UpgradeIds.BusyHands, new Node { cell = new Vector2Int(16, 8), icon = "sapling", show = Whole } },
             { UpgradeIds.RootsMarket, new Node { cell = new Vector2Int(16, 7), icon = "seed_carrot", show = Whole } },
             { UpgradeIds.GrainGuild, new Node { cell = new Vector2Int(16, 6), icon = "seed_wheat", show = Whole } },
             { UpgradeIds.PumpkinPatch, new Node { cell = new Vector2Int(15, 6), icon = "seed_pumpkin", show = Whole } },
@@ -104,10 +104,10 @@ namespace Wyspa.Upgrades
             { UpgradeIds.Grafting, new Node { cell = new Vector2Int(18, 13), icon = "sapling", show = Whole } },
             { UpgradeIds.MoonFruit, new Node { cell = new Vector2Int(17, 13), icon = "fruit_moon", show = Same } },
             { UpgradeIds.EmberCoins, new Node { cell = new Vector2Int(11, 8), icon = "essence", show = Same } },
-            { UpgradeIds.WorkWage, new Node { cell = new Vector2Int(10, 8), icon = "mouse", show = Same } },
+            { UpgradeIds.WorkWage, new Node { cell = new Vector2Int(10, 8), icon = "coin", show = Same } },
             { UpgradeIds.LandRent, new Node { cell = new Vector2Int(8, 8), icon = "plus", show = Same } },
-            { UpgradeIds.FocusSeller, new Node { cell = new Vector2Int(9, 11), icon = "focus", show = Whole } },
-            { UpgradeIds.RestedSeller, new Node { cell = new Vector2Int(9, 7), icon = "break", show = Whole } },
+            { UpgradeIds.FocusSeller, new Node { cell = new Vector2Int(9, 11), icon = "drop", show = Whole } },
+            { UpgradeIds.RestedSeller, new Node { cell = new Vector2Int(9, 7), icon = "star", show = Whole } },
         };
 
         /// <summary>Lewy górny róg drzewka w komórkach (drzewko rysowane od tego miejsca, strona przewija się w obie strony).</summary>

@@ -209,6 +209,8 @@ namespace Wyspa.Economy
         /// <summary>Mnożnik cen i dochodów: blask pereł (+2% za każdą zdobytą), Mgielny targ i Korona mgły.</summary>
         public static float SaleMultiplier => 1f + GlowPerPearl * Earned + Value(MistMarket) + Value(MistCrown);
         public static float EmberMultiplier => 1f + Value(KeepersEmber);
+        /// <summary>Niezmordowany (dar mgły): większy słój Żaru.</summary>
+        public static float JarMultiplier => 1f + Value(Tireless);
         public static float GrowthMultiplier => 1f + Value(GreenHands) + Value(IslandHeart);
         public static float UpgradeCostMultiplier => 1f - Value(OldFriends);
         public static float TileCostMultiplier => 1f - Value(CheapLand);
@@ -238,8 +240,6 @@ namespace Wyspa.Economy
             UpgradeEffects.NestCapacity += Mathf.RoundToInt(Value(CozyNest));
             UpgradeEffects.InterestRate += Value(PiggyBank);
             UpgradeEffects.OrderSlots += Mathf.RoundToInt(Value(NoticeBoard));
-            UpgradeEffects.FatigueMultiplier = Mathf.Min(1f, UpgradeEffects.FatigueMultiplier + Value(Tireless));
-            UpgradeEffects.HeavyFatigueMultiplier = UpgradeEffects.FatigueMultiplier * 0.5f;
             UpgradeEffects.WorkWage += Mathf.RoundToInt(Value(DayWage));
             UpgradeEffects.CritMult += Value(GoldenFleece);
             UpgradeEffects.ShardChance += Value(LuckyShard);

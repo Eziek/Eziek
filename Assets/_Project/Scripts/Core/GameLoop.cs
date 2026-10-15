@@ -11,21 +11,19 @@ using Wyspa.World;
 namespace Wyspa.Core
 {
     /// <summary>
-    /// Serce symulacji: co tick (domyślnie 1 s) sprawdza aktywność, ładuje Esencję,
-    /// zasila lampy i podlicza wzrost roślin. Symulacja w tickach, nie w każdym Update.
+    /// Serce symulacji: co tick (domyślnie 1 s) ładuje Esencję (Żar płynie sam z czasu), zasila lampy i podlicza wzrost roślin.
+    /// Symulacja w tickach, nie w każdym Update; działa tylko przy włączonej grze (offline rosną tylko rośliny nocy, §9 p. 134).
     /// </summary>
     [DefaultExecutionOrder(-100)]
     public class GameLoop : MonoBehaviour
     {
         public static GameLoop Instance { get; private set; }
 
-        [SerializeField] ActivityTracker activity;
         [SerializeField] GameClock clock;
         [SerializeField] EssenceStore essence;
         [SerializeField] Wallet wallet;
         [SerializeField] CropDatabase crops;
         [SerializeField] SaveSystem saveSystem;
-        [SerializeField] WorkRhythm rhythm;
         [SerializeField] UpgradeState upgrades;
         [SerializeField] AutomationSystem automation;
         [SerializeField] Island island;
@@ -55,12 +53,10 @@ namespace Wyspa.Core
         public static float DayGrowthMultiplier = 1f;
         float accumulator;
 
-        public ActivityTracker Activity => activity;
         public GameClock Clock => clock;
         public EssenceStore Essence => essence;
         public Wallet Wallet => wallet;
         public CropDatabase Crops => crops;
-        public WorkRhythm Rhythm => rhythm;
         public UpgradeState Upgrades => upgrades;
         public AutomationSystem Automation => automation;
         public Island Island => island;
@@ -167,8 +163,6 @@ namespace Wyspa.Core
             Instance = this;
             // starsze sceny nie mają tych komponentów - dokładamy je w locie
             // (bez operatora ??, bo „pusty” obiekt Unity nie jest prawdziwym null)
-            if (rhythm == null) rhythm = GetComponent<WorkRhythm>();
-            if (rhythm == null) rhythm = gameObject.AddComponent<WorkRhythm>();
             if (upgrades == null) upgrades = GetComponent<UpgradeState>();
             if (upgrades == null) upgrades = gameObject.AddComponent<UpgradeState>();
             Alchemy.Potions.Restore(null);   // statyczne: bez tego mikstury z poprzedniego slotu działałyby dalej
@@ -192,7 +186,8 @@ namespace Wyspa.Core
         public void RefreshEssenceCapacity()
         {
             if (essence != null && upgrades != null)
-                essence.SetCapacity(upgrades.Value(UpgradeIds.EssenceJar, essence.BaseCapacity) + Wyspa.Automation.EmberCrystal.TotalCapacityBonus);
+                essence.SetCapacity(upgrades.Value(UpgradeIds.EssenceJar, essence.BaseCapacity) * Economy.Prestige.JarMultiplier   // Niezmordowany
+                                    + Wyspa.Automation.EmberCrystal.TotalCapacityBonus);
         }
 
         /// <summary>Przelicza efekty ulepszeń na systemy (wołane po zakupie i po wczytaniu gry).</summary>
@@ -326,10 +321,7 @@ namespace Wyspa.Core
 
         void Tick(float dt)
         {
-            activity.Refresh();
             bool night = clock.IsNight;
-
-            rhythm.Tick(activity.IsActive, dt, System.DateTime.Now);
             // pełnia: komunikat raz na noc (rośliny nocy x2, krwawa róża rośnie)
             if (night && clock.IsFullMoon && !fullMoonAnnounced)
             {
@@ -339,13 +331,11 @@ namespace Wyspa.Core
             }
             else if (!night)
                 fullMoonAnnounced = false;
-            if (activity.IsActive)
-            {
-                float overflow = essence.AddActiveSeconds(dt * rhythm.EssenceMultiplier * Alchemy.Potions.Essence * UpgradeEffects.WorkEssence
-                                                          * Economy.Prestige.EmberMultiplier);   // napar skupienia, Żar Opiekunów
-                // Żar w złoto (nadmiar ponad pełny słój) i Dniówka (monety za minutę pracy)
-                Economy.Market.AddIncome(wallet, overflow * UpgradeEffects.EmberCoins + dt / 60f * UpgradeEffects.WorkWage);
-            }
+            // Żar płynie sam z czasu (§9 p. 134): Rozpałka, napar żaru, Żar Opiekunów
+            float overflow = essence.AddSeconds(dt * Alchemy.Potions.Essence * Economy.Prestige.EmberMultiplier
+                                                * (UpgradeEffects.EssenceRate + (night ? UpgradeEffects.NightEssence : 0f)));   // Nocny żar
+            // Żar w złoto (nadmiar ponad pełny słój) i Dniówka (monety za minutę gry)
+            Economy.Market.AddIncome(wallet, overflow * UpgradeEffects.EmberCoins + dt / 60f * UpgradeEffects.WorkWage);
             // świt nowej doby gry: odsetki, dzierżawa, popyt dnia (bez wypłaty przy wczytaniu)
             long cycle = clock.CycleNumber;
             if (lastCycle >= 0 && cycle != lastCycle)
@@ -362,13 +352,13 @@ namespace Wyspa.Core
             foreach (var plot in FarmPlot.All)
                 plot.Tick(dt, ContextFor(plot, night));
 
-            // drzewa owocowe: rosną od pracy (z tempem pracy), owoce wg gatunku (praca / noc / pełnia)
+            // drzewa owocowe: sadzonki rosną cały czas, owoce wg gatunku (dzień / noc / pełnia)
             for (int i = FruitTree.All.Count - 1; i >= 0; i--)
             {
                 var tree = FruitTree.All[i];
-                float mult = activity.TempoMultiplier * (island != null ? island.TreeZoneBonus(tree) : 1f) * Familiars.FamiliarSystem.TreeSpeed   // kruk
+                float mult = (island != null ? island.TreeZoneBonus(tree) : 1f) * Familiars.FamiliarSystem.TreeSpeed   // kruk
                            * UpgradeEffects.FruitSpeed;   // Dojrzałe owoce
-                tree.Tick(dt, activity.IsActive, night, clock.IsFullMoon, mult);
+                tree.Tick(dt, night, clock.IsFullMoon, mult);
             }
 
             if (automation != null)
@@ -382,7 +372,7 @@ namespace Wyspa.Core
             }
         }
 
-        /// <summary>Warunki wzrostu dla grządki (światło, noc, aktywność) - używane też przez HUD.</summary>
+        /// <summary>Warunki wzrostu dla grządki (światło, noc) - używane też przez HUD.</summary>
         public GrowthContext ContextFor(FarmPlot plot, bool night)
         {
             Vector2 p = plot.LightProbe;
@@ -390,9 +380,9 @@ namespace Wyspa.Core
             bool twilight = !night && clock.IsTwilight;
             if (twilight && crop != null && crop.kind == CropKind.Night)
                 night = true;   // świt i zmierzch liczą się roślinom nocy jak noc (rośliny dnia rosną wtedy jak w dzień)
-            // rośliny dnia: rytuał „Głębokie korzenie” i tempo pracy (pisanie, mysz)
+            // rośliny dnia: rytuał „Głębokie korzenie”, wywar wzrostu, pogoda, ulepszenia
             float dayBonus = crop != null && crop.kind == CropKind.Day
-                ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth * UpgradeEffects.DayGrowth   // deszcz +20%
+                ? DayGrowthMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth * UpgradeEffects.DayGrowth   // deszcz +20%
                   * (Weather.WeatherSystem.Raining ? Familiars.FamiliarSystem.RainGrowth : 1f) : 1f;   // ślimak: w deszczu jeszcze szybciej
             // mikstury z kotła: wywar wzrostu (rośliny dnia), eliksir nocy (rośliny nocy)
             if (crop != null && crop.kind == CropKind.Night)
@@ -401,7 +391,6 @@ namespace Wyspa.Core
                 dayBonus *= 1.5f;   // Zmierzchowe ziarno
             return new GrowthContext
             {
-                playerActive = activity.IsActive,
                 night = night,
                 lit = Illumination.IsLit(p, night),
                 multiplier = (night ? Illumination.GrowthMultiplier(p) : 1f) * (island != null ? island.ZoneBonus(plot) : 1f) * dayBonus

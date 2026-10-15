@@ -270,6 +270,13 @@ namespace Wyspa.World
             int scroll = UiInput.Scroll;
             if (!Locked && scroll != 0 && !mini && !OverUi())
                 ZoomTo(windowScale + scroll * 2, UiInput.MousePosition);
+            // dotyk (§9 p. 134): szczypanie dwoma palcami = przybliżenie, przeciąganie palcem = przesuwanie widoku
+            int pinch = UiInput.PinchStep;
+            if (!Locked && pinch != 0 && !mini && !OverUi())
+                ZoomTo(windowScale + pinch * 2, UiInput.MousePosition);
+            var touchPan = UiInput.TouchPan;
+            if (!Locked && touchPan != Vector2.zero && CanPan() && !OverUi())
+                pan -= touchPan / PixelRatio;
             WatchWindow();
             if (!Locked)
                 HandleDrag();

@@ -28,7 +28,7 @@ namespace Wyspa.UI
 
         /// <summary>Czas wzrostu rośliny: „40 s pracy” (dzień) albo „3 min nocy” (noc).</summary>
         public static string GrowTime(Farming.CropDefinition c) =>
-            Localization.Loc.Get(c.kind == Farming.CropKind.Day ? "ui.seed.time_work" : "ui.seed.time_night", Duration(c.growSeconds));
+            Localization.Loc.Get(c.kind == Farming.CropKind.Day ? "ui.seed.time_light" : "ui.seed.time_night", Duration(c.growSeconds));
 
         public static RectTransform Rect(string name, Transform parent)
         {

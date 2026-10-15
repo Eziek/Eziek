@@ -13,8 +13,8 @@ namespace Wyspa.Upgrades
         // Żar (lewo)
         public const string EssenceJar = "essence_jar";
         public const string Kindling = "kindling";
-        public const string SecondWind = "second_wind";
-        public const string FocusStreak = "focus_streak";
+        public const string SecondWind = "second_wind";     // id z czasów rytmu pracy (zapis); efekt: Nocny żar
+        public const string FocusStreak = "focus_streak";   // efekt: Żarliwe palenisko
         // ziemia (prawo)
         public const string FertileSoil = "fertile_soil";
         public const string NightDew = "night_dew";
@@ -59,7 +59,7 @@ namespace Wyspa.Upgrades
         public const string WispTips = "wisp_tips";
         public const string SunHarvest = "sun_harvest";
         public const string FreshPicked = "fresh_picked";
-        public const string BusyHands = "busy_hands";
+        public const string BusyHands = "busy_hands";   // efekt: Sezonowy targ
         public const string RootsMarket = "roots_market";
         public const string GrainGuild = "grain_guild";
         public const string PumpkinPatch = "pumpkin_patch";
@@ -87,7 +87,7 @@ namespace Wyspa.Upgrades
         public const string EmberCoins = "ember_coins";
         public const string WorkWage = "work_wage";
         public const string LandRent = "land_rent";
-        public const string FocusSeller = "focus_seller";
-        public const string RestedSeller = "rested_seller";
+        public const string FocusSeller = "focus_seller";   // efekt: Deszczowy kupiec
+        public const string RestedSeller = "rested_seller";   // efekt: Zimowy jarmark
     }
 }

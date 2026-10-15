@@ -621,3 +621,18 @@ Test w buildzie (w edytorze kadr liczy się z okna Game).
 5. Noc, siewca: dzień = Dynia, noc = Pamięć ziemi (same dzienne w pamięci): siewca sieje dynię na pustych grządkach.
 6. Sklep → Nasiona: każdy wiersz w jednej linii, nic nie nachodzi na wiersz niżej; dymek nad opisem pokazuje całość.
 
+## 54. Bez pracy (Żar i wzrost z czasu), sterowanie dotykiem
+Najpierw Wyspa → 2 (nowe wartości ulepszeń). Scena `MainLevel` nie ma już `ActivityTracker` (w Inspektorze żadnego „Missing script”).
+1. Gra włączona, bez ruszania myszą i klawiaturą przez kilka minut: Żar rośnie ok. 1 na minutę, rośliny dnia rosną w dzień
+   i pod lampą, rośliny nocy w nocy. HUD: dwa wiersze (waluty; zegar i pora roku), bez paska rytmu i lampek klawiatury/myszy.
+2. Księga → Statystyki: Żar, „Żar teraz: +1 na minutę” (w nocy z Nocnym żarem więcej), zarobek i zbiory w tym rejsie.
+   Opcje → Ogólne: bez progu bezczynności i rytmu; na dole opis wzrostu.
+3. Ulepszenia: Rozpałka, Nocny żar, Żarliwe palenisko (piec i kryształ dają więcej), Sezonowy targ (rzodkiew itp. drożej),
+   Deszczowy kupiec (w deszczu drożej), Zimowy jarmark (zimą drożej), Dniówka (monety co minutę). Dary: Niezmordowany
+   (większy słój), Żar Opiekunów. Mikstura „Napar żaru”: Żar +50%.
+4. Drzewo owocowe: sadzonka rośnie cały czas, owoce zwykłych drzew za dnia (dymek: „rosną za dnia”).
+5. Łódź i monumenty idą bez ruszania myszą. Zamknięcie gry na 30 min: po powrocie urosły tylko rośliny nocy.
+6. Dotyk (ekran dotykowy na Windows albo build na telefon): stuknięcie w grządkę = koło nasion, przytrzymanie = pierścień
+   akcji, przeciągnięcie palcem przesuwa widok, szczypanie zmienia przybliżenie; stuknięcie nie klika podwójnie.
+7. Lore 1 i 2 mówią o czuwaniu, nie o pracy; wprowadzenie (krok 2) nie każe pracować przy komputerze.
+

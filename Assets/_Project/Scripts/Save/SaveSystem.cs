@@ -22,8 +22,6 @@ namespace Wyspa.Save
         public List<PlotSave> plots = new List<PlotSave>();
         public List<CurrencyAmount> currencies = new List<CurrencyAmount>();
         public List<UpgradeSave> upgrades = new List<UpgradeSave>();
-        public long rhythmDayTicks;
-        public float rhythmDailySeconds;
         public List<CrateEntry> crate = new List<CrateEntry>();   // do v5: jedyna skrzynia (v6: zawartość przy obiekcie)
         public IslandSave island;               // v3: wyspa z kafelków (ziarno, kafelki, dekoracje, obiekty)
         public List<SeedSave> seeds = new List<SeedSave>();   // v4: worek nasion (hybrydy, kupiec, wyprawy)
@@ -387,8 +385,6 @@ namespace Wyspa.Save
                 essenceCapacity = game.Essence.Capacity,
                 currencies = game.Wallet.Snapshot(),
                 upgrades = game.Upgrades.Snapshot(),
-                rhythmDayTicks = game.Rhythm.SaveDayTicks,
-                rhythmDailySeconds = game.Rhythm.SaveDailySeconds,
                 unlockedSeeds = game.SnapshotUnlocks(),
                 automationGranted = game.Automation != null ? game.Automation.SnapshotGranted() : new List<string>(),
                 island = game.Island != null && game.Island.Ready ? game.Island.Snapshot() : null,
@@ -671,7 +667,6 @@ namespace Wyspa.Save
             game.Upgrades.Restore(data.upgrades);
             game.ApplyUpgrades();                // pojemność słoja przed ustawieniem Esencji
             game.Essence.Set(data.essence);
-            game.Rhythm.Restore(data.rhythmDayTicks, data.rhythmDailySeconds, DateTime.Now);
             if (data.version < 6 && data.crate != null && data.crate.Count > 0 && HarvestCrate.All.Count > 0)
                 HarvestCrate.All[0].Restore(data.crate);   // zapis sprzed 6b: zawartość jedynej skrzyni
             game.Seeds.Restore(data.seeds);

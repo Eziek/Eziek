@@ -125,7 +125,8 @@ namespace Wyspa.Economy
             if (E.QualityUp > 0f && quality < 3 && UnityEngine.Random.value < E.QualityUp)
                 quality++;   // Staranne ręce
             float bonus = SituationBonus(channel, count) + (crop.kind == CropKind.Day ? E.SaleDay : E.SaleNight)
-                        + GroupBonus(crop.id) + (crop.hybrid ? E.SaleHybrid : 0f);
+                        + GroupBonus(crop.id) + (crop.hybrid ? E.SaleHybrid : 0f)
+                        + (CropSeasons.SingleSeason(crop) ? E.SeasonSale : 0f);   // Sezonowy targ
             float value = crop.sellPrice * QualityMultiplier(quality) * count * (1f + bonus) * ChannelMultiplier(channel)
                         * Prestige.SaleMultiplier * MomentMultiplier();
             if (crop.id == DemandCropId())
@@ -162,24 +163,20 @@ namespace Wyspa.Economy
             }
         }
 
-        /// <summary>Premie sumowane (procenty): ogólne, chwila (praca, noc, świt, seria, wypoczęcie), lampy, renoma, kolekcja, seria sprzedaży.</summary>
+        /// <summary>Premie sumowane (procenty): ogólne, chwila (noc, świt, deszcz, zima), lampy, renoma, kolekcja, seria sprzedaży.</summary>
         static float SituationBonus(SaleChannel channel, int count)
         {
             float s = E.SaleAll + E.SaleAll2;
             var game = GameLoop.Instance;
             if (game != null)
             {
-                if (game.Activity != null && game.Activity.IsActive) s += E.ActiveSale;
                 if (game.Clock != null)
                 {
                     if (game.Clock.IsNight) s += E.NightTimeSale;
                     else if (game.Clock.Second < DawnWindow) s += E.DawnSale;
                 }
-                if (game.Rhythm != null)
-                {
-                    if (game.Rhythm.StreakBonusActive) s += E.StreakSale;
-                    if (game.Rhythm.Refreshed) s += E.RestedSale;
-                }
+                if (Weather.WeatherSystem.Raining) s += E.RainSale;   // Deszczowy kupiec
+                if (Seasons.Current == Season.Winter) s += E.WinterSale;   // Zimowy jarmark
             }
             if (E.LampCap > 0f) s += Mathf.Min(E.LampCap, LampStep * LampsOn());
             if (E.RepCap > 0f) s += Mathf.Min(E.RepCap, 0.01f * (Sold / ReputationStep));

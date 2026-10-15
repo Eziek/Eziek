@@ -10,9 +10,9 @@ namespace Wyspa.Upgrades
         public static int NestCapacity = 3;
         public static float WispXp = 1f;
         public static int CrateCapacity = 20;
-        public static float WorkEssence = 1f;
-        public static float FatigueMultiplier = 0.5f, HeavyFatigueMultiplier = 0.25f;
-        public static float StreakBonus = 0.25f;
+        public static float EssenceRate = 1f;   // Rozpałka: Żar płynie szybciej
+        public static float NightEssence = 0f;   // Nocny żar: w nocy Żar płynie szybciej
+        public static float HearthBoost = 1f;   // Żarliwe palenisko: piec i kryształy dają więcej Żaru
         public static float DayGrowth = 1f, NightGrowth = 1f;
         public static float MutationChance = 0.03f;
         public static float WildRuneInterval = 1f;
@@ -51,7 +51,7 @@ namespace Wyspa.Upgrades
         public static int WispTip = 0;   // Napiwki ogników
         public static float SaleDay = 0f;   // Słoneczny zbiór
         public static float HandBonus = 0f;   // Prosto z grządki
-        public static float ActiveSale = 0f;   // Pracowite ręce
+        public static float SeasonSale = 0f;   // Sezonowy targ (rośliny jednej pory roku)
         public static float GroupRoots = 0f;   // Korzenny targ
         public static float GroupGrain = 0f;   // Cech młynarzy
         public static float GroupPumpkin = 0f;   // Dyniowe pole
@@ -79,8 +79,8 @@ namespace Wyspa.Upgrades
         public static int EmberCoins = 0;   // Żar w złoto
         public static int WorkWage = 0;   // Dniówka
         public static int LandRent = 0;   // Dzierżawa
-        public static float StreakSale = 0f;   // Skupiony sprzedawca
-        public static float RestedSale = 0f;   // Wypoczęty kupiec
+        public static float RainSale = 0f;   // Deszczowy kupiec
+        public static float WinterSale = 0f;   // Zimowy jarmark
 
         public static void Apply(UpgradeState u)
         {
@@ -88,10 +88,9 @@ namespace Wyspa.Upgrades
             NestCapacity = UnityEngine.Mathf.RoundToInt(u.Value(UpgradeIds.NestSize, 3f));
             WispXp = u.Value(UpgradeIds.WispXp, 1f);
             CrateCapacity = UnityEngine.Mathf.RoundToInt(u.Value(UpgradeIds.BigCrates, 20f));
-            WorkEssence = u.Value(UpgradeIds.Kindling, 1f);
-            FatigueMultiplier = u.Value(UpgradeIds.SecondWind, 0.5f);
-            HeavyFatigueMultiplier = FatigueMultiplier * 0.5f;
-            StreakBonus = u.Value(UpgradeIds.FocusStreak, 0.25f);
+            EssenceRate = u.Value(UpgradeIds.Kindling, 1f);
+            NightEssence = u.Value(UpgradeIds.SecondWind, 0f);
+            HearthBoost = 1f + u.Value(UpgradeIds.FocusStreak, 0f);
             DayGrowth = u.Value(UpgradeIds.FertileSoil, 1f);
             NightGrowth = u.Value(UpgradeIds.NightDew, 1f);
             MutationChance = u.Value(UpgradeIds.Crossbreed, 0.03f);
@@ -129,7 +128,7 @@ namespace Wyspa.Upgrades
             WispTip = UnityEngine.Mathf.RoundToInt(u.Value(UpgradeIds.WispTips, 0f));
             SaleDay = u.Value(UpgradeIds.SunHarvest, 0f);
             HandBonus = u.Value(UpgradeIds.FreshPicked, 0f);
-            ActiveSale = u.Value(UpgradeIds.BusyHands, 0f);
+            SeasonSale = u.Value(UpgradeIds.BusyHands, 0f);
             GroupRoots = u.Value(UpgradeIds.RootsMarket, 0f);
             GroupGrain = u.Value(UpgradeIds.GrainGuild, 0f);
             GroupPumpkin = u.Value(UpgradeIds.PumpkinPatch, 0f);
@@ -157,8 +156,8 @@ namespace Wyspa.Upgrades
             EmberCoins = UnityEngine.Mathf.RoundToInt(u.Value(UpgradeIds.EmberCoins, 0f));
             WorkWage = UnityEngine.Mathf.RoundToInt(u.Value(UpgradeIds.WorkWage, 0f));
             LandRent = UnityEngine.Mathf.RoundToInt(u.Value(UpgradeIds.LandRent, 0f));
-            StreakSale = u.Value(UpgradeIds.FocusSeller, 0f);
-            RestedSale = u.Value(UpgradeIds.RestedSeller, 0f);
+            RainSale = u.Value(UpgradeIds.FocusSeller, 0f);
+            WinterSale = u.Value(UpgradeIds.RestedSeller, 0f);
         }
     }
 }

@@ -152,10 +152,11 @@ namespace Wyspa.EditorTools
                 levels = new[] { L(120f, Coins(200)), L(240f, Coins(800)), L(480f, Coins(3000)) }, requires = new[] { UpgradeIds.WispGardener } },
             new UpgradeSpec { id = UpgradeIds.Kindling, name = "Rozpałka", category = UpgradeCategory.Essence,
                 levels = new[] { L(1.1f, Coins(300)), L(1.2f, Coins(900)), L(1.3f, Coins(2500)) }, requires = new[] { UpgradeIds.EssenceJar } },
-            new UpgradeSpec { id = UpgradeIds.SecondWind, name = "Drugi oddech", category = UpgradeCategory.Rhythm,
-                levels = new[] { L(0.65f, Coins(600)), L(0.8f, Coins(1800)) }, requires = new[] { UpgradeIds.Kindling } },
-            new UpgradeSpec { id = UpgradeIds.FocusStreak, name = "Głębokie skupienie", category = UpgradeCategory.Rhythm,
-                levels = new[] { L(0.35f, Coins(500)), L(0.5f, Coins(1500)) }, requires = new[] { UpgradeIds.Kindling } },
+            // dawne ulepszenia rytmu pracy (§9 p. 134): te same id, nowe efekty
+            new UpgradeSpec { id = UpgradeIds.SecondWind, name = "Nocny żar", category = UpgradeCategory.Essence,
+                levels = new[] { L(0.25f, Coins(600)), L(0.5f, Coins(1800)) }, requires = new[] { UpgradeIds.Kindling } },
+            new UpgradeSpec { id = UpgradeIds.FocusStreak, name = "Żarliwe palenisko", category = UpgradeCategory.Essence,
+                levels = new[] { L(0.25f, Coins(500)), L(0.5f, Coins(1500)) }, requires = new[] { UpgradeIds.Kindling } },
             new UpgradeSpec { id = UpgradeIds.SpiderWicks, name = "Pajęcze knoty", category = UpgradeCategory.Lamps,
                 levels = new[] { L(0.85f, Coins(300), Wood(5)), L(0.7f, Coins(1000), Wood(10)) }, requires = new[] { UpgradeIds.EssenceJar } },
             // ziemia (prawo)
@@ -236,7 +237,7 @@ namespace Wyspa.EditorTools
                 levels = new[] { L(0.05f, Coins(1500)), L(0.1f, Coins(4500)), L(0.15f, Coins(13500)) }, requires = new[] { UpgradeIds.FertileSoil } },
             new UpgradeSpec { id = UpgradeIds.FreshPicked, name = "Prosto z grządki", category = UpgradeCategory.Trade,
                 levels = new[] { L(0.1f, Coins(2000)), L(0.2f, Coins(6000)), L(0.3f, Coins(18000)) }, requires = new[] { UpgradeIds.SunHarvest } },
-            new UpgradeSpec { id = UpgradeIds.BusyHands, name = "Pracowite ręce", category = UpgradeCategory.Trade,
+            new UpgradeSpec { id = UpgradeIds.BusyHands, name = "Sezonowy targ", category = UpgradeCategory.Trade,
                 levels = new[] { L(0.1f, Coins(3000)), L(0.2f, Coins(9000)) }, requires = new[] { UpgradeIds.SunHarvest } },
             new UpgradeSpec { id = UpgradeIds.RootsMarket, name = "Korzenny targ", category = UpgradeCategory.Trade,
                 levels = new[] { L(0.25f, Coins(2500)), L(0.5f, Coins(7500)) }, requires = new[] { UpgradeIds.FreshPicked } },
@@ -292,9 +293,9 @@ namespace Wyspa.EditorTools
                 levels = new[] { L(1f, Coins(4000)), L(2f, Coins(12000)), L(3f, Coins(36000)) }, requires = new[] { UpgradeIds.EmberCoins } },
             new UpgradeSpec { id = UpgradeIds.LandRent, name = "Dzierżawa", category = UpgradeCategory.Trade,
                 levels = new[] { L(5f, Coins(5000)), L(10f, Coins(15000)) }, requires = new[] { UpgradeIds.SecondWind } },
-            new UpgradeSpec { id = UpgradeIds.FocusSeller, name = "Skupiony sprzedawca", category = UpgradeCategory.Trade,
+            new UpgradeSpec { id = UpgradeIds.FocusSeller, name = "Deszczowy kupiec", category = UpgradeCategory.Trade,
                 levels = new[] { L(0.1f, Coins(4000)), L(0.2f, Coins(12000)) }, requires = new[] { UpgradeIds.FocusStreak } },
-            new UpgradeSpec { id = UpgradeIds.RestedSeller, name = "Wypoczęty kupiec", category = UpgradeCategory.Trade,
+            new UpgradeSpec { id = UpgradeIds.RestedSeller, name = "Zimowy jarmark", category = UpgradeCategory.Trade,
                 levels = new[] { L(0.15f, Coins(4000)), L(0.3f, Coins(12000)) }, requires = new[] { UpgradeIds.SecondWind } },
         };
 
@@ -1001,12 +1002,10 @@ namespace Wyspa.EditorTools
 
             // --- logika gry ---
             var game = new GameObject("Game");
-            var activity = game.AddComponent<ActivityTracker>();
             var clock = game.AddComponent<GameClock>();
             var essence = game.AddComponent<EssenceStore>();
             var wallet = game.AddComponent<Wallet>();
             var save = game.AddComponent<SaveSystem>();
-            var rhythm = game.AddComponent<WorkRhythm>();
             var upgradeState = game.AddComponent<UpgradeState>();
             var loop = game.AddComponent<GameLoop>();
             game.AddComponent<AppPerformance>();
@@ -1017,8 +1016,8 @@ namespace Wyspa.EditorTools
             game.AddComponent<Wyspa.Lore.Chronicle>();
             game.AddComponent<DebugHud>();
 
-            SetRefs(loop, ("activity", activity), ("clock", clock), ("essence", essence), ("wallet", wallet),
-                ("crops", db), ("saveSystem", save), ("rhythm", rhythm), ("upgrades", upgradeState), ("automation", automation), ("island", island));
+            SetRefs(loop, ("clock", clock), ("essence", essence), ("wallet", wallet),
+                ("crops", db), ("saveSystem", save), ("upgrades", upgradeState), ("automation", automation), ("island", island));
             SetRefs(upgradeState, ("database", upgradeDb));
             SetRefs(dayNight, ("clock", clock), ("globalLight", global));
             SetRefs(click, ("targetCamera", cam));

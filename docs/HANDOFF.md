@@ -1,9 +1,14 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-133), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-134), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
+
+- **NOWA KONCEPCJA (GDD §9 p. 134, TEST_PLAN 54): gra bez pracy i rytmu.** Żar płynie sam z czasu (+ piec, kryształy),
+  rośliny dnia rosną w świetle, wszystko tylko przy włączonej grze (offline jak dawniej tylko rośliny nocy). Usunięte
+  `ActivityTracker`, `WorkRhythm`, `SystemIdle`; ulepszenia i dary pracy mają nowe efekty (te same id). Sterowanie dotykiem
+  w `UI/UiInput.cs` (port na telefony: GDD §2.1). Wymaga Wyspa → 2. Nie testowane w Unity. `tools/balance/sim.py` nieaktualny.
 
 - Gałąź robocza: **`main`** (historia przepisana: bez stopek asystenta, autor Eziek). Stara gałąź `claude/...` do usunięcia
   na GitHubie po ustawieniu `main` jako domyślnej. PR-ów nie otwieramy bez prośby gracza.

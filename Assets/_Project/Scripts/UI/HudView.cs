@@ -10,8 +10,8 @@ using Wyspa.Localization;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// HUD (GDD §12.2): jeden zwarty pasek tuż nad wyspą. Górny wiersz: waluty i Esencja, dolny: rytm pracy,
-    /// tempo i zegar. Pasek idzie za lądem (nie przykleja się do rogów okna, więc w przezroczystym oknie nie wisi nad pulpitem).
+    /// HUD (GDD §12.2): jeden zwarty pasek tuż nad wyspą. Górny wiersz: waluty i Esencja, dolny: zegar gry
+    /// i pora roku. Pasek idzie za lądem (nie przykleja się do rogów okna, więc w przezroczystym oknie nie wisi nad pulpitem).
     /// Znika po kilku sekundach bez ruchu myszy, wraca po jej poruszeniu. W mini-trybie go nie ma.
     /// </summary>
     public class HudView : MonoBehaviour
@@ -36,11 +36,8 @@ namespace Wyspa.UI
         readonly List<Item> items = new List<Item>();
         Item essenceItem;
         RectTransform essenceFill;
-        Image rhythmIcon;
-        TextMeshProUGUI rhythmText, clockText, tempoText;
-        Image keysIcon, mouseIcon;
+        TextMeshProUGUI clockText;
         Image dayIcon;   // trzeci wiersz: słońce / księżyc, godzina gry, ile do nocy albo świtu   // wskaźnik: gra widzi pisanie / ruch myszy (zapala się na chwilę)
-        RectTransform rhythmFill;
         Vector2 lastMouse;
         float lastMove;
         float refresh;
@@ -49,7 +46,6 @@ namespace Wyspa.UI
         readonly Dictionary<Item, float> bumpUntil = new Dictionary<Item, float>();
         int flying;
 
-        static readonly Color InputDim = new Color(0.45f, 0.45f, 0.5f, 0.55f);
 
         public bool ForceVisible { get; set; }
         /// <summary>Widoczność paska (0..1): karteczka wprowadzenia pokazuje się i chowa razem z nim.</summary>
@@ -80,7 +76,7 @@ namespace Wyspa.UI
             this.root = root;
             var t = Ui.Theme;
             var barImg = Ui.Img(root, "IslandBar", t.tooltip, true);
-            bar = Ui.Place(barImg.rectTransform, Ui.BottomLeft, new Vector2(0.5f, 0f), Vector2.zero, new Vector2(120, 3 * RowH + Pad + 2));
+            bar = Ui.Place(barImg.rectTransform, Ui.BottomLeft, new Vector2(0.5f, 0f), Vector2.zero, new Vector2(120, 2 * RowH + Pad + 2));
             // --- górny wiersz: waluty ---
             items.Add(MakeItem("coin", CurrencyType.Coins));
             essenceItem = MakeItem("essence", null);
@@ -91,13 +87,7 @@ namespace Wyspa.UI
             items.Add(MakeItem("wood", CurrencyType.Wood));
             items.Add(MakeItem("stone", CurrencyType.Stone));
 
-            // --- dolny wiersz: rytm pracy, tempo, zegar ---
-            rhythmIcon = Ui.Img(bar, "RhythmIcon", t.Icon("focus"), false);
-            rhythmText = Ui.Txt(bar, "Rhythm", t.textLight);
-            rhythmFill = Ui.Bar(bar, "RhythmBar", t.barFillRhythm, Ui.TopLeft, Ui.TopLeft, Vector2.zero, new Vector2(30, 7));
-            tempoText = Ui.Txt(bar, "Tempo", t.textGold);
-            keysIcon = Ui.Img(bar, "Keys", t.Icon("keys"), false);
-            mouseIcon = Ui.Img(bar, "Mouse", t.Icon("mouse"), false);
+            // --- dolny wiersz: pora dnia, zegar, pora roku ---
             dayIcon = Ui.Img(bar, "DayNight", t.Icon("sun"), false);
             clockText = Ui.Txt(bar, "Clock", t.textLight);
         }
@@ -196,20 +186,6 @@ namespace Wyspa.UI
             }
             float topWidth = x - 6 + Pad;
 
-            var r = game.Rhythm;
-            string icon = r.FatigueLevel > 0 ? "fatigue" : (r.Refreshed ? "break" : "focus");
-            rhythmIcon.sprite = Ui.Theme.Icon(icon);
-            if (!game.Activity.IsActive)
-                rhythmText.text = Loc.Get("ui.rhythm.idle");
-            else if (r.FatigueLevel > 0)
-                rhythmText.text = Loc.Get("rhythm.fatigue.status", r.FatigueLevel == 2 ? r.HeavyFatigue : r.Fatigue);
-            else if (r.Refreshed)
-                rhythmText.text = Loc.Get("rhythm.refreshed.status", 15, Mathf.CeilToInt(r.RefreshedMinutesLeft));
-            else if (r.StreakBonusActive)
-                rhythmText.text = Loc.Get("rhythm.streak.bonus", Mathf.RoundToInt(r.StreakBonus * 100f));
-            else
-                rhythmText.text = Loc.Get("ui.rhythm.normal", r.StreakMinutes);
-            Ui.SetBar(rhythmFill, r.StreakMinutes / 25f);
             // czas gry: godzina na zegarze gry i odliczanie w prawdziwym czasie do następnej pory (świt, dzień, zmierzch, noc)
             var clock = game.Clock;
             int left = Mathf.CeilToInt(clock.SecondsToNextPhase);
@@ -220,50 +196,14 @@ namespace Wyspa.UI
                            + Loc.Get("ui.hud.season", Loc.Get(Seasons.NameKey(clock.Season)), clock.SeasonDay, GameClock.SeasonCycles);
             dayIcon.sprite = Ui.Theme.Icon(clock.IsNight ? "moon" : "sun");
             dayIcon.enabled = dayIcon.sprite != null;
-            float tempo = game.Activity.TempoMultiplier;
-            tempoText.text = tempo > 1.05f ? Loc.Get("ui.rhythm.tempo", tempo) : "";
 
-            // dolny wiersz: ikona, opis, pasek serii, tempo, zegar
+            // dolny wiersz: ikona pory i „14:05 noc za 23:40   Wiosna 3/6” (bez rytmu pracy, §9 p. 134)
             float y2 = -3f - RowH;
-            float bx = Pad;
-            Ui.Place(rhythmIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2), new Vector2(12, 12));
-            bx += 14;
-            float tw = Ui.Width(rhythmText);
-            Ui.Place(rhythmText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 2), new Vector2(tw, 10));
-            bx += tw + 4;
-            var frame = (RectTransform)rhythmFill.parent;
-            Ui.Place(frame, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 3), frame.sizeDelta);
-            bx += frame.sizeDelta.x + 4;
-            // tempo: w dolnym wierszu, a gdy się nie mieści w oknie - w wierszu zegara
-            float tempoW = tempoText.text.Length > 0 ? Ui.Width(tempoText) : 0f;
-            bool tempoBelow = tempoW > 0f && bx + tempoW + 4f + 26f + Pad > root.rect.width - 4f;
-            if (tempoW > 0f && !tempoBelow)
-            {
-                Ui.Place(tempoText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2 - 2), new Vector2(tempoW, 10));
-                bx += tempoW + 4;
-            }
-            // wskaźnik pracy: klawiatura i mysz jasne przez chwilę po wykrytym inpucie, inaczej przygaszone
-            var act = game.Activity;
-            float now = Time.unscaledTime;
-            keysIcon.color = now - act.LastKeyboardTime < 0.75f ? Color.white : InputDim;
-            mouseIcon.color = now - act.LastMouseTime < 0.75f ? Color.white : InputDim;
-            Ui.Place(keysIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2), new Vector2(12, 12));
-            bx += 12;
-            Ui.Place(mouseIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(bx, y2), new Vector2(12, 12));
-            bx += 14;
-            float bottomWidth = bx - 2 + Pad;
-            // trzeci wiersz: ikona pory i „14:05 noc za 23:40”
-            float y3 = y2 - RowH;
             float cw = Ui.Width(clockText);
-            Ui.Place(dayIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad, y3), new Vector2(12, 12));
-            Ui.Place(clockText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad + 14, y3 - 2), new Vector2(cw, 10));
+            Ui.Place(dayIcon.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad, y2), new Vector2(12, 12));
+            Ui.Place(clockText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad + 14, y2 - 2), new Vector2(cw, 10));
             float timeWidth = Pad + 14 + cw + Pad;
-            if (tempoBelow)
-            {
-                Ui.Place(tempoText.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(Pad + 14 + cw + 6, y3 - 2), new Vector2(tempoW, 10));
-                timeWidth += tempoW + 6;
-            }
-            float width2 = Mathf.Ceil(Mathf.Max(topWidth, Mathf.Max(bottomWidth, timeWidth)));
+            float width2 = Mathf.Ceil(Mathf.Max(topWidth, timeWidth));
             // szerokość od razu rośnie, a maleje dopiero po 3 s (pasek nie skacze na boki przy każdej zmianie tekstu)
             float now2 = Time.unscaledTime;
             if (width2 >= shownWidth || now2 - lastGrow > 3f)
@@ -271,7 +211,7 @@ namespace Wyspa.UI
                 if (width2 >= shownWidth) lastGrow = now2;
                 shownWidth = width2;
             }
-            bar.sizeDelta = new Vector2(shownWidth, 3 * RowH + Pad + 2);
+            bar.sizeDelta = new Vector2(shownWidth, 2 * RowH + Pad + 2);
         }
             // ------------------------------------------------------------ monety lecą łukiem do licznika (GDD §5.5)
 

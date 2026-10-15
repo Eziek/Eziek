@@ -5,7 +5,7 @@ namespace Wyspa.World
 {
     /// <summary>
     /// Historia wysepki fabularnej (§13.11): monument dawnego Łańcucha Latarni. Odbudowa w 4 etapach (Monument), koszt
-    /// pierwszego etapu poniżej (kolejne drożeją); gotowy monument przy pracy gracza daje walutę.
+    /// pierwszego etapu poniżej (kolejne drożeją); gotowy monument daje walutę (przy włączonej grze).
     /// Klucze tekstów: story.&lt;id&gt;.ruin / .building / .desc, zapiski lore.story.&lt;id&gt;.1-4 i .end.
     /// </summary>
     public class StorySite
@@ -14,7 +14,7 @@ namespace Wyspa.World
         public int wood, stone, coins;        // koszt pierwszego etapu odbudowy
         public CurrencyType product;
         public int amount;
-        public float interval;                // sekundy pracy na jeden dar
+        public float interval;                // sekundy (przy włączonej grze) na jeden dar
 
         public const int LoreLines = 4;
 

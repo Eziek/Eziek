@@ -1,6 +1,6 @@
 ﻿key,pl,en,de,ja,zh-Hans,uwagi
 game.title,Misty Packland,Misty Packland,Misty Packland,Misty Packland,Misty Packland,"marka, nie tłumaczyć (do 2026-10 nazwa robocza Pockland); JA czytanie: ミスティ・パックランド"
-term.essence,Żar,Ember,Glut,熾火,余火,energia z pracy (w kodzie nadal Essence)
+term.essence,Żar,Ember,Glut,熾火,余火,"energia wyspy: płynie sama z czasu, piec i kryształy (w kodzie nadal Essence)"
 term.grimoire,Księga,Grimoire,Grimoire,魔導書,魔典,główne menu
 menu.shop,Sklep,Shop,Laden,ショップ,商店,
 menu.upgrades,Ulepszenia,Upgrades,Verbesserungen,強化,升级,
@@ -47,9 +47,6 @@ world.fog,Mgła,Fog,Nebel,霧,迷雾,
 zone.graveyard,Cmentarz,Graveyard,Friedhof,墓地,墓地,
 zone.swamp,Bagno,Swamp,Sumpf,沼地,沼泽,
 zone.ruins,Ruiny,Ruins,Ruinen,遺跡,遗迹,
-rhythm.streak,Seria skupienia,Focus streak,Fokusserie,集中の連続,专注连续,
-rhythm.refreshed,Odświeżony,Refreshed,Erfrischt,リフレッシュ,精神焕发,bonus po przerwie
-rhythm.fatigue,Zmęczenie,Fatigue,Erschöpfung,疲労,疲劳,
 moon.full,Pełnia,Full moon,Vollmond,満月,满月,
 moon.cycle,Cykl księżycowy,Lunar cycle,Mondzyklus,月の周期,月相周期,
 crop.hybrid,Hybryda,Hybrid,Hybride,交配種,杂交种,
@@ -138,7 +135,6 @@ crop.wormwood,Piołun,Wormwood,Wermut,ニガヨモギ,苦艾,dzień
 crop.belladonna,Wilcza jagoda,Belladonna,Tollkirsche,ベラドンナ,颠茄,noc
 crop.mandrake,Mandragora,Mandrake,Alraune,マンドラゴラ,曼德拉草,noc
 crop.graveivy,Cmentarny bluszcz,Grave Ivy,Grabefeu,墓場のツタ,墓地常春藤,noc
-term.work_tempo,Tempo pracy,Work tempo,Arbeitstempo,作業テンポ,工作节奏,pisanie i mysz przyspieszają rośliny dnia
 act.fill,Zasyp grządkę,Fill in the plot,Beet zuschütten,畑を埋める,填平田地,odwrotność Przekop
 act.dismantle,Rozbierz,Dismantle,Abbauen,解体,拆除,"budowle, zwrot połowy monet"
 act.quit,Wyjdź z gry,Quit the game,Spiel beenden,ゲーム終了,退出游戏,
