@@ -1140,26 +1140,28 @@ namespace Wyspa.UI
 
         // ------------------------------------------------------------------ Bestiariusz i lore (GDD §11.3 H)
 
-        int bestiarySection;   // 0 rośliny, 1 ryby, 2 zdarzenia, 3 lore, 4 chowańce, 5 widziane
+        int bestiarySection;   // 0 rośliny, 1 ryby, 2 zdarzenia, 3 lore, 4 chowańce, 5 widziane, 6 mutacje (numer = klucz nagrody w zapisie)
         int lorePage;
         float tabsTop;         // przesunięcie treści, gdy zakładki działów zajmują dwa rzędy
         static readonly string[] FishIds = { "normal", "glow" };
         static readonly string[] EventIds = { "wisp", "star", "merchant", "monster", "fullmoon" };
         // nagroda za ukończenie kategorii (punkty księżyca)
-        static readonly int[] CategoryReward = { 2, 1, 2, 3, 0, 3 };   // 4 chowańce: bez nagrody
+        static readonly int[] CategoryReward = { 2, 1, 2, 3, 0, 3, 3 };   // 4 chowańce: bez nagrody
 
         void BuildBestiary()
         {
             var chronicle = Lore.Chronicle.Instance;
             float x = 0;
             tabsTop = 0f;
-            string[] sections = { "ui.bestiary.plants", "ui.bestiary.fish", "ui.bestiary.events", "ui.bestiary.lore", "ui.bestiary.familiars", "ui.bestiary.seen" };
+            // kolejność zakładek; numer działu zostaje stały (odebrane nagrody w zapisie: "bestiary.<numer>")
+            (int sec, string key)[] sections = { (0, "ui.bestiary.plants"), (6, "ui.bestiary.mutations"), (1, "ui.bestiary.fish"), (2, "ui.bestiary.events"),
+                                                 (3, "ui.bestiary.lore"), (4, "ui.bestiary.familiars"), (5, "ui.bestiary.seen") };
             for (int i = 0; i < sections.Length; i++)
             {
-                int sec = i;
+                int sec = sections[i].sec;
                 var b = Ui.Btn(content, "Section", () => { bestiarySection = sec; lorePage = 0; Show(Tab.Bestiary); });
                 var label = Ui.Txt(b.transform, "Text", sec == bestiarySection ? Ui.Theme.textGold : Ui.Theme.textLight, TextAlignmentOptions.Center);
-                label.text = Loc.Get(sections[i]);
+                label.text = Loc.Get(sections[i].key);
                 float bw = Mathf.Max(40f, Ui.Width(label) + 12f);
                 if (x > 0f && x + bw > W - 64)
                 {
@@ -1178,6 +1180,11 @@ namespace Wyspa.UI
             }
             if (chronicle == null)
                 return;
+            if (bestiarySection == 6)
+            {
+                BuildMutations(chronicle);
+                return;
+            }
 
             // wpisy kategorii: (id w kronice, tekst gdy odkryte)
             var entries = new List<(string id, string label)>();
@@ -1209,32 +1216,7 @@ namespace Wyspa.UI
             int found = 0;
             foreach (var e in entries)
                 if (chronicle.Found(e.id)) found++;
-            float y = 20 + tabsTop;
-            var progress = Ui.Txt(content, "Progress", Ui.Theme.textDark);
-            progress.text = Loc.Get("ui.bestiary.progress", found, entries.Count);
-            Ui.Place(progress.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(120, 10));
-            string category = "bestiary." + bestiarySection;
-            if (found == entries.Count && entries.Count > 0)
-            {
-                if (chronicle.Claimed(category))
-                {
-                    var done = Ui.Txt(content, "Done", Ui.Theme.textGoldOnPage, TextAlignmentOptions.TopRight);
-                    done.text = Loc.Get("ui.bestiary.complete");
-                    Ui.Place(done.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -y), new Vector2(160, 10));
-                }
-                else
-                {
-                    int reward = CategoryReward[Mathf.Clamp(bestiarySection, 0, CategoryReward.Length - 1)];
-                    var claim = Ui.Btn(content, "Claim", () => { chronicle.Claim(category, reward); Show(Tab.Bestiary); });
-                    var ct = Ui.Txt(claim.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
-                    ct.text = Loc.Get("ui.bestiary.claim", reward);
-                    float cw = Ui.Width(ct) + 12f;
-                    Ui.Stretch(ct.rectTransform);
-                    Ui.Place((RectTransform)claim.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -y + 2), new Vector2(cw, 14));
-                }
-            }
-            y += 16;
-
+            float y = ProgressHeader(chronicle, found, entries.Count);
             if (bestiarySection == 3)
             {
                 // lore: odkryte fragmenty w całości, po 4 na stronę
@@ -1278,6 +1260,98 @@ namespace Wyspa.UI
                 Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2((i % cols) * colW, -(y + (i / cols) * 13)), new Vector2(colW - 4, 10));
             }
         }
+
+        /// <summary>Nagłówek działu: „Odkryte: X/Y”, a przy pełnej stronie przycisk nagrody albo „Strona pełna”. Zwraca y pod nim.</summary>
+        float ProgressHeader(Lore.Chronicle chronicle, int found, int total)
+        {
+            float y = 20 + tabsTop;
+            var progress = Ui.Txt(content, "Progress", Ui.Theme.textDark);
+            progress.text = Loc.Get("ui.bestiary.progress", found, total);
+            Ui.Place(progress.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(0, -y), new Vector2(120, 10));
+            string category = "bestiary." + bestiarySection;
+            if (found == total && total > 0)
+            {
+                if (chronicle.Claimed(category))
+                {
+                    var done = Ui.Txt(content, "Done", Ui.Theme.textGoldOnPage, TextAlignmentOptions.TopRight);
+                    done.text = Loc.Get("ui.bestiary.complete");
+                    Ui.Place(done.rectTransform, Ui.TopRight, Ui.TopRight, new Vector2(0, -y), new Vector2(160, 10));
+                }
+                else
+                {
+                    int reward = CategoryReward[Mathf.Clamp(bestiarySection, 0, CategoryReward.Length - 1)];
+                    var claim = Ui.Btn(content, "Claim", () => { chronicle.Claim(category, reward); Show(Tab.Bestiary); });
+                    var ct = Ui.Txt(claim.transform, "Text", Ui.Theme.textLight, TextAlignmentOptions.Center);
+                    ct.text = Loc.Get("ui.bestiary.claim", reward);
+                    float cw = Ui.Width(ct) + 12f;
+                    Ui.Stretch(ct.rectTransform);
+                    Ui.Place((RectTransform)claim.transform, Ui.TopRight, Ui.TopRight, new Vector2(0, -y + 2), new Vector2(cw, 14));
+                }
+            }
+            return y + 16;
+        }
+
+        /// <summary>
+        /// Mutacje (GDD §9 p. 130): wiersz na każdą hybrydę. Odkryta (zmutowała na wyspie albo została zebrana): dojrzała
+        /// roślina, nazwa, rodzice, czas, cena, pełnia, nasiona w worku. Nieodkryta: ciemna sylwetka, „???” i ślad
+        /// (pierwszy rodzic i rodzaj drugiego). Na dole okna: jak działa mutacja i obecna szansa.
+        /// </summary>
+        void BuildMutations(Lore.Chronicle chronicle)
+        {
+            var game = GameLoop.Instance;
+            float chance = GameLoop.MutationChance * Familiars.FamiliarSystem.MutationMultiplier * 100f;
+            info.text = Loc.Get("ui.mutation.hint", chance.ToString("0.#"));
+            var hybrids = new List<Farming.CropDefinition>();
+            if (game != null && game.Crops != null)
+                foreach (var c in game.Crops.crops)
+                    if (c != null && c.hybrid && !string.IsNullOrEmpty(c.parentA)) hybrids.Add(c);
+            int found = 0;
+            foreach (var h in hybrids)
+                if (MutationKnown(chronicle, h)) found++;
+            float y = ProgressHeader(chronicle, found, hybrids.Count);
+            const float rowH = 56f, picW = 72f;
+            float textW = W - 64 - picW;
+            foreach (var h in hybrids)
+            {
+                bool known = MutationKnown(chronicle, h);
+                var sprite = h.RipeSprite;
+                if (sprite != null)
+                {
+                    var pic = Ui.Img(content, "Pic_" + h.id, sprite, false);
+                    pic.color = known ? Color.white : new Color(0.08f, 0.05f, 0.1f, 0.55f);   // nieodkryta: sylwetka
+                    var size = sprite.rect.size * 2f;
+                    Ui.Place(pic.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2((picW - size.x) / 2f, -(y + (rowH - 4f - size.y) / 2f)), size);
+                }
+                var name = Ui.Txt(content, "Name", known ? Ui.Theme.textGoldOnPage : Ui.Theme.textMutedOnPage);
+                name.text = known ? Loc.Get("crop." + h.id) : "???";
+                Ui.Place(name.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(picW, -(y + 4)), new Vector2(textW, 10));
+                var t = Ui.Txt(content, "Info", known ? Ui.Theme.textDark : Ui.Theme.textMutedOnPage);
+                t.textWrappingMode = TextWrappingModes.Normal;
+                if (known)
+                {
+                    string s = Loc.Get("ui.seed.parents", Loc.Get("crop." + h.parentA), Loc.Get("crop." + h.parentB)) + "\n"
+                             + Ui.GrowTime(h) + "   " + Loc.Get("ui.seed.sell", h.sellPrice);
+                    if (h.requiresFullMoon)
+                        s += "\n" + Loc.Get("ui.seed.fullmoon");
+                    int inBag = game != null ? game.Seeds.Count(h.id) : 0;
+                    if (inBag > 0)
+                        s += "\n" + Loc.Get("ui.seed.bag", inBag);
+                    t.text = s;
+                }
+                else
+                {
+                    var other = game != null && game.Crops != null ? game.Crops.Find(h.parentB) : null;
+                    bool otherNight = other != null && other.kind == Farming.CropKind.Night;
+                    t.text = Loc.Get(otherNight ? "ui.mutation.clue_night" : "ui.mutation.clue_day", Loc.Get("crop." + h.parentA));
+                }
+                Ui.Place(t.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(picW, -(y + 15)), new Vector2(textW, rowH - 17));
+                y += rowH;
+            }
+        }
+
+        /// <summary>Hybryda odkryta: zmutowała na wyspie (wpis „mutation:”) albo została już zebrana (starsze zapisy).</summary>
+        static bool MutationKnown(Lore.Chronicle chronicle, Farming.CropDefinition h) =>
+            chronicle.Found("mutation:" + h.id) || chronicle.Found("crop:" + h.id);
 
         /// <summary>Nazwa w „Widzianych” z liczbą spotkań (od drugiego).</summary>
         static string Seen(string key, int count) => count > 1 ? Loc.Get("ui.bestiary.seen.count", Loc.Get(key), count) : Loc.Get(key);

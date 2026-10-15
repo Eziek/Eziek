@@ -586,3 +586,13 @@ Najpierw Wyspa → 2 (16 nowych roślin i ikon nasion). F1: „Pora roku: nastę
    szronik, jemioła i nocny jaśmin świecą w nocy; kołysanie na wietrze bez uciętych liści.
 5. Ognik-siewca i losowe sadzenie nie sieją roślin spoza pory; popyt dnia wskazuje tylko roślinę z bieżącej pory.
 
+## 50. Mutacje w Bestiariuszu
+F1: „Mutacje zawsze”.
+1. Księga → Bestiariusz: zakładka „Mutacje” zaraz po „Rośliny”. Nowa gra: 6 wierszy z sylwetką, „???” i śladem
+   (np. „Ślad: Marchew obok rośliny nocy”); na dole okna opis i obecna szansa (3%, z kotem więcej).
+2. Marchew obok wilczej jagody, zbiór marchwi (z „Mutacje zawsze”): toast „Nowa mutacja! Wilcza marchew: +2 nasiona”,
+   w worku 2 nasiona; w Bestiariuszu wiersz odkryty: obrazek, rodzice, czas, cena.
+3. Druga mutacja tej samej hybrydy: zwykły toast „Mutacja! Nasiono: …”, +1 nasiono.
+4. Wszystkie 6 odkrytych: przycisk „Odbierz: +3 pkt”, po odebraniu „Strona pełna”. Zapis i wczytanie: odkrycia zostają.
+5. Stary zapis z zebraną hybrydą: ta hybryda od razu odkryta.
+

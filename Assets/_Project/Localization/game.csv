@@ -36,6 +36,7 @@ toast.deco.nest,Gniazdo z nasionem: +{0} {0:plural:plon nocy|plony nocy|plonów 
 toast.deco.berries,Jagody: +{0} {0:plural:moneta|monety|monet},Berries: +{0} {0:plural:coin|coins},Beeren: +{0} {0:plural:Münze|Münzen},ベリー：+{0}コイン,浆果：+{0}金币,usuwanie krzaka
 toast.deco.coins,Monety pod kamieniem: +{0} {0:plural:moneta|monety|monet},Coins under the rock: +{0} {0:plural:coin|coins},Münzen unter dem Felsen: +{0} {0:plural:Münze|Münzen},岩の下のコイン：+{0},石头下的金币：+{0},usuwanie kamienia
 toast.mutation,Mutacja! Nasiono: {0},Mutation! Seed: {0},Mutation! Samen: {0},突然変異！種：{0},变异！种子：{0},do worka nasion
+toast.mutation.new,Nowa mutacja! {0}: +{1} {1:plural:nasiono|nasiona|nasion}. Wpis w Bestiariuszu.,New mutation! {0}: +{1} {1:plural:seed|seeds}. Added to the Bestiary.,Neue Mutation! {0}: +{1} Samen. Im Bestiarium vermerkt.,新しい突然変異！{0}：種+{1}。図鑑に記録した。,新变异！{0}：种子+{1}。已记入图鉴。,pierwsze odkrycie hybrydy; {1} = liczba nasion
 toast.golden_deal,Złoty interes! Zapłata x{0},Golden deal! Paid x{0},Goldenes Geschäft! Bezahlt x{0},黄金の取引！代金{0}倍,黄金交易！收入x{0},targowanie
 toast.lucky_coin,Szczęśliwa moneta: odłamek gwiazdy!,Lucky coin: a star shard!,Glücksmünze: ein Sternsplitter!,幸運のコイン：星のかけら！,幸运硬币：星之碎片！,
 toast.dawn_income,Świt: odsetki i dzierżawa +{0} {0:plural:moneta|monety|monet},Dawn: interest and lease +{0} {0:plural:coin|coins},Morgengrauen: Zinsen und Pacht +{0} {0:plural:Münze|Münzen},夜明け：利子と賃料+{0}コイン,黎明：利息和租金+{0}金币,

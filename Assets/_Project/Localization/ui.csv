@@ -373,6 +373,10 @@ ui.nest.mood,nastrój {0}% (praca {1}%),mood {0}% (work {1}%),Stimmung {0} % (Ar
 ui.nest.resting,odpoczywa,resting,ruht sich aus,休憩中,休息中,
 ui.nest.need_rest,Ogniki są zmęczone: postaw ognisko albo sennik (Sklep → Budowle),The wisps are tired: build a bonfire or a dream hut (Shop → Buildings),Die Irrlichter sind müde: Baue ein Feuer oder eine Traumhütte (Laden → Bauwerke),鬼火が疲れている：たき火か夢見小屋を建てよう（ショップ→建物）,鬼火累了：建一个篝火或梦屋（商店→建筑）,
 ui.bestiary.familiars,Chowańce,Familiars,Vertraute,使い魔,使魔,sekcja Bestiariusza
+ui.bestiary.mutations,Mutacje,Mutations,Mutationen,突然変異,变异,sekcja Bestiariusza: odkryte hybrydy
+ui.mutation.hint,"Sąsiednie grządki z parą roślin: przy zbiorze {0}% szansy na nasiono hybrydy. Hybryd nie kupisz, sprzedają się drożej. Pierwsze odkrycie: 2 nasiona.",Neighbouring plots with a matching pair: {0}% chance of a hybrid seed at harvest. Hybrids can't be bought and sell for more. First discovery: 2 seeds.,"Benachbarte Beete mit passendem Paar: {0} % Chance auf einen Hybridsamen bei der Ernte. Hybriden kann man nicht kaufen, sie bringen mehr ein. Erste Entdeckung: 2 Samen.",隣り合う畑に組み合わせの作物があると、収穫時に{0}%で交配種の種が手に入る。交配種は買えず、高く売れる。初発見で種2つ。,相邻田地种着匹配的作物时，收获有{0}%几率得到杂交种种子。杂交种无法购买，售价更高。首次发现：2颗种子。,"{0} = szansa w % (z kotem, ulepszeniami i darami)"
+ui.mutation.clue_day,Ślad: {0} obok rośliny dnia,Clue: {0} next to a day crop,Spur: {0} neben einer Tagpflanze,手がかり：{0}と昼の作物,线索：{0}挨着日间作物,nieodkryta hybryda; {0} = jeden rodzic
+ui.mutation.clue_night,Ślad: {0} obok rośliny nocy,Clue: {0} next to a night crop,Spur: {0} neben einer Nachtpflanze,手がかり：{0}と夜の作物,线索：{0}挨着夜间作物,nieodkryta hybryda; {0} = jeden rodzic
 act.dig_up,Wykop roślinę,Dig up the plant,Pflanze ausgraben,植物を掘り出す,挖出植物,pierścień akcji na grządce
 act.plant_random,Obsiej puste grządki losowo,Plant random seeds on empty plots,Leere Beete zufällig bepflanzen,空いた畑にランダムに植える,在空地随机播种,pierścień akcji: losowe sadzenie
 toast.saved,Zapisano grę,Game saved,Spiel gespeichert,セーブしました,已保存游戏,po Zapisz grę

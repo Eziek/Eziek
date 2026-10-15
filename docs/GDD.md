@@ -458,6 +458,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   Grafiki sezonowe to placeholdery ze skryptu; docelowe rysuje się ręcznie (pliki `<nazwa>__<pora>.png`).
 - [x] **Rośliny sezonowe** (prośba gracza, §9 p. 129): 16 nowych roślin, po 4 na porę (2 dnia, 2 nocy), siew tylko
   w swojej porze, odblokowanie w Sklep → Nasiona. Grafiki to placeholdery ze skryptu (`seasonal_crops.py`).
+- [x] **Mutacje w Bestiariuszu** (prośba gracza, §9 p. 130): dział „Mutacje” z odkrywaniem hybryd (ślad, potem pełny wpis),
+  pierwsze odkrycie daje 2 nasiona.
 
 ---
 
@@ -1098,6 +1100,16 @@ Obrazki referencyjne (kopie): `docs/img/`
     (ulepszenie targu) losuje tylko z roślin, które da się teraz zasiać. Rośliny sezonowe nie należą do grup ulepszeń cen
     (Korzenny targ itd.). Grafiki: `tools/pixel-proto/seasonal_crops.py`, eksport `export_unity_seasonal_crops.py`
     (przed `pad_sway.py`), podgląd `docs/img/rosliny_sezonowe.png`.
+130. **Mutacje w Bestiariuszu** (prośba gracza: „co dają, wpisać do bestiariusza, odkrywanie”). Jak działają (bez zmian):
+    przy zbiorze rośliny, gdy na sąsiedniej grządce rośnie jej partner z pary rodziców, raz na zbiór szansa na nasiono
+    hybrydy do worka: 3% bazowo, więcej z ulepszeniem Krzyżowanie i darem mgły, kot ×2 (+25% na poziom więzi). Co dają:
+    nasiono rośliny, której nie da się kupić, droższej od rodziców (dynia-upiór 50, wilcza marchew 15, popielne zboże 25,
+    księżycowy mak 50, wrzeszczący czosnek 70, krwawy piołun 140 tylko w pełnię), do tego Sława hybryd (+% ceny), księżycowy
+    mak liczy się do przyjścia ćmy. **Nowe:** dział Bestiariusza „Mutacje” (zakładka zaraz po Roślinach, w zapisie numer
+    działu 6): wiersz na hybrydę. Odkryta (zmutowała na wyspie, wpis kroniki `mutation:<id>`, albo już zebrana, dla starych
+    zapisów): dojrzała roślina, nazwa, rodzice, czas, cena, pełnia, nasiona w worku. Nieodkryta: sylwetka, „???” i ślad
+    „<pierwszy rodzic> obok rośliny dnia/nocy”. W pasku na dole: jak działa mutacja z obecną szansą. Pierwsza mutacja danej
+    hybrydy daje 2 nasiona i toast „Nowa mutacja! … Wpis w Bestiariuszu”. Pełna strona: 3 punkty księżyca.
 
 ---
 

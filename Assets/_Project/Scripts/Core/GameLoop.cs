@@ -247,8 +247,15 @@ namespace Wyspa.Core
                         continue;
                     if (!DebugAlwaysMutate && Random.value >= MutationChance * Familiars.FamiliarSystem.MutationMultiplier)   // kot: x2
                         return;   // jedna próba na zbiór
-                    seeds.Add(h.id);
-                    GameEvents.RaiseToast("toast.mutation", Localization.Loc.Get("crop." + h.id));
+                    // pierwsze odkrycie (§9 p. 130): wpis w Bestiariuszu (Mutacje) i 2 nasiona zamiast 1
+                    var chronicle = Lore.Chronicle.Instance;
+                    bool first = chronicle != null && !chronicle.Found("mutation:" + h.id);
+                    seeds.Add(h.id, first ? 2 : 1);
+                    Lore.Chronicle.Note("mutation:" + h.id);
+                    if (first)
+                        GameEvents.RaiseToast("toast.mutation.new", Localization.Loc.Get("crop." + h.id), 2);
+                    else
+                        GameEvents.RaiseToast("toast.mutation", Localization.Loc.Get("crop." + h.id));
                     Visual.IslandFx.FindPopped(plot.CropPosition);
                     return;
                 }
