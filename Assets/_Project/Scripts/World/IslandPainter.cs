@@ -8,6 +8,29 @@ namespace Wyspa.World
     {
         public float cx, cy, rx, ry, phase;
         public bool glow;
+        /// <summary>Gatunek (FishKinds): kształt i ruch w Water.shader.</summary>
+        public int kind;
+        /// <summary>Mnożnik czasu okrążenia (wolniejsze gatunki &gt; 1).</summary>
+        public float slow;
+    }
+
+    /// <summary>
+    /// Gatunki ryb pod wodą (GDD §9 p. 112), rysowane w Water.shader (FishPixel): rozmiar ramki w pikselach danych wody,
+    /// środek ramki (klik w łowisku) i czy da się ją złowić.
+    /// </summary>
+    public static class FishKinds
+    {
+        public const int Common = 0, School = 1, Eel = 2, Ray = 3, Carp = 4, Jelly = 5, Angler = 6;
+        static readonly int[] W = { 10, 12, 16, 14, 15, 7, 10 };
+        static readonly int[] H = { 4, 7, 5, 6, 5, 6, 6 };
+        static readonly int[] Top = { 0, 0, 0, 0, 0, 0, -1 };   // żabnica: przynęta wystaje nad ramkę
+
+        public static int Width(int kind) => W[Clamp(kind)];
+        public static int Height(int kind) => H[Clamp(kind)];
+        public static float CenterX(int kind) => W[Clamp(kind)] / 2f;
+        public static float CenterY(int kind) => Top[Clamp(kind)] + H[Clamp(kind)] / 2f;
+        public static bool Catchable(int kind) => kind != Jelly;
+        static int Clamp(int k) => k < 0 || k >= W.Length ? 0 : k;
     }
 
     /// <summary>Gotowe obrazy wyspy (RGBA, wiersz 0 = DÓŁ, jak Texture2D w Unity) i dane dla wody, mgły i kamery.</summary>
@@ -342,6 +365,18 @@ namespace Wyspa.World
 
         // ------------------------------------------------------------ ryby i potwór (jak water.py, w pobliżu wyspy)
 
+        // kolejność gatunków przy rozmieszczaniu: zwykłe najczęściej, rzadsze dalej (nie zmieszczą się, gdy wody mało)
+        static readonly int[] FishOrder =
+        {
+            FishKinds.Common, FishKinds.School, FishKinds.Common, FishKinds.Eel, FishKinds.Carp, FishKinds.Common,
+            FishKinds.Ray, FishKinds.School, FishKinds.Jelly, FishKinds.Common, FishKinds.Angler, FishKinds.Eel,
+            FishKinds.Common, FishKinds.Jelly, FishKinds.Carp, FishKinds.School,
+        };
+
+        /// <summary>
+        /// Ryby w pobliżu wyspy (do 16, różne gatunki): ścieżka ósemka, cała w wodzie z zapasem zależnym od wielkości ryby;
+        /// duże (płaszczka, karp, żabnica, meduza) tylko w głębszej wodzie. Świecą: co trzecia zwykła i żabnica (przynęta).
+        /// </summary>
         static void PlaceFish(IslandPicture pic, float[] dist, int seed)
         {
             int W = pic.width, H = pic.height;
@@ -349,22 +384,40 @@ namespace Wyspa.World
             int y0 = Math.Max(10, pic.minY - 60), y1 = Math.Min(H - 6, pic.maxY + 60);
             var rnd = new WRandom(seed * 101L + 3);
             float D(double x, double y) => dist[Math.Min(H - 1, Math.Max(0, (int)y)) * W + Math.Min(W - 1, Math.Max(0, (int)x))];
-            for (int tries = 0; tries < 2000 && pic.fish.Count < 12; tries++)
+            int commons = 0;
+            foreach (int kind in FishOrder)
             {
-                int cx = rnd.Range(x0, x1), cy = rnd.Range(y0, y1);
-                double frx = rnd.Range(8.0, 16.0), fry = rnd.Range(2.0, 5.0), ph = rnd.Range(0.0, 2 * Math.PI);
-                if (D(cx, cy) < 7)
-                    continue;
-                bool ok = true;
-                for (int k = 0; k < 16 && ok; k++)
+                double rxMin = 8, rxMax = 16, ryMin = 2, ryMax = 5, slow = 1, minD = 7;
+                switch (kind)
                 {
-                    double a = k * Math.PI / 8;
-                    if (D(cx + frx * Math.Sin(a), cy + fry * Math.Sin(2 * a)) < 5) ok = false;
+                    case FishKinds.School: rxMin = 10; rxMax = 18; break;
+                    case FishKinds.Eel: rxMin = 12; rxMax = 20; ryMax = 4; slow = 1.2; break;
+                    case FishKinds.Ray: rxMin = 14; rxMax = 22; ryMin = 3; ryMax = 6; slow = 1.7; minD = 12; break;
+                    case FishKinds.Carp: rxMin = 10; rxMax = 16; ryMax = 4; slow = 1.4; minD = 11; break;
+                    case FishKinds.Jelly: rxMin = 2; rxMax = 4; ryMin = 3; ryMax = 6; slow = 2.6; minD = 14; break;
+                    case FishKinds.Angler: rxMin = 8; rxMax = 12; ryMax = 3; slow = 1.3; minD = 16; break;
                 }
-                if (!ok)
-                    continue;
-                int n = pic.fish.Count;
-                pic.fish.Add(new FishPath { cx = cx, cy = cy, rx = (float)frx, ry = (float)fry, phase = (float)ph, glow = n == 1 || n == 4 || n == 7 });
+                float hw = FishKinds.CenterX(kind), hh = FishKinds.CenterY(kind);
+                double margin = 4 + Math.Max(FishKinds.Width(kind), FishKinds.Height(kind)) / 3.0;
+                for (int tries = 0; tries < 160; tries++)
+                {
+                    int cx = rnd.Range(x0, x1), cy = rnd.Range(y0, y1);
+                    double frx = rnd.Range(rxMin, rxMax), fry = rnd.Range(ryMin, ryMax), ph = rnd.Range(0.0, 2 * Math.PI);
+                    if (D(cx + hw, cy + hh) < minD)
+                        continue;
+                    bool ok = true;
+                    for (int k = 0; k < 16 && ok; k++)
+                    {
+                        double a = k * Math.PI / 8;
+                        if (D(cx + hw + frx * Math.Sin(a), cy + hh + fry * Math.Sin(2 * a)) < margin) ok = false;
+                    }
+                    if (!ok)
+                        continue;
+                    bool glow = kind == FishKinds.Angler || (kind == FishKinds.Common && commons++ % 3 == 1);
+                    pic.fish.Add(new FishPath { cx = cx, cy = cy, rx = (float)frx, ry = (float)fry, phase = (float)ph, glow = glow,
+                                                kind = kind, slow = (float)slow });
+                    break;
+                }
             }
         }
 

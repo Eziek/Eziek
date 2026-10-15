@@ -101,7 +101,7 @@ namespace Wyspa.Visual
                 bool hidden = hiddenUntil[i] > now;
                 anyHidden |= hidden;
                 a[i] = new Vector4(hidden ? -1000f : f.cx, f.cy, f.rx, f.ry);
-                b[i] = new Vector4(f.phase, f.glow ? 1f : 0f, 0f, 0f);
+                b[i] = new Vector4(f.phase, f.glow ? 1f : 0f, f.kind, Mathf.Max(0.1f, f.slow));
             }
             material.SetVectorArray(FishId, a);
             material.SetVectorArray(FishBId, b);
@@ -117,10 +117,10 @@ namespace Wyspa.Visual
             var f = fish[i];
             float period = material != null && material.HasProperty(FishPeriodId) ? material.GetFloat(FishPeriodId) : 30f;
             float t = Time.timeSinceLevelLoad;   // jak _Time.y w shaderze
-            float a = 2f * Mathf.PI * Frac(t / Mathf.Max(1f, period)) + f.phase;
+            float a = 2f * Mathf.PI * Frac(t / Mathf.Max(1f, period * Mathf.Max(0.1f, f.slow))) + f.phase;
             float fx = Mathf.Round(f.cx + f.rx * Mathf.Sin(a));
             float fy = Mathf.Round(f.cy + f.ry * Mathf.Sin(2f * a));
-            return Island.PixelToWorld(fx + 5f, fy + 2f);
+            return Island.PixelToWorld(fx + FishKinds.CenterX(f.kind), fy + FishKinds.CenterY(f.kind));
         }
 
         static float Frac(float x) => x - Mathf.Floor(x);
@@ -133,8 +133,8 @@ namespace Wyspa.Visual
             float now = Time.timeSinceLevelLoad;
             for (int i = 0; i < fish.Count; i++)
             {
-                if (hiddenUntil[i] > now)
-                    continue;
+                if (hiddenUntil[i] > now || !FishKinds.Catchable(fish[i].kind))
+                    continue;   // meduzy się nie łowi
                 var c = FishCenter(i);
                 float d = Vector2.Distance(c, world);
                 if (d <= bestD && Vector2.Distance(c, center) <= range)

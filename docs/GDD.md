@@ -476,6 +476,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `trees2.py` + `export_unity_trees2.py` | drzewa od nowa: okrągłe, świerk, krzak, martwe, owocowe (fazy i przewracanie); nadpisuje starsze, po nim `pad_sway.py`; podgląd `docs/img/drzewa.png` |
 | `water_flora.py` + `export_unity_water.py` | ozdobniki na wodzie (lilie, liście, rzęsa, gałązka) → `Water/flora_<nazwa>.png`, podgląd `docs/img/woda_ozdobniki.png` |
 | `ember_gens.py` + `export_unity_ember.py` | generatory Żaru: piec (3 klatki płomienia) i kryształ → `Objects/ember_*`, podgląd `docs/img/generatory_zaru.png` |
+| `fish_species_preview.py` | podgląd gatunków ryb (port `FishPixel` z `Water.shader`) → `docs/img/ryby_gatunki.png` |
 | `monuments.py` + `export_unity_story.py` | monumenty wysp fabularnych: 4 historie × 5 faz (ruina, 3 etapy budowy, gotowy) → `Story/monument_<id>_<faza>.png`, podgląd `docs/img/monumenty.png` |
 | `export_unity_stages.py` | dodatkowe fazy roślin z gotowych PNG: kiełek (`crop_<id>_shoot`) i niedojrzała (`crop_<id>_unripe`); po `pad_sway.py` |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
@@ -935,6 +936,12 @@ Obrazki referencyjne (kopie): `docs/img/`
     mają własne obrazki. Czytelna czcionka (Fusion Pixel 8px latin) w oryginale nie ma ogonków w ą ę Ą Ę ani znaków nad
     wielkimi literami (Ż, Ó Ć Ś Ń Ź, Ä Ö Ü), przez co w grze było „Zaru”, „wrzucaja”: `tools/fonts/patch_fusion_pl.py`
     dorysowuje brakujące piksele w pliku czcionki (SIL OFL 1.1 pozwala na zmiany; czcionka nie ma zastrzeżonej nazwy).
+112. **Więcej gatunków ryb pod wodą** (prośba gracza). Ryb jest do 16 zamiast 12, w 7 gatunkach rysowanych w
+    `Water.shader` (`FishPixel`, gatunki w `FishKinds`, IslandPainter.cs): zwykła (5, co trzecia świeci nocą), ławica
+    4 rybek (3), węgorz wijący się wzdłuż ciała (2), płaszczka z falującymi skrzydłami i ogonem (1), duży karp z rozwidlonym
+    ogonem (2), meduza jaśniejsza od wody, pulsująca, z czułkami (2), żabnica ze świecącą nocą przynętą (1). Duże gatunki
+    pływają tylko w głębszej wodzie i wolniej. Łowienie z pomostu: żabnica liczy się jak świecąca ryba, meduzy się nie łowi.
+    Podgląd: `tools/pixel-proto/fish_species_preview.py` → `docs/img/ryby_gatunki.png`.
 
 ---
 

@@ -77,7 +77,7 @@ Shader "Wyspa/Water"
 
             // Tablice ustawia WaterAnimator (SetVectorArray). Współrzędne w pikselach kadru, y w dół (jak w Pythonie).
             float4 _Fish[16];       // cx, cy, rx, ry
-            float4 _FishB[16];      // faza (rad), świeci (0/1)
+            float4 _FishB[16];      // faza (rad), świeci (0/1), gatunek (FishKinds), mnożnik czasu okrążenia
             float _FishCount;
             float4 _Beast;          // x, y, włączony (0/1)
 
@@ -113,6 +113,96 @@ Shader "Wyspa/Water"
                 if (row == 0) return 0x30u;
                 if (row == 2) return shape == 0 ? 0x3FEu : 0x3FDu;
                 return shape == 0 ? 0x1F9u : 0x1FAu;
+            }
+
+            // ławica: 4 rybki 4x2 (przesunięcia w ramce 12x7)
+            static const int2 FISH_SCHOOL[4] = { int2(0, 0), int2(6, 1), int2(2, 3), int2(8, 4) };
+
+            // Gatunki ryb (GDD §9 p. 112, FishKinds w IslandPainter.cs): 0 zwykła 10x4, 1 ławica, 2 węgorz, 3 płaszczka,
+            // 4 karp, 5 meduza, 6 żabnica. lx, ly = piksel względem lewego górnego rogu ramki; k liczy od ogona do głowy.
+            // Wynik: 0 nic, 1 ciemna sylwetka, 2 jaśniej od wody (meduza), 3 przynęta żabnicy (świeci nocą).
+            int FishPixel(int kind, int lx, int ly, bool right, float t, int f, int i)
+            {
+                if (kind == 1)
+                {
+                    [unroll] for (int j = 0; j < 4; j++)
+                    {
+                        int mx = lx - FISH_SCHOOL[j].x;
+                        int my = ly - FISH_SCHOOL[j].y - (int)round(0.6 * sin(t * 2.0 + j * 1.7));
+                        if (mx < 0 || mx >= 4 || my < 0 || my >= 2)
+                            continue;
+                        int k = right ? mx : 3 - mx;
+                        uint row = my == 0 ? 0x6u : (((f + j) % 2) == 0 ? 0xFu : 0xEu);   // ogonek miga
+                        if (((row >> (uint)k) & 1u) != 0u)
+                            return 1;
+                    }
+                    return 0;
+                }
+                if (kind == 2)
+                {
+                    if (lx < 0 || lx >= 16 || ly < 0 || ly >= 5)
+                        return 0;
+                    int k = right ? lx : 15 - lx;
+                    int c = 2 + (int)round(1.3 * sin(k * 0.55 - t * 5.0 + i));   // wężowy ruch wzdłuż ciała
+                    int thick = k >= 12 ? 2 : (k >= 1 ? 1 : 0);
+                    return ly >= c && ly < c + thick ? 1 : 0;
+                }
+                if (kind == 3)
+                {
+                    if (lx < 0 || lx >= 14 || ly < -1 || ly >= 7)
+                        return 0;
+                    float k = right ? lx : 13 - lx;
+                    float wing = 3.0 + 0.9 * sin(t * 2.2 + i);   // skrzydła falują
+                    float bx = (k - 8.5) / 5.0, by = (ly - 2.5) / wing;
+                    if (bx * bx + by * by <= 1.0 && abs(bx) + abs(by) <= 1.25)
+                        return 1;
+                    return k < 4.0 && ly == 2 ? 1 : 0;           // cienki ogon
+                }
+                if (kind == 4)
+                {
+                    if (lx < 0 || lx >= 15 || ly < 0 || ly >= 5)
+                        return 0;
+                    float k = right ? lx : 14 - lx;
+                    float bx = (k - 8.5) / 6.0, by = (ly - 2.0) / 2.2;
+                    if (bx * bx + by * by <= 1.0)
+                        return 1;
+                    // rozwidlona płetwa ogonowa, macha co kilka klatek
+                    int dy = ly - 2 + ((f + i) % 4 < 2 ? 0 : (ly < 2 ? 1 : 0));
+                    if (k < 0.5) return abs(dy) == 2 || abs(dy) == 1 ? 1 : 0;
+                    if (k < 1.5) return abs(dy) <= 1 ? 1 : 0;
+                    return k < 2.5 && dy == 0 ? 1 : 0;
+                }
+                if (kind == 5)
+                {
+                    if (lx < 0 || lx >= 7 || ly < 0 || ly >= 6)
+                        return 0;
+                    float pulse = 0.4 * sin(t * 3.0 + i);           // dzwon kurczy się i rozpręża
+                    float bx = (lx - 3.0) / (3.0 + pulse), by = (ly - 1.5) / 1.6;
+                    if (ly <= 2 && bx * bx + by * by <= 1.0)
+                        return 2;
+                    if (ly >= 3)
+                        [unroll] for (int j = 1; j <= 5; j += 2)
+                            if (lx == j + (int)round(0.6 * sin(t * 2.0 + ly + j)))
+                                return 2;                           // czułki
+                    return 0;
+                }
+                if (kind == 6)
+                {
+                    if (lx < -1 || lx >= 11 || ly < -1 || ly >= 5)
+                        return 0;
+                    float k = right ? lx : 9 - lx;
+                    float bx = (k - 4.5) / 4.5, by = (ly - 2.5) / 1.8;
+                    if (bx * bx + by * by <= 1.0)
+                        return 1;
+                    if (k == 8.0 && ly == 0)
+                        return 1;                                   // wędka na głowie
+                    return k == 9.0 && ly == -1 ? 3 : 0;            // przynęta
+                }
+                if (lx < 0 || lx >= 10 || ly < 0 || ly >= 4)
+                    return 0;
+                int k0 = right ? lx : 9 - lx;
+                int shape = ((f + i) % 4) < 2 ? 0 : 1;
+                return ((FishRow(shape, ly) >> (uint)k0) & 1u) != 0u ? 1 : 0;
             }
 
             // gładki szum wartości 0..1 (dno, przerwy w grzbietach fal)
@@ -199,20 +289,22 @@ Shader "Wyspa/Water"
                     if (i >= count) break;
                     float4 p = _Fish[i];
                     float4 q = _FishB[i];
-                    float a = 6.2831853 * frac(t / _FishPeriod) + q.x;
+                    int kind = (int)round(q.z);
+                    float a = 6.2831853 * frac(t / (_FishPeriod * max(0.1, q.w))) + q.x;
                     int fx = (int)round(p.x + p.z * sin(a));
                     int fy = (int)round(p.y + p.w * sin(2.0 * a));
                     bool right = cos(a) > 0.0;
-                    int lx = x - fx;
-                    int ly = y - fy;
-                    if (lx >= 0 && lx < 10 && ly >= 0 && ly < 4 && cls != 5)
+                    int tone = cls != 5 ? FishPixel(kind, x - fx, y - fy, right, t, (int)f, i) : 0;
+                    if (tone == 1)
+                        col = DarkerColor(baseCls);
+                    else if (tone == 2)
+                        col = baseCls <= 1 ? _ColB3.rgb : BaseColor(baseCls - 1);   // meduza: jaśniej od wody
+                    else if (tone == 3)
                     {
-                        int k = right ? lx : 9 - lx;
-                        int shape = (((int)f + i) % 4) < 2 ? 0 : 1;
-                        if (((FishRow(shape, ly) >> (uint)k) & 1u) != 0u)
-                            col = DarkerColor(baseCls);
+                        if (night) { emit = true; emitCol = _ColGlow.rgb; }
+                        else col = _ColB3.rgb;
                     }
-                    if (q.y > 0.5 && night && x == fx + (right ? 8 : 1) && y == fy + 2)
+                    if (kind == 0 && q.y > 0.5 && night && x == fx + (right ? 8 : 1) && y == fy + 2)
                         emit = true;
                 }
 

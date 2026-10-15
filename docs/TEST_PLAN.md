@@ -450,3 +450,10 @@ Najpierw Wyspa → 2. F1: waluty (drewno, kamień, monety).
 3. Kryształ: pulsuje, słój od razu większy o 20 (HUD: np. 60 → 80), Żar rośnie powoli także bez pracy i nocą.
    Rozbiórka kryształu zmniejsza słój z powrotem.
 4. Zapis i wczytanie: rezerwa i wyłączenie pieca zostają; Żar ponad 60 przy krysztale nie przepada po wczytaniu.
+
+## 36. Gatunki ryb pod wodą
+1. Wokół wyspy pływa do 16 ryb w różnych kształtach: zwykłe, ławica 4 rybek, wijący się węgorz, płaszczka machająca
+   skrzydłami, duży karp (rozwidlony ogon), jasna pulsująca meduza z czułkami, żabnica z przynętą.
+2. Duże gatunki (płaszczka, karp, meduza, żabnica) pływają dalej od brzegu i wolniej; żadna ryba nie wpływa na ląd.
+3. Nocą świecą: oczko co trzeciej zwykłej ryby i przynęta żabnicy.
+4. Pomost: klik w rybę łowi ją (żabnica nocą jak świecąca), w meduzę nic nie robi; złowiona ryba znika i wraca.
