@@ -143,7 +143,7 @@ Shader "Wyspa/Fog"
                 float4 h = WyspaHash(float2(cell.x + 17.0 + seed, cell.y + 5.0));
                 c = float2((cell.x + 0.25 + 0.5 * h.x) * FOG_CELL * scale + round(sin(T + h.z * 6.2831853) * 2.0),
                            (cell.y + 0.25 + 0.5 * h.y) * FOG_CELL * scale);
-                rc = (14.0 + 10.0 * h.z) * scale;
+                rc = (15.5 + 10.0 * h.z) * scale;   // trochę większe: mniej szczelin między chmurami
             }
 
             void FogCloudBumps(inout FogCloud o, float2 cell, float seed, float T)
@@ -238,16 +238,22 @@ Shader "Wyspa/Fog"
                     bestY = o.c.y;
                     has = true;
                 }
-                // zwykłe okno: dalej od wyspy morze całe w mgle; przezroczyste: ciemny pas pod chmurami od krawędzi wody
-                bool base = band ? (d > edge - 3.0 && d < edge + 9.0) : d > edge + 10.0;
+                // podstawa pod chmurami (ciemny cień w szczelinach między nimi). Zwykłe okno: zaczyna się dopiero za pierwszym
+                // rzędem chmur i wchodzi ditheringiem Bayera, więc przy brzegu między kłębami widać wodę, a nie płaską szarość.
+                // Przezroczyste: ciemny pas od krawędzi wody, z miękkimi brzegami po obu stronach.
+                float th = WyspaBayer((int)q.x, (int)q.y);
+                float baseA = band ? saturate((d - (edge - 3.0)) / 4.0) * saturate((edge + 12.0 - d) / 4.0)
+                                   : saturate((d - (edge + 16.0)) / 12.0);
+                bool base = th < baseA - 0.01;
 
                 float jit = WyspaHash(float2(floor(p.x / 2.0) + 3.0, q.y + 11.0)).x - 0.5;
+                // chmury: szum w parach pikseli; podstawa: gładkie przejście tonów ditheringiem (bez szumu)
                 float t = has ? TONE_MID + big * TONE_SPAN + rim * TONE_RIM - depth * TONE_DEPTH + jit * TONE_JIT
-                              : TONE_BASE - saturate((d - edge) / 30.0) + jit * TONE_JIT;
+                              : TONE_BASE - saturate((d - edge) / 30.0) + (th - 0.5);
                 int idx = (int)clamp(floor(t), 0.0, 5.0);
                 half3 col = idx == 0 ? _Tone0.rgb : idx == 1 ? _Tone1.rgb : idx == 2 ? _Tone2.rgb
                           : idx == 3 ? _Tone3.rgb : idx == 4 ? _Tone4.rgb : _Tone5.rgb;
-                half a = (has || base) ? 0.95 : 0.0;
+                half a = (has || base) ? 1.0 : 0.0;   // pełne krycie: spod chmur nic nie prześwituje
                 if (band && d >= edge + FOG_REACH) a = 0;   // twardy limit zasięgu: chmury kończą się przed krawędzią okna
                 if (!water) a = 0;
 

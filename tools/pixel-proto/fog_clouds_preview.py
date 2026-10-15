@@ -19,13 +19,16 @@ W, H = 240, 200                         # kadr w pikselach danych (16 px)
 TONES = np.array([[0x1b, 0x20, 0x29], [0x2a, 0x31, 0x3c], [0x3f, 0x47, 0x51], [0x5c, 0x60, 0x63],
                   [0x83, 0x80, 0x76], [0xa9, 0xa0, 0x88]], float)
 CELL = 30.0                             # komórka siatki chmur (piksele mgły)
-RC = (14.0, 10.0)                       # promień bryły chmury: min, rozrzut
+RC = (15.5, 10.0)                       # promień bryły chmury: min, rozrzut
 NB = 6                                  # guzki na obwodzie bryły
 RIM = 2.5                               # szerokość rąbka (piksele mgły)
 LIGHT = np.array([-0.55, -0.75, 0.45]); LIGHT /= np.linalg.norm(LIGHT)   # y w dół: z lewej-góry, trochę od widza
 BAND_SCALE = 0.8                        # przezroczyste okno: trochę mniejsze chmury (mieszczą się w 34 px)
 CAP = 2.0                               # łuki guzków w środku bryły (piksele mgły)
 TONE_MID, TONE_SPAN, RIM_TONE, CAP_TONE, DEPTH, DEPTH_TONES, JIT, BASE_TONE = 2.9, 2.6, 1.1, 0.6, 30.0, 1.5, 0.35, 1.2
+
+
+BAYER = np.array([0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5], float).reshape(4, 4) / 16.0
 
 
 def hash4(x, y):
@@ -118,12 +121,16 @@ def fog(mode, edge, T, dist=None, w=W, h=H, s=S):
             rim = np.where(inside, np.where(lit_edge, 1.0, np.where(dark_edge, -1.0, np.where(caps, CAP_TONE, 0.0))), rim)
             depth = np.where(inside, np.clip((dc - edge) / DEPTH, 0, 1), depth)
     has = best_y > -1e8
-    base = (d > edge + 10.0) if not band else ((d > edge - 3.0) & (d < edge + 9.0))
+    # podstawa pod chmurami: za pierwszym rzędem chmur, wchodzi ditheringiem Bayera (przy brzegu między kłębami woda)
+    th = BAYER[yy.astype(int) & 3, xx.astype(int) & 3]
+    base_a = (np.clip((d - (edge - 3.0)) / 4.0, 0, 1) * np.clip((edge + 12.0 - d) / 4.0, 0, 1) if band
+              else np.clip((d - (edge + 16.0)) / 12.0, 0, 1))
+    base = th < base_a - 0.01
     jit = hash4(np.floor(xx / 2.0) + 3.0, yy + 11.0)[..., 0] - 0.5
     t = TONE_MID + big * TONE_SPAN + rim * RIM_TONE - depth * DEPTH_TONES + jit * JIT
-    t = np.where(has, t, BASE_TONE - np.clip((d - edge) / 30.0, 0, 1) + jit * JIT)
+    t = np.where(has, t, BASE_TONE - np.clip((d - edge) / 30.0, 0, 1) + (th - 0.5))   # podstawa: gładko, ditheringiem
     idx = np.clip(np.floor(t), 0, 5).astype(int)
-    a = np.where(has | base, 0.95, 0.0)
+    a = np.where(has | base, 1.0, 0.0)                         # pełne krycie
     if band:
         a = np.where(d < edge + 34.0, a, 0.0)   # twardy limit zasięgu w przezroczystym oknie
     a = np.where(d > 0, a, 0.0)

@@ -897,6 +897,9 @@ Obrazki referencyjne (kopie): `docs/img/`
     które wszedł ląd, odpływają gdzie indziej. **Wysepki** (§13.10): 2-4 odcięte skrawki po 3-4 kafelki na świat,
     wyłaniają się z mgły, gdy ląd podejdzie na 4 kafelki; kafelek kupiony tuż obok (także po skosie) przyłącza wysepkę
     za darmo z dekoracjami i znaleziskami.
+106. **Mgła bardziej kryje** (zrzut gracza: „widać to, co jest pod chmurami, tę szarość”). Chmury kryją w pełni (było 95%),
+    są trochę większe (mniej szczelin), a płaska ciemna podstawa pod chmurami zaczyna się dopiero za pierwszym rzędem
+    kłębów i wchodzi ditheringiem (przy brzegu między kłębami widać wodę, nie szarą płaszczyznę); tony podstawy bez szumu.
 
 ---
 
