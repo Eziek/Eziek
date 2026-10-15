@@ -144,7 +144,7 @@ namespace Wyspa.Automation
 
         /// <summary>Doświadczenie do następnego poziomu (-1 = najwyższy).</summary>
         public int NextLevelXp => Level < LevelXp.Length ? LevelXp[Level] : -1;
-        float Speed => 3f * (1f + 0.08f * (Level - 1)) * Upgrades.UpgradeEffects.WispSpeed;
+        float Speed => 3f * (1f + 0.08f * (Level - 1)) * Upgrades.UpgradeEffects.WispSpeed * MoodFactor;
         int Carry => 3 + (Level - 1) / 2;
 
         public static bool AnyOfKind(WispKind k)
@@ -455,6 +455,7 @@ namespace Wyspa.Automation
             UpdateTool();
             UpdateHat();
             chatCooldown -= Time.unscaledDeltaTime;
+            UpdateMood();
             playCooldown -= Time.unscaledDeltaTime;
             greetCooldown -= Time.unscaledDeltaTime;
             if (flying)
@@ -580,10 +581,17 @@ namespace Wyspa.Automation
                 idling = false;
                 if (nest == null)
                     yield break;
+                if (mood < TiredAt && !Save.SaveSystem.InMenu)
+                {
+                    yield return Rest();   // zmęczony: odpoczynek w senniku albo przy gnieździe (WispPlay.cs)
+                    continue;
+                }
                 var job = Island.Instance != null && Island.Instance.Ready && !Save.SaveSystem.InMenu ? FindJob() : null;
                 if (job != null)
                 {
+                    working = true;
                     yield return job;
+                    working = false;
                     Release();
                     yield return HoverFor(Random.Range(0.5f, 1.2f));
                 }
@@ -633,16 +641,26 @@ namespace Wyspa.Automation
                 }
             }
             float r = Random.value;
+            // ognisko w pobliżu gniazda: wolne ogniki spotykają się przy nim zamiast nad pniem
+            var fire = nest != null ? WispBonfire.Near(nest.transform.position) : null;
             if (r < 0.35f)
             {
+                if (fire != null)
+                {
+                    var seat = fire.Center + new Vector3(Random.Range(-0.9f, 0.9f), Random.Range(-0.1f, 0.5f), 0f);
+                    yield return FlyTo(seat, 0.2f);
+                    if (body != null) body.flipX = fire.Center.x < seat.x;   // twarzą do ognia
+                    yield return HoverFor(Random.Range(3f, 7f));
+                    yield break;
+                }
                 yield return FlyTo(Home, 0.2f);
                 yield return HoverFor(Random.Range(2f, 5f));
                 yield break;
             }
             Vector3 target;
             if (r < 0.75f || Lamp.All.Count == 0)
-                target = (nest != null ? nest.transform.position : transform.position)
-                         + new Vector3(Random.Range(-1.6f, 1.6f), Random.Range(0.6f, 1.8f), 0f);
+                target = (fire != null ? fire.Center : nest != null ? nest.transform.position : transform.position)
+                         + new Vector3(Random.Range(-1.6f, 1.6f), Random.Range(0.6f, 1.8f) - (fire != null ? 0.6f : 0f), 0f);
             else
                 target = Lamp.All[Random.Range(0, Lamp.All.Count)].transform.position + new Vector3(Random.Range(-0.6f, 0.6f), 1.5f, 0f);
             // powolny lot z kółkiem wokół celu
@@ -731,6 +749,7 @@ namespace Wyspa.Automation
             }
             transform.position = at;
             LeaveChat();
+            AddXp(1);   // rozmowa zbliża (doświadczenie)
             yield return HoverFor(Random.Range(0.4f, 1f));
         }
 
@@ -773,6 +792,8 @@ namespace Wyspa.Automation
             chatHost = false;
             chatWith = null;
             chatReady = false;
+            StopResting();
+            working = false;
             EndPlay();   // przerwana zabawa (odpłynięcie, przeniesione gniazdo): towarzysze wracają do pracy
             chatCooldown = Random.Range(45f, 120f);
             if (bubble != null)

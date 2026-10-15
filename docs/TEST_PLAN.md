@@ -391,3 +391,17 @@ Najpierw Wyspa → 2 (nowe grafiki chowańców). F1: „Wszystkie chowańce”, 
    przybyłe z bonusem i więzią.
 9. Zapis i wczytanie: chowańce, więź, „nakarmiony dziś”, liczniki warunków zostają.
 
+## 32. Domki chowańców, ognisko, sennik, nastrój ogników
+Najpierw Wyspa → 2. F1: „Wszystkie chowańce”, „Ogniki zmęczone”, „Ogniki wypoczęte”.
+1. Sklep → Budowle: domki tylko przybyłych chowańców; po postawieniu „Już stoi”. Ognisko i sennik z ceną rosnącą.
+2. Kot z koszem: spaceruje w pobliżu kosza, w nocy (i czasem w dzień) śpi w koszu, rysuje się na koszu, nie za nim.
+   Lis-widmo: biega wokół budy, późną nocą zwija się przed wejściem. Sowa w dziupli w dzień, nietoperz pod budką,
+   kruk na grzędzie, ropucha na liściu w oczku, ćma przy latarence, ślimak na kamieniu.
+3. Bonus chowańca z domkiem wyższy (dymek i panel: np. ropucha 15% → 18%); panel domku „Tu mieszka: …”.
+4. Ognisko obok gniazda: wolne ogniki krążą i wiszą przy ogniu (twarzą do ognia), zabawy przy ognisku.
+5. „Ogniki zmęczone”: ogniki ziewają i lecą spać do sennika (najwyżej 3), reszta nad gniazdo; przygasają, „Z”,
+   po przebudzeniu gwiazdka. Panel gniazda: „odpoczywa”, potem „nastrój 85% (praca 100%)”.
+6. Nastrój poniżej 60: w panelu „praca 80%” itp., ognik lata wolniej.
+7. Bez ogniska i sennika przy zmęczonych ognikach: podpowiedź w panelu gniazda.
+8. Zapis i wczytanie: nastrój ogników zostaje, domki stoją, chowańce wracają do domków.
+

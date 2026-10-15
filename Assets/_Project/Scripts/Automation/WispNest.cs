@@ -16,6 +16,7 @@ namespace Wyspa.Automation
         public int xp;
         public int name;
         public string hat;   // czapka (Economy.Hats), null = bez
+        public float mood = -1f;   // nastrój 0-100 (-1: zapis sprzed nastroju)
     }
 
     /// <summary>
@@ -256,13 +257,20 @@ namespace Wyspa.Automation
             if (info.Tab(Loc.Get("ui.nest.tab_wisps")))
             {
                 info.lines.Add(Loc.Get("ui.nest.range", Wisp.Radius * 2 + 1));
+                float tired = 0f;
                 foreach (var w in wisps)
                 {
                     int next = w.NextLevelXp;
-                    info.lines.Add(next < 0
+                    string line = next < 0
                         ? Loc.Get("ui.nest.wisp_max", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level)
-                        : Loc.Get("ui.nest.wisp", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level, w.Xp, next));
+                        : Loc.Get("ui.nest.wisp", Loc.Get(w.NameKey), Loc.Get(Wisp.KindKey(w.Kind)), w.Level, w.Xp, next);
+                    // nastrój: ile procent pracy (poniżej 60 wolniej), śpiący odpoczywa
+                    line += "  " + (w.Resting ? Loc.Get("ui.nest.resting") : Loc.Get("ui.nest.mood", Mathf.RoundToInt(w.Mood), Mathf.RoundToInt(w.MoodFactor * 100f)));
+                    info.lines.Add(line);
+                    if (w.Mood < Wisp.Content) tired++;
                 }
+                if (tired > 0 && WispDreamHouse.All.Count == 0 && WispBonfire.All.Count == 0)
+                    info.lines.Add(Loc.Get("ui.nest.need_rest"));
                 if (wisps.Count == 0)
                     info.lines.Add(Loc.Get("ui.nest.empty"));
             }
@@ -322,7 +330,7 @@ namespace Wyspa.Automation
             var list = new List<WispSave>();
             foreach (var w in wisps)
                 if (w != null)
-                    list.Add(new WispSave { id = w.Id, kind = (int)w.Kind, xp = w.Xp, name = w.NameIndex, hat = w.Hat });
+                    list.Add(new WispSave { id = w.Id, kind = (int)w.Kind, xp = w.Xp, name = w.NameIndex, hat = w.Hat, mood = w.Mood });
             return list;
         }
 
@@ -347,6 +355,8 @@ namespace Wyspa.Automation
                     var w = AddWisp((WispKind)s.kind, s.id, s.xp, s.name, true);
                     if (w != null && !string.IsNullOrEmpty(s.hat))
                         w.SetHat(s.hat);
+                    if (w != null)
+                        w.SetMood(s.mood);
                 }
         }
     }

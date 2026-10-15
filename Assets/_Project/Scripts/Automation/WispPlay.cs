@@ -95,6 +95,107 @@ namespace Wyspa.Automation
             yield return Flight.Arc(transform, at, at + new Vector3(0f, 0.18f, 0f), Speed, 0f);
         }
 
+        // ------------------------------------------------------------ nastrój i odpoczynek (GDD §9 p. 103)
+
+        /// <summary>Poniżej tego nastroju ognik musi odpocząć; wstaje, gdy nastrój wróci do Rested.</summary>
+        public const float TiredAt = 20f, Rested = 85f, Content = 60f;
+        float mood = 80f;
+        bool working, resting;
+        float restRate;
+        WispDreamHouse restHouse;
+        float warmthCheck;
+        bool nearFire;
+        float baseGlowAlpha = -1f;
+
+        /// <summary>Nastrój 0-100: praca obniża, zabawa, rozmowy, ognisko i odpoczynek podnoszą.</summary>
+        public float Mood => mood;
+        public bool Resting => resting;
+
+        /// <summary>Tempo pracy: pełne od nastroju 60, niżej spada do 60%.</summary>
+        public float MoodFactor => mood >= Content ? 1f : 0.6f + 0.4f * Mathf.Clamp01(mood / Content);
+
+        public void SetMood(float value)
+        {
+            if (value >= 0f)
+                mood = Mathf.Clamp(value, 0f, 100f);
+        }
+
+        void UpdateMood()
+        {
+            if (Save.SaveSystem.InMenu)
+                return;
+            float dt = Time.unscaledDeltaTime;
+            warmthCheck -= dt;
+            if (warmthCheck <= 0f)
+            {
+                warmthCheck = 0.5f;
+                nearFire = false;
+                foreach (var b in WispBonfire.All)
+                    if (b != null && (b.Center - transform.position).sqrMagnitude < WispBonfire.Warmth * WispBonfire.Warmth)
+                        nearFire = true;
+            }
+            float d;
+            if (resting) d = restRate;
+            else if (chatWith != null || leader != null || playHost) d = nearFire ? 0.8f : 0.5f;   // wspólny czas
+            else if (working) d = -0.1f;                                                      // ok. 10 min pracy: 80 → 20
+            else d = nearFire ? 0.35f : 0.05f;                                                // wolny czas, przy ognisku więcej
+            mood = Mathf.Clamp(mood + d * dt, 0f, 100f);
+            // śpiący ognik przygasa
+            if (glow != null)
+            {
+                if (baseGlowAlpha < 0f) baseGlowAlpha = glow.color.a;
+                var c = glow.color;
+                c.a = Mathf.MoveTowards(c.a, resting ? baseGlowAlpha * 0.35f : baseGlowAlpha, dt);
+                glow.color = c;
+            }
+        }
+
+        /// <summary>Odpoczynek: do sennika (jeśli ma wolne miejsce), inaczej nad gniazdem; śpi z „Z”, aż nastrój wróci.</summary>
+        IEnumerator Rest()
+        {
+            resting = true;
+            restRate = 0f;
+            Release();
+            SayGlyph(RuneGlyphs.Dots);   // ziewnięcie
+            Vector3 spot;
+            restHouse = WispDreamHouse.Free(transform.position);
+            if (restHouse != null && restHouse.TryEnter(this, out spot))
+                restRate = 2f;           // sennik: ok. 30 s
+            else
+            {
+                restHouse = null;
+                spot = Home;
+                restRate = 0.6f;         // przy gnieździe: ok. 2 min
+            }
+            float rate = restRate;
+            restRate = 0f;               // w drodze jeszcze nie odpoczywa
+            yield return FlyTo(spot, 0.3f);
+            restRate = rate;
+            float z = 1f;
+            for (float t = 0f; mood < Rested && t < 300f; t += Time.unscaledDeltaTime)
+            {
+                transform.position = spot + new Vector3(0f, Mathf.Sin(Time.unscaledTime * 0.8f + seed) * 0.04f, 0f);   // spokojny oddech
+                z -= Time.unscaledDeltaTime;
+                if (z <= 0f)
+                {
+                    z = Random.Range(3.5f, 6f);
+                    SayGlyph(RuneGlyphs.Sleep);
+                }
+                yield return null;
+            }
+            StopResting();
+            SayGlyph(RuneGlyphs.Star);   // wypoczęty
+        }
+
+        void StopResting()
+        {
+            if (restHouse != null)
+                restHouse.Leave(this);
+            restHouse = null;
+            resting = false;
+            restRate = 0f;
+        }
+
         // ------------------------------------------------------------ chowańce
 
         float startleUntil;
@@ -256,6 +357,9 @@ namespace Wyspa.Automation
                 playmates.Add(friends[i]);
             }
             yield return game(playmates);
+            AddXp(1);   // wspólna zabawa zbliża: doświadczenie dla wszystkich
+            foreach (var p in playmates)
+                if (Still(p)) p.AddXp(1);
             EndPlay();
             yield return HoverFor(Random.Range(0.4f, 1f));
         }
@@ -341,7 +445,15 @@ namespace Wyspa.Automation
                 if (w != null) w.flying = false;
         }
 
-        Vector3 PlayCenter => (nest != null ? nest.transform.position : transform.position) + new Vector3(0f, 1.3f, 0f);
+        Vector3 PlayCenter
+        {
+            get
+            {
+                var fire = nest != null ? WispBonfire.Near(nest.transform.position) : null;   // przy ognisku, gdy jest
+                return fire != null ? fire.Center + new Vector3(0f, 0.3f, 0f)
+                                    : (nest != null ? nest.transform.position : transform.position) + new Vector3(0f, 1.3f, 0f);
+            }
+        }
 
         // ------------------------------------------------------------ berek
 

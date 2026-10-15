@@ -175,6 +175,17 @@ familiar.owl,Sowa,Owl,Eule,フクロウ,猫头鹰,chowaniec
 familiar.snail,Ślimak,Snail,Schnecke,カタツムリ,蜗牛,chowaniec
 familiar.fox,Lis-widmo,Ghost Fox,Geisterfuchs,幽霊狐,幽灵狐,chowaniec: widoczny tylko w nocy
 term.bond,Więź,Bond,Bindung,絆,羁绊,chowaniec: poziom 0-4 z karmienia
+term.mood,Nastrój,Mood,Stimmung,気分,心情,"ognik: 0-100, od 60 pracuje na 100%"
+bld.bonfire,Ognisko ogników,Wisp Bonfire,Irrlichtfeuer,鬼火のたき火,鬼火篝火,"spotkania ogników, nastrój"
+bld.dreamhouse,Sennik,Dream Hut,Traumhütte,夢見小屋,梦屋,odpoczynek ogników
+bld.home_cat,Kocie posłanie,Cat Basket,Katzenkorb,猫のかご,猫篮,domek chowańca
+bld.home_raven,Grzęda kruka,Raven Perch,Rabenstange,ワタリガラスの止まり木,渡鸦栖木,domek chowańca
+bld.home_toad,Oczko wodne,Garden Pond,Gartenteich,小さな池,小池塘,domek chowańca (ropucha)
+bld.home_bat,Budka nietoperzy,Bat Box,Fledermauskasten,コウモリの巣箱,蝙蝠箱,domek chowańca
+bld.home_moth,Latarenka ćmy,Moth Lantern,Mottenlaterne,蛾のランタン,蛾灯笼,domek chowańca
+bld.home_owl,Dziupla sowy,Owl Hollow,Eulenhöhle,フクロウのうろ,猫头鹰树洞,domek chowańca
+bld.home_snail,Mszysty kamień,Mossy Stone,Moosstein,苔むした石,苔石,domek chowańca (ślimak)
+bld.home_fox,Buda lisa,Fox Kennel,Fuchshütte,狐の小屋,狐狸小屋,domek chowańca (lis-widmo)
 bld.wisp_nest,Gniazdo ogników,Wisp Nest,Irrlichtnest,鬼火の巣,鬼火巢,rój ogników: dom dla 3 ogników
 wisp.kind.gardener,Ogrodnik,Gardener,Gärtner,庭師,园丁,zawód ognika: zbiera plony i owoce
 wisp.kind.sower,Siewca,Sower,Säer,種まき,播种者,zawód ognika: sieje

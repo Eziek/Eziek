@@ -660,6 +660,20 @@ namespace Wyspa.EditorTools
                 if (g != null)
                     art.hatGlows.Add(new NamedSprite { name = h.id, sprite = g });
             }
+            // domki chowańców, ognisko ogników i sennik (tools/pixel-proto/homes.py)
+            art.homes = new List<NamedSprite>();
+            art.homeGlows = new List<NamedSprite>();
+            foreach (var d in Wyspa.Familiars.FamiliarSystem.Defs)
+            {
+                art.homes.Add(new NamedSprite { name = d.id, sprite = Obj("home_" + d.id) });
+                var hg = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Objects/home_{d.id}_glow.png");
+                if (hg != null)
+                    art.homeGlows.Add(new NamedSprite { name = d.id, sprite = hg });
+            }
+            art.bonfire = new[] { Obj("bonfire_0"), Obj("bonfire_1"), Obj("bonfire_2") };
+            art.bonfireGlow = new[] { Obj("bonfire_0_glow"), Obj("bonfire_1_glow"), Obj("bonfire_2_glow") };
+            art.dreamHouse = Obj("dreamhouse");
+            art.dreamHouseGlow = Obj("dreamhouse_glow");
             // chowańce: klatki i piksele emisyjne w kolejności póz z FamiliarSystem.Defs (tools/pixel-proto/familiars.py)
             art.familiars = new List<FamiliarArt>();
             foreach (var d in Wyspa.Familiars.FamiliarSystem.Defs)

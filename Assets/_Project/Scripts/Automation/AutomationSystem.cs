@@ -17,9 +17,25 @@ namespace Wyspa.Automation
     public class AutomationSystem : MonoBehaviour
     {
         public const string Crate = "crate", Nest = "nest", Merchant = "merchant", Rune = "rune", Cauldron = "cauldron", Store = "store";
+        /// <summary>Budowle ogników (GDD §9 p. 103): ognisko (spotkania, nastrój) i sennik (odpoczynek).</summary>
+        public const string Bonfire = "bonfire", DreamHouse = "dreamhouse";
+        /// <summary>Domek chowańca: "home_" + id chowańca (jeden na chowańca, gdy już przyszedł).</summary>
+        public const string HomePrefix = "home_";
         /// <summary>Zapisy sprzed roju: ognik-ogrodnik na własnym kafelku (wczytanie zamienia go na gniazdo z ognikiem).</summary>
         public const string Wisp = "wisp";
-        public static readonly string[] Kinds = { Crate, Nest, Merchant, Rune, Cauldron, Store };
+        public static readonly string[] Kinds = BuildKinds();
+
+        static string[] BuildKinds()
+        {
+            var list = new List<string> { Crate, Nest, Merchant, Rune, Cauldron, Store, Bonfire, DreamHouse };
+            foreach (var d in Familiars.FamiliarSystem.Defs)
+                list.Add(HomePrefix + d.id);
+            return list.ToArray();
+        }
+
+        /// <summary>Id chowańca dla domku ("home_fox" → "fox"), null dla innych budowli.</summary>
+        public static string HomeOf(string kind) =>
+            kind != null && kind.StartsWith(HomePrefix) ? kind.Substring(HomePrefix.Length) : null;
 
         /// <summary>Rodzaje, których darmowa pierwsza sztuka już była (w zapisie, żeby po przeniesieniu/usunięciu nie wracała).</summary>
         readonly HashSet<string> granted = new HashSet<string>();
@@ -34,7 +50,9 @@ namespace Wyspa.Automation
                 case Rune: return "bld.seed_rune";
                 case Cauldron: return "bld.cauldron";
                 case Store: return "bld.storehouse";
-                default: return kind;
+                case Bonfire: return "bld.bonfire";
+                case DreamHouse: return "bld.dreamhouse";
+                default: return HomeOf(kind) != null ? "bld." + kind : kind;
             }
         }
 
@@ -49,7 +67,13 @@ namespace Wyspa.Automation
             }
         }
 
-        public static bool IsUnlocked(string kind, UpgradeState upgrades) => upgrades != null && upgrades.Has(RequiredUpgrade(kind));
+        public static bool IsUnlocked(string kind, UpgradeState upgrades)
+        {
+            var familiar = HomeOf(kind);
+            if (familiar != null)
+                return Familiars.FamiliarSystem.Has(familiar);   // domek dopiero, gdy chowaniec przyszedł
+            return upgrades != null && upgrades.Has(RequiredUpgrade(kind));
+        }
 
         /// <summary>Koszt kolejnej sztuki: monety rosną x1.6 z każdą posiadaną, materiał stały (GDD §11.3 E, do balansu).</summary>
         public static List<CurrencyAmount> Cost(string kind, int owned)
@@ -62,8 +86,12 @@ namespace Wyspa.Automation
                 case Merchant: coins = 500; extra = new CurrencyAmount(CurrencyType.Stone, 8); break;
                 case Cauldron: coins = 300; extra = new CurrencyAmount(CurrencyType.Stone, 6); break;
                 case Store: coins = 120; extra = new CurrencyAmount(CurrencyType.Wood, 10); break;
+                case Bonfire: coins = 200; extra = new CurrencyAmount(CurrencyType.Stone, 8); break;
+                case DreamHouse: coins = 250; extra = new CurrencyAmount(CurrencyType.Wood, 10); break;
                 default: coins = 150; extra = new CurrencyAmount(CurrencyType.Stone, 5); break;
             }
+            if (HomeOf(kind) != null)
+                return new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, 120), new CurrencyAmount(CurrencyType.Wood, 6) };   // jeden na chowańca
             coins = Mathf.RoundToInt(coins * Mathf.Pow(1.6f, Mathf.Max(0, owned)) / 5f) * 5;
             return new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, coins), extra };
         }

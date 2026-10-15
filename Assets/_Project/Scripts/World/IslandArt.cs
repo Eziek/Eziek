@@ -126,6 +126,24 @@ namespace Wyspa.World
         [Header("Chowańce: klatki w kolejności póz z Familiars.FamiliarSystem.Defs (familiar_<id>_<poza>.png)")]
         public List<FamiliarArt> familiars = new List<FamiliarArt>();
 
+        [Header("Domki chowańców (home_<id>), ognisko ogników (3 klatki) i sennik")]
+        public List<UI.NamedSprite> homes = new List<UI.NamedSprite>();
+        public List<UI.NamedSprite> homeGlows = new List<UI.NamedSprite>();
+        public Sprite[] bonfire;
+        public Sprite[] bonfireGlow;
+        public Sprite dreamHouse;
+        public Sprite dreamHouseGlow;
+
+        public Sprite Home(string familiar, bool glow)
+        {
+            var list = glow ? homeGlows : homes;
+            if (familiar == null || list == null)
+                return null;
+            foreach (var h in list)
+                if (h != null && h.name == familiar) return h.sprite;
+            return null;
+        }
+
         public FamiliarArt Familiar(string id)
         {
             if (familiars == null)

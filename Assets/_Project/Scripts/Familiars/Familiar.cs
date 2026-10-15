@@ -158,6 +158,9 @@ namespace Wyspa.Familiars
         {
             // kolejność rysowania z wysokości na ekranie (jak obiekty na kafelkach); w locie ponad wszystkim
             int order = flying ? 4600 : Mathf.RoundToInt(Island.WorldToPixel(transform.position).y) + 4;
+            var home = Home;
+            if (!flying && home != null && (transform.position - home.Spot).sqrMagnitude < 0.02f)
+                order = home.FrontOrder;   // w domku (kosz, dziupla, grzęda): przed budowlą
             body.sortingOrder = order;
             if (glow != null) glow.sortingOrder = order + 1;
             // podskok przy reakcji (tylko sprite)
@@ -320,6 +323,16 @@ namespace Wyspa.Familiars
             return Island.TileAnchor(t, Random.Range(9, 15), out _) + new Vector3(Random.Range(-5, 6) / Ppu, 0f, 0f);
         }
 
+        // ---- domek (FamiliarHome): chowaniec kręci się wokół niego, wraca i w nim śpi
+
+        FamiliarHome Home => FamiliarHome.Of(Kind);
+        bool HomeChance(float p) => Home != null && Random.value < p;
+        /// <summary>Spacer: zwykle w pobliżu domku, czasem dalej po wyspie.</summary>
+        Vector3 Wander() => HomeChance(0.6f) ? Home.Around() : RandomLand();
+        Vector3 PlotOrHome() => HomeChance(0.35f) ? Home.Spot : NearPlot();
+        Vector3 PerchOrHome(float below = 0f) => HomeChance(0.4f) ? Home.Spot : RandomPerch() - new Vector3(0f, below, 0f);
+        Vector3 SleepSpot() => Home != null ? Home.Spot : CozySpot();
+
         /// <summary>Miejsce obok grządki (ropucha, kruk, ślimak).</summary>
         static Vector3 NearPlot()
         {
@@ -435,7 +448,7 @@ namespace Wyspa.Familiars
                 if (Night && r < 0.45f)
                 {
                     // drzemka w ciepłym miejscu, oddech, „Z”, po przebudzeniu przeciąganie
-                    yield return Walk(CozySpot(), 1.1f, 8f, "walk0", "walk1", "walk2", "walk3");
+                    yield return Walk(SleepSpot(), 1.1f, 8f, "walk0", "walk1", "walk2", "walk3");
                     float nap = Random.Range(15f, 30f), z = 2f;
                     for (float t = 0f; t < nap; t += Time.unscaledDeltaTime)
                     {
@@ -470,7 +483,15 @@ namespace Wyspa.Familiars
                     yield return Idle(Random.Range(2.5f, 4.5f), t => Mathf.FloorToInt(t * 3f) % 2 == 0 ? "groom" : "sit0");   // mycie łapki
                     continue;
                 }
-                yield return Walk(RandomLand(), 1.1f, 8f, "walk0", "walk1", "walk2", "walk3");
+                if (HomeChance(0.25f))
+                {
+                    // w dzień też lubi swój kosz: siada i mruży oczy, czasem drzemie
+                    yield return Walk(Home.Spot, 1.1f, 8f, "walk0", "walk1", "walk2", "walk3");
+                    yield return Idle(Random.Range(6f, 14f), t => t > 5f ? (Mathf.FloorToInt(t * 0.7f) % 2 == 0 ? "sleep0" : "sleep1")
+                                                                         : Sitting(t, "sit0", "sit1", "blink"));
+                    continue;
+                }
+                yield return Walk(Wander(), 1.1f, 8f, "walk0", "walk1", "walk2", "walk3");
                 yield return Idle(Random.Range(4f, 12f), t => Sitting(t, "sit0", "sit1", "blink"));
             }
         }
@@ -546,7 +567,7 @@ namespace Wyspa.Familiars
                 float r = Random.value;
                 if (r < 0.5f)
                 {
-                    yield return Fly(RandomPerch(), 3f, 0.6f, 10f, "fly0", "fly1", "fly2", "fly1");
+                    yield return Fly(PerchOrHome(), 3f, 0.6f, 10f, "fly0", "fly1", "fly2", "fly1");
                     float stay = Random.Range(6f, 15f);
                     for (float t = 0f; t < stay; t += Time.unscaledDeltaTime)
                     {
@@ -602,7 +623,7 @@ namespace Wyspa.Familiars
             transform.position = RandomLand();
             while (true)
             {
-                var to = NearPlot();
+                var to = PlotOrHome();
                 int hops = 0;
                 while ((to - transform.position).sqrMagnitude > 0.05f && hops++ < 12)
                 {
@@ -682,7 +703,7 @@ namespace Wyspa.Familiars
                     continue;
                 }
                 // dzień: wisi pod koroną drzewa (albo pod tablicą / lampą) i lekko się kołysze
-                var spot = RandomPerch() - new Vector3(0f, 0.55f, 0f);
+                var spot = PerchOrHome(0.55f);
                 yield return Fly(spot, 2.5f, 0.3f, 12f, "fly0", "fly1", "fly2", "fly1");
                 while (!Night || Lamp.All.Count == 0)
                 {
@@ -719,7 +740,7 @@ namespace Wyspa.Familiars
                     }
                     continue;
                 }
-                yield return Fly(RandomPerch(), 1.5f, 0.3f, 14f, "fly0", "fly1", "fly2", "fly1");
+                yield return Fly(PerchOrHome(), 1.5f, 0.3f, 14f, "fly0", "fly1", "fly2", "fly1");
                 while (!Night)
                 {
                     Show("rest");
@@ -752,7 +773,7 @@ namespace Wyspa.Familiars
                     float t0 = Random.Range(20f, 40f);
                     yield return Idle(t0, t => (t + seed) % 6f < 5.4f ? "blink" : "sit");
                     if (Random.value < 0.3f)
-                        yield return Fly(RandomPerch(), 2f, 0.4f, 4f, "fly0", "fly1");
+                        yield return Fly(PerchOrHome(), 2f, 0.4f, 4f, "fly0", "fly1");
                     continue;
                 }
                 // noc: rozgląda się za ognikami, pohukuje, przelatuje bezszelestnie
@@ -789,7 +810,7 @@ namespace Wyspa.Familiars
                     }
                     flying = false;
                 }
-                yield return Fly(RandomPerch(), 2.2f, 0.4f, 4f, "fly0", "fly1");
+                yield return Fly(PerchOrHome(), 2.2f, 0.4f, 4f, "fly0", "fly1");
             }
         }
 
@@ -800,7 +821,7 @@ namespace Wyspa.Familiars
             transform.position = RandomLand();
             while (true)
             {
-                var to = NearPlot();
+                var to = PlotOrHome();
                 var from = transform.position;
                 Face(to.x - from.x);
                 float trail = 0f;
@@ -843,7 +864,7 @@ namespace Wyspa.Familiars
                 float r = Random.value;
                 if (clock != null && clock.IsNight && clock.SecondsIntoNight > 600f && r < 0.4f)
                 {
-                    yield return Walk(CozySpot(), 1.6f, 9f, "walk0", "walk1", "walk2", "walk3");
+                    yield return Walk(SleepSpot(), 1.6f, 9f, "walk0", "walk1", "walk2", "walk3");
                     yield return Idle(Random.Range(15f, 25f), _ => "curl");
                     continue;
                 }
@@ -858,7 +879,7 @@ namespace Wyspa.Familiars
                     yield return Idle(Random.Range(6f, 12f), t => Sitting(t, "sit0", "sit1", null));
                     continue;
                 }
-                yield return Walk(RandomLand(), 1.8f, 10f, "walk0", "walk1", "walk2", "walk3");
+                yield return Walk(Wander(), 1.8f, 10f, "walk0", "walk1", "walk2", "walk3");
                 yield return Idle(Random.Range(3f, 6f), t => Sitting(t, "sit0", "sit1", null));
             }
         }

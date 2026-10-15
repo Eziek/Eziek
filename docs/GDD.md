@@ -335,6 +335,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] **Chowańce od nowa + 4 nowe** (prośba gracza: „biednie wyglądają”; §9 p. 102): nowa grafika i zachowania, karmienie
   i więź (0-4), prezenty, sekcja w Bestiariuszu z podpowiedziami. Nowe: ćma księżycowa, sowa, ślimak, lis-widmo.
   Do balansu: koszty przysmaków i siła bonusów.
+- [x] **Domki chowańców, ognisko i sennik, nastrój ogników** (prośba gracza; §9 p. 103). Gracz mówił o „reputacji”
+  ogników: zrobione jako **nastrój** (0-100, od 60 praca na 100%). Do balansu: tempo spadku przy pracy i odpoczynku.
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
   zegara). Księżyc: 8 nocy na cykl, pełnia jedną noc (rytuał „Księżycowa rosa”: dwie). Kupiec-widmo w co trzecią noc (34%),
   w pierwszej połowie nocy, zostaje 10 min. Rośliny i drzewa rosną **x3 szybciej** (marchew 3:20, dynia 8:20); rośliny nocy
@@ -462,6 +464,8 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `gift_icons.py` + `export_unity_gifts.py` | ikony 37 Darów Mgły (12 px) → `UI/Icons/icon_gift_<id>.png`, arkusz `docs/img/ikony_darow.png` |
 | `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze; argument = co ile minut gracz zagląda (domyślnie 20) |
 | `shadow_preview.py` | podgląd słońca i cieni (wzory jak w `SunShadows.cs` i `DayNightLighting.cs`) → `docs/img/cienie_pory_dnia.png` |
+| `familiars.py` + `export_unity_familiars.py` | chowańce (8 rodzajów, pozy) → `Critters/familiar_<id>_<poza>.png`, podgląd `docs/img/chowance.png` |
+| `homes.py` + `export_unity_homes.py` | domki chowańców, ognisko ogników (3 klatki), sennik → `Objects/`, podgląd `docs/img/domki.png` |
 | `export_unity_stages.py` | dodatkowe fazy roślin z gotowych PNG: kiełek (`crop_<id>_shoot`) i niedojrzała (`crop_<id>_unripe`); po `pad_sway.py` |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
 
@@ -854,6 +858,21 @@ Obrazki referencyjne (kopie): `docs/img/`
     odwiedzają chowańca i go „głaszczą”. Chowańce mają cień (plamka). Bestiariusz: sekcja „Chowańce” (sylwetka i „???”
     z podpowiedzią i postępem warunku, po przybyciu bonus i więź). Klik w chowańca ma pierwszeństwo przed grządką
     pod nim (`IPriorityClick`).
+103. **Domki chowańców, budowle ogników i nastrój** (prośba gracza: buda dla lisa, wokół której chodzi i w której śpi,
+    tak dla każdego chowańca; budowle, przy których ogniki się integrują; dobra „reputacja” = praca na 100%, czasem
+    odpoczynek). **Domki** (Sklep → Budowle, gdy chowaniec już przyszedł, jeden na chowańca, 120 monet + 6 drewna):
+    kocie posłanie (kosz z poduszką), grzęda kruka, oczko wodne (ropucha siada na liściu grzybieni), budka nietoperzy,
+    latarenka ćmy (świeci), dziupla sowy, mszysty kamień ślimaka (krople rosy świecą), buda lisa-widma (w wejściu
+    widmowy blask). Chowaniec spaceruje głównie wokół domku, siada na nim i w nim śpi (kot w dzień też drzemie w koszu,
+    lis zwija się przed budą, sowa w dziupli, nietoperz wisi pod budką), rysuje się wtedy przed budowlą. Domek liczy się
+    do bonusu jak jeden poziom więzi więcej. **Ognisko ogników** (200 monet + 8 kamienia, turkusowe płomienie, 3 klatki):
+    wolne ogniki z gniazd w promieniu 6 jednostek siedzą przy nim zamiast nad pniem, zabawy odbywają się przy ogniu,
+    a nastrój rośnie tam szybciej. **Sennik** (250 monet + 10 drewna, okrągła chatka z księżycem na dachu, 3 miejsca):
+    zmęczone ogniki śpią tu z „Z” i wracają do sił ponad 3 razy szybciej niż przy gnieździe. **Nastrój ognika** (0-100,
+    w zapisie): praca obniża (ok. 10 min pracy bez przerwy: 80 → 20), wolny czas podnosi powoli, przy ognisku szybciej,
+    rozmowy i zabawy najszybciej; poniżej 60 ognik pracuje wolniej (do 60% tempa), poniżej 20 musi odpocząć do 85
+    (przygasa, „Z”, potem gwiazdka). Rozmowy i zabawy dają też po 1 punkcie doświadczenia (integracja). Panel gniazda:
+    nastrój i tempo pracy przy każdym ogniku, „odpoczywa”, podpowiedź o ognisku i senniku.
 
 ---
 

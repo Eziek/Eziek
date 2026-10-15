@@ -61,6 +61,36 @@
       "y": 0.0625
     },
     {
+      "name": "bonfire_0",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "bonfire_0_glow",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "bonfire_1",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "bonfire_1_glow",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "bonfire_2",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "bonfire_2_glow",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
       "name": "broken_pillar",
       "x": 0.53571,
       "y": 0.03571
@@ -972,6 +1002,16 @@
       "y": 0.02381
     },
     {
+      "name": "dreamhouse",
+      "x": 0.52273,
+      "y": 0.0
+    },
+    {
+      "name": "dreamhouse_glow",
+      "x": 0.52273,
+      "y": 0.0
+    },
+    {
       "name": "essence_jar_l",
       "x": 0.52778,
       "y": 0.0
@@ -1774,6 +1814,61 @@
     {
       "name": "hat_witch",
       "x": 0.5,
+      "y": 0.0
+    },
+    {
+      "name": "home_bat",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "home_cat",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "home_fox",
+      "x": 0.52273,
+      "y": 0.0
+    },
+    {
+      "name": "home_fox_glow",
+      "x": 0.52273,
+      "y": 0.0
+    },
+    {
+      "name": "home_moth",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "home_moth_glow",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "home_owl",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "home_raven",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "home_snail",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "home_snail_glow",
+      "x": 0.525,
+      "y": 0.0
+    },
+    {
+      "name": "home_toad",
+      "x": 0.52083,
       "y": 0.0
     },
     {

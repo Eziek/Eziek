@@ -797,11 +797,18 @@ namespace Wyspa.UI
             foreach (var kind in Automation.AutomationSystem.Kinds)
             {
                 string k = kind;
+                string familiar = Automation.AutomationSystem.HomeOf(k);
+                if (familiar != null && !Familiars.FamiliarSystem.Has(familiar))
+                    continue;   // domek pokazuje się, gdy chowaniec już przyszedł
                 Sprite pic = null;
                 int area = 0;
-                if (art != null)
+                if (art != null && familiar != null)
+                    pic = art.Home(familiar, false);
+                else if (art != null)
                     switch (k)
                     {
+                        case Automation.AutomationSystem.Bonfire: pic = art.bonfire != null && art.bonfire.Length > 0 ? art.bonfire[0] : null; break;
+                        case Automation.AutomationSystem.DreamHouse: pic = art.dreamHouse; break;
                         case Automation.AutomationSystem.Crate: pic = art.crateFill != null && art.crateFill.Length > 2 ? art.crateFill[2] : null; break;
                         case Automation.AutomationSystem.Nest: pic = art.wispNest != null && art.wispNest.Length > 0 ? art.wispNest[0] : null; area = Automation.Wisp.Radius; break;
                         case Automation.AutomationSystem.Merchant: pic = art.merchantFrames != null && art.merchantFrames.Length > 0 ? art.merchantFrames[0] : null; break;
@@ -813,8 +820,12 @@ namespace Wyspa.UI
                 string nameKey = Automation.AutomationSystem.NameKey(k);
                 seaItems.Add(new ShopItem
                 {
-                    nameKey = nameKey, descKey = "ui.shop." + k + ".desc", sprite = pic, cost = cost,
-                    blockedText = () => Automation.AutomationSystem.IsUnlocked(k, game.Upgrades) ? null
+                    nameKey = nameKey, sprite = pic, cost = cost,
+                    descKey = familiar == null ? "ui.shop." + k + ".desc" : null,
+                    desc = familiar != null ? Loc.Get("ui.shop.home.desc", Loc.Get("familiar." + familiar)) : null,
+                    blockedText = () => familiar != null
+                        ? (island.CountBuilding(k) > 0 ? Loc.Get("ui.shop.home_built") : null)   // jeden domek na chowańca
+                        : Automation.AutomationSystem.IsUnlocked(k, game.Upgrades) ? null
                         : Loc.Get("ui.shop.needs_upgrade", Loc.Get("upgrade." + Automation.AutomationSystem.RequiredUpgrade(k) + ".name")),
                     note = () => Loc.Get("ui.shop.owned", island.CountBuilding(k)),
                     buy = i => StartBuilding(i, k, nameKey, pic, cost, area),

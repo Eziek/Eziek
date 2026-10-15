@@ -96,7 +96,8 @@ namespace Wyspa.Familiars
             return level;
         }
 
-        static float Level(string kind) => Has(kind) ? Bond(kind) : 0f;
+        /// <summary>Siła bonusu: poziom więzi, a domek dokłada jeszcze jeden.</summary>
+        static float Level(string kind) => Has(kind) ? Bond(kind) + (FamiliarHome.Of(kind) != null ? 1 : 0) : 0f;
 
         // ---- bonusy dla innych systemów (każdy poziom więzi wzmacnia bonus)
         public static float MutationMultiplier => Has(Cat) ? 2f + 0.25f * Level(Cat) : 1f;
@@ -111,7 +112,7 @@ namespace Wyspa.Familiars
         /// <summary>Bonus w procentach do tekstu (familiar.*.bonus, {0}).</summary>
         public static int BonusPercent(string kind)
         {
-            float level = Bond(kind);
+            float level = Bond(kind) + (FamiliarHome.Of(kind) != null ? 1 : 0);
             switch (kind)
             {
                 case Cat: return Mathf.RoundToInt((1f + 0.25f * level) * 100f);

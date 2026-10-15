@@ -1506,6 +1506,19 @@ namespace Wyspa.World
                     body.sprite = art.storehouse;
                     go.AddComponent<Automation.Storehouse>();
                     break;
+                case Automation.AutomationSystem.Bonfire:
+                    body.sprite = First(art.bonfire);
+                    var fire = Glow(First(art.bonfireGlow));
+                    go.AddComponent<Automation.WispBonfire>().Setup(body, fire, art.bonfire, art.bonfireGlow);
+                    NightGlow.Add(go, new Vector2(0f, 0.5f), new Color(0.37f, 0.81f, 0.72f), 1.8f, 0.6f);
+                    break;
+                case Automation.AutomationSystem.DreamHouse:
+                    body.sprite = art.dreamHouse;
+                    if (art.dreamHouseGlow != null)
+                        Glow(art.dreamHouseGlow);
+                    go.AddComponent<Automation.WispDreamHouse>();
+                    NightGlow.Add(go, new Vector2(0f, 1.1f), new Color(1f, 0.85f, 0.55f), 1.2f, 0.45f);
+                    break;
                 case Automation.AutomationSystem.Rune:
                     body.sprite = art.rune;
                     if (art.runeGlow != null)
@@ -1514,8 +1527,18 @@ namespace Wyspa.World
                     NightGlow.Add(go, new Vector2(0f, 0.6f), new Color(0.37f, 0.81f, 0.72f), 1.1f, 0.45f);
                     break;
                 default:
-                    Destroy(go);
-                    return null;
+                    var familiar = Automation.AutomationSystem.HomeOf(kind);
+                    if (familiar == null || Familiars.FamiliarSystem.Def(familiar) == null)
+                    {
+                        Destroy(go);
+                        return null;
+                    }
+                    body.sprite = art.Home(familiar, false);
+                    var homeGlow = art.Home(familiar, true);
+                    if (homeGlow != null)
+                        Glow(homeGlow);
+                    go.AddComponent<Familiars.FamiliarHome>().Setup(familiar);
+                    break;
             }
             AddTileCollider(go);
             var obj = go.AddComponent<TileObject>();
