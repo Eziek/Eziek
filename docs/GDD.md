@@ -931,6 +931,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     (do 6 polan, w zapisie). Wolny, wypoczęty ognik bierze 2 polana ze składu przy gnieździe (tylko ponad rezerwę), leci do
     pieca i wrzuca je do ognia (iskry); drwal po ścięciu drzewa niesie drewno najpierw do pieca, który czeka na opał, a
     nadmiar do składu. Jeden ognik naraz na piec. Bez żadnego ognika na wyspie piec dokłada sobie sam ze składu.
+111. **Poprawki po zrzucie sklepu.** Piec i kryształ Żaru miały w sklepie ikonkę runy dziczy (i jej zasięg przy stawianiu):
+    mają własne obrazki. Czytelna czcionka (Fusion Pixel 8px latin) w oryginale nie ma ogonków w ą ę Ą Ę ani znaków nad
+    wielkimi literami (Ż, Ó Ć Ś Ń Ź, Ä Ö Ü), przez co w grze było „Zaru”, „wrzucaja”: `tools/fonts/patch_fusion_pl.py`
+    dorysowuje brakujące piksele w pliku czcionki (SIL OFL 1.1 pozwala na zmiany; czcionka nie ma zastrzeżonej nazwy).
 
 ---
 
