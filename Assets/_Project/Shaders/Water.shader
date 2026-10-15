@@ -250,6 +250,7 @@ Shader "Wyspa/Water"
                 bool night = _Night > 0.5;
                 bool emit = false;
                 half3 emitCol = _ColGlow.rgb;
+                half tideMix = 0;   // świecący przypływ: ile turkusu domieszać do oświetlonej wody (delikatnie, bez pełnej emisji)
 
                 // --- głębia z ditheringiem w 32 px ---
                 int band;
@@ -297,10 +298,7 @@ Shader "Wyspa/Water"
                     bool right = cos(a) > 0.0;
                     int tone = cls != 5 ? FishPixel(kind, x - fx, y - fy, right, t, (int)f, i) : 0;
                     if (tone != 0 && night && _WyspaBiolum > 0.0)
-                    {
-                        emit = true;   // świecący przypływ: ryby płyną jak turkusowe światełka
-                        emitCol = _ColGlow.rgb;
-                    }
+                        tideMix = max(tideMix, 0.55);   // świecący przypływ: ryby płyną jak przygaszone turkusowe światełka
                     else if (tone == 1)
                         col = DarkerColor(baseCls);
                     else if (tone == 2)
@@ -443,13 +441,16 @@ Shader "Wyspa/Water"
                 bool glowTide = night && _WyspaBiolum > 0.0;
                 if (glowTide && water && d < 18.0)
                 {
+                    // rzadkie plamy (szum), pojedyncze iskry tuż przy brzegu i grzbiety fal; mocniej bliżej brzegu
                     float n = WNoise(float2(X, Y) / 5.0 + float2(t * 0.35, t * 0.2));
                     float spark = WyspaHash(float2(X, Y) + floor(t * 6.0)).x;
-                    if (n > 0.74 - 0.06 * _WyspaBiolum * (1.0 - d / 18.0) || (d < 6.0 && spark > 0.94) || col.r == _ColFo.r)
-                    {
-                        emit = true;
-                        emitCol = _ColGlow.rgb;
-                    }
+                    half near = (half)(1.0 - d / 18.0);
+                    if (n > 0.86 - 0.04 * _WyspaBiolum * near)
+                        tideMix = max(tideMix, 0.22 + 0.18 * near);
+                    if (d < 6.0 && spark > 0.985)
+                        tideMix = max(tideMix, 0.5);
+                    if (col.r == _ColFo.r)
+                        tideMix = max(tideMix, 0.25 * near);
                 }
 
                 // --- cień klifu i pulsująca piana przy brzegu ---
@@ -457,8 +458,11 @@ Shader "Wyspa/Water"
                 if (cls == 5) col = _ColB0.rgb;
                 if (cls == 6) col = pulse ? _ColFo.rgb : _ColB3.rgb;
                 if (cls == 7) col = pulse ? _ColB2.rgb : _ColFo.rgb;
-                if (cls >= 5) emit = glowTide && cls >= 6 && pulse;   // piana świeci w rytm przyboju
-                if (cls >= 6 && emit) emitCol = _ColGlow.rgb;
+                if (cls >= 5)
+                {
+                    emit = false;
+                    tideMix = glowTide && cls >= 6 && pulse ? 0.3 : 0;   // piana lekko jarzy się w rytm przyboju
+                }
 
                 half alpha = cls > 0 ? input.color.a : 0;
                 // przezroczyste okno: zostaje tylko pas wody przy brzegu, krawędź w szachownicę pikseli
@@ -468,6 +472,8 @@ Shader "Wyspa/Water"
                         alpha = 0;
                 }
                 half4 lit = WyspaLight(col, alpha, input.uv, input.lightingUV);
+                if (!emit && tideMix > 0)
+                    lit.rgb = lerp(lit.rgb, _ColGlow.rgb, tideMix * saturate(_WyspaBiolum));
 
                 // --- odbicia światła: iskierki tam, gdzie pada światło (komórki 3x1 px w 32 px) ---
                 if (!emit && water && d > 3.0 && alpha > 0)

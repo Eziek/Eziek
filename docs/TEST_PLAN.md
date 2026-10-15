@@ -485,13 +485,13 @@ Najpierw Wyspa → 2 (materiał `WaterReflection`).
    zmienia się w strzałki w 4 strony; nad Księgą i paskiem zwykły.
 3. Szybki ruch nad wyspą zostawia kilka iskierek.
 4. Przesuwany kursor odgina rośliny i korony drzew, które powoli wracają.
-5. Klik w wodę: dwa kręgi, bąbel, pobliskie ryby uciekają, lilie odpływają. Klik w drzewo/krzak: liście i ptaki odlatują.
+5. Klik w wodę: jeden krąg, który płynnie rośnie, cienieje i gaśnie (bez migania), bąbel, pobliskie ryby uciekają, lilie odpływają. Klik w drzewo/krzak: liście i ptaki odlatują.
    Klik w zapaloną lampę nocą: ćmy. Kliki dalej robią swoje (np. pomost łowi).
 6. Kursor nad ptakiem albo rybą: dymek z nazwą gatunku; pierwszy raz toast „Nowe w bestiariuszu: …”.
 
 ## 40. Rzadkie noce i „Widziane”
 F1: „Rzadka noc” uruchamia kolejne zjawisko (po kolei, każde do świtu albo do następnego kliknięcia).
-1. Świecąca toń: brzeg i grzbiety fal skrzą się turkusem, ryby świecą.
+1. Świecąca toń: delikatne turkusowe plamy i iskry przy brzegu, lekko jarząca się piana i ryby; woda nie jest zalana turkusem.
 2. Deszcz gwiazd: co chwilę przez niebo przelatuje spadająca gwiazda (nad mgłą).
 3. Zorza: falujące kurtyny u góry kadru, pikselowe, przy przesuwaniu widoku zostają u góry.
 4. Korowód ogników: 5-7 bladych ogników sunie gęsiego po wodzie pod wyspą, wyłaniając się i znikając przy krawędziach.

@@ -13,7 +13,7 @@ namespace Wyspa.Visual
     /// <summary>
     /// Zabawa kursorem (GDD §9 p. 115), same efekty, bez wpływu na grę:
     /// - kursor przechodzący przez rośliny i drzewa odgina je (shader kołysania, globalnie _WyspaCursor),
-    /// - klik w wodę: dwa rozchodzące się kręgi, ryby w pobliżu dają nura, lilie i liście odpływają,
+    /// - klik w wodę: rozchodzący się krąg (płynnie rośnie, cienieje i gaśnie), ryby w pobliżu dają nura, lilie odpływają,
     /// - klik w drzewo albo krzak: sypią się liście, siedzące obok ptaki odlatują,
     /// - klik w zapaloną lampę nocą: z kloszy wylatuje kilka ciem.
     /// </summary>
@@ -158,10 +158,7 @@ namespace Wyspa.Visual
                 return;
             lastWaterClick = Time.unscaledTime;
             if (ripples < MaxRipples)
-            {
-                StartCoroutine(Ripple(world, 0f));
-                StartCoroutine(Ripple(world, 0.28f));
-            }
+                StartCoroutine(Ripple(world));
             var water = FindAnyObjectByType<WaterAnimator>();
             if (water != null)
                 water.Scare(world, 2.2f);
@@ -198,47 +195,54 @@ namespace Wyspa.Visual
 
         // ------------------------------------------------------------ kręgi na wodzie
 
-        /// <summary>Krąg (spłaszczona elipsa w siatce 32 px) o promieniu r pikseli wody, z pamięci podręcznej.</summary>
-        Sprite Ring(int r)
+        /// <summary>
+        /// Krąg (spłaszczona elipsa 2:1 w siatce 32 px) o promieniu r pikseli wody i grubości 1 albo 2 px, z pamięci
+        /// podręcznej. Piksel należy do kręgu, gdy leży w elipsie zewnętrznej, a poza wewnętrzną (mniejszą o grubość).
+        /// </summary>
+        Sprite Ring(int r, int thick)
         {
-            while (rings.Count <= r)
+            int key = r * 2 + (thick > 1 ? 1 : 0);
+            while (rings.Count <= key)
                 rings.Add(null);
-            if (rings[r] != null)
-                return rings[r];
+            if (rings[key] != null)
+                return rings[key];
             int w = 2 * r + 3, h = r + 3;
             var tex = new Texture2D(w, h, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
             var px = new Color32[w * h];
-            float rx = r, ry = r * 0.5f;
+            float rx = r + 0.5f, ry = r * 0.5f + 0.5f;
+            float ix = rx - thick, iy = ry - 1f;
             for (int y = 0; y < h; y++)
                 for (int x = 0; x < w; x++)
                 {
-                    float dx = (x - (w - 1) / 2f) / Mathf.Max(0.5f, rx), dy = (y - (h - 1) / 2f) / Mathf.Max(0.5f, ry);
-                    float d = Mathf.Sqrt(dx * dx + dy * dy);
-                    bool on = Mathf.Abs(d - 1f) < 0.5f / Mathf.Max(1f, ry) + 0.12f;
-                    px[y * w + x] = on ? (Color32)RingColor : new Color32(0, 0, 0, 0);
+                    float cx = x - (w - 1) / 2f, cy = y - (h - 1) / 2f;
+                    bool outer = Ellipse(cx, cy, rx, ry) <= 1f;
+                    bool inner = ix > 0.3f && iy > 0.3f && Ellipse(cx, cy, ix, iy) < 1f;
+                    px[y * w + x] = outer && !inner ? (Color32)RingColor : new Color32(0, 0, 0, 0);
                 }
             tex.SetPixels32(px);
             tex.Apply(false);
-            rings[r] = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), RipplePpu);
-            return rings[r];
+            rings[key] = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), RipplePpu);
+            return rings[key];
         }
 
-        IEnumerator Ripple(Vector2 at, float delay)
+        static float Ellipse(float x, float y, float rx, float ry) => (x * x) / (rx * rx) + (y * y) / (ry * ry);
+
+        /// <summary>Krąg rośnie coraz wolniej, w połowie cienieje do 1 px i płynnie gaśnie (bez migania).</summary>
+        IEnumerator Ripple(Vector2 at)
         {
             ripples++;
-            if (delay > 0f)
-                yield return new WaitForSecondsRealtime(delay);
             var go = new GameObject("Ripple");
             go.transform.SetParent(transform, false);
             go.transform.position = new Vector3(Mathf.Round(at.x * RipplePpu) / RipplePpu, Mathf.Round(at.y * RipplePpu) / RipplePpu, 0f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sortingOrder = RippleOrder;
-            const float life = 1.1f;
+            const float life = 1.5f;
             for (float t = 0f; t < life; t += Time.unscaledDeltaTime)
             {
                 float u = t / life;
-                sr.sprite = Ring(2 + Mathf.RoundToInt(u * 9f));
-                sr.color = new Color(1f, 1f, 1f, u < 0.7f ? 1f : (Mathf.FloorToInt(t * 12f) % 2 == 0 ? 0.6f : 0f));   // na końcu miga
+                float grow = 1f - (1f - u) * (1f - u);                  // szybki start, łagodne zwolnienie
+                sr.sprite = Ring(2 + Mathf.RoundToInt(grow * 11f), u < 0.4f ? 2 : 1);
+                sr.color = new Color(1f, 1f, 1f, 0.9f * Mathf.Pow(1f - u, 1.4f));
                 yield return null;
             }
             Destroy(go);
