@@ -62,9 +62,12 @@ namespace Wyspa.World
             if (pips == null)
             {
                 var go = new GameObject("ChopPips");
-                go.transform.SetParent(transform.parent, false);   // nie w obiekcie: nie trzęsie się i nie skaluje z nim
+                // w korzeniu sceny: nie trzęsie się ani nie skaluje z obiektem i nie trafia do odbić w wodzie (skan dzieci DecoRoot)
                 pips = go.AddComponent<SpriteRenderer>();
                 pips.sortingOrder = PipOrder;
+                var art = Island.Instance != null ? Island.Instance.Art : null;
+                if (art != null && art.glow != null)
+                    pips.sharedMaterial = art.glow;   // bez oświetlenia: czytelne także nocą
             }
             pips.sprite = Pips(hits, need);
             pips.enabled = true;

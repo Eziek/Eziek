@@ -17,6 +17,9 @@ namespace Wyspa.UI
         string shown;
         const float MaxWidth = 220f;
 
+        /// <summary>Kto teraz pokazuje dymek (null = schowany).</summary>
+        public object Owner => gameObject.activeSelf ? owner : null;
+
         public static TooltipView Create(RectTransform canvasRoot)
         {
             var img = Ui.Img(canvasRoot, "Tooltip", Ui.Theme.tooltip, true);

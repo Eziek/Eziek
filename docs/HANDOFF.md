@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-121), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-122), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -53,6 +53,8 @@ Historia decyzji jest w GDD §9 (punkty 1-121), a lista testów w `docs/TEST_PLA
   `_WyspaCursor` w `WyspaSway.hlsl`, zdarzenie `ClickRouter.Clicked`. Nie testowane w Unity.
 - **Woda: księżycowa ścieżka, deszcz, płycizny, wiatr** (GDD §9 p. 119, TEST_PLAN 41): `Water.shader`,
   `WaterAnimator.UpdateSky`, podgląd `tools/pixel-proto/water_effects_preview.py`. Nie testowane w Unity.
+- **Przegląd kodu p. 114-121** (GDD §9 p. 122): poprawki bez zmian w rozgrywce. Seria p. 114-121 czeka na test gracza
+  w Unity (TEST_PLAN 38-43), najpierw Wyspa → 2.
 - **Ścinanie seriami kliknięć** (GDD §9 p. 121, TEST_PLAN 43): `World/ChopProgress.cs`, `Decoration.OnClick`,
   `FruitTree.TryClick`; szczegóły drzewa owocowego w pierścieniu PPM. Panel „Usuń” dekoracji nie otwiera się już z kliku.
 - **Horyzont, cienie chmur, poranna mgiełka** (GDD §9 p. 120, TEST_PLAN 42): `Visual/HorizonSights.cs`,

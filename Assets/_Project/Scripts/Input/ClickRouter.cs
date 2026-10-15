@@ -37,6 +37,21 @@ namespace Wyspa.Input
         /// <summary>Collider pod punktem: zwykłe obiekty mają pierwszeństwo przed obszarami o niskim priorytecie (łowisko).</summary>
         public static Collider2D Pick(Vector2 world)
         {
+            // kursor, dymek i okno pytają co klatkę o ten sam punkt: jedno zapytanie fizyki (i jedna tablica) na klatkę
+            if (cacheFrame == Time.frameCount && cachePoint == world)
+                return cacheHit;
+            cacheFrame = Time.frameCount;
+            cachePoint = world;
+            cacheHit = PickNow(world);
+            return cacheHit;
+        }
+
+        static int cacheFrame = -1;
+        static Vector2 cachePoint;
+        static Collider2D cacheHit;
+
+        static Collider2D PickNow(Vector2 world)
+        {
             var hits = Physics2D.OverlapPointAll(world);
             if (hits == null || hits.Length == 0)
                 return null;

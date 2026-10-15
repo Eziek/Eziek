@@ -30,6 +30,9 @@ namespace Wyspa.Visual
         Sprite streak, wisp;
         SpriteRenderer aurora;
         Texture2D auroraTex;
+        Color32[] auroraPx;
+        Color tint = Color.white, tintTarget = Color.white;   // krwawy księżyc wchodzi i schodzi płynnie
+        float biolum, biolumTarget;
         float starTimer, auroraTimer, processionTimer;
         int processions;
         readonly List<GameObject> spawned = new List<GameObject>();
@@ -41,6 +44,10 @@ namespace Wyspa.Visual
             if (Instance == this)
                 Instance = null;
             Stop();
+            Shader.SetGlobalFloat(BiolumId, 0f);           // bez płynnego zejścia: obiekt znika (np. powrót do menu)
+            DayNightLighting.NightTint = Color.white;
+            if (auroraTex != null)
+                Destroy(auroraTex);
         }
 
         void Update()
@@ -63,6 +70,11 @@ namespace Wyspa.Visual
             wasNight = night;
             if (Current != null)
                 Run();
+            float dt = Time.unscaledDeltaTime;
+            biolum = Mathf.MoveTowards(biolum, biolumTarget, dt * 0.25f);
+            Shader.SetGlobalFloat(BiolumId, biolum);
+            tint = Color.Lerp(tint, tintTarget, 1f - Mathf.Exp(-dt * 0.6f));
+            DayNightLighting.NightTint = tint;
         }
 
         void Roll()
@@ -103,8 +115,8 @@ namespace Wyspa.Visual
             Lore.Chronicle.Count("seen:sight:" + id);
             switch (id)
             {
-                case "biolum": Shader.SetGlobalFloat(BiolumId, 1f); break;
-                case "bloodmoon": DayNightLighting.NightTint = new Color(1f, 0.42f, 0.4f); break;
+                case "biolum": biolumTarget = 1f; break;
+                case "bloodmoon": tintTarget = new Color(1f, 0.42f, 0.4f); break;
                 case "aurora": MakeAurora(); break;
                 case "procession": processions = 0; processionTimer = Random.Range(5f, 40f); break;
             }
@@ -113,8 +125,8 @@ namespace Wyspa.Visual
         void Stop()
         {
             Current = null;
-            Shader.SetGlobalFloat(BiolumId, 0f);
-            DayNightLighting.NightTint = Color.white;
+            biolumTarget = 0f;
+            tintTarget = Color.white;
             StopAllCoroutines();
             foreach (var go in spawned)
                 if (go != null) Destroy(go);
@@ -238,11 +250,16 @@ namespace Wyspa.Visual
             const int h = 44;
             if (auroraTex == null || auroraTex.width != w)
             {
+                if (auroraTex != null)
+                    Destroy(auroraTex);
                 auroraTex = new Texture2D(w, h, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
-                aurora.sprite = Sprite.Create(auroraTex, new Rect(0, 0, w, h), new Vector2(0.5f, 1f), Ppu);
+                auroraPx = new Color32[w * h];
             }
+            if (aurora.sprite == null || aurora.sprite.texture != auroraTex)
+                aurora.sprite = Sprite.Create(auroraTex, new Rect(0, 0, w, h), new Vector2(0.5f, 1f), Ppu);
             float t = Time.unscaledTime;
-            var px = new Color32[w * h];
+            var px = auroraPx;
+            System.Array.Clear(px, 0, px.Length);
             var teal = new Color(0.37f, 0.81f, 0.72f);
             var violet = new Color(0.55f, 0.4f, 0.85f);
             for (int x = 0; x < w; x++)

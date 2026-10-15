@@ -6,7 +6,7 @@ using Wyspa.World;
 namespace Wyspa.Visual
 {
     /// <summary>
-    /// Sylwetki na horyzoncie (GDD §9 p. 120): co kilka minut daleko na wodzie, między kłębami mgły (26-40 px od brzegu,
+    /// Sylwetki na horyzoncie (GDD §9 p. 120): co kilka minut daleko na wodzie, między kłębami mgły (22-40 px od brzegu,
     /// tuż pod mgłą, więc chmury częściowo je zasłaniają), pojawia się coś dużego:
     /// - wieloryb: wynurza grzbiet, wypuszcza fontannę, chowa się i na koniec pokazuje płetwę ogonową,
     /// - wąż morski: trzy garby falują jeden po drugim, na końcu wychyla się łeb,
@@ -18,7 +18,7 @@ namespace Wyspa.Visual
         public static readonly string[] Ids = { "whale", "serpent", "ship" };
         const float Ppu = 16f;
         const int Order = 4990;                 // nad wszystkim na wodzie, pod mgłą (5000)
-        const float MinDist = 26f, MaxDist = 40f;
+        const float MinDist = 22f, MaxDist = 40f;   // od 22 px zaczyna się mgła (Fog.shader _FogFrom)
 
         public static HorizonSights Instance { get; private set; }
         public string Current { get; private set; }
@@ -117,7 +117,7 @@ namespace Wyspa.Visual
             var water = FindAnyObjectByType<WaterAnimator>();
             if (water != null && water.ShoreRange > 0f)
                 maxDist = Mathf.Min(maxDist, water.ShoreRange - 6f);   // przezroczyste okno: tylko w pasie wody
-            if (maxDist < MinDist - 8f)
+            if (maxDist < MinDist)
                 return false;
             float hh = cam.orthographicSize, hw = hh * cam.aspect;
             var c = (Vector2)cam.transform.position;
@@ -127,7 +127,7 @@ namespace Wyspa.Visual
                 var px = Island.WorldToPixel(p);
                 int x = Mathf.RoundToInt(px.x), y = Mathf.RoundToInt(px.y);
                 float d = pic.ShoreDistance(x, y);
-                if (d < MinDist - 8f || d > maxDist)
+                if (d < MinDist || d > maxDist)
                     continue;
                 int side = Mathf.RoundToInt(halfWidth * Ppu);
                 if (pic.ShoreDistance(x - side, y) < 16f || pic.ShoreDistance(x + side, y) < 16f || pic.ShoreDistance(x, y - 12) < 14f)
@@ -248,6 +248,9 @@ namespace Wyspa.Visual
             var clock = GameLoop.Instance != null ? GameLoop.Instance.Clock : null;
             if (clock != null && clock.IsNight)
             {
+                var art = Island.Instance != null ? Island.Instance.Art : null;
+                if (art != null && art.glow != null)
+                    sr.sharedMaterial = art.glow;   // nocą widmo lekko jaśnieje (bez oświetlenia), dzień: zwykłe światło
                 // latarnia na rufie (lewy koniec mapy, flipX odwraca stronę)
                 float lx = (0.5f - ShipMap[0].Length / 2f) / Ppu * (sr.flipX ? -1f : 1f);
                 NightGlow.Add(t.gameObject, new Vector2(lx, 4.5f / Ppu), new Color(1f, 0.75f, 0.45f), 0.8f, 0.35f);

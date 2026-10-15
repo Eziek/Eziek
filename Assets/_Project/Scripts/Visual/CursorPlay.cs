@@ -76,6 +76,14 @@ namespace Wyspa.Visual
             var tip = UiRoot.Instance != null ? UiRoot.Instance.Tooltip : null;
             if (tip == null)
                 return;
+            // dymek obiektu pod kursorem (drzewo, grządka, chowaniec) ma pierwszeństwo: bez tego ptak na drzewie
+            // i drzewo co klatkę przejmowałyby dymek od siebie (miganie)
+            var other = tip.Owner;
+            if (other != null && !ReferenceEquals(other, this))
+            {
+                spotted = null;
+                return;
+            }
             string id = null, name = null;
             object who = null;
             if (overWorld && AmbientBirds.Instance != null)
@@ -100,7 +108,7 @@ namespace Wyspa.Visual
             {
                 if (water == null)
                     water = FindAnyObjectByType<WaterAnimator>();
-                int i = water != null ? water.AnyFishAt(world) : -1;
+                int i = water != null && IsWater(world) ? water.AnyFishAt(world) : -1;
                 if (i >= 0)
                 {
                     int kind = water.KindOf(i);
@@ -150,7 +158,12 @@ namespace Wyspa.Visual
 
         static bool IsLeafy(DecoKind k) => k == DecoKind.TreeRound || k == DecoKind.Spruce || k == DecoKind.Bush || k == DecoKind.Mangrove;
 
-        /// <summary>Otwarta woda pod punktem świata (nie ląd ani klif). Też dla kursora (GameCursor).</summary>
+        static WaterAnimator waterRef;
+
+        /// <summary>
+        /// Widoczna otwarta woda pod punktem świata (nie ląd ani klif; w przezroczystym oknie tylko pas wody przy brzegu,
+        /// dalej jest pulpit). Też dla kursora (GameCursor).
+        /// </summary>
         public static bool IsWater(Vector2 world)
         {
             var island = Island.Instance;
@@ -158,7 +171,12 @@ namespace Wyspa.Visual
             if (pic == null)
                 return false;
             var p = Island.WorldToPixel(world);
-            return pic.IsWater(Mathf.FloorToInt(p.x), Mathf.FloorToInt(p.y));
+            int x = Mathf.FloorToInt(p.x), y = Mathf.FloorToInt(p.y);
+            if (!pic.IsWater(x, y))
+                return false;
+            if (waterRef == null)
+                waterRef = FindAnyObjectByType<WaterAnimator>();
+            return waterRef == null || waterRef.ShoreRange <= 0f || pic.ShoreDistance(x, y) <= waterRef.ShoreRange;
         }
 
         void WaterClick(Vector2 world)

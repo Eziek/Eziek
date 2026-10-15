@@ -1002,7 +1002,7 @@ Obrazki referencyjne (kopie): `docs/img/`
     ciemnieje w cienkich poziomych pasach płynących z wiatrem, z pojedynczymi jasnymi punktami). Podgląd w przybliżeniu:
     `tools/pixel-proto/water_effects_preview.py` → `docs/img/woda_efekty.png`.
 120. **Horyzont, cienie chmur, poranna mgiełka** (wybór gracza). **Sylwetki we mgle** (`Visual/HorizonSights.cs`):
-    co 2,5-6 min daleko na wodzie (26-40 px od brzegu, w kadrze), tuż pod mgłą, więc kłęby częściowo je zasłaniają:
+    co 2,5-6 min daleko na wodzie (22-40 px od brzegu, w kadrze), tuż pod mgłą, więc kłęby częściowo je zasłaniają:
     wieloryb (zmarszczka, grzbiet z płetwą, fontanna, zanurzenie, płetwa ogonowa, ok. 15 s), wąż morski (trzy garby
     falują po kolei, na końcu wychyla łeb, 18 s), statek-widmo (blady, podarte żagle na trzech masztach, przepływa
     przez 40 s, nocą z latarnią na rufie; nocą częściej). Grafika z map znaków w kodzie, podgląd
@@ -1021,6 +1021,13 @@ Obrazki referencyjne (kopie): `docs/img/`
     6 kliknięć razem z pierwszym, młode 3), potem drzewo pada. Szczegóły drzewa (stan, „Zetnij”, „Przenieś”): PPM na
     drzewie → pierścień → ikona owocu. Zabytki dalej otwierają panel z historią. Kod `World/ChopProgress.cs`,
     `Decoration.OnClick`, `FruitTree.TryClick`.
+122. **Przegląd kodu serii p. 114-121** (bez Unity, z lektury). Poprawione: kropki postępu ścinania odbijały się w wodzie
+    (były w kontenerze dekoracji) i nocą były ciemne (teraz bez oświetlenia); dymek nazwy ptaka lub ryby ustępuje dymkowi
+    obiektu pod kursorem (ptak na drzewie powodowałby miganie); w przezroczystym oknie kursor, kręgi i nazwy ryb tylko
+    w widocznym pasie wody; `ClickRouter.Pick` pamięta wynik na klatkę (kursor, dymek i okno pytały co klatkę osobno,
+    każde zapytanie to nowa tablica); zorza bez nowej tablicy co 0,12 s; krwawy księżyc i świecąca toń wchodzą i schodzą
+    płynnie (kilka sekund) zamiast skokiem; statek-widmo nocą lekko jaśnieje; sylwetki na horyzoncie 22-40 px od brzegu
+    (kod i opis były niezgodne).
 
 ---
 
