@@ -11,6 +11,26 @@
       "y": 0.04545
     },
     {
+      "name": "bird_bullfinch_fly0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_bullfinch_fly1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_bullfinch_sit0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_bullfinch_sit1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
       "name": "bird_crow_fly0",
       "x": 0.54167,
       "y": 0.0
@@ -47,6 +67,86 @@
     },
     {
       "name": "bird_finch_sit1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_gull_fly0",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "bird_gull_fly1",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "bird_gull_sit0",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "bird_gull_sit1",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "bird_heron_fly0",
+      "x": 0.52273,
+      "y": 0.0
+    },
+    {
+      "name": "bird_heron_fly1",
+      "x": 0.52273,
+      "y": 0.0
+    },
+    {
+      "name": "bird_heron_sit0",
+      "x": 0.53571,
+      "y": 0.0
+    },
+    {
+      "name": "bird_heron_sit1",
+      "x": 0.53571,
+      "y": 0.0
+    },
+    {
+      "name": "bird_magpie_fly0",
+      "x": 0.59375,
+      "y": 0.0
+    },
+    {
+      "name": "bird_magpie_fly1",
+      "x": 0.59375,
+      "y": 0.0
+    },
+    {
+      "name": "bird_magpie_sit0",
+      "x": 0.59375,
+      "y": 0.0
+    },
+    {
+      "name": "bird_magpie_sit1",
+      "x": 0.59375,
+      "y": 0.0
+    },
+    {
+      "name": "bird_tit_fly0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_tit_fly1",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_tit_sit0",
+      "x": 0.54167,
+      "y": 0.0
+    },
+    {
+      "name": "bird_tit_sit1",
       "x": 0.54167,
       "y": 0.0
     },

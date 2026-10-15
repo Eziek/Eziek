@@ -477,6 +477,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `water_flora.py` + `export_unity_water.py` | ozdobniki na wodzie (lilie, liście, rzęsa, gałązka) → `Water/flora_<nazwa>.png`, podgląd `docs/img/woda_ozdobniki.png` |
 | `ember_gens.py` + `export_unity_ember.py` | generatory Żaru: piec (3 klatki płomienia) i kryształ → `Objects/ember_*`, podgląd `docs/img/generatory_zaru.png` |
 | `fish_species_preview.py` | podgląd gatunków ryb (port `FishPixel` z `Water.shader`) → `docs/img/ryby_gatunki.png` |
+| `birds2.py` + `export_unity_birds.py` | ptaki: sroka, gil, sikora, mewa, czapla (sit0, sit1, fly0, fly1) → `Critters/bird_<id>_<poza>`, podgląd `docs/img/ptaki.png` |
 | `monuments.py` + `export_unity_story.py` | monumenty wysp fabularnych: 4 historie × 5 faz (ruina, 3 etapy budowy, gotowy) → `Story/monument_<id>_<faza>.png`, podgląd `docs/img/monumenty.png` |
 | `export_unity_stages.py` | dodatkowe fazy roślin z gotowych PNG: kiełek (`crop_<id>_shoot`) i niedojrzała (`crop_<id>_unripe`); po `pad_sway.py` |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
@@ -942,6 +943,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     ogonem (2), meduza jaśniejsza od wody, pulsująca, z czułkami (2), żabnica ze świecącą nocą przynętą (1). Duże gatunki
     pływają tylko w głębszej wodzie i wolniej. Łowienie z pomostu: żabnica liczy się jak świecąca ryba, meduzy się nie łowi.
     Podgląd: `tools/pixel-proto/fish_species_preview.py` → `docs/img/ryby_gatunki.png`.
+113. **Więcej ptaków** (prośba gracza). Do wrony i zięby doszły: sroka (głównie na ziemi, podskakuje), gil i sikora
+    (w koronach drzew, parami i trójkami), mewa (na pomoście albo na wodzie przy brzegu, czasem najpierw krąży nad wodą),
+    czapla (brodzi na płyciźnie, co kilka sekund uderza dziobem w wodę z pluskiem, długo zostaje, wolno macha skrzydłami).
+    Gromadki przylatują z jednej strony, naraz do 3 ptaków (z gromadką 5), częściej niż dotąd. Grafika
+    `tools/pixel-proto/birds2.py` + `export_unity_birds.py` (podgląd `docs/img/ptaki.png`), kod `Visual/AmbientBirds.cs`.
 
 ---
 

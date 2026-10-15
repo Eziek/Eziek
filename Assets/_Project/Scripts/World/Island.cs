@@ -134,7 +134,7 @@ namespace Wyspa.World
             {
                 var birds = new GameObject("Birds");
                 birds.transform.SetParent(transform.parent, false);
-                birds.AddComponent<AmbientBirds>().Setup(art.birdCrow, art.birdFinch, FindAnyObjectByType<GameClock>());
+                birds.AddComponent<AmbientBirds>().Setup(art, FindAnyObjectByType<GameClock>());
             }
         }
 

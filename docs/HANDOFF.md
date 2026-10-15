@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-112), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-113), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -46,6 +46,7 @@ Historia decyzji jest w GDD §9 (punkty 1-112), a lista testów w `docs/TEST_PLA
   słój +20), `Automation/EmberKiln.cs`, `EmberCrystal.cs`, grafika `tools/pixel-proto/ember_gens.py`. Wymaga Wyspa → 2.
   Liczby do balansu. Nie testowane w Unity.
 - **Gatunki ryb** (GDD §9 p. 112, TEST_PLAN 36): 7 gatunków w `Water.shader` (`FishPixel`), do 16 ryb. Nie testowane w Unity.
+- **Ptaki** (GDD §9 p. 113, TEST_PLAN 37): sroka, gil, sikora, mewa, czapla (`tools/pixel-proto/birds2.py`, `Visual/AmbientBirds.cs`). Wymaga Wyspa → 2. Nie testowane w Unity.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,

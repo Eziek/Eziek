@@ -457,3 +457,11 @@ Najpierw Wyspa → 2. F1: waluty (drewno, kamień, monety).
 2. Duże gatunki (płaszczka, karp, meduza, żabnica) pływają dalej od brzegu i wolniej; żadna ryba nie wpływa na ląd.
 3. Nocą świecą: oczko co trzeciej zwykłej ryby i przynęta żabnicy.
 4. Pomost: klik w rybę łowi ją (żabnica nocą jak świecąca), w meduzę nic nie robi; złowiona ryba znika i wraca.
+
+## 37. Ptaki
+Najpierw Wyspa → 2. W dzień, kilka minut obserwacji (pomost ułatwia mewy).
+1. Oprócz wron i zięb pojawiają się: sroka (na trawie, podskakuje), gil i sikora (w koronach drzew, czasem po 2-3),
+   mewa (siada na końcu pomostu albo na wodzie przy brzegu, czasem krąży), czapla (stoi w płytkiej wodzie przy brzegu,
+   co chwilę uderza dziobem w wodę, plusk).
+2. Ptaki nie siadają na lądzie w wodzie ani na pomoście w złym miejscu; czapla nie stoi na trawie.
+3. Kursor blisko ptaka płoszy go; nocą ptaków nie ma; o świcie z drzew zrywa się kilka ptaków (bez mew i czapli).

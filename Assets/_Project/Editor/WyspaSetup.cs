@@ -627,6 +627,9 @@ namespace Wyspa.EditorTools
                                                    LoadSprite($"Critters/bird_{kind}_fly0"), LoadSprite($"Critters/bird_{kind}_fly1") };
             art.birdCrow = Bird("crow");
             art.birdFinch = Bird("finch");
+            art.birds = new List<BirdArt>();
+            foreach (var id in new[] { "magpie", "bullfinch", "tit", "gull", "heron" })   // tools/pixel-proto/birds2.py
+                art.birds.Add(new BirdArt { id = id, frames = Bird(id) });
             art.noticeBoard = LoadSprite("Objects/notice_board");
             art.noticeBoardEmpty = LoadSprite("Objects/notice_board_empty");
             art.introArrow = LoadSprite("Fx/intro_arrow");

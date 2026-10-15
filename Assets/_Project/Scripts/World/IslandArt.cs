@@ -29,6 +29,14 @@ namespace Wyspa.World
         public Sprite doneGlow;
     }
 
+    /// <summary>Ptak tła: klatki sit0, sit1, fly0, fly1 (Critters/bird_&lt;id&gt;_&lt;poza&gt;).</summary>
+    [Serializable]
+    public class BirdArt
+    {
+        public string id;
+        public Sprite[] frames;
+    }
+
     [Serializable]
     public class FamiliarArt
     {
@@ -131,6 +139,17 @@ namespace Wyspa.World
         [Tooltip("sit0, sit1 (dziób w dół), fly0, fly1")]
         public Sprite[] birdCrow;
         public Sprite[] birdFinch;
+        [Tooltip("Pozostałe ptaki (sroka, gil, sikora, mewa, czapla), te same 4 pozy (tools/pixel-proto/birds2.py).")]
+        public List<BirdArt> birds = new List<BirdArt>();
+
+        public Sprite[] Bird(string id)
+        {
+            if (birds == null)
+                return null;
+            foreach (var b in birds)
+                if (b != null && b.id == id) return b.frames;
+            return null;
+        }
 
         [Header("Rój ogników: gniazdo (2 klatki) i ogniki w kolorach zawodów")]
         public Sprite[] wispNest;
