@@ -154,6 +154,8 @@ term.note,Karteczka,Note,Zettel,張り紙,便条,zadanie przybite do tablicy og�
 term.save_slot,Zapis,Save,Spielstand,セーブ,存档,slot zapisu w menu głównym (3 sloty)
 menu.main,Menu główne,Main menu,Hauptmenü,メインメニュー,主菜单,pierścień akcji: powrót do menu (gra się zapisuje)
 menu.game,Menu,Menu,Menü,メニュー,菜单,"pierścień akcji: podmenu (opcje, zapis, menu główne, wyjście)"
+time.dawn,Świt,Dawn,Morgengrauen,夜明け,黎明,"pora dnia 06-08: rosną rośliny dnia i nocy"
+time.dusk,Zmierzch,Dusk,Dämmerung,黄昏,黄昏,"pora dnia 18-20: rosną rośliny dnia i nocy"
 term.order,Zamówienie,Order,Auftrag,依頼,委托,karteczka z prośbą na tablicy ogłoszeń
 npc.herbalist,Zielarka z mgły,Fog Herbalist,Nebelkräuterin,霧の薬草師,雾中草药师,zamawiająca (bez postaci na ekranie)
 npc.gravedigger,Grabarz,Gravedigger,Totengräber,墓守,掘墓人,zamawiający

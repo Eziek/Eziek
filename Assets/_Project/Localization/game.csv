@@ -169,7 +169,7 @@ toast.cycle.closed,"Nów: cykl zamknięty, +{0} pkt księżyca","New moon: cycle
 toast.ritual.done,Odprawiono: {0},Ritual performed: {0},Ritual vollzogen: {0},儀式完了：{0},仪式完成：{0},{0} = nazwa rytuału
 toast.bestiary.reward,+{0} pkt księżyca,+{0} moon points,+{0} Mondpunkte,月の点+{0},月之点数+{0},{0} = punkty
 ritual.dusk,Zmierzchowe ziarno,Dusk Seed,Dämmerkorn,黄昏の種,黄昏之种,
-ritual.dusk.desc,Rośliny nocy rosną też o zmierzchu,Night crops also grow at dusk,Nachtpflanzen wachsen auch in der Dämmerung,夜の作物が黄昏にも育つ,夜间作物在黄昏时也会生长,
+ritual.dusk.desc,O świcie i zmierzchu rośliny rosną 50% szybciej,Crops grow 50% faster at dawn and dusk,In Morgengrauen und Dämmerung wachsen Pflanzen 50% schneller,夜明けと黄昏に作物の成長+50%,黎明和黄昏时作物生长+50%,
 ritual.quiet_lamps,Ciche lampy,Quiet Lamps,Stille Lampen,静かな灯,静谧之灯,
 ritual.quiet_lamps.desc,Lampy palą o 25% mniej Żaru,Lamps burn 25% less Ember,Lampen verbrauchen 25% weniger Glut,ランプの熾火消費が25%減る,灯消耗的余火减少25%,
 ritual.moon_dew,Księżycowa rosa,Moon Dew,Mondtau,月の露,月露,

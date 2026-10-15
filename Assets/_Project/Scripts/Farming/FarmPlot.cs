@@ -162,13 +162,20 @@ namespace Wyspa.Farming
         }
 
         /// <summary>Roślina, która teraz nie może rosnąć z powodu pory: nocna w dzień, dzienna nocą bez lampy.</summary>
-        public bool OutOfSeason(bool night, bool lit)
+        public bool OutOfSeason(bool night, bool twilight, bool lit)
         {
             var c = state.crop;
             if (c == null || state.IsRipe)
                 return false;
-            return c.kind == CropKind.Night ? !night : night && !lit;
+            return c.kind == CropKind.Night ? !night && !twilight : night && !lit;   // świt i zmierzch: rosną obie
         }
+
+        /// <summary>Do kiedy siewca może podmienić roślinę nie w porze: bardziej urośniętą zostawia (dorośnie w swojej porze).</summary>
+        public const float SwapMaxProgress = 0.5f;
+
+        /// <summary>Siewca podmienia: nie w porze i urośnięta najwyżej w połowie.</summary>
+        public bool Swappable(bool night, bool twilight, bool lit) =>
+            OutOfSeason(night, twilight, lit) && state.growth < state.crop.growSeconds * SwapMaxProgress;
 
         /// <summary>Sadzenie (koło nasion, runa siewu) - koszt nasiona płaci wywołujący.</summary>
         public void Replant(CropDefinition crop)

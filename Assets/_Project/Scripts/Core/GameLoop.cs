@@ -49,7 +49,8 @@ namespace Wyspa.Core
         public static bool DebugAlwaysMutate;
 
         /// <summary>Rytuał „Zmierzch”: rośliny nocy rosną też w ostatniej godzinie przed nocą.</summary>
-        public static bool DuskGrowth;
+        /// <summary>Rytuał „Zmierzchowe ziarno”: o świcie i zmierzchu rośliny rosną 1,5x szybciej.</summary>
+        public static bool TwilightBoost;
         /// <summary>Rytuał „Głębokie korzenie”: rośliny dnia rosną szybciej.</summary>
         public static float DayGrowthMultiplier = 1f;
         float accumulator;
@@ -341,14 +342,17 @@ namespace Wyspa.Core
         {
             Vector2 p = plot.LightProbe;
             var crop = plot.State.crop;
-            if (!night && DuskGrowth && crop != null && crop.kind == CropKind.Night && clock.IsDusk)
-                night = true;   // zmierzch liczy się roślinom nocy jak noc
+            bool twilight = !night && clock.IsTwilight;
+            if (twilight && crop != null && crop.kind == CropKind.Night)
+                night = true;   // świt i zmierzch liczą się roślinom nocy jak noc (rośliny dnia rosną wtedy jak w dzień)
             // rośliny dnia: rytuał „Głębokie korzenie” i tempo pracy (pisanie, mysz)
             float dayBonus = crop != null && crop.kind == CropKind.Day
                 ? DayGrowthMultiplier * activity.TempoMultiplier * Alchemy.Potions.DayGrowth * Weather.WeatherSystem.DayGrowth * UpgradeEffects.DayGrowth : 1f;   // deszcz +20%
             // mikstury z kotła: wywar wzrostu (rośliny dnia), eliksir nocy (rośliny nocy)
             if (crop != null && crop.kind == CropKind.Night)
                 dayBonus = Alchemy.Potions.NightGrowth * Familiars.FamiliarSystem.NightGrowth * UpgradeEffects.NightGrowth * Lore.Story.NightGrowth;   // + Światło Opiekunów   // eliksir nocy, ropucha
+            if (twilight && TwilightBoost)
+                dayBonus *= 1.5f;   // Zmierzchowe ziarno
             return new GrowthContext
             {
                 playerActive = activity.IsActive,

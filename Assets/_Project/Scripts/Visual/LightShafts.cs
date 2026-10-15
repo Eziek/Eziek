@@ -111,7 +111,7 @@ namespace Wyspa.Visual
                 float moon = 1f - Mathf.Abs(clock.MoonPhase - 0.5f) * 2f;   // pełnia = 1, nów = 0
                 c = nightColor; i = nightIntensity * (0.3f + 0.7f * moon); v = nightVolume * (0.3f + 0.7f * moon);
             }
-            else if (clock.IsDusk)
+            else if (clock.IsTwilight)   // świt i zmierzch: ciepłe, niskie słońce
             {
                 c = duskColor; i = dayIntensity; v = dayVolume;
             }

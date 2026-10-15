@@ -336,3 +336,14 @@ Najpierw Wyspa → 2 (nowe czasy, ceny i sprite'y faz).
 8. Kupiec-widmo: paczki po 10 nasion, hybryda po 3 nasiona.
 9. Stary zapis: rośliny w trakcie wzrostu od razu dojrzałe albo prawie (wzrost liczony w sekundach), nic się nie psuje.
 
+## 28. Świt i zmierzch
+1. F1: godzina 06:30 (świt). Pasek HUD: „06:30  świt, dzień za …”. Roślina nocy (nie pod lampą) rośnie dalej, dymek:
+   „Świt: rośnie jeszcze …”. Roślina dnia też rośnie (gracz aktywny).
+2. Siewca z podmianą: o świcie nie rusza rośliny nocy, która jeszcze rośnie; po 08:00 podmienia tylko te urośnięte
+   najwyżej w połowie (np. 30%), a roślina na 80% zostaje na grządce do zmierzchu.
+3. 18:30 (zmierzch): HUD „zmierzch, noc za …”, roślina nocy już rośnie, roślina dnia rośnie, dymek „Zmierzch: rośnie
+   jeszcze …”. Snopy światła pomarańczowe o świcie i zmierzchu.
+4. W dzień (np. 12:00): HUD „zmierzch za …”; w nocy „świt za …”.
+5. Zamknij grę na ok. 1 h: rośliny nocy urosły o ok. 31 min (noc + świt + zmierzch), nie 20.
+6. Rytuał Zmierzchowe ziarno: opis „O świcie i zmierzchu rośliny rosną 50% szybciej”.
+

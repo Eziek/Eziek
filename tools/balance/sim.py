@@ -131,7 +131,10 @@ def run(cfg=None, verbose=True):
         for t in range(24 * 60 * per_min):
             m, sub = divmod(t, per_min)
             active = m < WORK_H * 60
-            is_night = ((tick // per_min) % CYCLE) >= DAY_MIN
+            cyc_min = (tick / per_min) % CYCLE
+            is_night = cyc_min >= DAY_MIN
+            # świt (06-08) i zmierzch (18-20): rośliny nocy też rosną (po 2/14 dnia z każdej strony)
+            night_crops = is_night or cyc_min < DAY_MIN * 2 / 14 or cyc_min >= DAY_MIN * 12 / 14
             tick += 1
             day_lit = 1.0 if not is_night else min(1.0, st['lamps'] * LAMP_PLOTS / max(1.0, len(plots) * (1 - NIGHT_SHARE)))
             if active:
@@ -142,7 +145,7 @@ def run(cfg=None, verbose=True):
             for p in plots:
                 if not p: continue
                 if crops[p[0]][3]:
-                    if is_night: p[1] += STEP
+                    if night_crops: p[1] += STEP
                 elif active:
                     p[1] += STEP * TEMPO * day_lit
             if not active:

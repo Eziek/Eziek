@@ -308,8 +308,10 @@ ui.tray.topmost,Zawsze na wierzchu,Always on top,Immer im Vordergrund,常に最�
 ui.tray.mini,Mini-tryb,Mini mode,Minimodus,ミニモード,迷你模式,
 ui.tray.ripe,Plony czekają na zbiór: {0},Crops waiting for harvest: {0},Ernte wartet: {0},収穫待ちの作物：{0},待收获的作物：{0},powiadomienie Windows
 ui.options.notify,Powiadomienia Windows,Windows notifications,Windows-Benachrichtigungen,Windowsの通知,Windows 通知,opcje → system
-ui.hud.to_night,{0}  noc za {1},{0}  night in {1},{0}  Nacht in {1},{0}  夜まで {1},{0}  距夜晚 {1},"pasek HUD: {0} = godzina gry, {1} = mm:ss do nocy"
+ui.hud.to_night,"{0}  zmierzch, noc za {1}","{0}  dusk, night in {1}","{0}  Dämmerung, Nacht in {1}",{0}  黄昏 夜まで {1},{0}  黄昏 距夜晚 {1},"pasek HUD (zmierzch): {0} = godzina gry, {1} = mm:ss do nocy"
 ui.hud.to_day,{0}  świt za {1},{0}  dawn in {1},{0}  Morgen in {1},{0}  夜明けまで {1},{0}  距黎明 {1},"pasek HUD: {0} = godzina gry, {1} = mm:ss do świtu"
+ui.hud.dawn,"{0}  świt, dzień za {1}","{0}  dawn, day in {1}","{0}  Morgengrauen, Tag in {1}",{0}  夜明け 昼まで {1},{0}  黎明 距白天 {1},"pasek HUD (świt): {1} = mm:ss do końca świtu"
+ui.hud.to_dusk,{0}  zmierzch za {1},{0}  dusk in {1},{0}  Dämmerung in {1},{0}  黄昏まで {1},{0}  距黄昏 {1},"pasek HUD (dzień): {1} = mm:ss do zmierzchu"
 ui.menu.unreadable,Zapis nieczytelny,Unreadable save,Spielstand unlesbar,読めないセーブ,存档无法读取,slot z uszkodzonym plikiem
 ui.menu.slot_mist,We mgle: czeka w przystani,In the mist: waiting at the harbor,Im Nebel: wartet im Hafen,霧の中：港で待機中,雾中：在港湾等待,
 ui.nest.range,Ogniki pracują w polu {0}x{0} wokół gniazda,Wisps work in the {0}x{0} area around the nest,Irrlichter arbeiten im Bereich {0}x{0} um das Nest,巣の周囲{0}x{0}で働く,鬼火在巢周围{0}x{0}范围内工作,{0} = bok pola
@@ -350,6 +352,8 @@ ui.altar.finale_done,"Światło Opiekunów płonie: lampy palą o 20% mniej Żar
 ui.monster.next,Dalej,Next,Weiter,次へ,继续,
 ui.monster.farewell,Pożegnaj,Say farewell,Abschied nehmen,別れを告げる,告别,
 ui.plot.replace_hint,"Kliknij, aby podmienić (nasiono wróci do worka)",Click to replace (the seed goes back to the bag),Klicken zum Ersetzen (der Samen kommt in den Beutel zurück),クリックで植え替え（種は袋に戻る）,点击替换（种子会回到袋中）,
+ui.plot.dawn_left,Świt: rośnie jeszcze {0},Dawn: still grows for {0},Morgengrauen: wächst noch {0},夜明け：あと{0}育つ,黎明：还能生长{0},"roślina nocy o świcie, {0} = czas (ui.time.*)"
+ui.plot.dusk_left,Zmierzch: rośnie jeszcze {0},Dusk: still grows for {0},Dämmerung: wächst noch {0},黄昏：あと{0}育つ,黄昏：还能生长{0},"roślina dnia o zmierzchu, {0} = czas (ui.time.*)"
 act.dig_up,Wykop roślinę,Dig up the plant,Pflanze ausgraben,植物を掘り出す,挖出植物,pierścień akcji na grządce
 act.plant_random,Obsiej puste grządki losowo,Plant random seeds on empty plots,Leere Beete zufällig bepflanzen,空いた畑にランダムに植える,在空地随机播种,pierścień akcji: losowe sadzenie
 toast.saved,Zapisano grę,Game saved,Spiel gespeichert,セーブしました,已保存游戏,po Zapisz grę

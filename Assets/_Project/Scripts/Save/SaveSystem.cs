@@ -680,7 +680,7 @@ namespace Wyspa.Save
                 UI.IntroNotes.Instance.Step = data.version >= 8 ? Mathf.Clamp(data.intro, 0, UI.IntroNotes.Done) : UI.IntroNotes.Done;
 
             var savedAt = new DateTime(data.savedAtUtcTicks, DateTimeKind.Utc).ToLocalTime();
-            float offlineNight = game.Clock.NightSecondsBetween(savedAt, DateTime.Now);
+            float offlineNight = game.Clock.NightCropSecondsBetween(savedAt, DateTime.Now);   // noc, świt i zmierzch
 
             var byId = new Dictionary<string, PlotSave>();
             foreach (var p in data.plots)

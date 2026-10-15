@@ -210,11 +210,12 @@ namespace Wyspa.UI
             else
                 rhythmText.text = Loc.Get("ui.rhythm.normal", r.StreakMinutes);
             Ui.SetBar(rhythmFill, r.StreakMinutes / 25f);
-            // czas gry: godzina na zegarze gry i odliczanie w prawdziwym czasie do nocy / świtu
+            // czas gry: godzina na zegarze gry i odliczanie w prawdziwym czasie do następnej pory (świt, dzień, zmierzch, noc)
             var clock = game.Clock;
-            int left = Mathf.CeilToInt(clock.IsNight ? GameClock.CycleSeconds - clock.Second : GameClock.DaySeconds - clock.Second);
+            int left = Mathf.CeilToInt(clock.SecondsToNextPhase);
             string countdown = $"{left / 60}:{left % 60:00}";
-            clockText.text = Loc.Get(clock.IsNight ? "ui.hud.to_day" : "ui.hud.to_night", clock.Now.ToString("HH:mm"), countdown);
+            string phaseKey = clock.IsNight ? "ui.hud.to_day" : clock.IsDawn ? "ui.hud.dawn" : clock.IsDusk ? "ui.hud.to_night" : "ui.hud.to_dusk";
+            clockText.text = Loc.Get(phaseKey, clock.Now.ToString("HH:mm"), countdown);
             dayIcon.sprite = Ui.Theme.Icon(clock.IsNight ? "moon" : "sun");
             dayIcon.enabled = dayIcon.sprite != null;
             float tempo = game.Activity.TempoMultiplier;

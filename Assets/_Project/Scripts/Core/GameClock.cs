@@ -8,6 +8,8 @@ namespace Wyspa.Core
     /// (06:00-20:00 na zegarze gry), a 20 min to noc (20:00-06:00). Cykl liczy się od stałej daty w czasie UTC, więc idzie dalej,
     /// także gdy gra jest wyłączona. Każdy cykl to osobna „doba gry” (Now ma datę i godzinę na zegarze gry), dzięki czemu
     /// zdarzenia „raz na noc” (kupiec, potwór, ołtarz) działają raz na cykl. Księżyc: pełny cykl faz trwa 8 nocy, pełnia to jedna noc.
+    /// Pory: świt 06-08 i zmierzch 18-20 (po ok. 5:43) należą do dnia, ale rosną w nich oba rodzaje roślin: o świcie
+    /// rośliny nocy jeszcze dorastają, o zmierzchu już ruszają (GameLoop.ContextFor), a rośliny dnia rosną jak w dzień.
     /// Każdy zapis ma własne przesunięcie cyklu (SaveOffsetSeconds): nowa wyspa zaczyna się zawsze rano, a potem czas płynie
     /// dalej tak samo, także offline.
     /// </summary>
@@ -18,6 +20,14 @@ namespace Wyspa.Core
         public const float NightSeconds = CycleSeconds - DaySeconds;
         /// <summary>Godziny na zegarze gry: noc od 20:00 do 06:00.</summary>
         public const float NightStartsAt = 20f, NightEndsAt = 6f;
+        /// <summary>Świt do 08:00, zmierzch od 18:00 (godziny zegara gry).</summary>
+        public const float DawnEndsAt = 8f, DuskStartsAt = 18f;
+        /// <summary>Sekundy cyklu: koniec świtu i początek zmierzchu (po 2 h zegara gry = ok. 343 s).</summary>
+        public const float DawnEndSecond = (DawnEndsAt - NightEndsAt) / 14f * DaySeconds;
+        public const float DuskStartSecond = (DuskStartsAt - NightEndsAt) / 14f * DaySeconds;
+        /// <summary>Ile sekund cyklu rosną rośliny nocy: noc, świt i zmierzch.</summary>
+        public const float NightCropSeconds = NightSeconds + DawnEndSecond + (DaySeconds - DuskStartSecond);
+
         /// <summary>Ile nocy trwa cykl księżyca (od nowiu do nowiu).</summary>
         public const int MoonCycleNights = 8;
 
@@ -119,34 +129,50 @@ namespace Wyspa.Core
         /// <summary>Klucz bieżącej (albo ostatniej) nocy: numer cyklu. Zdarzenia „raz na noc” porównują ten klucz.</summary>
         public string NightKey => "c" + CycleNumber;
 
-        /// <summary>Zmierzch: ostatnia godzina zegara gry przed nocą (ok. 3 min).</summary>
+        /// <summary>Świt: 06:00-08:00 (ok. 5:43), dzień, ale rośliny nocy jeszcze rosną.</summary>
+        public bool IsDawn => Second < DawnEndSecond;
+
+        /// <summary>Zmierzch: 18:00-20:00 (ok. 5:43) przed nocą, rośliny nocy już rosną.</summary>
         public bool IsDusk
         {
             get
             {
-                float h = Hour;
-                return h >= NightStartsAt - 1f && h < NightStartsAt;
+                float s = Second;
+                return s >= DuskStartSecond && s < DaySeconds;
+            }
+        }
+
+        /// <summary>Świt albo zmierzch: rosną oba rodzaje roślin.</summary>
+        public bool IsTwilight => IsDawn || IsDusk;
+
+        /// <summary>Sekundy do końca bieżącej pory (świtu, dnia, zmierzchu albo nocy) w prawdziwym czasie.</summary>
+        public float SecondsToNextPhase
+        {
+            get
+            {
+                float s = Second;
+                float end = s < DawnEndSecond ? DawnEndSecond : s < DuskStartSecond ? DuskStartSecond : s < DaySeconds ? DaySeconds : CycleSeconds;
+                return end - s;
             }
         }
 
         public static bool IsNightAt(DateTime utc) => SecondOfCycle(Cycles(utc)) >= DaySeconds;
 
-        /// <summary>Ile sekund nocy minęło między dwoma momentami (postęp offline). Liczone dokładnie, cykl po cyklu.</summary>
-        public float NightSecondsBetween(DateTime fromLocal, DateTime toLocal, double maxHours = 24 * 7)
+        /// <summary>Ile sekund rosły rośliny nocy (noc, świt, zmierzch) między dwoma momentami (postęp offline).</summary>
+        public float NightCropSecondsBetween(DateTime fromLocal, DateTime toLocal, double maxHours = 24 * 7)
         {
             if (toLocal <= fromLocal)
                 return 0f;
             DateTime end = toLocal - fromLocal > TimeSpan.FromHours(maxHours) ? fromLocal.AddHours(maxHours) : toLocal;
             double a = Cycles(fromLocal.ToUniversalTime()), b = Cycles(end.ToUniversalTime());
-            return (float)(NightUpTo(b) - NightUpTo(a));
+            return (float)(NightCropUpTo(b) - NightCropUpTo(a));
         }
 
-        /// <summary>Sekundy nocy od epoki do chwili c (w cyklach).</summary>
-        static double NightUpTo(double c)
+        static double NightCropUpTo(double c)
         {
             double whole = Math.Floor(c);
             double inCycle = (c - whole) * CycleSeconds;
-            return whole * NightSeconds + Math.Max(0.0, inCycle - DaySeconds);
+            return whole * NightCropSeconds + Math.Min(inCycle, DawnEndSecond) + Math.Max(0.0, inCycle - DuskStartSecond);
         }
 
         // ------------------------------------------------------------ księżyc (8 nocy na cykl)

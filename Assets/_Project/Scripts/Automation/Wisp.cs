@@ -986,7 +986,8 @@ namespace Wyspa.Automation
 
         IEnumerator SowerJob()
         {
-            // osobne nasiona na dzień i na noc; o świcie i zmierzchu podmiana roślin, które teraz nie rosną
+            // osobne nasiona na dzień i na noc; po świcie i po zmierzchu podmiana roślin, które teraz nie rosną
+            // (tylko urośniętych najwyżej w połowie: bardziej urośnięte dorosną w swojej porze)
             var game = GameLoop.Instance;
             if (game == null || nest == null)
                 return null;
@@ -1006,7 +1007,7 @@ namespace Wyspa.Automation
                 CropDefinition crop;
                 if (plot.State.IsEmpty)
                     crop = random ? game.RandomSeed(night) : chosen != null ? chosen : plot.LastCrop;
-                else if (nest.Swap && (chosen != null || random) && plot.OutOfSeason(night, game.ContextFor(plot, night).lit))
+                else if (nest.Swap && (chosen != null || random) && plot.Swappable(night, game.Clock.IsTwilight, game.ContextFor(plot, night).lit))
                     crop = random ? game.RandomSeed(night) : chosen;   // podmiana: stara roślina wraca do worka jako nasiono
                 else
                     continue;
@@ -1038,8 +1039,8 @@ namespace Wyspa.Automation
                 if (!plot.State.IsEmpty)
                 {
                     bool night = game.Clock.IsNight;
-                    if (!nest.Swap || !plot.OutOfSeason(night, game.ContextFor(plot, night).lit))
-                        continue;   // w międzyczasie zaczęła rosnąć albo gracz wyłączył podmianę
+                    if (!nest.Swap || !plot.Swappable(night, game.Clock.IsTwilight, game.ContextFor(plot, night).lit))
+                        continue;   // w międzyczasie zaczęła rosnąć (świt, zmierzch), urosła albo gracz wyłączył podmianę
                     plot.DigUp();
                 }
                 if (!game.Seeds.TryTake(crop.id) && (crop.hybrid || !game.Wallet.TrySpend(Economy.Market.SeedPrice(crop))))

@@ -325,6 +325,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   powrót do menu z pierścienia akcji (§12.11, §9 p. 96).
 - [x] **Krótki wzrost** (prośba gracza): rośliny najdłużej 10 min (dzień 20 s - 3 min, noc 1,5-10 min), drzewa 4-10 min,
   mniejsze ceny za sztukę, 6 faz wzrostu (§9 p. 98). Do sprawdzenia w grze: czy satysfakcja jest, czy nie za szybko.
+- [x] **Pory dnia: świt i zmierzch** (prośba gracza): świt 06-08 i zmierzch 18-20 (po ok. 5:43) to część dnia, w której
+  rosną oba rodzaje roślin. Siewca nie wykopuje roślin urośniętych ponad połowę (§9 p. 99).
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
   zegara). Księżyc: 8 nocy na cykl, pełnia jedną noc (rytuał „Księżycowa rosa”: dwie). Kupiec-widmo w co trzecią noc (34%),
   w pierwszej połowie nocy, zostaje 10 min. Rośliny i drzewa rosną **x3 szybciej** (marchew 3:20, dynia 8:20); rośliny nocy
@@ -362,7 +364,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Lore (wybór gracza): historia **„Ostatnia latarnia”** (§11.3 H), 33 zapiski odkrywane po kolei w każdym źródle.
 - [x] Punkty księżyca (Etap 5c): przy nowiu cykl daje plony/10 + plony nocy/5 + ryby/5 + zdarzenia/3 + kafelki/10, maks. 12;
   pełna strona bestiariusza daje jednorazowo 2 / 1 / 2 / 3 pkt (rośliny / ryby / zjawy / zapiski). Liczby do balansu.
-- [x] Pierwsze rytuały (jednorazowe, na zawsze): Zmierzchowe ziarno (rośliny nocy rosną o zmierzchu, 2 pkt + 3 odłamki),
+- [x] Pierwsze rytuały (jednorazowe, na zawsze): Zmierzchowe ziarno (rośliny nocy rosną o zmierzchu, 2 pkt + 3 odłamki; po §9 p. 99: o świcie i zmierzchu rośliny +50%),
   Ciche lampy (-25% Esencji, 2 pkt + 8 łusek), Księżycowa rosa (pełnia x2 dłużej, 3 pkt + 1 dar), Głębokie korzenie
   (rośliny dnia +10%, 2 pkt + 20 drewna), Szept mgły (kupiec x2 dłużej, 2 pkt + 2 odłamki), Pamięć przypływu (wyprawy -25%,
   3 pkt + 1 dar).
@@ -791,6 +793,15 @@ Obrazki referencyjne (kopie): `docs/img/`
     czasy w opisach nasion w sekundach i minutach. Symulacja (`tools/balance/sim.py`, krok 10 s): zaglądanie co 20 min:
     ognik po 2 h, 25 kafelków 41 h, 100 kafelków 85 h (wcześniej 3 h / 23 h / 94 h); co 5 min: ognik po 0,8 h,
     25 kafelków 10 h, 100 kafelków 42 h. Zarobek z miesiąca ok. 2x większy (perły w rejsie: pierwiastek, ok. 1,4x).
+99. **Pory dnia: świt i zmierzch** (zgłoszenie gracza: roślina nocy na 97% nie zdążyła przed świtem i ogniki-siewcy
+    ją wykopały). Doba: świt 06:00-08:00, dzień, zmierzch 18:00-20:00, noc (świt i zmierzch po ok. 5:43 prawdziwego
+    czasu). O świcie rośliny nocy jeszcze rosną, a rośliny dnia już rosną; o zmierzchu odwrotnie: dzienne jeszcze,
+    nocne już. Rośliny nocy mają więc ok. 31 min na cykl zamiast 20 (także offline: `GameClock.NightCropSecondsBetween`).
+    Siewca podmienia roślinę nie w porze dopiero po świcie / po zmierzchu i tylko urośniętą najwyżej w połowie
+    (`FarmPlot.Swappable`); bardziej urośnięta czeka na swoją porę. Pasek HUD pokazuje porę i czas do następnej
+    („świt, dzień za”, „zmierzch za”, „zmierzch, noc za”, „świt za”), dymek grządki „Świt: rośnie jeszcze 2 min”.
+    Snopy światła o świcie ciepłe jak o zmierzchu. Rytuał Zmierzchowe ziarno (wcześniej: rośliny nocy o zmierzchu,
+    teraz to zasada gry): o świcie i zmierzchu rośliny +50%.
 
 ---
 
@@ -996,7 +1007,7 @@ efekty w `Upgrades/UpgradeEffects.cs` (wartości wstępne do balansu):
 - **Ołtarz ofiarny na brzegu:** wymiana z potworem.
 
 **G. Rytuały i księżyc (późna gra)**
-- **Księga rytuałów:** stałe pasywne bonusy za rzadkie surowce (np. „rośliny nocy rosną też o zmierzchu”).
+- **Księga rytuałów:** stałe pasywne bonusy za rzadkie surowce (np. „o świcie i zmierzchu rośliny rosną 50% szybciej”).
 - **Cykl księżycowy zamiast prestiżu:** co prawdziwe 29,5 dnia (od nowiu do nowiu) cykl się zamyka i daje punkty do Księgi
   za osiągnięcia z tego cyklu. **Wyspa nic nie traci** (świadomie bez resetu postępu).
 
