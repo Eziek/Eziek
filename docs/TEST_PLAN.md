@@ -314,3 +314,12 @@ Najpierw **Wyspa → 2** (grafiki czapek).
    Ctrl+S w menu i podczas scenki rejsu nic nie robi.
 6. Menu główne z pierścienia: powrót do menu z burzą; Start wraca do tej samej wyspy.
 
+## 26. Pierścień akcji z podmenu, Ustawienia z menu
+1. PPM na pustej grządce rosnącej rośliny (najwięcej ikon: zasyp, wykop, losowe sadzenie + 4): ikony nie nachodzą na
+   siebie, także podświetlona.
+2. Ikona „Menu”: w tym samym miejscu drugie koło (Opcje, Zapisz grę, Menu główne z domkiem, Wyjdź), w środku ikona
+   „Wstecz” wraca do pierwszego koła. Dymek z poprzedniej ikony nie zostaje na ekranie.
+3. Koło przy krawędzi okna mieści się w oknie (pierwsze i drugie).
+4. Menu główne → Ustawienia: Księga bez kolumny zakładek po lewej, strona przy lewej krawędzi, krzyżyk w rogu.
+   W grze Księga ma zakładki jak dawniej.
+

@@ -373,10 +373,14 @@ namespace Wyspa.UI
                 new ActionRing.Entry { icon = "book", nameKey = "term.grimoire", run = () => OpenBook(BookView.Tab.Upgrades) },
                 new ActionRing.Entry { icon = "shop", nameKey = "menu.shop", run = () => OpenBook(BookView.Tab.Shop) },
                 new ActionRing.Entry { icon = "plus", nameKey = "menu.expand", run = () => { CloseAll(); Expansion.Toggle(); } },
-                new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
-                new ActionRing.Entry { icon = "save", nameKey = "act.save", run = SaveGame },
-                new ActionRing.Entry { icon = "menu", nameKey = "menu.main", run = BackToMenu },
-                new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame },
+                // opcje, zapis, menu główne i wyjście w podmenu: pierwsze koło ma najwyżej 7 ikon
+                new ActionRing.Entry { icon = "menu", nameKey = "menu.game", children = new List<ActionRing.Entry>
+                {
+                    new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
+                    new ActionRing.Entry { icon = "save", nameKey = "act.save", run = SaveGame },
+                    new ActionRing.Entry { icon = "home", nameKey = "menu.main", run = BackToMenu },
+                    new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame },
+                } },
             };
             // losowe sadzenie na wszystkich pustych grządkach: w nocy rośliny nocy, w dzień rośliny dnia
             bool anyEmpty = false;

@@ -26,10 +26,12 @@ namespace Wyspa.UI
         };
 
         const float W = 360, H = 232;
+        const float TabsW = 38;   // kolumna zakładek po lewej (strona zaczyna się za nią)
         public const float Width = W, Height = H;
 
         GameObject blocker;
         RectTransform content;
+        RectTransform panelRect, pageRect;
         TextMeshProUGUI title;
         TextMeshProUGUI info;
         TooltipView tooltip;
@@ -58,7 +60,7 @@ namespace Wyspa.UI
         {
             var t = Ui.Theme;
             var panel = Ui.Img(root, "Panel", t.panel, true, true);
-            Ui.Place(panel.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(W, H));
+            panelRect = Ui.Place(panel.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(W, H));
 
             for (int i = 0; i < Tabs.Length; i++)
             {
@@ -78,7 +80,7 @@ namespace Wyspa.UI
             }
 
             var page = Ui.Img(panel.transform, "Page", t.panelPage, true);
-            Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(38, -6), new Vector2(W - 44, H - 12));
+            pageRect = Ui.Place(page.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(TabsW, -6), new Vector2(W - 44, H - 12));
             title = Ui.Txt(page.transform, "Title", t.textDark, TextAlignmentOptions.TopLeft, Ui.TextSize * 2);
             Ui.Place(title.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(10, -8), new Vector2(200, 18));
             // treść w przewijanym oknie:
@@ -115,10 +117,13 @@ namespace Wyspa.UI
                     Mathf.CeilToInt((W + 16) * UiRoot.DesiredUiScale()), Mathf.CeilToInt((H + 16) * UiRoot.DesiredUiScale())));
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();
-            // menu główne (Ustawienia): tylko zakładka opcji, reszta Księgi dotyczy gry
+            // menu główne (Ustawienia): same opcje, bez kolumny zakładek (reszta Księgi dotyczy gry); Księga węższa o kolumnę
             bool menu = Wyspa.Save.SaveSystem.InMenu;
             foreach (var (tb, img) in tabImages)
-                img.gameObject.SetActive(!menu || tb == Tab.Options);
+                img.gameObject.SetActive(!menu);
+            float tabsW = menu ? 6f : TabsW;
+            panelRect.sizeDelta = new Vector2(W - TabsW + tabsW, H);
+            pageRect.anchoredPosition = new Vector2(tabsW, -6);
             if (menu)
                 tab = Tab.Options;
             Show(tab);

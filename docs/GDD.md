@@ -753,6 +753,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     najnowszy plik albo zaczyna nową wyspę), Ustawienia = Księga tylko z Opcjami. Przycisk „Zapisz grę” w pierścieniu akcji
     i Ctrl+S. Interaktywne tło: burza nad wyspą, pioruny co kilka sekund w morze za wyspą (rozbłysk, piana, grzmot), klik
     w tło = piorun w to miejsce (§12.11).
+97. **Porządki w UI** (zgłoszenie gracza: ikony w pierścieniu nachodzą na siebie, w Ustawieniach z menu samotna ikonka
+    zakładki): pierścień ma najwyżej 7 ikon (Księga, Sklep, Rozbudowa, Menu + akcje pod kursorem), Opcje, Zapisz grę,
+    Menu główne (nowa ikona domku) i Wyjdź są w podmenu „Menu” (drugie koło w tym samym miejscu, środek = Wstecz).
+    Ikony stoją co 27 px po obwodzie (7 px przerwy), koło rośnie z liczbą ikon. Księga z menu głównego bez kolumny
+    zakładek i węższa o nią.
 43. Po teście: mgła w przezroczystym oknie **miękka** (półprzezroczysta w 6 stopniach zamiast szachownicy), kłęby za wodą
     do ok. 16 px. Światło przerobione na **Light 2D jak lampy**: snopy słońca/księżyca to Sprite Light 2D z obrazem snopów
     i wolumetrią (`LightShafts`), lampy i świecące owoce z wolumetrią, ogniki/duszki/runy mają w nocy własną poświatę
@@ -802,7 +807,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/UI/UiRoot.cs` | korzeń UI: Canvas (Constant Pixel Size, skala UI = skala świata − 1), EventSystem, font TMP tworzony w locie z `WyspaPixel.ttf`, dymek nad grządką |
 | `Scripts/UI/Ui.cs`, `UiTheme.cs`, `UiInput.cs`, `LocText.cs` | fabryka elementów (9-slice, tekst, przycisk, pasek), motyw (sprite'y, ikony, kolory, tabele), wejście, tekst z klucza odświeżany po zmianie języka |
 | `Scripts/UI/HudView.cs` | HUD: waluty (pokazane po zdobyciu), Esencja, rytm pracy, zegar; chowa się po 5 s bez ruchu myszy |
-| `Scripts/UI/ActionRing.cs` | pierścień akcji (PPM na wyspie): Księga, Sklep, Opcje, Rozbudowa; wyzwalany w `UiRoot` (bez przeciągania, gdy nic nie jest otwarte) |
+| `Scripts/UI/ActionRing.cs` | pierścień akcji (PPM na wyspie): Księga, Sklep, Rozbudowa, Menu (podmenu: Opcje, Zapisz, Menu główne, Wyjdź); wyzwalany w `UiRoot` (bez przeciągania, gdy nic nie jest otwarte) |
 | `Scripts/UI/SeedWheel.cs` | koło nasion wokół pustej grządki, dymki z opisem, PPM/Esc zamyka |
 | `Scripts/UI/BookView.cs` | Księga: zakładki Sklep (Lampy, Morze), Ulepszenia, Rytuały, Bestiariusz, Statystyki, Opcje (język, jasność nocy, rytm pracy) |
 | `Scripts/UI/ToastView.cs`, `TooltipView.cs` | toasty (maks. 3, 4 s) i dymek przy kursorze |
@@ -1149,7 +1154,8 @@ Makiety: `docs/img/ui_hud.png`, `ui_ksiega_sklep.png`, `ui_ksiega_ulepszenia.png
 ### 12.2 HUD
 - **Pasek nad wyspą (Etap 6d):** górny wiersz: monety, Esencja (ikona + pasek + liczby), plony nocy, odłamki gwiazd, drewno, kamień
   (waluty pojawiają się dopiero po zdobyciu); dolny wiersz: rytm pracy, pasek serii, tempo, zegar. Pasek idzie za lądem.
-- **Menu:** pierścień akcji pod prawym klikiem na wyspie (Księga, Sklep, Opcje, Rozbudowa), §12.10. Przycisków w rogu okna już nie ma.
+- **Menu:** pierścień akcji pod prawym klikiem na wyspie (Księga, Sklep, Rozbudowa, Menu z podmenu: Opcje, Zapisz grę,
+  Menu główne, Wyjdź; do tego akcje tego, co pod kursorem), §12.10, §9 p. 97. Przycisków w rogu okna już nie ma.
 - Rytm pracy (dolny wiersz paska): ikona stanu (seria / odświeżony / zmęczenie), opis („SERIA 32 MIN +25%”), pasek, zegar.
 - **Mini-tryb:** HUD całkiem ukryty, zostaje tylko wyspa.
 

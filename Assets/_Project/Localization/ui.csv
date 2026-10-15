@@ -351,6 +351,7 @@ ui.plot.replace_hint,"Kliknij, aby podmienić (nasiono wróci do worka)",Click t
 act.dig_up,Wykop roślinę,Dig up the plant,Pflanze ausgraben,植物を掘り出す,挖出植物,pierścień akcji na grządce
 act.plant_random,Obsiej puste grządki losowo,Plant random seeds on empty plots,Leere Beete zufällig bepflanzen,空いた畑にランダムに植える,在空地随机播种,pierścień akcji: losowe sadzenie
 toast.saved,Zapisano grę,Game saved,Spiel gespeichert,セーブしました,已保存游戏,po Zapisz grę
+act.back,Wstecz,Back,Zurück,戻る,返回,pierścień akcji: środek podmenu
 ui.dig_up.back,"{0}: nasiono wróci do worka, wzrost przepadnie","{0}: the seed goes back to the bag, growth is lost","{0}: Der Samen kommt in den Beutel zurück, das Wachstum geht verloren",{0}：種は袋に戻り、成長は失われる,{0}：种子回到袋中，生长进度丢失,
 ui.nest.sower_day,Siewca w dzień: {0},Sower by day: {0},Säer am Tag: {0},昼の種まき：{0},白天播种：{0},otwiera koło nasion dnia
 ui.nest.sower_night,Siewca w nocy: {0},Sower by night: {0},Säer in der Nacht: {0},夜の種まき：{0},夜间播种：{0},otwiera koło nasion nocy

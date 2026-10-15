@@ -10,6 +10,9 @@ EXTRA_ICONS = {
     # zapis gry: zwój z woskową pieczęcią
     'save': ["..........", ".hwwwwwwh.", ".hw2222wh.", ".hwwwwwwh.", ".hw222wwh.",
              ".hwwwwcch.", ".hwwwccrc.", ".hhhhhccc.", "......c.c.", ".........."],
+    # menu główne: domek z zapalonym oknem
+    'home': ["....hh....", "...hffh...", "..hffffh..", ".hffffffh.", "hhhhhhhhhh",
+             ".wwwwwwww.", ".wggwwjjw.", ".wggwwjjw.", ".wwwwwjjw.", ".wwwwwjjw."],
 }
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
