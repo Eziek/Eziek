@@ -605,3 +605,8 @@ F1: „Mutacje zawsze”.
 4. Wiosną siewca na dynię: „Siewca czeka: Dynia poza porą roku (siew: lato, jesień, zima)”.
 5. Stary zapis z dynią w ustawieniu nocy: po wczytaniu dynia jest w ustawieniu dnia i siewca ją sadzi w dzień.
 
+## 52. Chowańce na grzędach
+1. Sowa, ćma, kruk i nietoperz przez kilka minut: nigdy dwa na tej samej koronie drzewa, tablicy czy lampie.
+2. Nietoperz w dzień wisi pod koroną drzewa albo w domku, nigdy na tablicy ogłoszeń ani na lampie.
+3. Mało drzew i lamp: chowańce, dla których brak wolnej grzędy, siedzą w domkach.
+

@@ -1120,6 +1120,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     przenosi ją do ustawienia dnia (gdy wolne) albo czyści. Panel gniazda (zakładka Siewca) pokazuje powód czekania
     („Siewca czeka: za mało monet…”, „…poza porą roku…”, „…brak nasion w worku” dla hybryd, „Brak pustych grządek
     w zasięgu…”), a gdy są puste grządki i siewca nie może siać, toast z powodem raz przy każdej zmianie powodu.
+132. **Chowańce jeden na drugim na tablicy** (zrzut gracza: sowa, ćma i nietoperz naraz na tablicy ogłoszeń, nietoperz
+    na środku deski). Grzędy (korony drzew, tablica, lampy) są teraz zajmowane: chowaniec nie wybiera grzędy, na której
+    ktoś siedzi albo do której leci; gdy wszystkie zajęte, leci do swojego domku. Nietoperz wisi tylko pod koronami
+    drzew (pod tablicą i lampą wisiał na desce albo słupie).
 
 ---
 

@@ -405,7 +405,13 @@ namespace Wyspa.Familiars
         /// <summary>Spacer: zwykle w pobliżu domku, czasem dalej po wyspie.</summary>
         Vector3 Wander() => HomeChance(0.6f) ? Home.Around() : RandomLand();
         Vector3 PlotOrHome() => HomeChance(0.35f) ? Home.Spot : NearPlot();
-        Vector3 PerchOrHome(float below = 0f) => HomeChance(0.4f) ? Home.Spot : RandomPerch(below);
+        Vector3 PerchOrHome(float below = 0f)
+        {
+            if (!HomeChance(0.4f))
+                return RandomPerch(below);
+            hasPerch = false;   // do domku: grzęda wolna dla innych
+            return Home.Spot;
+        }
         Vector3 SleepSpot() => Home != null ? Home.Spot : CozySpot();
 
         /// <summary>Miejsce obok grządki (ropucha, kruk, ślimak).</summary>
@@ -426,16 +432,18 @@ namespace Wyspa.Familiars
             return RandomLand();
         }
 
-        /// <summary>Gdzie może usiąść ptak: korony drzew (owocowych i dzikich), tablica, lampy.</summary>
-        /// <summary>Grzędy z kolejnością rysowania budowli, na której się siedzi (żeby ptak był przed koroną, nie za nią).</summary>
-        static List<(Vector3 at, int order)> Perches()
+        /// <summary>
+        /// Gdzie może usiąść ptak: korony drzew (owocowych i dzikich), tablica, lampy; z kolejnością rysowania budowli, na której
+        /// się siedzi (żeby ptak był przed koroną, nie za nią). hang: można pod nią wisieć (nietoperz), tylko korony drzew.
+        /// </summary>
+        static List<(Vector3 at, int order, bool hang)> Perches()
         {
-            var list = new List<(Vector3, int)>();
+            var list = new List<(Vector3, int, bool)>();
             foreach (var t in FruitTree.All)
             {
                 var sr = t != null ? t.GetComponent<SpriteRenderer>() : null;
                 if (t != null && t.Adult && sr != null)
-                    list.Add((new Vector3(sr.bounds.center.x + Random.Range(-0.3f, 0.3f), sr.bounds.max.y - 0.45f, 0f), sr.sortingOrder + 3));
+                    list.Add((new Vector3(sr.bounds.center.x + Random.Range(-0.3f, 0.3f), sr.bounds.max.y - 0.45f, 0f), sr.sortingOrder + 3, true));
             }
             var island = Island.Instance;
             if (island != null)
@@ -444,32 +452,67 @@ namespace Wyspa.Familiars
                 {
                     var sr = tr != null ? tr.GetComponent<SpriteRenderer>() : null;
                     if (sr != null)
-                        list.Add((new Vector3(sr.bounds.center.x, sr.bounds.max.y - 0.5f, 0f), sr.sortingOrder + 3));
+                        list.Add((new Vector3(sr.bounds.center.x, sr.bounds.max.y - 0.5f, 0f), sr.sortingOrder + 3, true));
                 }
                 var board = island.Board;
                 if (board != null)
-                    list.Add((board.transform.position + new Vector3(0f, 1.1f, 0f), Order(board.gameObject)));
+                    list.Add((board.transform.position + new Vector3(0f, 1.1f, 0f), Order(board.gameObject), false));
             }
             foreach (var l in Lamp.All)
                 if (l != null)
-                    list.Add((l.transform.position + new Vector3(0f, 1.4f, 0f), Order(l.gameObject)));
+                    list.Add((l.transform.position + new Vector3(0f, 1.4f, 0f), Order(l.gameObject), false));
             return list;
         }
 
         static int Order(GameObject go) => go.TryGetComponent(out SpriteRenderer sr) ? sr.sortingOrder + 3 : 0;
 
-        Vector3 perchAt;
+        Vector3 perchAt, perchBase;
         int perchOrder;
+        bool hasPerch;
 
-        /// <summary>Losowa grzęda; zapamiętuje, przed czym ma się rysować, gdy na niej siedzi.</summary>
+        /// <summary>Grzęda zajęta przez innego chowańca: siedzi na niej albo do niej leci.</summary>
+        bool Taken(Vector3 at)
+        {
+            foreach (var o in All)
+            {
+                if (o == null || o == this || !o.hasPerch)
+                    continue;
+                var d = o.perchBase - at;
+                if (Mathf.Abs(d.x) > 0.6f || Mathf.Abs(d.y) > 0.9f)
+                    continue;
+                if (o.flying || (o.transform.position - o.perchAt).sqrMagnitude < 0.05f)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Losowa wolna grzęda; zapamiętuje, przed czym ma się rysować, gdy na niej siedzi. below > 0: wisi pod nią
+        /// (nietoperz), więc tylko korony drzew (pod tablicą czy lampą wisiałby na środku deski albo słupa).
+        /// </summary>
         Vector3 RandomPerch(float below = 0f)
         {
-            var p = Perches();
-            if (p.Count == 0)
+            var all = Perches();
+            var free = all.FindAll(p => (below <= 0f || p.hang) && !Taken(p.at));
+            if (free.Count == 0 && Home != null)
+            {
+                hasPerch = false;   // wszystkie zajęte: do domku zamiast na cudzą grzędę
+                return Home.Spot;
+            }
+            if (free.Count == 0)
+                free = all.FindAll(p => below <= 0f || p.hang);   // bez domku: jak dawniej, byle nie na desce
+            if (free.Count == 0)
+                free = all;
+            if (free.Count == 0)
+            {
+                hasPerch = false;
                 return RandomLand() + new Vector3(0f, 0.8f, 0f);
-            var (at, order) = p[Random.Range(0, p.Count)];
+            }
+            var (at, order, _) = free[Random.Range(0, free.Count)];
+            perchBase = at;
             perchAt = at - new Vector3(0f, below, 0f);
             perchOrder = order;
+            hasPerch = true;
             return perchAt;
         }
 
