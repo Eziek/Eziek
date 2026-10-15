@@ -187,6 +187,13 @@ namespace Wyspa.Automation
             SayGlyph(RuneGlyphs.Star);   // wypoczęty
         }
 
+        /// <summary>Zwalnia miejsce przy ognisku (przerwany odpoczynek przy ogniu: zabawa, odpłynięcie).</summary>
+        void LeaveFire()
+        {
+            foreach (var b in WispBonfire.All)
+                if (b != null) b.Leave(this);
+        }
+
         void StopResting()
         {
             if (restHouse != null)
@@ -368,6 +375,7 @@ namespace Wyspa.Automation
         void Join(Wisp host)
         {
             StopAllCoroutines();
+            LeaveFire();
             idling = false;
             flying = false;
             leader = host;

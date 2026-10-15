@@ -20,6 +20,37 @@ namespace Wyspa.Automation
         Sprite[] frames, glows;
         float seed;
 
+        /// <summary>Miejsc przy ogniu (krąg): więcej ogników zostaje przy swoich gniazdach, zamiast się tłoczyć.</summary>
+        public const int Seats = 6;
+        readonly Wisp[] seated = new Wisp[Seats];
+
+        /// <summary>Wolne miejsce w kręgu przy ogniu (stałe dla ognika, póki siedzi). False = krąg pełny.</summary>
+        public bool TrySeat(Wisp w, out Vector3 seat)
+        {
+            seat = default;
+            int free = -1;
+            for (int i = 0; i < Seats; i++)
+            {
+                if (seated[i] != null && !seated[i].isActiveAndEnabled)
+                    seated[i] = null;
+                if (seated[i] == w) { free = i; break; }
+                if (free < 0 && seated[i] == null) free = i;
+            }
+            if (free < 0)
+                return false;
+            seated[free] = w;
+            // elipsa wokół ognia (z przodu niżej, z tyłu wyżej), co 60 stopni
+            float a = free * Mathf.PI * 2f / Seats + 0.3f;
+            seat = Center + new Vector3(Mathf.Cos(a) * 1.15f, Mathf.Sin(a) * 0.5f + 0.15f, 0f);
+            return true;
+        }
+
+        public void Leave(Wisp w)
+        {
+            for (int i = 0; i < Seats; i++)
+                if (seated[i] == w) seated[i] = null;
+        }
+
         /// <summary>Gdzie krążą ogniki: nad ogniem.</summary>
         public Vector3 Center => transform.position + new Vector3(0f, 0.9f, 0f);
 

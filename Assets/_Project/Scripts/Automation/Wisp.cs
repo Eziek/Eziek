@@ -67,7 +67,7 @@ namespace Wyspa.Automation
         public const int Radius = 3;
         public const int NameCount = 12;
         const float Personal = 0.9f;       // bliżej niż tyle ogniki się rozpychają (ognik z narzędziem i czapką ok. 14 px)
-        const float MaxNudge = 0.45f;      // najdalej o tyle sprite odsuwa się od toru lotu
+        const float MaxNudge = 0.7f;       // najdalej o tyle sprite odsuwa się od toru lotu (w tłoku przy gnieździe)
         const float ChatRange = 3.5f;      // jak daleko szuka rozmówcy
         const float ChatGap = 0.46f;       // pół odstępu między rozmówcami (dalej niż Personal: bez rozpychania w rozmowie)
         const float HeadHeight = 1.05f;    // dymek nad głową (od punktu zaczepienia sprite'a)
@@ -645,12 +645,13 @@ namespace Wyspa.Automation
             var fire = nest != null ? WispBonfire.Near(nest.transform.position) : null;
             if (r < 0.35f)
             {
-                if (fire != null)
+                // przy ogniu: własne miejsce w kręgu (najwyżej 6 ogników), reszta zostaje przy gnieździe
+                if (fire != null && fire.TrySeat(this, out var seat))
                 {
-                    var seat = fire.Center + new Vector3(Random.Range(-0.9f, 0.9f), Random.Range(-0.1f, 0.5f), 0f);
                     yield return FlyTo(seat, 0.2f);
                     if (body != null) body.flipX = fire.Center.x < seat.x;   // twarzą do ognia
                     yield return HoverFor(Random.Range(3f, 7f));
+                    fire.Leave(this);
                     yield break;
                 }
                 yield return FlyTo(Home, 0.2f);
@@ -659,8 +660,8 @@ namespace Wyspa.Automation
             }
             Vector3 target;
             if (r < 0.75f || Lamp.All.Count == 0)
-                target = (fire != null ? fire.Center : nest != null ? nest.transform.position : transform.position)
-                         + new Vector3(Random.Range(-1.6f, 1.6f), Random.Range(0.6f, 1.8f) - (fire != null ? 0.6f : 0f), 0f);
+                target = (nest != null ? nest.transform.position : transform.position)   // spacer wokół własnego gniazda
+                         + new Vector3(Random.Range(-2.2f, 2.2f), Random.Range(0.4f, 2.0f), 0f);
             else
                 target = Lamp.All[Random.Range(0, Lamp.All.Count)].transform.position + new Vector3(Random.Range(-0.6f, 0.6f), 1.5f, 0f);
             // powolny lot z kółkiem wokół celu
@@ -794,6 +795,7 @@ namespace Wyspa.Automation
             chatReady = false;
             StopResting();
             working = false;
+            LeaveFire();
             EndPlay();   // przerwana zabawa (odpłynięcie, przeniesione gniazdo): towarzysze wracają do pracy
             chatCooldown = Random.Range(45f, 120f);
             if (bubble != null)
