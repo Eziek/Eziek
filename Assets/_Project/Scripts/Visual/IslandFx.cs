@@ -118,6 +118,26 @@ namespace Wyspa.Visual
             fx.particles.Burst(cropPos, fx.soil, 6, 38f, 160f, 0.5f, order + 1);
         }
 
+        /// <summary>Roślina wyrwana przez ognika: ziemia pryska na boki, kilka listków, grudki osypują się do dołka.</summary>
+        public static void Uprooted(Vector3 cropPos, int order)
+        {
+            var fx = Instance;
+            if (fx == null || fx.particles == null)
+                return;
+            fx.particles.Burst(cropPos, fx.soil, 9, 46f, 190f, 0.55f, order + 1);
+            fx.particles.Burst(cropPos + new Vector3(0f, 2f / Ppu, 0f), fx.soil, 4, 18f, 120f, 0.4f, order + 1);
+            if (fx.leaves != null && fx.leaves.Length > 0)
+                fx.particles.Burst(cropPos + new Vector3(0f, 7f / Ppu, 0f), fx.leaves, 3, 34f, 110f, 0.7f, order + 2);
+        }
+
+        /// <summary>Okruszki ziemi podskakują przy szarpaniu rośliny (przed wyrwaniem).</summary>
+        public static void SoilCrumbs(Vector3 cropPos, int order)
+        {
+            var fx = Instance;
+            if (fx != null && fx.particles != null)
+                fx.particles.Burst(cropPos, fx.soil, 2, 16f, 140f, 0.3f, order + 1);
+        }
+
         public static void Planted(Vector3 cropPos, int order)
         {
             var fx = Instance;

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using Wyspa.Automation;
 using Wyspa.Core;
+using Wyspa.Farming;
 using Wyspa.Lighting;
 using Wyspa.World;
 
@@ -13,6 +15,8 @@ namespace Wyspa.Visual
     /// Dzień: słońce wschodzi po prawej (wschód) i zachodzi po lewej, więc rano cienie są długie w lewo, w południe krótkie,
     /// wieczorem długie w prawo; o świcie i zmierzchu bledną przy horyzoncie. Noc: cień od najbliższej zapalonej lampy
     /// (dłuższy dalej od niej, wyraźniejszy bliżej), a poza lampami słaby cień od księżyca.
+    /// Rośliny na grządkach rzucają cień tak samo. Ogniki (lecą nad ziemią) mają w dzień miękką plamkę cienia pod sobą,
+    /// przesuniętą od słońca; w nocy jej nie ma, bo same świecą.
     /// Do tego ciepła poświata od strony słońca (Point Light 2D) o świcie i zmierzchu.
     /// Sylwetka: para obiektów (obrót, skala, obrót) daje dowolne ścięcie sprite'a bez własnego shadera.
     /// </summary>
@@ -30,7 +34,11 @@ namespace Wyspa.Visual
             public Lamp lamp;   // gdy obiekt to lampa: jej własne światło cienia nie rzuca
         }
 
+        const float WispGround = 0.42f;     // plamka cienia tyle pod ognikiem (ziemia pod nim)
         readonly Dictionary<Transform, Shadow> shadows = new Dictionary<Transform, Shadow>();
+        readonly Dictionary<Wisp, SpriteRenderer> wispShadows = new Dictionary<Wisp, SpriteRenderer>();
+        readonly List<Wisp> goneWisps = new List<Wisp>();
+        Sprite blob;
         readonly List<Transform> gone = new List<Transform>();
         GameClock clock;
         Light2D sunGlow;
@@ -93,6 +101,18 @@ namespace Wyspa.Visual
                 if (!shadows.ContainsKey(t))
                     shadows[t] = Create(t, src, island);
             }
+            // rośliny na grządkach (sprite rośliny jest dzieckiem grządki)
+            foreach (var plot in FarmPlot.All)
+            {
+                var src = plot != null ? plot.CropRenderer : null;
+                if (src == null || !plot.isActiveAndEnabled)
+                    continue;
+                var t = src.transform;
+                seen.Add(t);
+                if (!shadows.ContainsKey(t))
+                    shadows[t] = Create(t, src, island);
+            }
+            ScanWisps(island);
             gone.Clear();
             foreach (var kv in shadows)
                 if (kv.Key == null || !seen.Contains(kv.Key))
@@ -102,6 +122,75 @@ namespace Wyspa.Visual
                 if (shadows[t].root != null)
                     Destroy(shadows[t].root.gameObject);
                 shadows.Remove(t);
+            }
+        }
+
+        void ScanWisps(Island island)
+        {
+            foreach (var w in Wisp.All)
+                if (w != null && !wispShadows.ContainsKey(w))
+                {
+                    var go = new GameObject("WispShadow");
+                    go.transform.SetParent(transform, false);
+                    var sr = go.AddComponent<SpriteRenderer>();
+                    sr.sprite = Blob();
+                    sr.sortingOrder = Order;
+                    sr.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                    if (island.Art != null && island.Art.glow != null)
+                        sr.sharedMaterial = island.Art.glow;
+                    wispShadows[w] = sr;
+                }
+            goneWisps.Clear();
+            foreach (var kv in wispShadows)
+                if (kv.Key == null || !kv.Key.isActiveAndEnabled)
+                    goneWisps.Add(kv.Key);
+            foreach (var w in goneWisps)
+            {
+                if (wispShadows[w] != null)
+                    Destroy(wispShadows[w].gameObject);
+                wispShadows.Remove(w);
+            }
+        }
+
+        /// <summary>Miękka plamka 9x3 px (środek pełny, brzegi półprzezroczyste), pivot w środku.</summary>
+        Sprite Blob()
+        {
+            if (blob != null)
+                return blob;
+            const int w = 9, h = 3;
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point, name = "WispShadow" };
+            var px = new Color32[w * h];
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++)
+                {
+                    float dx = (x - (w - 1) / 2f) / (w / 2f), dy = (y - (h - 1) / 2f) / (h / 2f);
+                    float d = dx * dx + dy * dy;
+                    byte a = d < 0.45f ? (byte)255 : d < 1f ? (byte)140 : (byte)0;
+                    px[y * w + x] = new Color32(255, 255, 255, a);
+                }
+            tex.SetPixels32(px);
+            tex.Apply(false);
+            blob = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 16f, 0, SpriteMeshType.FullRect);
+            return blob;
+        }
+
+        void UpdateWispShadows(Vector2 sunDir, float sunAlpha)
+        {
+            foreach (var kv in wispShadows)
+            {
+                var w = kv.Key;
+                var sr = kv.Value;
+                if (w == null || sr == null)
+                    continue;
+                float a = sunAlpha * 0.85f;
+                sr.enabled = a > 0.01f;
+                if (!sr.enabled)
+                    continue;
+                var p = w.BodyPosition;
+                // cień trochę od słońca, na pełne piksele (plamka nie pływa między pikselami)
+                float x = Mathf.Round((p.x + sunDir.x * 0.12f) * 16f) / 16f, y = Mathf.Round((p.y - WispGround) * 16f) / 16f;
+                sr.transform.position = new Vector3(x, y, 0f);
+                sr.color = new Color(Shade.r, Shade.g, Shade.b, a);
             }
         }
 
@@ -140,6 +229,7 @@ namespace Wyspa.Visual
             float sunAlpha = day ? 0.3f * Mathf.Clamp01(height / 0.12f) * weather : 0f;
             float moon = 1f - Mathf.Abs(clock.MoonPhase - 0.5f) * 2f;
             float moonAlpha = clock.IsNight ? 0.1f * (0.3f + 0.7f * moon) * weather : 0f;
+            UpdateWispShadows(sunDir, sunAlpha);
 
             foreach (var kv in shadows)
             {
@@ -243,6 +333,12 @@ namespace Wyspa.Visual
                 if (kv.Value.root != null)
                     Destroy(kv.Value.root.gameObject);
             shadows.Clear();
+            foreach (var kv in wispShadows)
+                if (kv.Value != null)
+                    Destroy(kv.Value.gameObject);
+            wispShadows.Clear();
+            if (blob != null)
+                Destroy(blob.texture);
         }
     }
 }

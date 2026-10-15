@@ -33,7 +33,10 @@ namespace Wyspa.Farming
         /// <summary>Kafelek grządki (ustawia wyspa) - do sąsiedztwa przy mutacjach.</summary>
         public Vector2Int Cell { get; set; }
         public Vector3 CropPosition => cropRenderer != null ? cropRenderer.transform.position : transform.position;
-        int CropOrder => cropRenderer != null ? cropRenderer.sortingOrder : 0;
+        /// <summary>Sprite rośliny (cienie: SunShadows).</summary>
+        public SpriteRenderer CropRenderer => cropRenderer;
+        Vector3 cropHome;   // położenie rośliny na grządce (szarpanie przy wyrywaniu wraca do niego)
+        public int CropOrder => cropRenderer != null ? cropRenderer.sortingOrder : 0;
         public PlotState State => state;
         /// <summary>Ostatnio zebrana roślina (runa siewu w trybie „pamięć ziemi” sadzi ją ponownie). Bez zapisu.</summary>
         public CropDefinition LastCrop { get; private set; }
@@ -49,6 +52,8 @@ namespace Wyspa.Farming
             plotId = id;
             cropRenderer = crop;
             glowRenderer = glow;
+            if (crop != null)
+                cropHome = crop.transform.localPosition;
             cropFx = fx;
         }
 
@@ -126,15 +131,22 @@ namespace Wyspa.Farming
             }
         }
 
-        /// <summary>Zbiór bez zapłaty (np. ognik-ogrodnik wkłada plon do skrzyni). Zwraca zebraną roślinę.</summary>
-        public CropDefinition HarvestSilently()
+        /// <summary>
+        /// Zbiór bez zapłaty (np. ognik-ogrodnik wkłada plon do skrzyni). Zwraca zebraną roślinę.
+        /// pulled: ognik wyrwał ją sam (własny efekt wyrywania), bez podskakującego plonu.
+        /// </summary>
+        public CropDefinition HarvestSilently(bool pulled = false)
         {
             var crop = state.crop;
             if (crop != null)
             {
-                IslandFx.Harvest(CropPosition, crop.RipeSprite, CropOrder);
+                if (pulled)
+                    IslandFx.Uprooted(CropPosition, CropOrder);
+                else
+                    IslandFx.Harvest(CropPosition, crop.RipeSprite, CropOrder);
                 LastCrop = crop;
             }
+            EndTug();
             state.Clear();
             RefreshVisual();
             Pop();
@@ -194,6 +206,28 @@ namespace Wyspa.Farming
             cropRenderer.sprite = state.IsEmpty ? null : state.crop.StageSprite(state.Stage);
             if (glowRenderer != null)
                 glowRenderer.sprite = state.IsEmpty ? null : state.crop.StageGlow(state.Stage);
+        }
+
+        /// <summary>
+        /// Szarpanie przy wyrywaniu (ognik ciągnie): tension 0..1 - roślina drży coraz mocniej i wyciąga się w górę.
+        /// Przesunięcie o całe piksele, żeby sprite nie rozmywał się między pikselami.
+        /// </summary>
+        public void Tug(float tension)
+        {
+            if (cropRenderer == null)
+                return;
+            var t = cropRenderer.transform;
+            float shake = Mathf.Sin(Time.unscaledTime * 55f) * (0.5f + 1.5f * tension);
+            t.localPosition = cropHome + new Vector3(Mathf.Round(shake) / 16f, Mathf.Round(tension * 2f) / 16f, 0f);
+            t.localScale = new Vector3(1f - 0.08f * tension, 1f + 0.22f * tension, 1f);
+        }
+
+        public void EndTug()
+        {
+            if (cropRenderer == null)
+                return;
+            cropRenderer.transform.localPosition = cropHome;
+            cropRenderer.transform.localScale = Vector3.one;
         }
 
         void Pop()

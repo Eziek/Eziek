@@ -330,6 +330,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] **Wschód i zachód słońca, światło i cienie** (prośba gracza): kolory światła o świcie i zmierzchu, ciepła poświata
   od strony słońca, snopy obracają się za słońcem, cienie obiektów od słońca (dzień) i od lamp (noc) (§9 p. 100).
   Do oceny w grze: siła cieni (0,3 w dzień, do 0,42 przy lampie) i kolory wschodu/zachodu.
+- [x] **Cienie roślin i ogników, wyrywanie plonów, zabawy ogników** (prośba gracza; §9 p. 101): ogniki bawią się ze sobą
+  (berek, wyścig, podrzucanie, taniec, drzemka), witają się w przelocie i gratulują awansu.
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
   zegara). Księżyc: 8 nocy na cykl, pełnia jedną noc (rytuał „Księżycowa rosa”: dwie). Kupiec-widmo w co trzecią noc (34%),
   w pierwszej połowie nocy, zostaje 10 min. Rośliny i drzewa rosną **x3 szybciej** (marchew 3:20, dynia 8:20); rośliny nocy
@@ -817,6 +819,18 @@ Obrazki referencyjne (kopie): `docs/img/`
     przy horyzoncie i w deszczu. Noc: cień od najbliższej zapalonej lampy (w przeciwną stronę, dłuższy dalej od lampy,
     wyraźniejszy bliżej), poza lampami słaby cień od księżyca (mocniejszy w pełnię). Podgląd:
     `docs/img/cienie_pory_dnia.png` (`tools/pixel-proto/shadow_preview.py`).
+101. **Cienie roślin i ogników, wyrywanie plonów, ogniki między sobą** (prośba gracza). Cienie mają też rośliny na
+    grządkach (jak obiekty), a ogniki w dzień miękką plamkę cienia pod sobą (przesuniętą od słońca; w nocy bez, bo
+    świecą). **Wyrywanie** (ogrodnik): ognik zniża się nad rośliną, szarpie (roślina drży coraz mocniej i wyciąga się
+    w górę, okruszki ziemi), roślina wyskakuje z ziemi z pryśnięciem ziemi i listków, łukiem leci do ręki ognika, a on
+    podskakuje z odrzutu (zamiast zamachu sierpem). **Zabawy wolnych ogników** (`Automation/WispPlay.cs`, jedna naraz
+    na wyspie, ognik zaczynający prowadzi resztę): berek (złapany: iskry i „!”, raz zamiana ról), wyścig do lampy albo
+    drzewa i z powrotem (odliczanie „! ! !”, zwycięzca pętla i gwiazdka, przegrany wielokropek), podrzucanie plonu
+    łukiem (czasem ktoś nie złapie), taniec w kółku 2-4 ogników (koło się zwęża, finał rozbłysk w środku), wspólna
+    drzemka w nocy (wspólny oddech, po kolei „Z”). W nocy częściej taniec i drzemka, w dzień berek, wyścig, podrzucanie.
+    **Mijanka**: dwa ogniki w przelocie uchylają czapki albo przybijają „piątkę” (iskry). **Gratulacje**: przy awansie
+    do 3 wolnych ogników obok przylatuje i krąży wokół bohatera z gwiazdkami. Nowe znaki w dymkach: serce, „Z”, gwiazdka
+    (serce także jako reakcja na koniec rozmowy).
 
 ---
 

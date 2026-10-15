@@ -62,7 +62,7 @@ namespace Wyspa.Automation
     /// jaśniejszy blask. Ma imię (dymek gniazda). Ogrodnik, siewca, drwal i alchemik pracują w polu 7x7 wokół gniazda,
     /// latarnik i zbieracz na całej wyspie.
     /// </summary>
-    public class Wisp : MonoBehaviour
+    public partial class Wisp : MonoBehaviour
     {
         public const int Radius = 3;
         public const int NameCount = 12;
@@ -128,6 +128,8 @@ namespace Wyspa.Automation
         public WispNest Nest => nest;
         public string NameKey => "wisp.name." + nameIndex;
         public static string KindKey(WispKind k) => "wisp.kind." + k.ToString().ToLowerInvariant();
+        /// <summary>Gdzie naprawdę widać ognika (sprite odsunięty od sąsiadów): cień, efekty.</summary>
+        public Vector3 BodyPosition => visual != null ? visual.position : transform.position;
 
         public int Level
         {
@@ -176,6 +178,8 @@ namespace Wyspa.Automation
             seed = Random.value * 10f;
             shinyTimer = Random.Range(120f, 300f);
             chatCooldown = Random.Range(10f, 45f);
+            playCooldown = Random.Range(20f, 60f);
+            greetCooldown = Random.Range(5f, 20f);
             visual = body != null && body.transform != transform ? body.transform : null;
             if (group == null)
                 group = gameObject.AddComponent<UnityEngine.Rendering.SortingGroup>();
@@ -289,7 +293,9 @@ namespace Wyspa.Automation
             if (hatSr == null)
                 return;
             bool flip = body != null && body.flipX;
-            var at = new Vector3(flip ? 0.5f / 16f : -0.5f / 16f, HatY, 0f);   // środek głowy: 0,5 px od pivota
+            // środek głowy: 0,5 px od pivota; przy powitaniu czapka unosi się na chwilę o 2 px
+            float lift = Time.unscaledTime < hatLiftUntil ? 2f / 16f : 0f;
+            var at = new Vector3(flip ? 0.5f / 16f : -0.5f / 16f, HatY + lift, 0f);
             hatSr.flipX = flip;
             hatSr.transform.localPosition = at;
             hatSr.sortingOrder = 6;
@@ -449,6 +455,8 @@ namespace Wyspa.Automation
             UpdateTool();
             UpdateHat();
             chatCooldown -= Time.unscaledDeltaTime;
+            playCooldown -= Time.unscaledDeltaTime;
+            greetCooldown -= Time.unscaledDeltaTime;
             if (flying)
             {
                 trailTimer -= Time.unscaledDeltaTime;
@@ -482,6 +490,8 @@ namespace Wyspa.Automation
                 // w tym samym punkcie: stały kierunek dla pary (po ziarnie), żeby nie migotały
                 var dir = dist > 0.001f ? d / dist : new Vector3(seed > o.seed ? 1f : -1f, 0f, 0f);
                 push += dir * ((Personal - dist) * 0.5f);
+                if (dist < Personal * 0.8f && seed > o.seed)
+                    TryGreet(o);   // mijanka: uchylenie czapki albo „piątka”
             }
             push.y *= 0.6f;
             push = Vector3.ClampMagnitude(push, MaxNudge);
@@ -502,6 +512,7 @@ namespace Wyspa.Automation
             if (Level > before)
             {
                 ApplyLevelLook();
+                CallCheer();   // wolne ogniki obok zlatują się pogratulować
                 IslandFx.FindPopped(transform.position + new Vector3(0f, 0.6f, 0f));
                 GameEvents.PlaySound("magic", 0.6f);
                 GameEvents.RaiseToast("toast.wisp.level", Loc.Get(NameKey), Loc.Get(KindKey(kind)), Level);
@@ -598,6 +609,18 @@ namespace Wyspa.Automation
         IEnumerator Idle()
         {
             idling = true;
+            // zabawa z innymi wolnymi ognikami (berek, wyścig, podrzucanie, taniec, drzemka) - WispPlay.cs
+            if (playCooldown <= 0f && !Save.SaveSystem.InMenu)
+            {
+                playCooldown = Random.Range(15f, 35f);
+                var play = activePlays < MaxPlays && Random.value < 0.55f ? StartPlay() : null;
+                if (play != null)
+                {
+                    idling = false;
+                    yield return play;
+                    yield break;
+                }
+            }
             if (chatCooldown <= 0f && !Save.SaveSystem.InMenu)
             {
                 chatCooldown = Random.Range(8f, 20f);   // nie wyszło: następna próba za chwilę
@@ -750,6 +773,7 @@ namespace Wyspa.Automation
             chatHost = false;
             chatWith = null;
             chatReady = false;
+            EndPlay();   // przerwana zabawa (odpłynięcie, przeniesione gniazdo): towarzysze wracają do pracy
             chatCooldown = Random.Range(45f, 120f);
             if (bubble != null)
                 bubble.Hide();
@@ -763,7 +787,8 @@ namespace Wyspa.Automation
             var glyphs = new List<int>();
             float r = Random.value;
             if (last && r < 0.7f)
-                glyphs.Add(r < 0.2f ? RuneGlyphs.Exclaim : r < 0.35f ? RuneGlyphs.Question : r < 0.5f ? RuneGlyphs.Dots : RuneGlyphs.Note);
+                glyphs.Add(r < 0.18f ? RuneGlyphs.Exclaim : r < 0.3f ? RuneGlyphs.Question : r < 0.42f ? RuneGlyphs.Dots
+                         : r < 0.54f ? RuneGlyphs.Heart : RuneGlyphs.Note);
             else
             {
                 int n = r < 0.15f ? 1 : r < 0.5f ? 2 : r < 0.85f ? 3 : 4;
@@ -852,10 +877,15 @@ namespace Wyspa.Automation
                 if (plot == null || !plot.State.IsRipe)
                     continue;
                 int quality = plot.State.Quality;
-                Pose(1, 0.25f);   // zamach sierpem
-                var crop = plot.HarvestSilently();
+                yield return Uproot(plot);
+                if (plot == null || !plot.State.IsRipe)
+                    continue;
+                var ripeSprite = plot.State.crop.RipeSprite;
+                var from = plot.CropPosition;
+                var crop = plot.HarvestSilently(true);
                 if (crop == null)
                     continue;
+                yield return CatchCrop(ripeSprite, from);
                 carried.Add(new Carried { crop = crop, quality = quality, sprite = crop.RipeSprite });
                 ShowCarried();
                 AddXp(1);

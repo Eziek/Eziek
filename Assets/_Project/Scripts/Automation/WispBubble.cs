@@ -15,7 +15,7 @@ namespace Wyspa.Automation
     {
         const float Ppu = 16f;
         public const int RuneCount = 17;
-        public const int Question = 17, Exclaim = 18, Dots = 19, Note = 20;
+        public const int Question = 17, Exclaim = 18, Dots = 19, Note = 20, Heart = 21, Sleep = 22, Star = 23;
         public const int SyllableCount = 12;
 
         static readonly string[][] Shapes =
@@ -41,6 +41,9 @@ namespace Wyspa.Automation
             new[] { "X", "X", "X", ".", "X" },                      // !
             new[] { ".....", ".....", ".....", ".....", "X.X.X" },  // ...
             new[] { ".XX", ".X.", ".X.", "XX.", "XX." },            // nutka (nucenie, śmiech)
+            new[] { ".X.X.", "XXXXX", "XXXXX", ".XXX.", "..X.." },  // serce
+            new[] { "XXX", "..X", ".X.", "X..", "XXX" },            // Z (drzemka)
+            new[] { "..X..", ".XXX.", "XXXXX", ".X.X.", "X...X" },  // gwiazdka (wygrana, gratulacje)
         };
 
         static readonly Color32 Outline = new Color32(0x0f, 0x0a, 0x10, 0xff);
@@ -62,6 +65,9 @@ namespace Wyspa.Automation
                 case Exclaim: return "babble_ex";
                 case Dots: return "babble_hum";
                 case Note: return "babble_laugh";
+                case Heart: return "babble_laugh";
+                case Sleep: return "babble_hum";
+                case Star: return "babble_ex";
                 default: return "babble_" + (Mathf.Abs(glyph) % SyllableCount);
             }
         }

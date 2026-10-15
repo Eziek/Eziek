@@ -359,3 +359,17 @@ Najpierw Wyspa → 2 (nowe czasy, ceny i sprite'y faz).
 6. Wydajność: duża wyspa (F1, kilkadziesiąt obiektów) bez spadku płynności.
 7. Przezroczyste okno i menu główne: cienie i kolory działają, nic nie wychodzi poza ląd.
 
+## 30. Cienie roślin i ogników, wyrywanie, zabawy ogników
+1. W dzień rośliny na grządkach mają cień jak drzewa (rano w lewo, wieczorem w prawo); ogniki mają pod sobą plamkę
+   cienia, która idzie za nimi. W nocy plamki nie ma.
+2. Ogrodnik przy dojrzałej roślinie: zniża się, roślina drży i wyciąga się, okruszki ziemi, wyskakuje z ziemi (ziemia
+   pryska), leci łukiem do ręki, ognik podskakuje. Plon trafia do skrzyni jak wcześniej, jakość bez zmian.
+3. Dwa lub więcej wolnych ogników przy gnieździe (np. wszystko zebrane): co jakiś czas zabawa. Dzień: berek, wyścig
+   (do lampy albo drzewa, „! ! !” na start, zwycięzca pętla z gwiazdką), podrzucanie plonu. Noc: taniec w kółku,
+   drzemka z „Z”. Po zabawie ogniki wracają do pracy.
+4. Zabawa w trakcie: pojawia się praca (dojrzała roślina) - zabawa kończy się najpóźniej po kilku sekundach, potem praca.
+5. Mijające się w locie ogniki: z czapką unoszą ją na chwilę, bez czapki iskry między nimi. Nie częściej niż co 25 s.
+   Ogniki wiszące obok siebie przy gnieździe nie witają się w kółko.
+6. Awans ognika (F1: doświadczenie): wolne ogniki obok przylatują i krążą wokół niego z gwiazdką.
+7. Odpłynięcie we mgłę w trakcie zabawy: wszystkie ogniki wracają do gniazd, nikt nie zostaje zawieszony.
+
