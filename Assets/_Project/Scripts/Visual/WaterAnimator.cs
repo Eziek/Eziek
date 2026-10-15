@@ -26,6 +26,9 @@ namespace Wyspa.Visual
         static readonly int MoonPathId = Shader.PropertyToID("_WyspaMoonPath");
         static readonly int RainId = Shader.PropertyToID("_WyspaRain");
         static readonly int SunlightId = Shader.PropertyToID("_WyspaSunlight");
+        static readonly int CloudShadowId = Shader.PropertyToID("_WyspaCloudShadow");
+        static readonly int MorningMistId = Shader.PropertyToID("_WyspaMorningMist");
+        static readonly int ShoreRangeGlobalId = Shader.PropertyToID("_WyspaShoreRange");
 
         [SerializeField] SpriteRenderer water;
         [SerializeField] GameClock clock;
@@ -34,7 +37,10 @@ namespace Wyspa.Visual
 
         Material material;
         float timer;
-        float moonPath, rain, sunlight;
+        float moonPath, rain, sunlight, cloudShadow, morningMist;
+
+        /// <summary>Przezroczyste okno: woda widoczna tylko do tylu pikseli od brzegu (0 = całe morze).</summary>
+        public float ShoreRange => shoreRange;
         readonly List<FishPath> fish = new List<FishPath>();
         float[] hiddenUntil = new float[0];
         bool anyHidden;
@@ -69,6 +75,7 @@ namespace Wyspa.Visual
         public void SetShoreOnly(float pixels)
         {
             shoreRange = Mathf.Max(0f, pixels);
+            Shader.SetGlobalFloat(ShoreRangeGlobalId, shoreRange);   // atmosfera (Atmosphere.shader) nie maluje pulpitu
             var m = EnsureMaterial();
             if (m != null)
                 m.SetFloat(ShoreRangeId, shoreRange);
@@ -274,6 +281,13 @@ namespace Wyspa.Visual
                 sunTarget = Mathf.Clamp01(Mathf.Sin(u * Mathf.PI) / 0.35f) * (raining ? 0.2f : 1f);
             }
             float rainTarget = weather == Weather.WeatherKind.Storm ? 1f : raining ? 0.6f : 0f;
+            // cienie chmur: w dzień przy pogodzie (w deszczu niebo całe zasnute); mgiełka: od 6:00 do 8:00, najgęstsza o świcie
+            float shadowTarget = !clock.IsNight && !raining ? 1f : 0f;
+            float mistTarget = 0f;
+            if (!clock.IsNight && sec < GameClock.DawnEndSecond)
+                mistTarget = (1f - sec / GameClock.DawnEndSecond) * (raining ? 0.6f : 1f);
+            cloudShadow = Mathf.MoveTowards(cloudShadow, shadowTarget, dt * 0.2f);
+            morningMist = Mathf.MoveTowards(morningMist, mistTarget, dt * 0.2f);
             moonPath = Mathf.MoveTowards(moonPath, moonTarget, dt * 0.25f);
             sunlight = Mathf.MoveTowards(sunlight, sunTarget, dt * 0.25f);
             rain = Mathf.MoveTowards(rain, rainTarget, dt * 0.3f);
@@ -283,6 +297,8 @@ namespace Wyspa.Visual
             Shader.SetGlobalVector(MoonPathId, new Vector4(px, moonPath, 0f, 0f));
             Shader.SetGlobalFloat(RainId, rain);
             Shader.SetGlobalFloat(SunlightId, sunlight);
+            Shader.SetGlobalFloat(CloudShadowId, cloudShadow);
+            Shader.SetGlobalFloat(MorningMistId, morningMist);
         }
 
         void UpdateNight()

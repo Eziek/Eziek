@@ -87,6 +87,15 @@ namespace Wyspa.Visual
                     name = Localization.Loc.Get("bird." + bird);
                 }
             }
+            if (id == null && overWorld && HorizonSights.Instance != null)
+            {
+                string sight = HorizonSights.Instance.SightAt(world, out who);
+                if (sight != null)
+                {
+                    id = "horizon:" + sight;
+                    name = Localization.Loc.Get("horizon." + sight);
+                }
+            }
             if (id == null && overWorld)
             {
                 if (water == null)

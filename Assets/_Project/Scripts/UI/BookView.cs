@@ -1182,10 +1182,11 @@ namespace Wyspa.UI
                     foreach (var e in EventIds) entries.Add(("event:" + e, Loc.Get("ui.event." + e)));
                     break;
                 case 5:
-                    // widziane (GDD §9 p. 116): ptaki i ryby wskazane kursorem, rzadkie noce; z licznikiem spotkań
+                    // widziane (GDD §9 p. 116, 120): ptaki, ryby i sylwetki na horyzoncie wskazane kursorem, rzadkie noce; z licznikiem spotkań
                     foreach (var b in Visual.AmbientBirds.Ids) entries.Add(("bird:" + b, Seen("bird." + b, chronicle.Stat("seen:bird:" + b))));
                     for (int k = 0; k < FishKinds.Count; k++) entries.Add(("species:" + k, Seen("fishkind." + k, chronicle.Stat("seen:species:" + k))));
                     foreach (var r in Visual.RareNights.Ids) entries.Add(("sight:" + r, Seen("sight." + r, chronicle.Stat("seen:sight:" + r))));
+                    foreach (var z in Visual.HorizonSights.Ids) entries.Add(("horizon:" + z, Seen("horizon." + z, chronicle.Stat("seen:horizon:" + z))));
                     break;
                 default:
                     foreach (var l in Lore.LoreBook.All) entries.Add(("lore:" + l, Loc.Get(l)));

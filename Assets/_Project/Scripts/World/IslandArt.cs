@@ -254,6 +254,8 @@ namespace Wyspa.World
         public Material floatMat;
         [Tooltip("Odbicia w wodzie (WaterReflection.shader, Visual/WaterReflections).")]
         public Material reflection;
+        [Tooltip("Cienie chmur, poranna mgiełka i rosa (Atmosphere.shader, Visual/Atmosphere).")]
+        public Material atmosphere;
 
         public LampDefinition Lamp(string id)
         {

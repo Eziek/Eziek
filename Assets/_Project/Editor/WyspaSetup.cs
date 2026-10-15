@@ -742,6 +742,7 @@ namespace Wyspa.EditorTools
             art.glow = GlowMaterial();
             art.floatMat = FxMaterialAsset("Float", "SpriteFloat", null);   // łodzie i boja w wodzie (Visual/Floating)
             art.reflection = FxMaterialAsset("WaterReflection", "WaterReflection", null);   // odbicia w wodzie (Visual/WaterReflections)
+            art.atmosphere = FxMaterialAsset("Atmosphere", "Atmosphere", null);   // cienie chmur, mgiełka o świcie, rosa (Visual/Atmosphere)
             EditorUtility.SetDirty(art);
             return art;
         }

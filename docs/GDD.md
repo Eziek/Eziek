@@ -450,8 +450,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   liście z drzew, ćmy z lamp, nazwy ptaków i ryb), **rzadkie noce** (świecąca toń, deszcz gwiazd, zorza, korowód
   ogników, krwawy księżyc) i dział **„Widziane”** w Bestiariuszu. Tylko wygląd, bez wpływu na ekonomię.
 - [x] Woda (wybór gracza, §9 p. 119): księżycowa ścieżka, kółka od deszczu, refleksy słońca i wodorosty na płyciznach,
-  smugi wiatru. Kolejne pomysły z listy (cienie chmur, poranna mgiełka, tęcza, dym z pieca, ćmy, motyle, sylwetki we mgle,
-  tryb zdjęcia) czekają na wybór gracza.
+  smugi wiatru. Potem (§9 p. 120) sylwetki we mgle (wieloryb, wąż morski, statek-widmo), cienie chmur, poranna mgiełka
+  z rosą. Z listy zostały: tęcza, dym z pieca i para z kotła, ćmy przy lampach, motyle i ważki, tryb zdjęcia.
 
 ---
 
@@ -1000,6 +1000,17 @@ Obrazki referencyjne (kopie): `docs/img/`
     kołyszą się, przesuwają się z dnem w paralaksie); **smugi wiatru** (w podmuchu, tym samym co kołysze roślinami, woda
     ciemnieje w cienkich poziomych pasach płynących z wiatrem, z pojedynczymi jasnymi punktami). Podgląd w przybliżeniu:
     `tools/pixel-proto/water_effects_preview.py` → `docs/img/woda_efekty.png`.
+120. **Horyzont, cienie chmur, poranna mgiełka** (wybór gracza). **Sylwetki we mgle** (`Visual/HorizonSights.cs`):
+    co 2,5-6 min daleko na wodzie (26-40 px od brzegu, w kadrze), tuż pod mgłą, więc kłęby częściowo je zasłaniają:
+    wieloryb (zmarszczka, grzbiet z płetwą, fontanna, zanurzenie, płetwa ogonowa, ok. 15 s), wąż morski (trzy garby
+    falują po kolei, na końcu wychyla łeb, 18 s), statek-widmo (blady, podarte żagle na trzech masztach, przepływa
+    przez 40 s, nocą z latarnią na rufie; nocą częściej). Grafika z map znaków w kodzie, podgląd
+    `tools/pixel-proto/horizon_preview.py` → `docs/img/horyzont.png`. Kursor nad sylwetką: nazwa i wpis do „Widziane”
+    (3 nowe pozycje). F1: „Horyzont”. **Atmosfera** (`Shaders/Atmosphere.shader`, `Visual/Atmosphere.cs`, jeden sprite
+    z obrazem lądu nad obiektami, pod mgłą, rysuje tylko nad lądem i widoczną wodą): **cienie chmur** w dzień przy
+    pogodzie (duże miękkie plamy z ditheringiem suną powoli w prawo, 17% cienia), **poranna mgiełka** od 6:00 do 8:00
+    nad wodą (poziome blade smugi, gęstsze przy brzegu, rzedną do 8:00) i **rosa** (pojedyncze piksele trawy migoczą
+    o świcie). Materiał `Atmosphere` tworzy Wyspa → 2.
 
 ---
 
@@ -1058,6 +1069,8 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Visual/WaterReflections.cs` | odbicia w wodzie: kopie sprite'ów obiektów przy brzegu, ogników i chowańców (shader `WaterReflection`) |
 | `Scripts/Visual/GameCursor.cs`, `CursorPlay.cs` | własny kursor (stany, iskierki) i zabawa kursorem: odginanie roślin, kręgi na wodzie, liście, ćmy, nazwy ptaków i ryb |
 | `Scripts/Visual/RareNights.cs` | rzadkie noce: świecąca toń, deszcz gwiazd, zorza, korowód ogników, krwawy księżyc |
+| `Scripts/Visual/HorizonSights.cs` | sylwetki na horyzoncie we mgle: wieloryb, wąż morski, statek-widmo |
+| `Scripts/Visual/Atmosphere.cs` | cienie chmur, poranna mgiełka i rosa (sprite z obrazem lądu, `Atmosphere.shader`) |
 | `Scripts/Visual/LightShafts.cs`, `NightGlow.cs` | snopy słońca/księżyca (Sprite Light 2D z wolumetrią, za kamerą), nocna poświata ogników, duszków i run |
 | `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |

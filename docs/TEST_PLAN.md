@@ -509,3 +509,16 @@ Pora dnia i pogoda z F1 (przewijanie czasu, wymuszenie pogody).
    niewidoczna); na płyciźnie kołyszą się ciemne źdźbła wodorostów (przy przesuwaniu widoku płyną z dnem).
 4. Podmuch wiatru (gdy drzewa się odginają): po wodzie przebiegają cienkie, ciemniejsze poziome smugi w stronę wiatru.
 5. Żaden efekt nie wchodzi na ląd, klif ani pianę; w przezroczystym oknie widać je tylko w pasie wody przy brzegu.
+
+## 42. Horyzont, cienie chmur, poranna mgiełka
+Najpierw Wyspa → 2 (materiał `Atmosphere`). F1: „Horyzont” pokazuje kolejną sylwetkę od razu.
+1. Wieloryb: daleko na wodzie, przy mgle; zmarszczka, ciemny grzbiet z płetwą, fontanna, zanurzenie, płetwa ogonowa.
+   Kłęby mgły częściowo go zasłaniają. Nie wchodzi na ląd ani na wysepki.
+2. Wąż morski: trzy garby wynurzają się po kolei, potem łeb z bladym okiem; powoli płynie w bok.
+3. Statek-widmo: blady, półprzezroczysty, podarte żagle, powoli przepływa i kołysze się; nocą latarnia na rufie świeci.
+4. Kursor nad sylwetką: dymek z nazwą, za pierwszym razem toast „Nowe w bestiariuszu”; w Bestiariuszu → Widziane są nowe pozycje.
+5. Bez F1: sylwetka mniej więcej co 2,5-6 minut, zawsze w kadrze.
+6. Dzień, pogodnie: po lądzie i wodzie powoli suną duże, miękkie cienie chmur (także po drzewach i budowlach);
+   w deszczu i nocą ich nie ma; w przezroczystym oknie nie ma ich na pulpicie.
+7. Świt (6:00-8:00): nad wodą blade, poziome smugi mgiełki, najgęstsze o 6:00, rzedną do 8:00; na trawie migoczą pojedyncze
+   piksele rosy.

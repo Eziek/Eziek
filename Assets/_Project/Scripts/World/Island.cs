@@ -131,6 +131,18 @@ namespace Wyspa.World
                 rare.transform.SetParent(transform.parent, false);
                 rare.AddComponent<RareNights>();
             }
+            if (FindAnyObjectByType<HorizonSights>() == null)
+            {
+                var horizon = new GameObject("HorizonSights");   // wieloryb, wąż morski, statek-widmo we mgle
+                horizon.transform.SetParent(transform.parent, false);
+                horizon.AddComponent<HorizonSights>();
+            }
+            if (art != null && art.atmosphere != null)
+            {
+                var atmo = new GameObject("Atmosphere");   // cienie chmur, poranna mgiełka, rosa
+                atmo.transform.SetParent(transform.parent, false);
+                atmo.AddComponent<Atmosphere>().Setup(this, art.atmosphere);
+            }
             if (art != null && art.reflection != null)
             {
                 var refl = new GameObject("WaterReflections");

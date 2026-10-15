@@ -249,3 +249,6 @@ sight.aurora,Zorza,Aurora,Polarlicht,オーロラ,极光,rzadka noc: zorza nad w
 sight.procession,Korowód ogników,Wisp Procession,Irrlichtzug,鬼火の行列,鬼火游行,rzadka noc: blade ogniki płyną nad wodą
 sight.bloodmoon,Krwawy księżyc,Blood Moon,Blutmond,血の月,血月,"rzadka noc: tylko w pełni, czerwone światło"
 ui.bestiary.seen,Widziane,Sightings,Gesichtet,目撃,目击,"sekcja Bestiariusza: ptaki i ryby wskazane kursorem, rzadkie noce"
+horizon.whale,Wieloryb,Whale,Wal,クジラ,鲸鱼,sylwetka na horyzoncie we mgle (Widziane)
+horizon.serpent,Wąż morski,Sea Serpent,Seeschlange,大海蛇,海蛇,sylwetka na horyzoncie we mgle (Widziane)
+horizon.ship,Statek-widmo,Ghost Ship,Geisterschiff,幽霊船,幽灵船,sylwetka na horyzoncie we mgle (Widziane)
