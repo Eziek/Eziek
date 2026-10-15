@@ -14,6 +14,8 @@ namespace Wyspa.World
         public readonly List<TilePos> startSoil = new List<TilePos>();
         public TilePos startDecoTile;
         public DecoKind startDeco;
+        /// <summary>Wysepki (§13.10): odcięte skrawki lądu po 3-4 kafelki. Nie należą do gracza, dopóki ich nie przyłączy.</summary>
+        public readonly List<List<TilePos>> islets = new List<List<TilePos>>();
 
         public ZoneKind ZoneAt(TilePos p) => zones.TryGetValue(p, out var z) ? z : ZoneKind.None;
         public FindKind FindAt(TilePos p) => finds.TryGetValue(p, out var f) ? f : FindKind.None;
@@ -116,7 +118,60 @@ namespace Wyspa.World
             }
             plan.startDecoTile = pool[startRnd.Range(0, pool.Count)];
             plan.startDeco = (DecoKind)startRnd.Range(0, 4);
+            PlaceIslets(plan, seed);
             return plan;
+        }
+
+        /// <summary>
+        /// Wysepki (§13.10): 2-4 skrawki po 3-4 kafelki, 6-10 kafelków od środka startu, poza strefami, co najmniej 2 kafelki
+        /// wody między sobą. Na każdej leży co najmniej jedno znalezisko. Osobny generator liczb, więc dawne światy (zapisy)
+        /// mają te same strefy i znaleziska co przed dodaniem wysepek.
+        /// </summary>
+        static void PlaceIslets(WorldPlan plan, int seed)
+        {
+            var rnd = new WRandom(seed * 53L + 19);
+            int count = rnd.Range(2, 5);
+            var taken = new List<TilePos>();
+            for (int guard = 0; plan.islets.Count < count && guard < 300; guard++)
+            {
+                double a = rnd.Range(0.0, 2 * Math.PI), d = rnd.Range(6.5, 10.0);
+                var first = new TilePos((int)Math.Round(15.5 + d * Math.Cos(a)), (int)Math.Round(15.5 + d * Math.Sin(a)));
+                int size = rnd.Range(3, 5);
+                var cells = new List<TilePos> { first };
+                for (int g = 0; cells.Count < size && g < 60; g++)
+                {
+                    var p = cells[rnd.Range(0, cells.Count)];
+                    var (dc, dr) = Dirs[rnd.Range(0, 4)];
+                    var q = new TilePos(p.c + dc, p.r + dr);
+                    if (!cells.Contains(q))
+                        cells.Add(q);
+                }
+                bool ok = cells.Count == size;
+                foreach (var p in cells)
+                {
+                    if (p.c < 2 || p.r < 2 || p.c > Size - 3 || p.r > Size - 3 || plan.zones.ContainsKey(p))
+                        ok = false;
+                    foreach (var t in taken)
+                        if (Math.Max(Math.Abs(t.c - p.c), Math.Abs(t.r - p.r)) <= 2)
+                            ok = false;
+                    foreach (var t in plan.start)   // na starcie schowana we mgle (IslandMap.IsletReveal)
+                        if (Math.Max(Math.Abs(t.c - p.c), Math.Abs(t.r - p.r)) <= IslandMap.IsletReveal)
+                            ok = false;
+                }
+                if (!ok)
+                    continue;
+                taken.AddRange(cells);
+                plan.islets.Add(cells);
+                bool hasFind = false;
+                foreach (var p in cells)
+                    if (plan.FindAt(p) != FindKind.None)
+                        hasFind = true;
+                if (!hasFind)
+                {
+                    double v = rnd.Value();
+                    plan.finds[cells[rnd.Range(0, cells.Count)]] = v < 0.35 ? FindKind.Shard : v < 0.65 ? FindKind.NightSeed : FindKind.Coins;
+                }
+            }
         }
     }
 }

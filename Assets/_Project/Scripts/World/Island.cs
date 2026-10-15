@@ -98,6 +98,8 @@ namespace Wyspa.World
         public IslandArt Art => art;
         /// <summary>Stojące obiekty wyspy (dekoracje, drzewa, lampy, budowle): cienie (SunShadows) biorą je stąd.</summary>
         public Transform DecoRoot => decoRoot;
+        /// <summary>Bieżący obraz wyspy (mapa odległości od brzegu dla ozdobników na wodzie), null przed pierwszym malowaniem.</summary>
+        public IslandPicture Picture => picture;
         public bool Ready => map.Count > 0;
         /// <summary>Po każdym przemalowaniu wyspy (zakup kafelka, nowy świat, wczytanie).</summary>
         public event Action Rebuilt;
@@ -119,6 +121,12 @@ namespace Wyspa.World
         {
             EnsureLightShafts();
             EnsureSunShadows();
+            if (art != null && art.waterFlora != null && art.waterFlora.Length > 0)
+            {
+                var flora = new GameObject("WaterFlora");
+                flora.transform.SetParent(transform.parent, false);
+                flora.AddComponent<WaterFlora>().Setup(this);
+            }
             // ptaki: tworzone w locie (bez przebudowy sceny), sprite'y z IslandArt (Wyspa → 2)
             if (art != null && art.birdCrow != null && art.birdCrow.Length >= 4 && FindAnyObjectByType<AmbientBirds>() == null)
             {
@@ -276,6 +284,7 @@ namespace Wyspa.World
             var plan = map.Plan;
             Rebuild();
             SyncPlots();
+            RefreshIslets(false);
             // nowa gra: na czwartym kafelku startu zamiast dekoracji stoi tablica z karteczkami wprowadzenia
             if (withBoard)
                 SpawnBoard(plan.startDecoTile);
@@ -304,6 +313,7 @@ namespace Wyspa.World
                     savedObjectTiles[o.id] = new TilePos(o.c, o.r);
             Rebuild();
             SyncPlots();
+            RefreshIslets(false);
             if (save.zonesFound != null)
                 foreach (var z in save.zonesFound)
                     zonesFound.Add((ZoneKind)z);
@@ -470,6 +480,8 @@ namespace Wyspa.World
             foreach (var c in critters)
                 if (c != null) Destroy(c);
             critters.Clear();
+            foreach (int i in new List<int>(isletViews.Keys))
+                DestroyIsletView(i);
             lampCounter = 0;
             claiming = false;
             StopAllCoroutines();
@@ -516,8 +528,9 @@ namespace Wyspa.World
                 return false;
             }
             GameEvents.PlaySound("tile");
-            var find = map.Buy(p);
-            StartCoroutine(Claim(p, find, wallet));
+            var merged = new List<TilePos>();
+            var find = map.Buy(p, merged);
+            StartCoroutine(Claim(p, find, wallet, merged));
             return true;
         }
 
@@ -540,7 +553,7 @@ namespace Wyspa.World
         }
 
         /// <summary>Ląd wynurza się z wody w 3 skokowych klatkach, potem piana, znalezisko i (czasem) dekoracja (§13.5).</summary>
-        IEnumerator Claim(TilePos p, FindKind find, Wallet wallet)
+        IEnumerator Claim(TilePos p, FindKind find, Wallet wallet, List<TilePos> merged)
         {
             claiming = true;
             IslandFx.TileClaimed(TileCenter(p), art != null ? art.foam : null);
@@ -572,6 +585,7 @@ namespace Wyspa.World
                 AddDecoration(p, NewTileDeco(p));
             PlacePending();
             GrantFind(p, find, wallet);
+            AfterGrowth(merged, wallet);
             Changed?.Invoke();
         }
 
@@ -975,7 +989,17 @@ namespace Wyspa.World
 
         void AddDecoration(TilePos p, DecoKind kind)
         {
-            var a = art != null ? art.Deco(kind) : null;
+            var sr = DecoSprite(p, kind, out var a);
+            AddTileCollider(sr.gameObject);
+            var deco = sr.gameObject.AddComponent<Decoration>();
+            deco.Init(this, p, kind, a, sr);
+            decorations[p] = deco;
+        }
+
+        /// <summary>Sprite dekoracji na kafelku (kołysanie, świecące piksele), bez klikania: dekoracja albo ozdoba wysepki.</summary>
+        SpriteRenderer DecoSprite(TilePos p, DecoKind kind, out DecoArt a)
+        {
+            a = art != null ? art.Deco(kind) : null;
             var sr = NewSprite("Deco_" + kind, decoRoot, TileAnchor(p, 13, out int order), order);
             sr.sprite = a != null ? a.sprite : null;
             if (a != null && a.sway)
@@ -990,10 +1014,90 @@ namespace Wyspa.World
                 if (art.glow != null)
                     g.sharedMaterial = art.glow;
             }
-            AddTileCollider(sr.gameObject);
-            var deco = sr.gameObject.AddComponent<Decoration>();
-            deco.Init(this, p, kind, a, sr);
-            decorations[p] = deco;
+            return sr;
+        }
+
+        // ================================================================ wysepki (§13.10)
+
+        const float IsletDecoChance = 0.6f;
+        readonly Dictionary<int, List<GameObject>> isletViews = new Dictionary<int, List<GameObject>>();
+
+        /// <summary>Ozdoba kafelka wysepki (stała dla miejsca): ta sama przed przyłączeniem i po nim.</summary>
+        DecoKind? IsletDeco(TilePos p) =>
+            WHash.Value(p.c, p.r, map.Seed + 916) < IsletDecoChance ? NewTileDeco(p) : (DecoKind?)null;
+
+        /// <summary>
+        /// Widoczne, odcięte wysepki: ozdoby (same sprite'y, bez usuwania) i klikalne kafelki z podpowiedzią.
+        /// Przyłączone albo ukryte znikają. announce = toast i piana, gdy wysepka właśnie wyłoniła się z mgły.
+        /// </summary>
+        void RefreshIslets(bool announce)
+        {
+            var visible = map.VisibleIslets();
+            foreach (int i in new List<int>(isletViews.Keys))
+                if (!visible.Contains(i))
+                    DestroyIsletView(i);
+            foreach (int i in visible)
+            {
+                if (isletViews.ContainsKey(i))
+                    continue;
+                isletViews[i] = CreateIsletView(i);
+                if (announce)
+                {
+                    GameEvents.RaiseToast("toast.islet.found");
+                    foreach (var p in map.IsletTiles(i))
+                        IslandFx.TileClaimed(TileCenter(p), art != null ? art.foam : null);
+                }
+            }
+        }
+
+        void DestroyIsletView(int i)
+        {
+            if (isletViews.TryGetValue(i, out var list))
+                foreach (var go in list)
+                    if (go != null) { go.SetActive(false); Destroy(go); }
+            isletViews.Remove(i);
+        }
+
+        List<GameObject> CreateIsletView(int i)
+        {
+            var list = new List<GameObject>();
+            foreach (var p in map.IsletTiles(i))
+            {
+                var deco = IsletDeco(p);
+                if (deco.HasValue)
+                    list.Add(DecoSprite(p, deco.Value, out _).gameObject);
+                var spot = new GameObject("Islet_" + p);
+                spot.transform.SetParent(decoRoot, false);
+                spot.transform.position = TileCenter(p);
+                spot.AddComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
+                spot.AddComponent<IsletSpot>().Init(this, i);
+                list.Add(spot);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Po dojściu kafelka: przyłączone wysepki (merged = ich kafelki, już własne) dostają zwykłe dekoracje i wydają
+        /// znaleziska, a wysepki, do których ląd się zbliżył, wyłaniają się z mgły.
+        /// </summary>
+        void AfterGrowth(List<TilePos> merged, Wallet wallet)
+        {
+            RefreshIslets(true);
+            if (merged == null || merged.Count == 0)
+                return;
+            foreach (var q in merged)
+            {
+                var deco = IsletDeco(q);
+                if (deco.HasValue && IsFree(q))
+                    AddDecoration(q, deco.Value);
+                IslandFx.TileClaimed(TileCenter(q), art != null ? art.foam : null);
+            }
+            if (wallet != null && map.Plan != null)
+                foreach (var q in merged)
+                    GrantFind(q, map.Plan.FindAt(q), wallet);
+            GameEvents.RaiseToast("toast.islet.joined", merged.Count);
+            Lore.Chronicle.Count("islet");
+            PlacePending();
         }
 
         /// <summary>Klikalny obszar = kafelek pod obiektem (podstawa stoi 6 px pod środkiem kafelka).</summary>
@@ -1457,7 +1561,8 @@ namespace Wyspa.World
                     tile = p;
                 }
             }
-            if (bestD == float.MaxValue || !map.AddFree(tile))
+            var merged = new List<TilePos>();
+            if (bestD == float.MaxValue || !map.AddFree(tile, merged))
                 return false;
             Rebuild();
             IslandFx.TileClaimed(TileCenter(tile), art != null ? art.foam : null);
@@ -1465,6 +1570,7 @@ namespace Wyspa.World
             var game = GameLoop.Instance;
             if (game != null && map.Plan != null)
                 GrantFind(tile, map.Plan.FindAt(tile), game.Wallet);   // znaleziska (też zapiski Opiekuna) nie przepadają
+            AfterGrowth(merged, game != null ? game.Wallet : null);
             Changed?.Invoke();
             return IsFree(tile);
         }
@@ -1826,18 +1932,47 @@ namespace Wyspa.World
 
         // ================================================================ testy (HUD debugowy)
 
+        /// <summary>F1: kupuje kafelki w stronę najbliższej odciętej wysepki, aż wyłoni się z mgły (gotowa do przyłączenia).</summary>
+        public void DebugTowardIslet()
+        {
+            if (map.Plan == null)
+                return;
+            int target = -1;
+            for (int i = 0; i < map.Plan.islets.Count && target < 0; i++)
+                if (map.IsletCut(i))
+                    target = i;
+            if (target < 0)
+                return;
+            var goal = map.IsletTiles(target)[0];
+            for (int guard = 0; guard < 40 && map.IsletCut(target) && map.IsletGap(target) > 1; guard++)
+            {
+                var c = map.Candidates();
+                c.RemoveAll(SeaBlocked);
+                if (c.Count == 0)
+                    break;
+                c.Sort((a, b) => (Math.Abs(a.c - goal.c) + Math.Abs(a.r - goal.r)).CompareTo(Math.Abs(b.c - goal.c) + Math.Abs(b.r - goal.r)));
+                map.Buy(c[0]);
+            }
+            Rebuild();
+            RefreshIslets(true);
+            PlacePending();
+            Changed?.Invoke();
+        }
+
         public void DebugBuyRandom(int count)
         {
             var rnd = new System.Random();
+            var merged = new List<TilePos>();
             for (int i = 0; i < count; i++)
             {
                 var c = map.Candidates();
                 c.RemoveAll(SeaBlocked);
                 if (c.Count == 0)
                     break;
-                map.Buy(c[rnd.Next(c.Count)]);
+                map.Buy(c[rnd.Next(c.Count)], merged);
             }
             Rebuild();
+            AfterGrowth(merged, null);
             PlacePending();
             Changed?.Invoke();
         }

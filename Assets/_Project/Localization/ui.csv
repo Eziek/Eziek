@@ -388,3 +388,9 @@ ui.store.reserve_less,Rezerwa -{0},Reserve -{0},Reserve -{0},予備 -{0},储备 
 ui.store.reserve_more,Rezerwa +{0},Reserve +{0},Reserve +{0},予備 +{0},储备 +{0},
 ui.store.auto,Sprzedaż co 10 s: {0},Sell every 10 s: {0},Alle 10 s verkaufen: {0},10秒ごとに売る：{0},每10秒出售：{0},{0} = wł./wył.
 ui.store.sell_now,Sprzedaj nadwyżkę teraz (+{0}),Sell surplus now (+{0}),Überschuss jetzt verkaufen (+{0}),今すぐ余りを売る（+{0}）,立即出售多余（+{0}）,{0} = monety
+ui.islet.title,Odcięta wysepka,Cut-off islet,Abgetrenntes Inselchen,離れ小島,孤立的小岛,
+ui.islet.desc,"Skrawek lądu wyłonił się z mgły. Nie da się z niego korzystać, dopóki go nie przyłączysz: kup kafelek tuż obok (także po skosie), a dołączy za darmo, razem z tym, co na nim leży.","A scrap of land has risen from the fog. You can't use it until you connect it: buy a tile right next to it (diagonals count) and it joins for free, along with whatever lies on it.","Ein Stück Land ist aus dem Nebel aufgetaucht. Nutzen kannst du es erst, wenn du es anschließt: Kauf ein Landstück direkt daneben (auch schräg), dann schließt es sich kostenlos an, samt allem, was darauf liegt.",霧の中から小さな土地が現れた。つなげるまでは使えない。すぐ隣（斜めも可）の土地マスを買えば、上にあるものごと無料でつながる。,一块土地从迷雾中浮现。连接之前无法使用：买下紧挨着它的土地格（斜对角也算），它就会免费并入，连同上面的一切。,
+ui.islet.size,Kafelki: {0},Tiles: {0},Landstücke: {0},マス：{0},土地格：{0},
+ui.islet.gap,Od wyspy dzieli ją {0} {0:plural:kafelek|kafelki|kafelków} wody,{0} {0:plural:tile|tiles} of water away from your island,{0} {0:plural:Landstück|Landstücke} Wasser von deiner Insel entfernt,島から水{0}マス,距离岛屿{0}格水面,"najkrótsza odległość, także po skosie"
+ui.islet.expand,Rozbudowa,Expand,Ausbauen,拡張,扩建,otwiera tryb rozbudowy
+ui.expand.islet,Przyłączy wysepkę za darmo!,Connects an islet for free!,Schließt ein Inselchen kostenlos an!,小島が無料でつながる！,免费连接一座小岛！,podpowiedź nad kafelkiem

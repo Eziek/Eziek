@@ -674,6 +674,16 @@ namespace Wyspa.EditorTools
             art.bonfireGlow = new[] { Obj("bonfire_0_glow"), Obj("bonfire_1_glow"), Obj("bonfire_2_glow") };
             art.dreamHouse = Obj("dreamhouse");
             art.dreamHouseGlow = Obj("dreamhouse_glow");
+            // ozdobniki na wodzie (tools/pixel-proto/water_flora.py, kolejność jak FLORA i wagi w Visual/WaterFlora)
+            string[] flora = { "lily_pads_0", "lily_pads_1", "lily_pads_2", "lily_pale", "lily_mist", "leaf_0", "leaf_1",
+                               "duckweed_0", "duckweed_1", "twig" };
+            art.waterFlora = new Sprite[flora.Length];
+            art.waterFloraGlow = new Sprite[flora.Length];
+            for (int i = 0; i < flora.Length; i++)
+            {
+                art.waterFlora[i] = LoadSprite("Water/flora_" + flora[i]);
+                art.waterFloraGlow[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Water/flora_{flora[i]}_glow.png");
+            }
             // chowańce: klatki i piksele emisyjne w kolejności póz z FamiliarSystem.Defs (tools/pixel-proto/familiars.py)
             art.familiars = new List<FamiliarArt>();
             foreach (var d in Wyspa.Familiars.FamiliarSystem.Defs)

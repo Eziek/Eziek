@@ -24,6 +24,14 @@ namespace Wyspa.World
         public int beastX, beastY;
         /// <summary>Prostokąt lądu z klifem i konturem (piksele tekstury, y w dół, włącznie).</summary>
         public int minX, minY, maxX, maxY;
+
+        /// <summary>Odległość od brzegu w pikselach (y w dół, jak w malarzu), 0 na lądzie i poza obrazem; z mapy danych wody.</summary>
+        public float ShoreDistance(int x, int y)
+        {
+            if (data == null || x < 0 || y < 0 || x >= width || y >= height)
+                return 0f;
+            return data[((height - 1 - y) * width + x) * 4] / 4f;
+        }
     }
 
     /// <summary>
@@ -61,7 +69,8 @@ namespace Wyspa.World
 
             // --- region pracy: kafelki + zapas na zaokrąglenie, klif, kontur i pianę ---
             int rx0 = int.MaxValue, ry0 = int.MaxValue, rx1 = int.MinValue, ry1 = int.MinValue;
-            foreach (var p in map.Tiles.Keys)
+            var painted = map.PaintedTiles();   // własny ląd i widoczne wysepki (§13.10)
+            foreach (var p in painted)
             {
                 var (x, y) = TileOrigin(p);
                 rx0 = Math.Min(rx0, x); ry0 = Math.Min(ry0, y);
@@ -74,7 +83,7 @@ namespace Wyspa.World
 
             // --- maska z kafelków ---
             var m = new bool[R.w * R.h];
-            foreach (var p in map.Tiles.Keys)
+            foreach (var p in painted)
             {
                 var (x0, y0) = TileOrigin(p);
                 int ax = x0, ay = y0, bx = x0 + Tile, by = y0 + Tile;

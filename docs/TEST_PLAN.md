@@ -405,3 +405,20 @@ Najpierw Wyspa → 2. F1: „Wszystkie chowańce”, „Ogniki zmęczone”, „
 7. Bez ogniska i sennika przy zmęczonych ognikach: podpowiedź w panelu gniazda.
 8. Zapis i wczytanie: nastrój ogników zostaje, domki stoją, chowańce wracają do domków.
 
+
+## 33. Drzewa, ozdobniki na wodzie, wysepki
+Najpierw Wyspa → 2 (nowe grafiki drzew i ozdobników). F1: „Do wysepki”, „+10 kafelków”, „Nowy świat”.
+1. Drzewa: okrągłe, świerk, krzak i martwe drzewo mają nowe grafiki (kępy liści, kora, korzenie); kołyszą się bez
+   ucinania liści na brzegach; ścięte okrągłe drzewo przewraca się w nowej grafice. Drzewa owocowe: wszystkie fazy
+   i przewracanie w nowym stylu, świecące owoce (gruszka-widmo, księżycowe) dalej świecą nocą.
+2. Woda: przy brzegu kilka lilii, liści, rzęsy; każdy powoli dryfuje (pół minuty na okrążenie), bez migotania
+   i rozmycia. Ozdobniki nie leżą na lądzie, pomoście ani łodzi. Nocą mglista (fioletowa) lilia lekko świeci.
+3. Po zakupie kafelka obok ozdobnika: ozdobnik pojawia się gdzie indziej, reszta zostaje. Przy większej wyspie jest ich więcej.
+4. „Do wysepki”: z mgły wyłania się wysepka (toast, piana), okno obejmuje ją; ma klif, kontur i ozdoby (drzewa, kamienie).
+5. Klik w wysepkę: panel „Odcięta wysepka” z opisem, liczbą kafelków, odległością w kafelkach wody i „Rozbudowa”.
+   Na wysepce nie da się kopać ani usuwać ozdób.
+6. Tryb rozbudowy: kafelek tuż obok wysepki (także po skosie) ma „+” zamiast ceny i podpowiedź „Przyłączy wysepkę za darmo!”.
+7. Kupno tego kafelka: toast „Wysepka przyłączona: +3/4 kafelki”, znaleziska spod jej kafelków, ozdoby stają się
+   zwykłymi dekoracjami (da się je usunąć), kafelki da się przekopać; cena kolejnego kafelka rośnie tylko o jeden zakup.
+8. Zapis i wczytanie: przyłączona wysepka zostaje, odcięte wracają w tych samych miejscach. Stary zapis wczytuje się
+   bez błędów (wysepki tuż przy lądzie po prostu się nie pojawiają).

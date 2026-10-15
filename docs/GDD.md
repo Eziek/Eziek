@@ -438,6 +438,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Rój ogników (prośba gracza): **gniazdo na 3 ogniki**, 6 zawodów (ogrodnik, siewca, drwal, alchemik, latarnik,
   zbieracz), **poziomy** z imionami, krążenie bez pracy. Siewca zastępuje runę siewu, a runa staje się **runą dziczy**
   (wokół wyrastają drzewa i kamienie). Szczegóły w §11.3 E. Zapis v12 (stary ognik → gniazdo z ogrodnikiem).
+- [x] Drzewa, ozdobniki na wodzie i wysepki (prośba gracza, §9 p. 105): nowe grafiki drzew (`trees2.py`), pływające
+  lilie, liście i rzęsa przy brzegu, odcięte wysepki 3-4 kafelków do przyłączenia (§13.10). Grafiki nadal placeholdery.
 
 ---
 
@@ -466,6 +468,8 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `shadow_preview.py` | podgląd słońca i cieni (wzory jak w `SunShadows.cs` i `DayNightLighting.cs`) → `docs/img/cienie_pory_dnia.png` |
 | `familiars.py` + `export_unity_familiars.py` | chowańce (8 rodzajów, pozy) → `Critters/familiar_<id>_<poza>.png`, podgląd `docs/img/chowance.png` |
 | `homes.py` + `export_unity_homes.py` | domki chowańców, ognisko ogników (3 klatki), sennik → `Objects/`, podgląd `docs/img/domki.png` |
+| `trees2.py` + `export_unity_trees2.py` | drzewa od nowa: okrągłe, świerk, krzak, martwe, owocowe (fazy i przewracanie); nadpisuje starsze, po nim `pad_sway.py`; podgląd `docs/img/drzewa.png` |
+| `water_flora.py` + `export_unity_water.py` | ozdobniki na wodzie (lilie, liście, rzęsa, gałązka) → `Water/flora_<nazwa>.png`, podgląd `docs/img/woda_ozdobniki.png` |
 | `export_unity_stages.py` | dodatkowe fazy roślin z gotowych PNG: kiełek (`crop_<id>_shoot`) i niedojrzała (`crop_<id>_unripe`); po `pad_sway.py` |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
 
@@ -882,6 +886,17 @@ Obrazki referencyjne (kopie): `docs/img/`
     Czas i światło: długa klatka (uśpiony komputer) nie przelicza godzin naraz (rośliny nocy dostają przespaną noc jak
     offline), snopy obracają się płynnie, cienie znikają od razu z obiektem i uwzględniają przysiad roślin, wyciek
     sprite'a pioruna w menu, uszkodzony zapis zaczyna rano. Ekonomia: „Obfite noce” znów +1 plon nocy za roślinę.
+105. **Drzewa, woda i wysepki** (prośba gracza: „drzewa biednie wyglądają”, „coś, co delikatnie pływa”, „skrawek ziemi
+    do przyłączenia”). **Drzewa od nowa** (`tools/pixel-proto/trees2.py`, eksport `export_unity_trees2.py`): korona
+    z kęp liści z teksturą (jaśniejsze kępki, ciemne prześwity, cień pod kępami, listki wystające poza obrys), grubszy
+    pień z korą, korzeniami i gałęziami znikającymi w koronie; okrągłe drzewo, świerk z poszarpanymi piętrami, krzak
+    z jagodami, martwe drzewo z dziuplą i wszystkie gatunki owocowe we wszystkich fazach (z klatkami przewracania).
+    **Ozdobniki na wodzie** (`water_flora.py`, `Visual/WaterFlora`): liście lilii (3 rodzaje), blada lilia, mglista
+    lilia (nocą lekko świeci), opadłe liście, rzęsa, gałązka. 5-18 sztuk (rośnie z wyspą) 8-30 px od brzegu, każda
+    dryfuje po małej elipsie we własnym rytmie (pół minuty na okrążenie); omijają pomost; po zakupie kafelka te, na
+    które wszedł ląd, odpływają gdzie indziej. **Wysepki** (§13.10): 2-4 odcięte skrawki po 3-4 kafelki na świat,
+    wyłaniają się z mgły, gdy ląd podejdzie na 4 kafelki; kafelek kupiony tuż obok (także po skosie) przyłącza wysepkę
+    za darmo z dekoracjami i znaleziskami.
 
 ---
 
@@ -1443,6 +1458,22 @@ Podgląd: `docs/img/wyspa_strefy.png` (wyspa z trzema strefami), `docs/img/arkus
   (np. rytuał przy posągu).
 - **Bonus strefy wynika z podłoża**, a nie z dekoracji. Na cmentarnej ziemi można założyć grządkę i zachowuje bonus
   (rośliny nocy ×1.5).
+
+### 13.10 Wysepki (prośba gracza, §9 p. 105)
+- **Generator świata** (`WorldGenerator.PlaceIslets`, osobne liczby losowe, więc dawne światy mają te same strefy
+  i znaleziska): **2-4 wysepki po 3-4 kafelki**, 6-10 kafelków od środka startu, poza strefami, co najmniej 2 kafelki wody
+  między sobą. Na każdej leży co najmniej jedno znalezisko (odłamek, nasiona nocy albo monety).
+- **Odkrycie:** na starcie wysepki są schowane we mgle. Wyłaniają się (toast i piana), gdy własny ląd podejdzie na
+  **4 kafelki** (także po skosie). Malarz wyspy rysuje je jak ląd (klif, kontur, piana), więc okno i kamera je obejmują.
+- **Odcięta wysepka nie należy do gracza:** nie da się na niej kopać, budować ani usuwać dekoracji; ma własne ozdoby
+  (drzewa, krzaki, kamienie, stałe dla miejsca). Klik: panel z opisem, liczbą kafelków, odległością w kafelkach wody
+  i przyciskiem „Rozbudowa”.
+- **Przyłączenie:** zakup (albo darmowy kafelek pod budowlę) **tuż obok wysepki, także po skosie** przyłącza ją całą:
+  jej kafelki stają się własne **za darmo** (nie podnoszą ceny kolejnych), ozdoby stają się zwykłymi dekoracjami do
+  usunięcia, wypadają znaleziska spod kafelków, toast „Wysepka przyłączona”. W trybie rozbudowy taki kafelek ma „+”
+  zamiast ceny i podpowiedź „Przyłączy wysepkę za darmo!”.
+- **Zapis bez zmian:** stan wysepki wynika z kafelków (odcięta = żaden jej kafelek nie należy do gracza ani nie dotyka
+  jego lądu). Przyłączona to zwykłe posiadane kafelki; w starszych zapisach wysepka, do której ląd już dorósł, się nie pojawia.
 
 ---
 

@@ -95,6 +95,11 @@ namespace Wyspa.World
         [Tooltip("Latarnia morska: lampa spoza sklepu lamp, stawiana z Morza.")]
         public LampDefinition lighthouse;
 
+        [Header("Ozdobniki na wodzie (WaterFlora): kolejność jak FLORA w tools/pixel-proto/water_flora.py")]
+        public Sprite[] waterFlora;
+        [Tooltip("Piksele emisyjne (ten sam indeks), puste gdy ozdobnik nie świeci.")]
+        public Sprite[] waterFloraGlow;
+
         [Header("Drzewa owocowe (GDD §15.1)")]
         public List<Farming.TreeArt> trees = new List<Farming.TreeArt>();
         public Sprite sapling;

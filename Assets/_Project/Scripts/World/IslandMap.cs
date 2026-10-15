@@ -63,13 +63,140 @@ namespace Wyspa.World
             Changed?.Invoke();
         }
 
+        // ---------------------------------------------------------------- wysepki (§13.10)
+
+        /// <summary>Wysepka wyłania się z mgły, gdy własny ląd jest najwyżej tyle kafelków od niej (także po skosie).</summary>
+        public const int IsletReveal = 4;
+
+        bool OwnedWithin(TilePos p, int range)
+        {
+            for (int dc = -range; dc <= range; dc++)
+                for (int dr = -range; dr <= range; dr++)
+                    if (tiles.ContainsKey(new TilePos(p.c + dc, p.r + dr)))
+                        return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Wysepka jeszcze odcięta: żaden jej kafelek nie należy do gracza ani nie dotyka jego lądu (także po skosie).
+        /// Stan wynika z samych kafelków, więc zapis go nie trzyma: przyłączona wysepka to zwykłe posiadane kafelki,
+        /// a w starszych zapisach wysepka, do której ląd już dorósł, po prostu się nie pojawia.
+        /// </summary>
+        public bool IsletCut(int i)
+        {
+            if (Plan == null || i < 0 || i >= Plan.islets.Count)
+                return false;
+            foreach (var p in Plan.islets[i])
+                if (OwnedWithin(p, 1))
+                    return false;
+            return true;
+        }
+
+        /// <summary>Odcięta i widoczna (ląd gracza dość blisko).</summary>
+        public bool IsletVisible(int i)
+        {
+            if (!IsletCut(i))
+                return false;
+            foreach (var p in Plan.islets[i])
+                if (OwnedWithin(p, IsletReveal))
+                    return true;
+            return false;
+        }
+
+        public List<int> VisibleIslets()
+        {
+            var list = new List<int>();
+            if (Plan != null)
+                for (int i = 0; i < Plan.islets.Count; i++)
+                    if (IsletVisible(i))
+                        list.Add(i);
+            return list;
+        }
+
+        public IReadOnlyList<TilePos> IsletTiles(int i) => Plan.islets[i];
+
+        /// <summary>Ile kafelków wody dzieli wysepkę od lądu (najkrócej, także po skosie); 1 = następny zakup obok ją przyłączy.</summary>
+        public int IsletGap(int i)
+        {
+            int best = int.MaxValue;
+            foreach (var p in Plan.islets[i])
+                foreach (var q in tiles.Keys)
+                    best = Math.Min(best, Math.Max(Math.Abs(p.c - q.c), Math.Abs(p.r - q.r)));
+            return best == int.MaxValue ? 0 : Math.Max(1, best - 1);
+        }
+
+        /// <summary>Kupno kafelka p przyłączy wysepkę (podpowiedź w trybie rozbudowy).</summary>
+        public bool JoinsIslet(TilePos p) => IsletsTouching(p).Count > 0;
+
+        /// <summary>Kafelek widocznej, odciętej wysepki (do podpowiedzi), -1 gdy żadnej.</summary>
+        public int IsletAt(TilePos p)
+        {
+            if (Plan == null)
+                return -1;
+            for (int i = 0; i < Plan.islets.Count; i++)
+                if (Plan.islets[i].Contains(p))
+                    return IsletVisible(i) ? i : -1;
+            return -1;
+        }
+
+        /// <summary>Ląd do namalowania: własne kafelki i widoczne wysepki.</summary>
+        public List<TilePos> PaintedTiles()
+        {
+            var list = new List<TilePos>(tiles.Keys);
+            foreach (int i in VisibleIslets())
+                list.AddRange(Plan.islets[i]);
+            return list;
+        }
+
+        /// <summary>Wysepki, które dołączy nowy kafelek p (dotyka ich, także po skosie). Liczone przed dodaniem p.</summary>
+        List<int> IsletsTouching(TilePos p)
+        {
+            var list = new List<int>();
+            if (Plan == null)
+                return list;
+            for (int i = 0; i < Plan.islets.Count; i++)
+            {
+                if (!IsletCut(i))
+                    continue;
+                foreach (var q in Plan.islets[i])
+                    if (Math.Abs(q.c - p.c) <= 1 && Math.Abs(q.r - p.r) <= 1)
+                    {
+                        list.Add(i);
+                        break;
+                    }
+            }
+            return list;
+        }
+
+        /// <summary>Dokłada kafelki dotkniętych wysepek (za darmo, bez liczenia do ceny) i dopisuje je do merged.</summary>
+        void JoinIslets(List<int> touching, List<TilePos> merged)
+        {
+            foreach (int i in touching)
+                foreach (var q in Plan.islets[i])
+                    if (!tiles.ContainsKey(q))
+                    {
+                        tiles[q] = TileKind.Grass;
+                        merged?.Add(q);
+                    }
+        }
+
+        bool IsCutIsletTile(TilePos p)
+        {
+            if (Plan == null)
+                return false;
+            for (int i = 0; i < Plan.islets.Count; i++)
+                if (Plan.islets[i].Contains(p))
+                    return IsletCut(i);
+            return false;
+        }
+
         /// <summary>Kafelki do kupienia: przylegające do lądu (4 kierunki), w granicach świata.</summary>
         public List<TilePos> Candidates()
         {
             var set = new HashSet<TilePos>();
             foreach (var p in tiles.Keys)
                 foreach (var q in Neighbours(p))
-                    if (WorldGenerator.InWorld(q) && !tiles.ContainsKey(q))
+                    if (WorldGenerator.InWorld(q) && !tiles.ContainsKey(q) && !IsCutIsletTile(q))
                         set.Add(q);
             var list = new List<TilePos>(set);
             list.Sort((a, b) => a.r != b.r ? a.r.CompareTo(b.r) : a.c.CompareTo(b.c));
@@ -78,7 +205,7 @@ namespace Wyspa.World
 
         public bool CanBuy(TilePos p)
         {
-            if (!WorldGenerator.InWorld(p) || tiles.ContainsKey(p))
+            if (!WorldGenerator.InWorld(p) || tiles.ContainsKey(p) || IsCutIsletTile(p))
                 return false;
             foreach (var q in Neighbours(p))
                 if (tiles.ContainsKey(q))
@@ -86,23 +213,30 @@ namespace Wyspa.World
             return false;
         }
 
-        /// <summary>Dodaje kafelek (koszt płaci wywołujący). Zwraca znalezisko spod kafelka.</summary>
-        public FindKind Buy(TilePos p)
+        /// <summary>
+        /// Dodaje kafelek (koszt płaci wywołujący). Zwraca znalezisko spod kafelka. Kafelek dotykający wysepki przyłącza ją
+        /// całą: jej kafelki trafiają do merged (znaleziska spod nich wydaje wywołujący).
+        /// </summary>
+        public FindKind Buy(TilePos p, List<TilePos> merged = null)
         {
             if (!CanBuy(p))
                 return FindKind.None;
+            var touching = IsletsTouching(p);
             tiles[p] = TileKind.Grass;
             Purchased++;
+            JoinIslets(touching, merged);
             Changed?.Invoke();
             return Plan != null ? Plan.FindAt(p) : FindKind.None;
         }
 
-        /// <summary>Darmowy kafelek (miejsce dla darmowej budowli): bez znaleziska i bez liczenia do ceny następnych kafelków.</summary>
-        public bool AddFree(TilePos p)
+        /// <summary>Darmowy kafelek (miejsce dla darmowej budowli): bez liczenia do ceny następnych kafelków. Też przyłącza wysepki.</summary>
+        public bool AddFree(TilePos p, List<TilePos> merged = null)
         {
             if (!CanBuy(p))
                 return false;
+            var touching = IsletsTouching(p);
             tiles[p] = TileKind.Grass;
+            JoinIslets(touching, merged);
             Changed?.Invoke();
             return true;
         }

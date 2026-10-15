@@ -144,8 +144,9 @@ namespace Wyspa.UI
             foreach (var kv in labels)
             {
                 bool find = island.Map.Plan != null && island.Map.Plan.FindAt(kv.Key) != FindKind.None;
-                kv.Value.text = find ? "?" : price;
-                kv.Value.color = find ? Ui.Theme.textWisp : (afford ? Ui.Theme.textLight : Ui.Theme.textWarn);
+                bool islet = island.Map.JoinsIslet(kv.Key);   // przyłączy wysepkę (§13.10)
+                kv.Value.text = islet ? "+" : find ? "?" : price;
+                kv.Value.color = islet || find ? Ui.Theme.textWisp : (afford ? Ui.Theme.textLight : Ui.Theme.textWarn);
             }
         }
 
@@ -235,6 +236,8 @@ namespace Wyspa.UI
                 string s = Loc.Get("ui.expand.title") + "\n" + Loc.Get("ui.expand.cost", island.NextTileCoins, island.NextTileEssence);
                 if (island.Map.Plan != null && island.Map.Plan.FindAt(f.Tile) != FindKind.None)
                     s += "\n" + Loc.Get("ui.expand.find");
+                if (island.Map.JoinsIslet(f.Tile))
+                    s += "\n" + Loc.Get("ui.expand.islet");
                 // brak środków: co dokładnie (Żar w HUD jest zaokrąglony w dół, ale ułamki też się liczą)
                 var game = GameLoop.Instance;
                 if (game != null && !island.CanAffordTile(game.Wallet, game.Essence))

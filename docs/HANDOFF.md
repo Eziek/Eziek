@@ -1,7 +1,7 @@
-# Przekazanie sesji (stan na 2026-10-14)
+# Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-104), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-105), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -32,6 +32,11 @@ Historia decyzji jest w GDD §9 (punkty 1-104), a lista testów w `docs/TEST_PLA
   grafika `tools/pixel-proto/familiars.py`), więź i karmienie, prezenty, sekcja w Bestiariuszu. Wymaga Wyspa → 2.
 - **Domki chowańców, ognisko, sennik, nastrój ogników** (GDD §9 p. 103, TEST_PLAN 32): `Familiars/FamiliarHome.cs`,
   `Automation/WispHaven.cs`, nastrój w `WispPlay.cs`; grafika `tools/pixel-proto/homes.py`. Wymaga Wyspa → 2.
+- **Drzewa, ozdobniki na wodzie, wysepki** (GDD §9 p. 105, §13.10, TEST_PLAN 33): drzewa od nowa
+  (`tools/pixel-proto/trees2.py` + `export_unity_trees2.py`, potem `pad_sway.py`), pływające lilie i liście
+  (`water_flora.py` + `export_unity_water.py`, `Visual/WaterFlora.cs`), odcięte wysepki do przyłączenia
+  (`WorldGenerator.PlaceIslets`, `IslandMap` wysepki, `World/IsletSpot.cs`; zapis bez zmian; podgląd `docs/img/wysepki.png`). F1: „Do wysepki”.
+  Wymaga Wyspa → 2. Nie testowane w Unity.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,
