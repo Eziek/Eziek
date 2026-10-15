@@ -22,6 +22,14 @@ namespace Wyspa.Automation
         const float PlayRange = 4f;        // jak daleko szuka towarzyszy
         static int activePlays;
 
+        /// <summary>Liczniki statyczne od zera przy każdym starcie gry (także bez przeładowania domeny w edytorze).</summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetCounters()
+        {
+            activePlays = 0;
+            activeChats = 0;
+        }
+
         float playCooldown, greetCooldown;
         float hatLiftUntil;
         Wisp leader;                       // kto prowadzi zabawę, w której ten ognik bierze udział
@@ -36,6 +44,7 @@ namespace Wyspa.Automation
         /// </summary>
         IEnumerator Uproot(FarmPlot plot)
         {
+            tugging = plot;
             var top = transform.position;
             var grip = top - new Vector3(0f, 0.18f, 0f);
             yield return Flight.Arc(transform, top, grip, Speed * 0.8f, 0f);
@@ -58,6 +67,7 @@ namespace Wyspa.Automation
             }
             if (plot != null)
                 plot.EndTug();
+            tugging = null;
             transform.position = grip;
             if (OnScreen())
                 GameEvents.PlaySound("dig", 0.35f);
@@ -70,6 +80,7 @@ namespace Wyspa.Automation
             if (sprite != null)
             {
                 var go = new GameObject("Uprooted");
+                tempFx = go;
                 go.transform.SetParent(transform.parent, false);
                 var sr = go.AddComponent<SpriteRenderer>();
                 sr.sprite = sprite;
@@ -261,6 +272,20 @@ namespace Wyspa.Automation
             yield return HoverFor(Random.Range(0.6f, 1.2f));
         }
 
+        FarmPlot tugging;     // roślina, którą ognik właśnie szarpie
+        GameObject tempFx;    // lecący plon albo piłka z podrzucania
+
+        /// <summary>Przerwana praca albo zabawa (przeniesione gniazdo, odpłynięcie): roślina wraca na miejsce, obrazki znikają.</summary>
+        void CleanupInterrupted()
+        {
+            if (tugging != null)
+                tugging.EndTug();
+            tugging = null;
+            if (tempFx != null)
+                Destroy(tempFx);
+            tempFx = null;
+        }
+
         // ------------------------------------------------------------ mijanka i gratulacje
 
         /// <summary>Dwa ogniki mijają się w locie: uchylają czapki albo przybijają „piątkę” (iskierka). Robota idzie dalej.</summary>
@@ -299,6 +324,7 @@ namespace Wyspa.Automation
                     continue;
                 w.StopAllCoroutines();
                 w.idling = false;
+                w.LeaveFire();
                 w.StartCoroutine(w.Cheer(this, n++));
             }
         }
@@ -437,6 +463,11 @@ namespace Wyspa.Automation
             float longest = 0.3f;
             for (int i = 0; i < who.Count; i++)
             {
+                if (who[i] != this && !Still(who[i]))
+                {
+                    from.Add(Vector3.zero);   // towarzysz zniknął (rozebrane gniazdo): pomijany
+                    continue;
+                }
                 from.Add(who[i].transform.position);
                 longest = Mathf.Max(longest, Vector3.Distance(from[i], spots[i]) / speed);
                 who[i].flying = true;
@@ -450,7 +481,7 @@ namespace Wyspa.Automation
                 yield return null;
             }
             foreach (var w in who)
-                if (w != null) w.flying = false;
+                if (w == this || Still(w)) w.flying = false;
         }
 
         Vector3 PlayCenter
@@ -524,7 +555,8 @@ namespace Wyspa.Automation
             var startB = center + new Vector3(0.3f, 0f, 0f);
             yield return Gather(new List<Wisp> { this, other }, new List<Vector3> { startA, startB }, Speed * 0.7f);
             Face(goal);
-            other.Face(goal);
+            if (Still(other))
+                other.Face(goal);
             for (int i = 0; i < 3 && Still(other); i++)
             {
                 SayGlyph(RuneGlyphs.Exclaim);
@@ -622,6 +654,7 @@ namespace Wyspa.Automation
             Face(b);
             other.Face(a);
             var go = new GameObject("TossBall");
+            tempFx = go;
             go.transform.SetParent(transform.parent, false);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = BallSprite();
@@ -742,7 +775,8 @@ namespace Wyspa.Automation
                 spots.Add(home + new Vector3((i - (who.Count - 1) / 2f) * 0.42f, Mathf.Abs(i - (who.Count - 1) / 2f) * -0.05f, 0f));
             yield return Gather(who, spots, Speed * 0.5f);
             for (int i = 0; i < who.Count; i++)
-                who[i].Face(home);   // przytuleni do środka
+                if (who[i] == this || Still(who[i]))
+                    who[i].Face(home);   // przytuleni do środka
             float next = 0.5f;
             int speaker = 0;
             for (float t = 0f; t < 8f && Still(mates[0]); t += Time.unscaledDeltaTime)
@@ -772,7 +806,7 @@ namespace Wyspa.Automation
             who.AddRange(mates);
             var at = new List<Vector3>();
             foreach (var w in who)
-                at.Add(w.transform.position);
+                at.Add(w == this || Still(w) ? w.transform.position : Vector3.zero);   // zniszczony towarzysz: pomijany
             for (float t = 0f; t < seconds; t += Time.unscaledDeltaTime)
             {
                 for (int i = 0; i < who.Count; i++)

@@ -227,6 +227,7 @@ namespace Wyspa.Automation
         public void OnNestMoved()
         {
             StopAllCoroutines();
+            idling = false;
             Release();
             LeaveChat();
             flying = false;
@@ -404,6 +405,7 @@ namespace Wyspa.Automation
         public void RecallHome()
         {
             StopAllCoroutines();
+            idling = false;
             Release();
             LeaveChat();
             flying = false;
@@ -796,6 +798,8 @@ namespace Wyspa.Automation
             StopResting();
             working = false;
             LeaveFire();
+            CleanupInterrupted();   // przerwane wyrywanie, lot plonu, podrzucanie (WispPlay.cs)
+            leader = null;
             EndPlay();   // przerwana zabawa (odpłynięcie, przeniesione gniazdo): towarzysze wracają do pracy
             chatCooldown = Random.Range(45f, 120f);
             if (bubble != null)
@@ -908,13 +912,14 @@ namespace Wyspa.Automation
                 var crop = plot.HarvestSilently(true);
                 if (crop == null)
                     continue;
-                yield return CatchCrop(ripeSprite, from);
+                // plon od razu w rękach (przerwany lot plonu niczego nie gubi), lot to tylko obraz
                 carried.Add(new Carried { crop = crop, quality = quality, sprite = crop.RipeSprite });
-                ShowCarried();
                 AddXp(1);
                 var game = GameLoop.Instance;
                 if (game != null)
                     game.AfterHarvest(plot, crop);   // bestiariusz, mutacje, zamówienia
+                yield return CatchCrop(ripeSprite, from);
+                ShowCarried();
             }
             yield return DeliverTrip();
         }
@@ -1094,6 +1099,8 @@ namespace Wyspa.Automation
                     bool night = game.Clock.IsNight;
                     if (!nest.Swap || !plot.Swappable(night, game.Clock.IsTwilight, game.ContextFor(plot, night).lit))
                         continue;   // w międzyczasie zaczęła rosnąć (świt, zmierzch), urosła albo gracz wyłączył podmianę
+                    if (game.Seeds.Count(crop.id) <= 0 && (crop.hybrid || game.Wallet.Coins < Economy.Market.SeedPrice(crop)))
+                        continue;   // nie ma czym obsiać: nie wykopuje rośliny na darmo
                     plot.DigUp();
                 }
                 if (!game.Seeds.TryTake(crop.id) && (crop.hybrid || !game.Wallet.TrySpend(Economy.Market.SeedPrice(crop))))
