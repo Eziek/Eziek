@@ -91,17 +91,16 @@ def heron(pose):
         s.blob(11, 6, 4.2, 2.0, ['b1', 'b2', 'b3'])
         s.blob(15.5, 5, 1.6, 1.4, ['b2', 'b3', 'fo']); s.set(15, 4, 'o')
         s.line(17, 5, 20, 5, 'go')                                               # dziób
-        s.line(6, 6, 1, 7, 'e2')                                                 # nogi do tyłu
         if pose == 'fly0':
             s.line(10, 5, 6, 0, 'b2'); s.line(12, 5, 9, 0, 'b2'); s.set(6, 0, 'o')
         else:
             s.line(10, 7, 6, 11, 'b2'); s.line(12, 7, 9, 11, 'b2'); s.set(6, 11, 'o')
         s.outline()
+        s.line(6, 6, 2, 7, 'co'); s.set(1, 7, 'p2')                              # cienkie czerwone nogi do tyłu
         return s
     s = Sprite(14, 22, 7, 21)
     s.blob(6, 10, 3.6, 2.6, ['b1', 'b2', 'b3'])                                   # tułów
     s.line(2, 11, 0, 13, 'b1')                                                   # ogon
-    s.line(6, 13, 6, 21, 'e2'); s.line(8, 13, 8, 21, 'e1')                       # nogi
     if pose == 'sit0':
         neck = [(8, 8), (9, 7), (9, 6), (8, 5), (8, 4), (9, 3)]
         hx, hy = 10, 2
@@ -117,6 +116,10 @@ def heron(pose):
     else:
         s.line(hx + 1, hy + 1, hx + 2, hy + 4, 'go')                             # dziób w wodzie
     s.outline()
+    # nogi po konturze, więc zostają cienkie (1 px): bliższa czerwona ze stawem skokowym, dalsza ciemniejsza, palce
+    s.line(5, 14, 5, 20, 'p2'); s.set(4, 21, 'p2'); s.set(5, 21, 'p2')
+    s.line(7, 14, 7, 17, 'co'); s.set(7, 18, 'p2'); s.line(7, 19, 7, 20, 'co')
+    s.set(6, 21, 'co'); s.set(7, 21, 'co'); s.set(8, 21, 'co')
     return s
 
 

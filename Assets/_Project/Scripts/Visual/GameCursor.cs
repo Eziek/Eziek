@@ -155,15 +155,7 @@ namespace Wyspa.Visual
             Vector2 world = cam.ScreenToWorldPoint(mouse);
             if (ClickRouter.Pick(world) != null)
                 return State.Hover;
-            var island = Island.Instance;
-            var pic = island != null ? island.Picture : null;
-            if (pic != null)
-            {
-                var p = Island.WorldToPixel(world);
-                if (pic.ShoreDistance(Mathf.FloorToInt(p.x), Mathf.FloorToInt(p.y)) > 0f)
-                    return State.Water;
-            }
-            return State.Normal;
+            return CursorPlay.IsWater(world) ? State.Water : State.Normal;
         }
 
         /// <summary>Szybki ruch nad wyspą: iskierki za kursorem (rzadko, żeby nie zaśmiecać).</summary>

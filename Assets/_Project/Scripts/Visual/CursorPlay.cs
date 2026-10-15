@@ -26,6 +26,10 @@ namespace Wyspa.Visual
         static readonly Color RingColor = new Color32(0x84, 0x8e, 0x9b, 0xd0);
 
         readonly List<Sprite> rings = new List<Sprite>();
+        const int MaxRipples = 6;         // seria klików nie zasypuje wody kręgami
+        const float WaterClickGap = 0.15f;
+        int ripples;
+        float lastWaterClick = -1f;
         object spotted;          // ptak albo ryba, nad którą ostatnio był kursor (licznik „Widziane” raz na spotkanie)
         WaterAnimator water;
         Vector2 lastMouse;
@@ -36,6 +40,7 @@ namespace Wyspa.Visual
         void OnDisable()
         {
             ClickRouter.Clicked -= OnClicked;
+            ripples = 0;   // korutyny kręgów giną razem z komponentem
             Shader.SetGlobalVector(CursorId, Vector4.zero);
         }
 
@@ -136,20 +141,27 @@ namespace Wyspa.Visual
 
         static bool IsLeafy(DecoKind k) => k == DecoKind.TreeRound || k == DecoKind.Spruce || k == DecoKind.Bush || k == DecoKind.Mangrove;
 
-        static bool IsWater(Vector2 world)
+        /// <summary>Otwarta woda pod punktem świata (nie ląd ani klif). Też dla kursora (GameCursor).</summary>
+        public static bool IsWater(Vector2 world)
         {
             var island = Island.Instance;
             var pic = island != null ? island.Picture : null;
             if (pic == null)
                 return false;
             var p = Island.WorldToPixel(world);
-            return pic.ShoreDistance(Mathf.FloorToInt(p.x), Mathf.FloorToInt(p.y)) > 0f;
+            return pic.IsWater(Mathf.FloorToInt(p.x), Mathf.FloorToInt(p.y));
         }
 
         void WaterClick(Vector2 world)
         {
-            StartCoroutine(Ripple(world, 0f));
-            StartCoroutine(Ripple(world, 0.28f));
+            if (Time.unscaledTime - lastWaterClick < WaterClickGap)
+                return;
+            lastWaterClick = Time.unscaledTime;
+            if (ripples < MaxRipples)
+            {
+                StartCoroutine(Ripple(world, 0f));
+                StartCoroutine(Ripple(world, 0.28f));
+            }
             var water = FindAnyObjectByType<WaterAnimator>();
             if (water != null)
                 water.Scare(world, 2.2f);
@@ -213,6 +225,7 @@ namespace Wyspa.Visual
 
         IEnumerator Ripple(Vector2 at, float delay)
         {
+            ripples++;
             if (delay > 0f)
                 yield return new WaitForSecondsRealtime(delay);
             var go = new GameObject("Ripple");
@@ -229,6 +242,7 @@ namespace Wyspa.Visual
                 yield return null;
             }
             Destroy(go);
+            ripples--;
         }
     }
 }

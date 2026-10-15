@@ -975,6 +975,13 @@ Obrazki referencyjne (kopie): `docs/img/`
     7 ptaków, 7 gatunków ryb (wskazane kursorem) i 5 rzadkich nocy, z licznikiem spotkań (×N); pełna strona daje
     3 punkty księżyca. Tylko wygląd. Kod `Visual/RareNights.cs`, świecąca toń w `Water.shader` (`_WyspaBiolum`),
     krwawy księżyc przez `DayNightLighting.NightTint`. F1: „Rzadka noc” (kolejne zjawiska po kolei).
+117. **Poprawki po teście odbić i kursora** (uwagi gracza). Rośliny na grządkach już się nie odbijają (ich odbicia
+    wisiały w wodzie z dala od brzegu jak pływające grządki). Odbija się za to **sam brzeg**: pod każdą kolumną lądu
+    kontur, klif i pas trawy (26 px, ostatnie 12 zanikają), liczone z obrazu wyspy po każdej przebudowie, więc odbicia
+    drzew i budowli siedzą na odbitym brzegu, a nie unoszą się osobno; piana przy brzegu zostaje widoczna. Lilie i liście
+    na wodzie po kliknięciu odpływają na sprężynie (impulsy się sumują, z limitem prędkości i odległości), zamiast
+    przeskakiwać przy każdym kliknięciu. Kręgi na wodzie: najwyżej 6 naraz i co 0,15 s, tylko nad otwartą wodą (nie nad
+    lądem ani klifem). Czapla ma cienkie (1 px), czerwone nogi ze stawem i palcami zamiast grubych brązowych.
 
 ---
 

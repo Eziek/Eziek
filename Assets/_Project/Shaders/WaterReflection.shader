@@ -2,6 +2,7 @@
 // Wiersze pikseli falują o piksel w bok, kolor przechodzi w barwę wody, a odbicie słabnie z odległością od brzegu
 // (u podstawy obiektu wyraźne, czubek ledwo widać). Maska wody: mapa danych wody (globalnie _WyspaWaterData, ustawia
 // WaterAnimator): klasa piksela > 0 = woda. _Unlit = 1 dla pikseli emisyjnych (odbicie lampy świeci nocą).
+// Odbicie brzegu (klif i trawa) to jedna tekstura wielkości obrazu wyspy z _Fade = 0.
 Shader "Wyspa/WaterReflection"
 {
     Properties
@@ -11,6 +12,7 @@ Shader "Wyspa/WaterReflection"
         _TintAmount("Tint amount", Range(0, 1)) = 0.45
         _Strength("Strength (set by WaterReflections)", Range(0, 1)) = 0.5
         _Unlit("Unlit (glow)", Float) = 0
+        _Fade("Fade toward the top", Range(0, 1)) = 0.9
 
         [HideInInspector] _Color("Tint", Color) = (1,1,1,1)
         [HideInInspector] _RendererColor("RendererColor", Color) = (1,1,1,1)
@@ -65,6 +67,7 @@ Shader "Wyspa/WaterReflection"
                 half _TintAmount;
                 half _Strength;
                 half _Unlit;
+                half _Fade;
             CBUFFER_END
 
             Varyings ReflVertex(Attributes input)
@@ -97,10 +100,11 @@ Shader "Wyspa/WaterReflection"
                 float2 size = max(_WyspaWaterSize.xy, float2(1, 1));
                 float2 px = floor(input.positionWS * 16.0 + size * 0.5);
                 half4 data = SAMPLE_TEXTURE2D_LOD(_WyspaWaterData, sampler_WyspaWaterData, (px + 0.5) / size, 0);
-                half water = data.g > 0.06 ? 1 : 0;
+                half cls = round(data.g * 255.0 / 32.0);              // klasa wody (Water.shader): 6-7 piana przy brzegu
+                half water = cls < 0.5 ? 0 : (cls > 5.5 ? 0.35 : 1);
 
                 // u podstawy obiektu wyraźne, ku czubkowi słabnie; pasy co 2 wiersze lekko ciemniejsze (zmarszczki)
-                half fade = saturate(1.0 - input.uv.y * 0.9);
+                half fade = saturate(1.0 - input.uv.y * _Fade);   // ląd: 0, zanikanie zapisane w alfie tekstury
                 half ripple = fmod(row, 4.0) < 1.0 ? 0.75 : 1.0;
                 half a = c.a * water * _Strength * fade * ripple * input.color.a;
                 half3 col = lerp(c.rgb * input.color.rgb, _Tint.rgb, _TintAmount);

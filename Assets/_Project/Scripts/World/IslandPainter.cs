@@ -56,6 +56,17 @@ namespace Wyspa.World
                 return 0f;
             return data[((height - 1 - y) * width + x) * 4] / 4f;
         }
+
+        /// <summary>Piksel lądu na obrazie wyspy (trawa, klif, kontur), y w dół.</summary>
+        public bool IsLand(int x, int y)
+        {
+            if (island == null || x < 0 || y < 0 || x >= width || y >= height)
+                return false;
+            return island[((height - 1 - y) * width + x) * 4 + 3] > 200;
+        }
+
+        /// <summary>Otwarta woda pod pikselem (nie ląd, nie klif), y w dół.</summary>
+        public bool IsWater(int x, int y) => ShoreDistance(x, y) > 0f && !IsLand(x, y);
     }
 
     /// <summary>

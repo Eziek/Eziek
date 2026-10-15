@@ -27,8 +27,7 @@ namespace Wyspa.Visual
             public Transform t;
             public Vector2 home;            // piksele obrazu wyspy (y w dół)
             public float phase, period, rx, ry;
-            public Vector2 kick;            // odepchnięcie (klik w wodę), wygasa w KickSeconds
-            public float kickAt = -100f;
+            public Vector2 push, pushVel;   // odepchnięcie (klik w wodę): sprężyna, piksele i piksele/s
         }
 
         readonly List<Item> items = new List<Item>();
@@ -139,11 +138,14 @@ namespace Wyspa.Visual
                 rx = Random.Range(1.5f, 3.5f),
                 ry = Random.Range(0.6f, 1.4f),
             };
-            Place(it, Time.unscaledTime);
+            Place(it, Time.unscaledTime, 0f);
             return it;
         }
 
-        const float KickSeconds = 2.5f;
+        const float PushImpulse = 26f;      // prędkość (px/s) od kliku tuż obok
+        const float MaxPush = 9f;           // najdalsze odepchnięcie (px), także po serii klików
+        const float MaxPushSpeed = 34f;
+        const float Spring = 1.3f, Damping = 2.3f;   // ok. krytyczne tłumienie: odpływa, zwalnia, wolno wraca bez bujania
 
         /// <summary>Klik w wodę: ozdobniki w promieniu odpływają od miejsca kliknięcia i wolno wracają.</summary>
         public static void Nudge(Vector2 world, float radius)
@@ -169,18 +171,25 @@ namespace Wyspa.Visual
                 float dist = d.magnitude;
                 if (dist > r)
                     continue;
-                it.kick = (dist > 0.01f ? d / dist : Vector2.right) * 7f * (1f - dist / r);
-                it.kickAt = Time.unscaledTime;
+                // impuls dodaje się do bieżącego ruchu (bez skoku na start), z limitem prędkości
+                it.pushVel += (dist > 0.01f ? d / dist : Vector2.right) * PushImpulse * (1f - dist / r);
+                it.pushVel = Vector2.ClampMagnitude(it.pushVel, MaxPushSpeed);
             }
         }
 
-        static void Place(Item it, float time)
+        static void Place(Item it, float time, float dt)
         {
             float a = time * Mathf.PI * 2f / it.period + it.phase;
             var px = it.home + new Vector2(Mathf.Sin(a) * it.rx, Mathf.Sin(a * 0.7f + it.phase) * it.ry);
-            float k = (time - it.kickAt) / KickSeconds;
-            if (k >= 0f && k < 1f)
-                px += it.kick * Mathf.Sin(Mathf.Min(1f, k * 4f) * Mathf.PI * 0.5f) * (1f - k);   // szybko odpływa, wolno wraca
+            if (it.push != Vector2.zero || it.pushVel != Vector2.zero)
+            {
+                dt = Mathf.Min(dt, 0.1f);
+                it.pushVel += (-it.push * Spring - it.pushVel * Damping) * dt;
+                it.push = Vector2.ClampMagnitude(it.push + it.pushVel * dt, MaxPush);
+                if (it.push.sqrMagnitude < 0.01f && it.pushVel.sqrMagnitude < 0.01f)
+                    it.push = it.pushVel = Vector2.zero;
+            }
+            px += it.push;
             // przyciągnięte do siatki wody (32 px na kafelek): ruch po pół piksela grafiki, bez rozmycia
             var w = Island.PixelToWorld(px.x, px.y);
             it.t.position = new Vector3(Mathf.Round(w.x * 32f) / 32f, Mathf.Round(w.y * 32f) / 32f, 0f);
@@ -188,10 +197,10 @@ namespace Wyspa.Visual
 
         void Update()
         {
-            float time = Time.unscaledTime;
+            float time = Time.unscaledTime, dt = Time.unscaledDeltaTime;
             foreach (var it in items)
                 if (it.t != null)
-                    Place(it, time);
+                    Place(it, time, dt);
         }
     }
 }

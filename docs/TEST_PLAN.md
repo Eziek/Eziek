@@ -473,6 +473,11 @@ Najpierw Wyspa → 2 (materiał `WaterReflection`).
 2. Ognik i chowaniec nad wodą albo przy brzegu odbijają się na bieżąco (z animacją).
 3. Nocą odbicia są ciemne, ale okna, lampy i oczy świecą na wodzie.
 4. Po rozbiórce obiektu albo dokupieniu kafelka przy brzegu odbicie znika albo przesuwa się w ciągu pół sekundy.
+5. Pod całym brzegiem odbija się klif i pas trawy (zanika w głąb), piana przy brzegu nadal widoczna; po dokupieniu
+   kafelka odbicie brzegu od razu pasuje do nowego kształtu. Rośliny z grządek nie mają odbić.
+6. Lilie: kilkanaście szybkich klików obok odpycha je dalej, ale płynnie (bez skakania), potem wolno wracają.
+7. Seria klików w ziemię, potem klik w wodę: tylko jeden zestaw kręgów w miejscu kliknięcia w wodę.
+8. Czapla stoi na cienkich czerwonych nogach.
 
 ## 39. Kursor i zabawa kursorem
 1. Kursor to pikselowa strzałka z żarzącym się czubkiem (ostry, bez rozmycia, przy każdej skali okna).

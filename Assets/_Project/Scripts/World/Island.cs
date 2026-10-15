@@ -102,6 +102,8 @@ namespace Wyspa.World
         public Transform DecoRoot => decoRoot;
         /// <summary>Bieżący obraz wyspy (mapa odległości od brzegu dla ozdobników na wodzie), null przed pierwszym malowaniem.</summary>
         public IslandPicture Picture => picture;
+        /// <summary>Sprite lądu (obraz wyspy), np. do odbicia brzegu w wodzie.</summary>
+        public SpriteRenderer LandRenderer => islandRenderer;
         public bool Ready => map.Count > 0;
         /// <summary>Po każdym przemalowaniu wyspy (zakup kafelka, nowy świat, wczytanie).</summary>
         public event Action Rebuilt;

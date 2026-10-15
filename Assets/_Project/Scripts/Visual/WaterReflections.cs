@@ -2,26 +2,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using Wyspa.Automation;
 using Wyspa.Familiars;
-using Wyspa.Farming;
 using Wyspa.World;
 
 namespace Wyspa.Visual
 {
     /// <summary>
-    /// Odbicia w wodzie (GDD §9 p. 114). Każdy obiekt przy brzegu (drzewa, budowle, lampy, monumenty, pomost, łódź,
-    /// rośliny) i każdy ognik czy chowaniec dostaje odwróconą kopię swoich sprite'ów pod linią brzegu: oś lustra to pierwszy
-    /// piksel wody pod podstawą obiektu (do MaxScan pikseli niżej), więc obiekt daleko od wody nie ma odbicia.
+    /// Odbicia w wodzie (GDD §9 p. 114, 117). Brzeg odbija się cały: pod każdą kolumną lądu klif, kontur i pas trawy
+    /// (LandDepth pikseli) lustrzanie w wodę, z obrazu wyspy. Każdy obiekt przy brzegu (drzewa, budowle, lampy, monumenty,
+    /// pomost, łódź) i każdy ognik czy chowaniec dostaje odwróconą kopię swoich sprite'ów: oś lustra to pierwszy piksel wody
+    /// pod podstawą obiektu (do MaxScan pikseli niżej), więc odbicie siada na odbitym brzegu, a obiekt daleko od wody
+    /// odbicia nie ma. Rośliny na grządkach się nie odbijają (wyglądały jak grządki pływające po wodzie).
     /// Kopie rysuje Wyspa/WaterReflection (widać je tylko nad wodą, falują, słabną w głąb). Piksele emisyjne (lampy,
     /// okna, oczy) mają odbicie bez oświetlenia, więc nocą świecą na wodzie. Sprite'y kopiujemy co klatkę (animacje).
     /// </summary>
     public class WaterReflections : MonoBehaviour
     {
         const int Order = -1985;          // nad wodą (-2000), pod ozdobnikami na wodzie (-1960) i lądem (-1900)
-        const int MaxScan = 28;           // tyle pikseli pod podstawą szukamy wody
+        const int MaxScan = 20;           // tyle pikseli pod podstawą szukamy wody
+        const int LandOrder = Order - 1;  // odbity brzeg pod odbiciami obiektów
+        const int LandDepth = 26;         // tyle pikseli lądu (kontur, klif, trawa) odbija się pod brzegiem
+        const int LandFadeFrom = 14;      // od tej głębokości odbicie brzegu zanika
+        const float LandStrength = 0.55f;
         const float ScanEvery = 0.5f;
         const float Strength = 0.5f, GlowStrength = 0.65f;
         static readonly int StrengthId = Shader.PropertyToID("_Strength");
         static readonly int UnlitId = Shader.PropertyToID("_Unlit");
+        static readonly int FadeId = Shader.PropertyToID("_Fade");
 
         class Mirror
         {
@@ -40,6 +46,9 @@ namespace Wyspa.Visual
         readonly List<SpriteRenderer> buffer = new List<SpriteRenderer>();
         MaterialPropertyBlock litBlock, glowBlock;
         float scan;
+        SpriteRenderer land;
+        Texture2D landTex;
+        byte[] landPx;
 
         public void Setup(Island owner, Material reflection)
         {
@@ -51,6 +60,75 @@ namespace Wyspa.Visual
             glowBlock = new MaterialPropertyBlock();
             glowBlock.SetFloat(StrengthId, GlowStrength);
             glowBlock.SetFloat(UnlitId, 1f);
+            island.Rebuilt += BuildLand;
+            BuildLand();
+        }
+
+        void OnDestroy()
+        {
+            if (island != null)
+                island.Rebuilt -= BuildLand;
+        }
+
+        // ------------------------------------------------------------ odbity brzeg
+
+        /// <summary>
+        /// Tekstura odbicia brzegu (wielkości obrazu wyspy): w każdej kolumnie pod dolną krawędzią lądu kolejne piksele
+        /// lądu idą w górę, ich odbicia w dół (pierwszy piksel wody = kontur, potem klif, potem trawa). Przy końcu zanika.
+        /// Liczona po każdej przebudowie obrazu wyspy (nowy kafelek, wynurzanie).
+        /// </summary>
+        void BuildLand()
+        {
+            var pic = island != null ? island.Picture : null;
+            var src = island != null ? island.LandRenderer : null;
+            if (pic == null || pic.island == null || src == null || material == null)
+                return;
+            int w = pic.width, h = pic.height;
+            if (landTex == null || landTex.width != w || landTex.height != h)
+            {
+                landTex = new Texture2D(w, h, TextureFormat.RGBA32, false, false)
+                {
+                    name = "LandReflection", filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp,
+                };
+                landPx = new byte[w * h * 4];
+                var go = new GameObject("LandReflection");
+                go.transform.SetParent(transform, false);
+                land = go.AddComponent<SpriteRenderer>();
+                land.sprite = Sprite.Create(landTex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 16f, 0, SpriteMeshType.FullRect);
+                land.sharedMaterial = material;
+                land.sortingOrder = LandOrder;
+                var block = new MaterialPropertyBlock();
+                block.SetFloat(StrengthId, LandStrength);
+                block.SetFloat(UnlitId, 0f);
+                block.SetFloat(FadeId, 0f);
+                land.SetPropertyBlock(block);
+            }
+            land.transform.position = src.transform.position;
+            land.transform.localScale = src.transform.lossyScale;
+            System.Array.Clear(landPx, 0, landPx.Length);
+            var img = pic.island;
+            // wiersze tablic od dołu obrazu (jak tekstura): wiersz r - 1 leży pod wierszem r
+            bool Land(int x, int r) => img[(r * w + x) * 4 + 3] > 200;
+            for (int x = 0; x < w; x++)
+                for (int r = 1; r < h; r++)
+                {
+                    if (!Land(x, r) || Land(x, r - 1))
+                        continue;
+                    for (int k = 0; k < LandDepth; k++)
+                    {
+                        int from = r + k, to = r - 1 - k;
+                        if (from >= h || to < 0 || !Land(x, from) || Land(x, to))
+                            break;
+                        int si = (from * w + x) * 4, di = (to * w + x) * 4;
+                        landPx[di] = img[si];
+                        landPx[di + 1] = img[si + 1];
+                        landPx[di + 2] = img[si + 2];
+                        float a = k < LandFadeFrom ? 1f : 1f - (k - LandFadeFrom + 1f) / (LandDepth - LandFadeFrom + 1f);
+                        landPx[di + 3] = (byte)Mathf.RoundToInt(255f * a);
+                    }
+                }
+            landTex.LoadRawTextureData(landPx);
+            landTex.Apply(false);
         }
 
         void LateUpdate()
@@ -78,11 +156,6 @@ namespace Wyspa.Visual
                 if (w != null) Track(w.transform, true);
             foreach (var f in Familiar.All)
                 if (f != null) Track(f.transform, true);
-            foreach (var p in FarmPlot.All)
-            {
-                var crop = p != null ? p.CropRenderer : null;
-                if (crop != null) Track(crop.transform, false);
-            }
             gone.Clear();
             foreach (var kv in mirrors)
                 if (kv.Key == null || !seen.Contains(kv.Key))

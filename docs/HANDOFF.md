@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-116), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-117), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -47,7 +47,7 @@ Historia decyzji jest w GDD §9 (punkty 1-116), a lista testów w `docs/TEST_PLA
   Liczby do balansu. Nie testowane w Unity.
 - **Gatunki ryb** (GDD §9 p. 112, TEST_PLAN 36): 7 gatunków w `Water.shader` (`FishPixel`), do 16 ryb. Nie testowane w Unity.
 - **Ptaki** (GDD §9 p. 113, TEST_PLAN 37): sroka, gil, sikora, mewa, czapla (`tools/pixel-proto/birds2.py`, `Visual/AmbientBirds.cs`). Wymaga Wyspa → 2. Nie testowane w Unity.
-- **Odbicia w wodzie** (GDD §9 p. 114, TEST_PLAN 38): `Visual/WaterReflections.cs`, `Shaders/WaterReflection.shader`.
+- **Odbicia w wodzie** (GDD §9 p. 114, 117, TEST_PLAN 38): `Visual/WaterReflections.cs` (też odbity brzeg z obrazu wyspy), `Shaders/WaterReflection.shader`.
   Wymaga Wyspa → 2. Nie testowane w Unity.
 - **Własny kursor i zabawa kursorem** (GDD §9 p. 115, TEST_PLAN 39): `Visual/GameCursor.cs`, `Visual/CursorPlay.cs`,
   `_WyspaCursor` w `WyspaSway.hlsl`, zdarzenie `ClickRouter.Clicked`. Nie testowane w Unity.
