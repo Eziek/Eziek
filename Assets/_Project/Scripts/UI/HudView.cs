@@ -215,7 +215,9 @@ namespace Wyspa.UI
             int left = Mathf.CeilToInt(clock.SecondsToNextPhase);
             string countdown = $"{left / 60}:{left % 60:00}";
             string phaseKey = clock.IsNight ? "ui.hud.to_day" : clock.IsDawn ? "ui.hud.dawn" : clock.IsDusk ? "ui.hud.to_night" : "ui.hud.to_dusk";
-            clockText.text = Loc.Get(phaseKey, clock.Now.ToString("HH:mm"), countdown);
+            // pora roku i jej dzień (GDD §9 p. 127), np. „Wiosna 3/6”
+            clockText.text = Loc.Get(phaseKey, clock.Now.ToString("HH:mm"), countdown) + "   "
+                           + Loc.Get("ui.hud.season", Loc.Get(Seasons.NameKey(clock.Season)), clock.SeasonDay, GameClock.SeasonCycles);
             dayIcon.sprite = Ui.Theme.Icon(clock.IsNight ? "moon" : "sun");
             dayIcon.enabled = dayIcon.sprite != null;
             float tempo = game.Activity.TempoMultiplier;

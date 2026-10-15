@@ -1052,6 +1052,19 @@ Obrazki referencyjne (kopie): `docs/img/`
     gdy więcej postawić nie wolno (domek chowańca: jeden; duszek-handlarz: brak wolnej skrzyni) albo po PPM/Esc.
     Pojedynczo zostają: tablica ogłoszeń, pomost, budowle na brzegu, przenoszenie. Podpowiedź „LPM: postaw (można
     kolejne) - PPM: koniec”. Kod `PlacementMode.Request.repeat/nextCost/canRepeat`.
+127. **Pory roku** (wybór gracza: pora = 6 cykli gry, rośliny sezonowe, zmienia się wygląd drzew, terenu i wody, budowli
+    i pogody). Rok = 24 cykle (24 h gry); nowa wyspa zaczyna się wiosną (zapis pamięta cykl startu `seasonStart`,
+    starszy zapis: wiosna od wczytania). HUD: „Wiosna 3/6” obok zegara, toast przy zmianie, F1: „Pora roku: następna /
+    z cyklu”. **Rośliny sezonowe** (`Farming/CropSeasons.cs`): siać można tylko w swoich porach (koło nasion wygasza
+    przycisk i podaje porę, losowe sadzenie, ognik-siewca i zamówienia biorą tylko rośliny z bieżącej pory); posadzone
+    rosną dalej po zmianie pory. Dzień: marchew (wiosna, jesień, zima), zboże (wiosna-jesień), dynia (lato-zima),
+    czosnek (jesień-wiosna), mak (wiosna, lato), piołun (lato-zima). Noc: trupi grzyb (lato-zima), księżycowy kwiat
+    (wiosna, lato, zima), upiorna dynia (jesień-wiosna), wilcza jagoda (lato, jesień), mandragora (zima, wiosna);
+    cały rok: cmentarny bluszcz, krwawa róża, hybrydy. W każdej porze co najmniej 2 startowe rośliny dnia i 2 nocy.
+    Wygląd pór roku: w toku (sprite'y sezonowe, teren, woda, pogoda).
+128. **Dzicz bez Żaru** (zgłoszenie gracza: drzew i kamieni z nowych kafelków nie da się ściąć). Przyczyna: kamień
+    kosztuje 6 Żaru, drzewo 5; bez Żaru kliknięcie dawało tylko krótki toast. Teraz dymek pokazuje koszt na czerwono
+    „(masz X)”, a kliknięcie bez Żaru: wyraźne drgnięcie odmowy i toast „Za mało Żaru: potrzeba X, masz Y”.
 
 ---
 

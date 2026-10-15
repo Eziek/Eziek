@@ -71,6 +71,7 @@ namespace Wyspa.UI
             GUILayout.Label($"Aktywny: {(game.Activity.IsActive ? "tak" : "nie")} ({game.Activity.SecondsSinceInput:0}s / próg {game.Activity.IdleThresholdSeconds:0}s, czas rzeczywisty)");
             GUILayout.Label(PlotUnderMouse(game));
             GUILayout.Label($"Księżyc: {clock.MoonPhase:0.00}{(clock.IsFullMoon ? "  PEŁNIA" : "")}   Pogoda: {Weather.WeatherSystem.Current}");
+            GUILayout.Label($"Pora roku: {clock.Season}, dzień {clock.SeasonDay}/{GameClock.SeasonCycles}{(GameClock.DebugSeason != null ? " (wymuszona)" : "")}");
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Pogoda: z cyklu")) Weather.WeatherSystem.DebugForce = null;
             if (GUILayout.Button("Deszcz")) Weather.WeatherSystem.DebugForce = Weather.WeatherKind.Rain;
@@ -258,6 +259,8 @@ namespace Wyspa.UI
                 if (GUILayout.Button("Monument: etap")) island.DebugAdvanceMonuments();
                 if (GUILayout.Button("Rzadka noc") && Visual.RareNights.Instance != null) Visual.RareNights.Instance.DebugNext();
                 if (GUILayout.Button("Horyzont") && Visual.HorizonSights.Instance != null) Visual.HorizonSights.Instance.DebugNext();
+                if (GUILayout.Button("Pora roku: następna")) Seasons.DebugNext(game.Clock);
+                if (GUILayout.Button("Pora roku: z cyklu")) GameClock.DebugSeason = null;
                 GUILayout.EndHorizontal();
                 if (GUILayout.Button("Nowy świat (nowe ziarno)"))
                     island.NewWorld(GameLoop.NewSeed());

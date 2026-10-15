@@ -207,7 +207,7 @@ namespace Wyspa.Orders
             var list = new List<(string, int, bool)>();
             if (game.Crops != null)
                 foreach (var c in game.Crops.crops)
-                    if (c != null && game.IsUnlocked(c) && !c.requiresFullMoon)
+                    if (c != null && game.IsUnlocked(c) && !c.requiresFullMoon && CropSeasons.Now(c))   // tylko to, co da się teraz zasiać
                         list.Add(("crop:" + c.id, c.sellPrice, c.kind == CropKind.Night));
             var seen = new HashSet<string>();
             foreach (var t in FruitTree.All)

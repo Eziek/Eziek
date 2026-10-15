@@ -472,3 +472,5 @@ toast.sight.aurora,Nad mgłą rozlewa się zorza.,An aurora spills over the fog.
 toast.sight.procession,Korowód bladych ogników płynie przez wodę.,A procession of pale wisps drifts across the water.,Ein Zug blasser Irrlichter treibt über das Wasser.,青白い鬼火の行列が水面を渡っていく。,一列苍白的鬼火飘过水面。,toast; rzadka noc
 toast.sight.bloodmoon,Księżyc nabiera barwy krwi.,The moon turns the colour of blood.,Der Mond färbt sich blutrot.,月が血の色に染まる。,月亮染上了血色。,toast; rzadka noc
 toast.seen.new,Nowe w bestiariuszu: {0},New in the bestiary: {0},Neu im Bestiarium: {0},図鑑に追加：{0},图鉴新增：{0},toast; {0} = nazwa ptaka albo ryby
+toast.season,Pora roku: {0},Season: {0},Jahreszeit: {0},季節：{0},季节：{0},toast przy zmianie pory roku
+toast.seed.out_of_season,{0}: nie ta pora roku (siew: {1}),{0}: wrong season (sow in: {1}),{0}: falsche Jahreszeit (Aussaat: {1}),{0}：季節が違う（種まき：{1}）,{0}：季节不对（播种季：{1}）,toast: nasiono poza porą roku

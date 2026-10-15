@@ -417,3 +417,9 @@ ui.kiln.waiting,"Czeka, aż ognik przyniesie drewno.",Waiting for a wisp to brin
 ui.bestiary.seen.count,{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{1} = ile razy widziane
 ui.tree.hint,Klik: zbierz owoce; kilka szybkich: zetnij; PPM: szczegóły,Click: pick fruit; several quick clicks: chop; RMB: details,Klick: Obst pflücken; mehrmals schnell: fällen; RMT: Details,クリック：収穫、素早く数回：伐採、右クリック：詳細,点击：摘果，快速多次：砍伐，右键：详情,dymek nad drzewem owocowym
 ui.place.click_more,LPM: postaw (można kolejne) - PPM: koniec,Left click: place (keep placing) - right click: done,Linksklick: setzen (weitere möglich) - Rechtsklick: fertig,左クリック：設置（続けて置ける） - 右クリック：終了,左键：放置（可继续放置） - 右键：结束,tryb stawiania seriami (GDD §9 p. 126)
+ui.deco.need_have,"Za mało Żaru: potrzeba {0}, masz {1}","Not enough Ember: need {0}, you have {1}","Zu wenig Glut: {0} nötig, du hast {1}",熾火が足りない：必要{0}、所持{1},余火不足：需要{0}，现有{1},toast: kliknięcie w dzicz bez Żaru
+ui.deco.cost_missing,Koszt: {0} Żaru (masz {1}),Cost: {0} Ember (you have {1}),Kosten: {0} Glut (du hast {1}),コスト：熾火{0}（所持{1}）,消耗：{0}余火（现有{1}）,"dymek dziczy, gdy brakuje Żaru (na czerwono)"
+ui.hud.season,{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},pasek HUD: pora roku i jej dzień (1-6)
+ui.seed.seasons,Siew: {0},Sow in: {0},Aussaat: {0},種まき：{0},播种季：{0},koło nasion i sklep: kiedy można siać
+ui.seed.out_of_season,Nie teraz! Siew: {0},Not now! Sow in: {0},Nicht jetzt! Aussaat: {0},今は不可！種まき：{0},现在不行！播种季：{0},nasiono poza porą roku
+ui.seed.all_year,cały rok,all year,ganzjährig,通年,全年,

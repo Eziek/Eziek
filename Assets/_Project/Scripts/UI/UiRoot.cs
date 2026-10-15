@@ -491,8 +491,13 @@ namespace Wyspa.UI
             {
                 var da = deco.Art;
                 if (da != null && da.removable && !da.landmark)   // koszt, nagroda i jak usunąć (seria kliknięć, GDD §9 p. 121)
-                    Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + "\n" + Loc.Get("ui.deco.cost", da.essenceCost) + "\n"
+                {
+                    int have = Mathf.FloorToInt(game.Essence.Amount);
+                    string cost = have >= da.essenceCost ? Loc.Get("ui.deco.cost", da.essenceCost)
+                        : "<color=#" + ColorUtility.ToHtmlStringRGB(Ui.Theme.textWarn) + ">" + Loc.Get("ui.deco.cost_missing", da.essenceCost, have) + "</color>";
+                    Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + "\n" + cost + "\n"
                         + Loc.Get("ui.deco.reward." + da.reward.ToString().ToLowerInvariant(), da.rewardAmount) + "\n" + Loc.Get("ui.deco.hint"));
+                }
                 else
                     Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + (da != null && da.landmark ? "\n" + Loc.Get("ui.object.hint") : ""));
                 return;

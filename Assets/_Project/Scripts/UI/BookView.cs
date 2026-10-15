@@ -752,7 +752,7 @@ namespace Wyspa.UI
                 seaItems.Add(new ShopItem
                 {
                     nameKey = "crop." + c.id, icon = c.SeedIcon, buyKey = "ui.shop.unlock",
-                    desc = time + ", " + Loc.Get("ui.seed.sell", c.sellPrice),
+                    desc = time + ", " + Loc.Get("ui.seed.sell", c.sellPrice) + "\n" + Loc.Get("ui.seed.seasons", Farming.CropSeasons.Text(c)),
                     cost = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, c.unlockPrice) },
                     blockedKey = _ => game.IsUnlocked(crop) ? "ui.shop.unlocked" : null,
                     buy = _ => { if (game.TryUnlock(crop)) Show(Tab.Shop); },

@@ -126,7 +126,7 @@ namespace Wyspa.Farming
                     return;
                 }
                 var seed = SeedSelection.Current;
-                if (seed != null && game.Wallet.TrySpend(Economy.Market.SeedPrice(seed)))
+                if (seed != null && CropSeasons.Now(seed) && game.Wallet.TrySpend(Economy.Market.SeedPrice(seed)))
                     Replant(seed);
             }
         }

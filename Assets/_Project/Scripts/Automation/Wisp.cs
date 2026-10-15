@@ -1094,8 +1094,8 @@ namespace Wyspa.Automation
                 else
                     continue;
                 // nie sadzimy rośliny, która o tej porze i tak by nie rosła (np. pamięć ziemi z nocną o świcie)
-                if (crop == null || (crop.kind == CropKind.Night) != night || crop == plot.State.crop)
-                    continue;
+                if (crop == null || (crop.kind == CropKind.Night) != night || crop == plot.State.crop || !CropSeasons.Now(crop))
+                    continue;   // poza porą roku siewca tego nie sieje (pamięć ziemi z poprzedniej pory też nie)
                 if (game.Seeds.Count(crop.id) <= 0 && (crop.hybrid || game.Wallet.Coins < Economy.Market.SeedPrice(crop)))
                     continue;
                 if (Reserve(plot))

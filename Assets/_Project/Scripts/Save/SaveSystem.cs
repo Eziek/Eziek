@@ -43,6 +43,7 @@ namespace Wyspa.Save
         public bool mist;                       // v16: slot czeka w Przystani we mgle (rejs skończony, nowej wyspy jeszcze nie ma)
         public List<string> mistUnlocks = new List<string>();   // v16: nasiona odblokowane w poprzednim rejsie (Pamięć nasion)
         public double clockOffset;              // v16: przesunięcie cyklu dnia i nocy (nowa wyspa zaczyna się rano, GameClock)
+        public long seasonStart;                // cykl początku wiosny (pory roku, GDD §9 p. 127); 0 = starszy zapis: wiosna od wczytania
         public VoyageSummary summary;           // v16: podsumowanie skończonego rejsu (Przystań pokazuje je raz)
         public bool arrival;                    // v16: nowa wyspa po rejsie, scenka przypłynięcia jeszcze nie grała
     }
@@ -404,6 +405,7 @@ namespace Wyspa.Save
                 market = Market.Snapshot(),
                 prestige = Prestige.Snapshot(),
                 clockOffset = GameClock.SaveOffsetSeconds,
+                seasonStart = GameClock.SeasonStart,
             };
             foreach (var plot in FarmPlot.All)
                 data.plots.Add(new PlotSave { id = plot.PlotId, cropId = plot.State.cropId, growth = plot.State.growth,
@@ -607,6 +609,7 @@ namespace Wyspa.Save
             if (!File.Exists(FilePath))
             {
                 GameClock.SaveOffsetSeconds = GameClock.MorningOffset();   // nowa gra albo reset: zawsze od rana
+                GameClock.SeasonStart = GameClock.CycleWithOffset(GameClock.SaveOffsetSeconds);   // i od wiosny
                 return;
             }
 
@@ -620,17 +623,21 @@ namespace Wyspa.Save
                 Debug.LogError($"[Wyspa] Uszkodzony zapis, start od zera (kopia: *.corrupt.json): {e.Message}");
                 BackupCorrupt();
                 GameClock.SaveOffsetSeconds = GameClock.MorningOffset();   // nowa wyspa od rana
+                GameClock.SeasonStart = GameClock.CycleWithOffset(GameClock.SaveOffsetSeconds);
                 return;
             }
             if (data == null)
             {
                 BackupCorrupt();
                 GameClock.SaveOffsetSeconds = GameClock.MorningOffset();
+                GameClock.SeasonStart = GameClock.CycleWithOffset(GameClock.SaveOffsetSeconds);
                 return;
             }
             if (!string.IsNullOrEmpty(data.slotName))
                 CurrentName = data.slotName;
             GameClock.SaveOffsetSeconds = data.clockOffset;
+            // nowa wyspa po rejsie i starsze zapisy (bez pola): wiosna zaczyna się teraz
+            GameClock.SeasonStart = data.seasonStart != 0 && !data.arrival ? data.seasonStart : GameClock.CycleWithOffset(data.clockOffset);
             PendingArrival = data.arrival && !data.mist;
             if (data.mist)
             {

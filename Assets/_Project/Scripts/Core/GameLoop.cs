@@ -104,8 +104,9 @@ namespace Wyspa.Core
             var pool = new List<CropDefinition>();
             foreach (var c in crops.crops)
             {
-                if (c == null || c == except || (c.kind == CropKind.Night) != night || (c.requiresFullMoon && !clock.IsFullMoon))
-                    continue;
+                if (c == null || c == except || (c.kind == CropKind.Night) != night || (c.requiresFullMoon && !clock.IsFullMoon)
+                    || !CropSeasons.Now(c))
+                    continue;   // poza porą roku nie sieje się (rośliny sezonowe)
                 if (seeds.Count(c.id) > 0 || (IsUnlocked(c) && wallet.Coins >= Economy.Market.SeedPrice(c)))
                     pool.Add(c);
             }
@@ -174,6 +175,8 @@ namespace Wyspa.Core
             Economy.Market.Restore(null);    // zarobek rejsu i renoma (wczytuje SaveSystem)
             Economy.Prestige.Restore(null);  // perły i dary mgły (wczytuje SaveSystem)
             GameClock.SaveOffsetSeconds = 0;  // menu główne: zwykły cykl; zapis ustawia własne przesunięcie (nowa wyspa: rano)
+            GameClock.SeasonStart = 0;
+            Seasons.Reset();
             Lighting.Lamp.ResetScenes();      // łańcuchy lamp ze scenek poprzedniej sceny
             if (GetComponent<Orders.OrderBook>() == null) gameObject.AddComponent<Orders.OrderBook>();   // zamówienia z tablicy
             if (GetComponent<Familiars.FamiliarSystem>() == null) gameObject.AddComponent<Familiars.FamiliarSystem>();   // chowańce
@@ -278,6 +281,8 @@ namespace Wyspa.Core
 
         void Update()
         {
+            if (!Save.SaveSystem.InMenu)
+                Seasons.Update(clock);   // pory roku: zdarzenie zmiany dla wyglądu i roślin sezonowych
             float frame = Time.unscaledDeltaTime;
             if (frame > 60f)
             {

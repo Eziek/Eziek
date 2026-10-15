@@ -253,3 +253,11 @@ horizon.whale,Wieloryb,Whale,Wal,クジラ,鲸鱼,sylwetka na horyzoncie we mgle
 horizon.serpent,Wąż morski,Sea Serpent,Seeschlange,大海蛇,海蛇,sylwetka na horyzoncie we mgle (Widziane)
 horizon.ship,Statek-widmo,Ghost Ship,Geisterschiff,幽霊船,幽灵船,sylwetka na horyzoncie we mgle (Widziane)
 act.details,Szczegóły,Details,Details,詳細,详情,pierścień akcji: panel obiektu
+season.spring,Wiosna,Spring,Frühling,春,春季,pora roku (6 cykli gry)
+season.summer,Lato,Summer,Sommer,夏,夏季,pora roku
+season.autumn,Jesień,Autumn,Herbst,秋,秋季,pora roku
+season.winter,Zima,Winter,Winter,冬,冬季,pora roku
+season.spring.lower,wiosna,spring,Frühling,春,春季,"w wyliczeniach (siew: wiosna, lato)"
+season.summer.lower,lato,summer,Sommer,夏,夏季,
+season.autumn.lower,jesień,autumn,Herbst,秋,秋季,
+season.winter.lower,zima,winter,Winter,冬,冬季,

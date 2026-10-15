@@ -70,7 +70,11 @@ namespace Wyspa.World
             var game = GameLoop.Instance;
             if (game != null && game.Essence.Amount < art.essenceCost)
             {
-                GameEvents.RaiseToast("ui.deco.need", art.essenceCost);
+                // za mało Żaru: wyraźne „nie” (drgnięcie bez odprysków) i ile brakuje, zamiast cichego braku reakcji
+                GameEvents.RaiseToast("ui.deco.need_have", art.essenceCost, Mathf.FloorToInt(game.Essence.Amount));
+                StopShake();
+                home = transform.position;
+                shake = StartCoroutine(Refuse());
                 return;
             }
             var top = sr != null ? new Vector3(transform.position.x, sr.bounds.max.y, 0f) : transform.position + Vector3.up;
@@ -93,6 +97,18 @@ namespace Wyspa.World
             StopCoroutine(shake);
             shake = null;
             transform.position = home;
+        }
+
+        /// <summary>Odmowa (za mało Żaru): dwa szybkie drgnięcia, bez dźwięku uderzenia i odprysków.</summary>
+        IEnumerator Refuse()
+        {
+            for (int i = 0; i < 4 && !removing; i++)
+            {
+                transform.position = home + new Vector3((i % 2 == 0 ? 1f : -1f) / Ppu, 0f, 0f);
+                yield return new WaitForSecondsRealtime(0.05f);
+            }
+            transform.position = home;
+            shake = null;
         }
 
         /// <summary>Jedno uderzenie: drgnięcie o piksel, kilka odprysków (drzazgi, okruchy, liście), stuk.</summary>

@@ -101,7 +101,8 @@ namespace Wyspa.UI
                 {
                     icon = c.SeedIcon, count = game.Seeds.Count(c.id), crop = c,
                     tip = () => Describe(c), pick = () => Plant(c),
-                    affordable = () => game.Seeds.Count(c.id) > 0 || (!c.hybrid && game.Wallet.Coins >= Economy.Market.SeedPrice(c)),
+                    affordable = () => Farming.CropSeasons.Now(c)
+                                       && (game.Seeds.Count(c.id) > 0 || (!c.hybrid && game.Wallet.Coins >= Economy.Market.SeedPrice(c))),
                 });
             }
             plot = target;
@@ -253,6 +254,11 @@ namespace Wyspa.UI
             // najpierw worek nasion (za darmo), potem zakup za monety (hybryd nie da się kupić)
             if (game == null || target == null || target.State.IsRipe || target.State.crop == crop)
                 return;
+            if (!Farming.CropSeasons.Now(crop))
+            {
+                GameEvents.RaiseToast("toast.seed.out_of_season", Loc.Get("crop." + crop.id), Farming.CropSeasons.Text(crop));
+                return;
+            }
             if (game.Seeds.Count(crop.id) > 0 || (!crop.hybrid && game.Wallet.Coins >= Economy.Market.SeedPrice(crop)))
                 target.DigUp();   // podmiana: najpierw wykop (nasiono wraca do worka), dopiero potem płać za nowe
             if (target.State.IsEmpty
@@ -294,6 +300,8 @@ namespace Wyspa.UI
                  + time;
             if (c.requiresFullMoon)
                 s += "\n" + Loc.Get("ui.seed.fullmoon");
+            // pory roku: kiedy można siać; poza porą wyraźna informacja (przycisk wygaszony)
+            s += "\n" + Loc.Get(Farming.CropSeasons.Now(c) ? "ui.seed.seasons" : "ui.seed.out_of_season", Farming.CropSeasons.Text(c));
             if (Economy.Market.DemandCropId() == c.id)
                 s += "\n" + Loc.Get("ui.seed.demand", Upgrades.UpgradeEffects.DemandMult);   // Popyt dnia
             if (c.hybrid && !string.IsNullOrEmpty(c.parentA))

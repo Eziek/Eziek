@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Wyspa.Core
 {
+    /// <summary>Pora roku (GDD §9 p. 127).</summary>
+    public enum Season { Spring, Summer, Autumn, Winter }
+
     /// <summary>
     /// Pora dnia z cyklu gry: pełna doba trwa 1 h, z czego 40 min to dzień
     /// (06:00-20:00 na zegarze gry), a 20 min to noc (20:00-06:00). Cykl liczy się od stałej daty w czasie UTC, więc idzie dalej,
@@ -174,6 +177,29 @@ namespace Wyspa.Core
             double inCycle = (c - whole) * CycleSeconds;
             return whole * NightCropSeconds + Math.Min(inCycle, DawnEndSecond) + Math.Max(0.0, inCycle - DuskStartSecond);
         }
+
+        // ------------------------------------------------------------ pory roku (GDD §9 p. 127): 6 cykli na porę
+
+        /// <summary>Ile cykli (dób gry) trwa jedna pora roku; cały rok = 24 cykle = 24 h gry.</summary>
+        public const int SeasonCycles = 6;
+
+        /// <summary>Cykl, w którym zaczęła się wiosna tego zapisu (nowa wyspa zaczyna się wiosną; z pliku zapisu).</summary>
+        public static long SeasonStart;
+
+        /// <summary>Do testów (F1): wymuszona pora roku zamiast liczonej z cyklu.</summary>
+        public static Season? DebugSeason;
+
+        /// <summary>Numer cyklu teraz przy danym przesunięciu zapisu (do ustawienia SeasonStart nowej wyspy).</summary>
+        public static long CycleWithOffset(double saveOffset) =>
+            (long)Math.Floor(((DateTime.UtcNow - EpochUtc).TotalSeconds + DebugOffsetSeconds + saveOffset) / CycleSeconds);
+
+        long SeasonCycle => CycleNumber - SeasonStart;
+
+        /// <summary>Bieżąca pora roku: wiosna, lato, jesień, zima (po 6 cykli).</summary>
+        public Season Season => DebugSeason ?? (Season)(int)(((SeasonCycle / SeasonCycles) % 4 + 4) % 4);
+
+        /// <summary>Który dzień pory roku (1..6).</summary>
+        public int SeasonDay => (int)((SeasonCycle % SeasonCycles + SeasonCycles) % SeasonCycles) + 1;
 
         // ------------------------------------------------------------ księżyc (8 nocy na cykl)
 
