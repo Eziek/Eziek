@@ -534,3 +534,9 @@ Najpierw Wyspa → 2 (materiał `Atmosphere`). F1: „Horyzont” pokazuje kolej
 6. PPM na drzewie owocowym → w pierścieniu ikona owocu „Szczegóły” → panel ze stanem, „Zetnij” i „Przenieś”.
 7. Zabytek (np. stary posąg): klik dalej otwiera panel z historią.
 8. Ognik-drwal dalej sam rozbiera dzicz (bez zmian).
+
+## 44. Drzewko ulepszeń: poziomy
+1. Księga → Ulepszenia: węzły bliżej siebie i trochę większe; linie między nimi dalej widać.
+2. Ulepszenie z 2-3 poziomami: na dolnej krawędzi węzła ciemna plakietka z kreskami; kupione jasnopomarańczowe, reszta szara.
+3. Gdy stać cię na kolejny poziom, jego kreska miga; po zakupie zapala się na stałe.
+4. Plakietka nie zasłania ikony ani nie wchodzi na węzeł poniżej.

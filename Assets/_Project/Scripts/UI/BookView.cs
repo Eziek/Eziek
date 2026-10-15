@@ -251,7 +251,10 @@ namespace Wyspa.UI
             public readonly List<Image> pips = new List<Image>();
         }
         readonly List<TreeNode> treeNodes = new List<TreeNode>();
-        const float Cell = 28f, NodeSize = 22f;
+        const float Cell = 27f, NodeSize = 24f;   // węzły blisko siebie (3 px przerwy), poziomy na plakietce w węźle
+        // poziomy ulepszenia: jasne kreski na ciemnej plakietce (czytelne na pergaminie i przy każdym kolorze ramki)
+        static readonly Color PipOwned = new Color32(0xf2, 0xb8, 0x66, 0xff), PipEmpty = new Color32(0x4a, 0x3a, 0x44, 0xff),
+                              PipNext = new Color32(0xa8, 0x6a, 0x3a, 0xff), PipPlate = new Color32(0x12, 0x0c, 0x14, 0xff);
 
         static NodeState StateOf(UpgradeState ups, UpgradeDefinition d)
         {
@@ -332,17 +335,21 @@ namespace Wyspa.UI
                 var icon = Ui.Img(frame.transform, "Icon", Ui.Theme.Icon(st == NodeState.Fog ? "lock" : UpgradeTree.Icon(def.id)), false);
                 Ui.Place(icon.rectTransform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(12, 12));
                 var node = new TreeNode { def = def, state = st, frame = frame, icon = icon };
-                // poziomy jako kropki pod węzłem
+                // poziomy: ciemna plakietka na dolnej krawędzi węzła, w niej kreska na poziom (kupione jasnym żarem)
                 int levels = st == NodeState.Fog ? 0 : def.MaxLevel;
                 if (levels > 1)
                 {
-                    float pw = 4f, gap = 1f, total = levels * pw + (levels - 1) * gap;
+                    float pw = levels <= 3 ? 5f : levels <= 5 ? 3f : 2f, gap = 1f, total = levels * pw + (levels - 1) * gap;
+                    var plate = Ui.Img(frame.transform, "Levels", null, false);
+                    plate.enabled = true;
+                    plate.color = PipPlate;
+                    var bottom = new Vector2(0.5f, 0f);
+                    Ui.Place(plate.rectTransform, bottom, bottom, new Vector2(0f, -2f), new Vector2(total + 2f, 4f));
                     for (int i = 0; i < levels; i++)
                     {
-                        var pip = Ui.Img(content, "Pip", null, false);
+                        var pip = Ui.Img(plate.transform, "Pip", null, false);
                         pip.enabled = true;
-                        Ui.Place(pip.rectTransform, Ui.TopLeft, Ui.TopLeft,
-                                 new Vector2(center.x - total / 2f + i * (pw + gap), center.y - NodeSize / 2f - 1f), new Vector2(pw, 2));
+                        Ui.Place(pip.rectTransform, Ui.BottomLeft, Ui.BottomLeft, new Vector2(1f + i * (pw + gap), 1f), new Vector2(pw, 2f));
                         node.pips.Add(pip);
                     }
                 }
@@ -381,8 +388,10 @@ namespace Wyspa.UI
                 float pulse = canBuy ? 0.85f + 0.15f * Mathf.Sin(Time.unscaledTime * 4f) : 1f;
                 n.frame.color = n.state == NodeState.Fog ? new Color(0.6f, 0.6f, 0.6f, 0.8f) : new Color(pulse, pulse, pulse, 1f);
                 n.icon.color = n.state == NodeState.Open && !canBuy ? new Color(1f, 1f, 1f, 0.55f) : Color.white;
+                // kupione jasnym żarem, następny poziom (gdy stać cię) miga, reszta przygaszona
+                bool blink = Mathf.Repeat(Time.unscaledTime, 0.8f) < 0.4f;
                 for (int i = 0; i < n.pips.Count; i++)
-                    n.pips[i].color = i < lvl ? Ui.Theme.textGoldOnPage : Ui.Theme.textMutedOnPage;   // kupione ciemnym złotem, reszta szara
+                    n.pips[i].color = i < lvl ? PipOwned : i == lvl && canBuy && blink ? PipNext : PipEmpty;
             }
         }
 

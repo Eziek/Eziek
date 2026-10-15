@@ -1028,6 +1028,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     każde zapytanie to nowa tablica); zorza bez nowej tablicy co 0,12 s; krwawy księżyc i świecąca toń wchodzą i schodzą
     płynnie (kilka sekund) zamiast skokiem; statek-widmo nocą lekko jaśnieje; sylwetki na horyzoncie 22-40 px od brzegu
     (kod i opis były niezgodne).
+123. **Poziomy ulepszeń czytelniej** (uwaga gracza: kreski słabo widać, węzły za daleko). Drzewko ulepszeń: węzły
+    24 px co 27 px (było 22 co 28, przerwa 3 px zamiast 6). Poziomy na ciemnej plakietce na dolnej krawędzi węzła:
+    kreska na poziom, kupione jasnym żarem (#f2b866), brakujące przygaszone, a następny poziom, gdy stać cię na niego,
+    miga. Szerokość kreski 5 px przy 2-3 poziomach (3 px przy 4-5). Podgląd `docs/img/ulepszenia_poziomy.png`.
 
 ---
 
