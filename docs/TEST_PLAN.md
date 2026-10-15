@@ -548,3 +548,10 @@ Najpierw Wyspa → 2 (materiał `Atmosphere`). F1: „Horyzont” pokazuje kolej
 3. Podmuch wiatru (rośliny się odginają): smuga dymu i pary wyraźnie odchyla się w prawo, potem wraca do pionu.
 4. Deszcz i burza: dym od razu bardziej pochylony.
 5. Przeniesienie pieca lub kotła: dym idzie z nowego miejsca; dym nie odbija się w wodzie i nie trzęsie się z obiektem.
+
+## 46. Chowańce tylko po lądzie
+1. Kot, ropucha, ślimak i lis przez kilka minut: nigdy nie stoją ani nie idą po wodzie, klifie czy pomoście poza lądem.
+2. Wyspa z zatoką lub wcięciem: chowaniec idzie dookoła po trawie zamiast na skróty przez wodę.
+3. Kot poluje na ognika tylko nad lądem (ognik nad wodą: kot go zostawia).
+4. Kruk ląduje przy grządkach na trawie i nie podskakuje do wody.
+5. Po dokupieniu kafelka chowańce chodzą także po nowym lądzie.

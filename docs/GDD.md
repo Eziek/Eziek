@@ -1039,6 +1039,13 @@ Obrazki referencyjne (kopie): `docs/img/`
     w prawo (mocniej w deszczu i burzy), a przechodzący podmuch (ten sam co odgina rośliny, `IslandFx.GustAt`) wyraźnie
     odrywa smugę w bok. Kod `Visual/Plume.cs` (podpięty w `EmberKiln` i `Cauldron`), podgląd
     `tools/pixel-proto/plume_preview.py` → `docs/img/dym_para.png`.
+125. **Chowańce nie chodzą po wodzie** (zgłoszenie gracza: kot szedł po wodzie). Kot, ropucha, ślimak i lis (oraz kruk,
+    gdy ląduje przy grządkach) chodzą tylko po trawie: ląd z maski grządek (bez 2 px przy brzegu i bez klifu) na kafelkach
+    gracza. Każdy cel (domek, grządka, ognisko, brzeg, losowe miejsce) jest przesuwany na najbliższą trawę, a gdy prosta
+    droga przecina wodę (zatoka, wcięcie brzegu), trasa omija ją po trawie: BFS po pikselach i wygładzenie, odcinki
+    sprawdzane piksel po pikselu. Kot nie poluje na ognika lecącego nad wodą. Kod `World/LandGrid.cs` (czysty C#),
+    `Familiar.Route`. Sprawdzone poza Unity na 6 wyspach po 40 kafelków: 12 000 losowych tras, żadna nie dotyka wody
+    ani klifu, ok. 0,7 ms na trasę.
 
 ---
 

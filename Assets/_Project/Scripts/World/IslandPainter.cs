@@ -65,6 +65,14 @@ namespace Wyspa.World
             return island[((height - 1 - y) * width + x) * 4 + 3] > 200;
         }
 
+        /// <summary>Trawa, po której można chodzić (maska grządek: ląd bez 2 px przy brzegu i bez klifu), y w dół.</summary>
+        public bool IsWalkable(int x, int y)
+        {
+            if (landMask == null || x < 0 || y < 0 || x >= width || y >= height)
+                return false;
+            return landMask[((height - 1 - y) * width + x) * 4 + 3] > 200;
+        }
+
         /// <summary>Otwarta woda pod pikselem (nie ląd, nie klif), y w dół.</summary>
         public bool IsWater(int x, int y) => ShoreDistance(x, y) > 0f && !IsLand(x, y);
     }

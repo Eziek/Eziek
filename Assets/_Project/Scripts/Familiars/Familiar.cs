@@ -314,15 +314,88 @@ namespace Wyspa.Familiars
         static bool Night => GameLoop.Instance != null && GameLoop.Instance.Clock.IsNight;
         static bool Raining => Weather.WeatherSystem.Raining;
 
-        /// <summary>Losowe miejsce na lądzie (podstawa kafelka, z przesunięciem w poziomie).</summary>
+        /// <summary>Losowe miejsce na trawie (podstawa kafelka, z przesunięciem w poziomie); nigdy na wodzie ani klifie.</summary>
         static Vector3 RandomLand()
         {
             var island = Island.Instance;
-            if (island == null || !island.Ready)
+            if (island == null || !island.Ready || island.Map.Count == 0)
                 return Vector3.zero;
             var tiles = new List<TilePos>(island.Map.Tiles.Keys);
-            var t = tiles[Random.Range(0, tiles.Count)];
-            return Island.TileAnchor(t, Random.Range(9, 15), out _) + new Vector3(Random.Range(-5, 6) / Ppu, 0f, 0f);
+            for (int i = 0; i < 10; i++)
+            {
+                var t = tiles[Random.Range(0, tiles.Count)];
+                var p = Island.TileAnchor(t, Random.Range(9, 15), out _) + new Vector3(Random.Range(-5, 6) / Ppu, 0f, 0f);
+                if (Walkable(p))
+                    return p;
+            }
+            return ToLand(Island.TileAnchor(tiles[Random.Range(0, tiles.Count)], 12, out _));
+        }
+
+        // ---- chodzenie tylko po lądzie (GDD §9 p. 125): kot, ropucha, ślimak i lis (oraz kruk, gdy ląduje) nie wchodzą
+        // na wodę ani klif. Cel przesuwamy na najbliższą trawę, a gdy prosta droga przecina wodę, trasa omija ją po trawie
+        // (World/LandGrid: BFS po pikselach, wygładzenie). Siatka liczona od nowa po każdej przebudowie obrazu wyspy.
+
+        static LandGrid grid;
+
+        static LandGrid Grid()
+        {
+            var island = Island.Instance;
+            var pic = island != null ? island.Picture : null;
+            if (pic == null || pic.landMask == null)
+                return null;
+            if (grid == null || grid.Picture != pic)
+                grid = new LandGrid(pic, island.Map);
+            return grid;
+        }
+
+        static Vector3 ToWorld((double x, double y) p) => Snap(Island.PixelToWorld((float)p.x, (float)p.y));
+
+        /// <summary>Trawa na kafelku gracza (nie woda, klif, pas 2 px przy brzegu ani nieprzyłączona wysepka).</summary>
+        static bool Walkable(Vector3 p)
+        {
+            var g = Grid();
+            if (g == null)
+                return true;
+            var px = Island.WorldToPixel(p);
+            return g.Walkable(px.x, px.y);
+        }
+
+        /// <summary>Najbliższy punkt na trawie (bez trawy w pobliżu: bez zmian).</summary>
+        static Vector3 ToLand(Vector3 p)
+        {
+            var g = Grid();
+            if (g == null)
+                return p;
+            var px = Island.WorldToPixel(p);
+            return g.Nearest(px.x, px.y, out double x, out double y) ? ToWorld((x, y)) : p;
+        }
+
+        /// <summary>Czy prosty odcinek idzie cały po trawie.</summary>
+        static bool LineOnLand(Vector3 a, Vector3 b)
+        {
+            var g = Grid();
+            if (g == null)
+                return true;
+            var pa = Island.WorldToPixel(a);
+            var pb = Island.WorldToPixel(b);
+            return g.Line(pa.x, pa.y, pb.x, pb.y);
+        }
+
+        /// <summary>Punkty drogi po trawie z from do to (pusta: nie ma dokąd iść, chowaniec zostaje).</summary>
+        static List<Vector3> Route(Vector3 from, Vector3 to)
+        {
+            var g = Grid();
+            var route = new List<Vector3>();
+            if (g == null)
+            {
+                route.Add(to);
+                return route;
+            }
+            var pf = Island.WorldToPixel(from);
+            var pt = Island.WorldToPixel(to);
+            foreach (var p in g.Route(pf.x, pf.y, pt.x, pt.y))
+                route.Add(ToWorld(p));
+            return route;
         }
 
         // ---- domek (FamiliarHome): chowaniec kręci się wokół niego, wraca i w nim śpi
@@ -401,7 +474,14 @@ namespace Wyspa.Familiars
         }
 
 
+        /// <summary>Spacer po lądzie: odcinkami po trasie z Route (omija wodę).</summary>
         IEnumerator Walk(Vector3 to, float speed, float fps, params string[] poses)
+        {
+            foreach (var leg in Route(transform.position, to))
+                yield return WalkLeg(leg, speed, fps, poses);
+        }
+
+        IEnumerator WalkLeg(Vector3 to, float speed, float fps, string[] poses)
         {
             var from = transform.position;
             float dist = Vector3.Distance(from, to);
@@ -540,6 +620,8 @@ namespace Wyspa.Familiars
         {
             var under = new Vector3(wisp.transform.position.x, wisp.transform.position.y - 0.9f, 0f);
             var near = under + new Vector3(under.x > transform.position.x ? -0.8f : 0.8f, 0f, 0f);
+            if (!Walkable(under) || !Walkable(near) || !LineOnLand(near, under))
+                yield break;   // ognik nad wodą albo za klifem: kot nie skacze do wody
             yield return Walk(near, 0.6f, 4f, "walk0", "walk1", "walk2", "walk3");   // skradanie
             yield return Idle(0.6f, _ => "stretch");                                  // przyczajenie
             if (wisp == null)
@@ -595,11 +677,13 @@ namespace Wyspa.Familiars
                 {
                     // na ziemi przy grządkach: podskoki i dziobanie
                     scared = false;
-                    yield return Fly(NearPlot(), 3f, 0.8f, 10f, "fly0", "fly1", "fly2", "fly1");
+                    yield return Fly(ToLand(NearPlot()), 3f, 0.8f, 10f, "fly0", "fly1", "fly2", "fly1");   // ląduje na trawie, nie w wodzie
                     for (int i = 0; i < Random.Range(3, 7) && !scared; i++)
                     {
                         var from = transform.position;
                         var to = from + new Vector3(Random.Range(-0.35f, 0.35f), Random.Range(-0.1f, 0.1f), 0f);
+                        if (!Walkable(to))
+                            to = from;   // podskok w miejscu zamiast do wody
                         Face(to.x - from.x);
                         for (float t = 0f; t < 0.2f; t += Time.unscaledDeltaTime)
                         {
@@ -638,9 +722,9 @@ namespace Wyspa.Familiars
             transform.position = RandomLand();
             while (true)
             {
-                var to = PlotOrHome();
                 int hops = 0;
-                while ((to - transform.position).sqrMagnitude > 0.05f && hops++ < 12)
+                foreach (var to in Route(transform.position, PlotOrHome()))
+                while ((to - transform.position).sqrMagnitude > 0.05f && hops++ < 24)
                 {
                     var from = transform.position;
                     var step = Vector3.ClampMagnitude(to - from, 0.35f);
@@ -836,10 +920,10 @@ namespace Wyspa.Familiars
             transform.position = RandomLand();
             while (true)
             {
-                var to = PlotOrHome();
-                var from = transform.position;
-                Face(to.x - from.x);
                 float trail = 0f;
+                foreach (var to in Route(transform.position, PlotOrHome()))
+                {
+                Face(to.x - transform.position.x);
                 while ((to - transform.position).sqrMagnitude > 0.01f)
                 {
                     bool hidden = forcedPose == "hide" && Time.unscaledTime < forcedUntil;
@@ -856,6 +940,7 @@ namespace Wyspa.Familiars
                     }
                     Cycle(1.6f, "crawl0", "crawl1");
                     yield return null;
+                }
                 }
                 yield return Idle(Random.Range(5f, 12f), t => "crawl0");
             }
