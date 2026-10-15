@@ -22,6 +22,7 @@ namespace Wyspa.UI
         FarmPlot plot;
         CropDefinition plotCrop;   // co rosło przy otwarciu (podmiana); zmiana z zewnątrz zamyka koło
         static int forcedNight = -1;   // kategoria narzucona na czas jednego otwarcia (podmiana, siewca dzień/noc)
+        bool lockCategory;             // koło siewcy dla ustawienia dnia albo nocy: bez przełącznika (nocna roślina w dzień nigdy by nie wzeszła)
         Automation.ISeedChooser picker;
         readonly List<(Button b, System.Func<bool> affordable)> buttons = new List<(Button, System.Func<bool>)>();
 
@@ -111,6 +112,7 @@ namespace Wyspa.UI
             plot = target;
             plotCrop = target.State.crop;
             picker = null;
+            lockCategory = false;
             reopen = () => Open(target);
             Build(target.transform.position, slots);
         }
@@ -142,7 +144,8 @@ namespace Wyspa.UI
                                  pick = () => rune.Seed = Automation.WispNest.Off });
             plot = null;
             picker = rune;
-            reopen = () => OpenPicker(rune);
+            lockCategory = night.HasValue;
+            reopen = () => OpenPicker(rune, night);
             Build(rune.PickerAnchor, slots);
         }
 
@@ -210,13 +213,16 @@ namespace Wyspa.UI
             }
             // środek: przełącznik dzień / noc (zamyka klik obok koła, PPM albo Esc)
             var again = reopen;
-            var toggle = Ui.IconBtn(wheel, "Category", ShowNight ? "sun" : "moon", new Vector2(16, 16), () =>
+            if (!lockCategory)
             {
-                ShowNight = !ShowNight;
-                again?.Invoke();
-            });
-            Ui.Place((RectTransform)toggle.transform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(16, 16));
-            toggle.gameObject.AddComponent<HoverTip>().Init(tooltip, () => Loc.Get(ShowNight ? "ui.wheel.show_day" : "ui.wheel.show_night"));
+                var toggle = Ui.IconBtn(wheel, "Category", ShowNight ? "sun" : "moon", new Vector2(16, 16), () =>
+                {
+                    ShowNight = !ShowNight;
+                    again?.Invoke();
+                });
+                Ui.Place((RectTransform)toggle.transform, Ui.Center, Ui.Center, Vector2.zero, new Vector2(16, 16));
+                toggle.gameObject.AddComponent<HoverTip>().Init(tooltip, () => Loc.Get(ShowNight ? "ui.wheel.show_day" : "ui.wheel.show_night"));
+            }
 
             blocker.SetActive(true);
             blocker.transform.SetAsLastSibling();

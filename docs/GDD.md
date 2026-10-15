@@ -1110,6 +1110,16 @@ Obrazki referencyjne (kopie): `docs/img/`
     zapisów): dojrzała roślina, nazwa, rodzice, czas, cena, pełnia, nasiona w worku. Nieodkryta: sylwetka, „???” i ślad
     „<pierwszy rodzic> obok rośliny dnia/nocy”. W pasku na dole: jak działa mutacja z obecną szansą. Pierwsza mutacja danej
     hybrydy daje 2 nasiona i toast „Nowa mutacja! … Wpis w Bestiariuszu”. Pełna strona: 3 punkty księżyca.
+131. **Siewca nie sadził dyni** (zgłoszenie nowego gracza, sprzed pór roku). Siewca po cichu pomijał wybraną roślinę
+    i nie było wiadomo dlaczego. Możliwe powody: (1) błąd: w kole nasion siewcy był przełącznik dzień/noc, więc dało się
+    wstawić dynię do ustawienia **nocy**, a w nocy siewca sieje tylko rośliny nocy, więc nie siał jej nigdy;
+    (2) brak monet na nasiono (dynia 5) przy pustym worku; (3) brak pustych grządek w zasięgu (siewca nie wyrywa
+    rosnących roślin, podmienia tylko te, które o tej porze dnia nie rosną); (4) od p. 127 poza porą roku (nowa gra
+    zaczyna się wiosną, dynia: lato, jesień, zima). Poprawki: w kole siewcy nie ma przełącznika (dzień: tylko rośliny
+    dnia, noc: tylko nocy), ustawienia nie przyjmą rośliny złego rodzaju, a stary zapis z dynią w ustawieniu nocy
+    przenosi ją do ustawienia dnia (gdy wolne) albo czyści. Panel gniazda (zakładka Siewca) pokazuje powód czekania
+    („Siewca czeka: za mało monet…”, „…poza porą roku…”, „…brak nasion w worku” dla hybryd, „Brak pustych grządek
+    w zasięgu…”), a gdy są puste grządki i siewca nie może siać, toast z powodem raz przy każdej zmianie powodu.
 
 ---
 

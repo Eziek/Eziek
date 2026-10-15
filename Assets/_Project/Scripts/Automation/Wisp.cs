@@ -1101,6 +1101,11 @@ namespace Wyspa.Automation
                 if (Reserve(plot))
                     route.Add((plot, crop));
             }
+            // wybrana roślina, a nic do posiania z jej powodu (pora roku, monety, nasiona hybrydy): toast z powodem raz
+            if (route.Count > 0)
+                nest.ReportSowerProblem(null);
+            else if (chosen != null && nest.HasFreePlot())
+                nest.ReportSowerProblem(nest.SowerProblem(night));
             return route.Count > 0 ? SowTrip(route) : null;
         }
 

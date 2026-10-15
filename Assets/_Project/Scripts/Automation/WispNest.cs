@@ -46,17 +46,68 @@ namespace Wyspa.Automation
         public string Seed
         {
             get => seed;
-            set => seed = value ?? Memory;
+            set { seed = value != null && Fits(value, false) ? value : Memory; lastProblem = null; }
         }
         /// <summary>Nasiona siewcy w nocy.</summary>
         public string SeedNight
         {
             get => seedNight;
-            set => seedNight = value ?? Memory;
+            set { seedNight = value != null && Fits(value, true) ? value : Memory; lastProblem = null; }
         }
         /// <summary>Podmiana o świcie i zmierzchu: nocne, które w dzień stoją, na dzienne (i odwrotnie). Domyślnie włączona.</summary>
         public bool Swap => swap;
         public string SeedFor(bool night) => night ? seedNight : seed;
+
+        /// <summary>Roślina pasuje do ustawienia: dzienna do dnia, nocna do nocy (tryby pamięć, losowo, nic pasują zawsze).</summary>
+        static bool Fits(string mode, bool night)
+        {
+            var game = GameLoop.Instance;
+            var c = game != null && game.Crops != null ? game.Crops.Find(mode) : null;
+            return c == null || (c.kind == Farming.CropKind.Night) == night;
+        }
+
+        /// <summary>
+        /// Dlaczego siewca nie posieje wybranej rośliny (tekst do panelu i toastu) albo null: poza porą roku, brak nasion
+        /// hybrydy w worku, brak monet na nasiono.
+        /// </summary>
+        public string SowerProblem(bool night)
+        {
+            var game = GameLoop.Instance;
+            var c = game != null && game.Crops != null ? game.Crops.Find(SeedFor(night)) : null;
+            if (c == null)
+                return null;
+            string name = Loc.Get("crop." + c.id);
+            if (!Farming.CropSeasons.Now(c))
+                return Loc.Get("ui.nest.sower_season", name, Farming.CropSeasons.Text(c));
+            if (game.Seeds.Count(c.id) > 0)
+                return null;
+            if (c.hybrid)
+                return Loc.Get("ui.nest.sower_seeds", name);
+            int price = Market.SeedPrice(c);
+            return game.Wallet.Coins < price ? Loc.Get("ui.nest.sower_coins", name, price) : null;
+        }
+
+        /// <summary>Czy w zasięgu gniazda jest pusta grządka (siewca nie wyrywa roślin, które teraz rosną).</summary>
+        public bool HasFreePlot()
+        {
+            var t = Tile;
+            foreach (var p in Farming.FarmPlot.All)
+                if (p != null && p.State.IsEmpty && Mathf.Abs(p.Cell.x - t.c) <= AreaRadius && Mathf.Abs(p.Cell.y - t.r) <= AreaRadius)
+                    return true;
+            return false;
+        }
+
+        string lastProblem;
+
+        /// <summary>Siewca stoi przez problem z nasionami: toast raz, przy każdej zmianie powodu (null = sieje, zapomina).</summary>
+        public void ReportSowerProblem(string problem)
+        {
+            if (problem == lastProblem)
+                return;
+            lastProblem = problem;
+            if (problem != null)
+                GameEvents.RaiseToast("toast.sower.waits", problem);
+        }
 
         /// <summary>Jedno z dwóch ustawień siewcy (dzień albo noc) dla koła nasion.</summary>
         class SeedSlot : ISeedChooser
@@ -296,6 +347,9 @@ namespace Wyspa.Automation
                     string s = slot.Seed;
                     string what = s == Memory ? Loc.Get("ui.rune.memory") : s == Off ? Loc.Get("ui.rune.off")
                                 : s == Random ? Loc.Get("ui.rune.random") : Loc.Get("crop." + s);
+                    string problem = SowerProblem(night);
+                    if (problem != null)
+                        info.lines.Add(problem);
                     info.Button(Loc.Get(night ? "ui.nest.sower_night" : "ui.nest.sower_day", what), () =>
                     {
                         var ui = UI.UiRoot.Instance;
@@ -303,6 +357,8 @@ namespace Wyspa.Automation
                             ui.Wheel.OpenPicker(slot, slot.night);   // koło nasion zamiast panelu
                     });
                 }
+                if (!HasFreePlot())
+                    info.lines.Add(Loc.Get("ui.nest.sower_no_plot"));
                 info.Button(Loc.Get("ui.nest.swap", Loc.Get(swap ? "ui.on" : "ui.off")), () => swap = !swap, true, true);
             }
 
@@ -347,6 +403,20 @@ namespace Wyspa.Automation
                 seedNight = seed;
                 seed = Memory;
             }
+            // roślina w złym ustawieniu (dawne koło siewcy pozwalało przełączyć dzień/noc): przenosi ją albo czyści,
+            // inaczej siewca nigdy by jej nie posiał (np. dynia w ustawieniu nocy)
+            if (!Fits(seedNight, true) && seed == Memory && Fits(seedNight, false))
+            {
+                seed = seedNight;
+                seedNight = Memory;
+            }
+            if (!Fits(seed, false) && seedNight == Memory && Fits(seed, true))
+            {
+                seedNight = seed;
+                seed = Memory;
+            }
+            if (!Fits(seed, false)) seed = Memory;
+            if (!Fits(seedNight, true)) seedNight = Memory;
             if (list == null)
                 return;
             foreach (var s in list)

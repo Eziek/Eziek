@@ -596,3 +596,12 @@ F1: „Mutacje zawsze”.
 4. Wszystkie 6 odkrytych: przycisk „Odbierz: +3 pkt”, po odebraniu „Strona pełna”. Zapis i wczytanie: odkrycia zostają.
 5. Stary zapis z zebraną hybrydą: ta hybryda od razu odkryta.
 
+## 51. Siewca: czytelne powody czekania
+1. Gniazdo z siewcą → zakładka Siewca → „Siewca w nocy”: w kole tylko rośliny nocy, bez przełącznika słońce/księżyc
+   w środku; „Siewca w dzień”: tylko rośliny dnia.
+2. Dzień, siewca na dynię, pusta grządka w zasięgu, 0 monet i brak nasion dyni: toast „Siewca czeka: za mało monet
+   na nasiono (Dynia: 5)” raz; w panelu gniazda ta sama linia. Po zdobyciu monet siewca sadzi dynię.
+3. Wszystkie grządki w zasięgu zajęte rosnącymi roślinami: w panelu „Brak pustych grządek w zasięgu…”, bez toastu.
+4. Wiosną siewca na dynię: „Siewca czeka: Dynia poza porą roku (siew: lato, jesień, zima)”.
+5. Stary zapis z dynią w ustawieniu nocy: po wczytaniu dynia jest w ustawieniu dnia i siewca ją sadzi w dzień.
+

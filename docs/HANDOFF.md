@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-130), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-131), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -65,6 +65,8 @@ Historia decyzji jest w GDD §9 (punkty 1-130), a lista testów w `docs/TEST_PLA
   Nie testowane w Unity. Dzicz bez Żaru (czerwony koszt, odmowa): GDD §9 p. 128.
 - **Mutacje w Bestiariuszu** (GDD §9 p. 130, TEST_PLAN 50): `BookView.BuildMutations` (dział 6), pierwsze odkrycie
   w `GameLoop.TryMutate` (wpis kroniki `mutation:<id>`, 2 nasiona). Nie testowane w Unity.
+- **Siewca: powody czekania** (GDD §9 p. 131, TEST_PLAN 51): `WispNest.SowerProblem/HasFreePlot/ReportSowerProblem`,
+  koło siewcy bez przełącznika dzień/noc (`SeedWheel.lockCategory`). Nie testowane w Unity.
 - **Ścinanie seriami kliknięć** (GDD §9 p. 121, TEST_PLAN 43): `World/ChopProgress.cs`, `Decoration.OnClick`,
   `FruitTree.TryClick`; szczegóły drzewa owocowego w pierścieniu PPM. Panel „Usuń” dekoracji nie otwiera się już z kliku.
 - **Horyzont, cienie chmur, poranna mgiełka** (GDD §9 p. 120, TEST_PLAN 42): `Visual/HorizonSights.cs`,
