@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-118), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-119), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -51,6 +51,8 @@ Historia decyzji jest w GDD §9 (punkty 1-118), a lista testów w `docs/TEST_PLA
   Wymaga Wyspa → 2. Nie testowane w Unity.
 - **Własny kursor i zabawa kursorem** (GDD §9 p. 115, TEST_PLAN 39): `Visual/GameCursor.cs`, `Visual/CursorPlay.cs`,
   `_WyspaCursor` w `WyspaSway.hlsl`, zdarzenie `ClickRouter.Clicked`. Nie testowane w Unity.
+- **Woda: księżycowa ścieżka, deszcz, płycizny, wiatr** (GDD §9 p. 119, TEST_PLAN 41): `Water.shader`,
+  `WaterAnimator.UpdateSky`, podgląd `tools/pixel-proto/water_effects_preview.py`. Nie testowane w Unity.
 - **Rzadkie noce i „Widziane”** (GDD §9 p. 116, TEST_PLAN 40): `Visual/RareNights.cs`, `_WyspaBiolum` w `Water.shader`,
   dział 5 w Bestiariuszu (`BookView.BuildBestiary`). F1: „Rzadka noc”. Nie testowane w Unity.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością

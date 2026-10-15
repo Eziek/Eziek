@@ -3,6 +3,8 @@
 // Port prototypu tools/pixel-proto/water.py (10 kl./s). Ryby i potwora ustawia WaterAnimator (tablice z C#).
 // obraz w 32 px, dno z paralaksą i załamaniem, światełka
 // pod wodą, fale załamujące się w pianę, kręgi. Dane (odległość, klasy) zostają w siatce 16 px.
+// GDD §9 p. 119: refleksy słońca na płyciznach, kołyszące się wodorosty, smugi wiatru, kółka od kropli deszczu
+// i księżycowa ścieżka (globalne wartości z WaterAnimator i wiatru z IslandFx).
 Shader "Wyspa/Water"
 {
     Properties
@@ -81,6 +83,11 @@ Shader "Wyspa/Water"
             float4 _FishB[16];      // faza (rad), świeci (0/1), gatunek (FishKinds), mnożnik czasu okrążenia
             float _FishCount;
             float4 _Beast;          // x, y, włączony (0/1)
+            float4 _WyspaMoonPath;  // x = kolumna księżyca (piksele mapy danych), y = siła 0..1 (WaterAnimator)
+            float _WyspaRain;       // 0..1: deszcz 0.6, burza 1 (WaterAnimator, płynnie)
+            float _WyspaSunlight;   // 0..1: słońce nad wodą (refleksy na płyciznach)
+            float _WyspaWindFront;  // podmuch wiatru (IslandFx, jak w WyspaSway.hlsl): czoło w pikselach świata
+            float _WyspaWindPower;
 
             Varyings WaterVertex(Attributes input)
             {
@@ -284,6 +291,40 @@ Shader "Wyspa/Water"
                         col = deeper;
                 }
 
+                // --- płycizny w słońcu: siatka jasnych refleksów na dnie, wędruje razem z falowaniem ---
+                if (water && d > 2.0 && d < 18.0 && _WyspaSunlight > 0.01)
+                {
+                    float n1 = WNoise(sb / 7.0 + float2(t * 0.35, t * 0.2));
+                    float n2 = WNoise(sb / 6.0 + float2(-t * 0.3, t * 0.25) + 23.0);
+                    if (abs(n1 - n2) < 0.07 && th < _WyspaSunlight * (1.0 - d / 18.0) * 1.3)
+                        col = baseCls <= 1 ? _ColB3.rgb : BaseColor(baseCls - 1);
+                }
+
+                // --- wodorosty na płyciźnie: pionowe źdźbła 4-8 px, czubek kołysze się w prądzie ---
+                if (water && d > 5.0 && d < 22.0)
+                {
+                    const float cellW = 9.0, cellH = 14.0;
+                    float wrow = floor(sb.y / cellH);
+                    float wcol = floor(sb.x / cellW);
+                    [unroll] for (int wc = -1; wc <= 1; wc++)
+                    {
+                        float4 hw = WyspaHash(float2(wcol + wc, wrow) + 51.3);
+                        if (hw.x < 0.3)
+                        {
+                            float baseX = (wcol + wc) * cellW + floor(hw.y * cellW);
+                            float baseY = wrow * cellH + cellH - 1.0 - floor(hw.z * 3.0);   // dolny koniec (y w dół)
+                            float len = 4.0 + floor(hw.w * 5.0);
+                            float k = floor(baseY - sb.y);                                  // 0 u podstawy
+                            if (k >= 0.0 && k < len)
+                            {
+                                float sway = round(sin(t * 1.4 + hw.w * 6.28 + k * 0.45) * 1.5 * (k / len));
+                                if (floor(sb.x) == baseX + sway)
+                                    col = lerp(col, half3(0.13, 0.2, 0.17), 0.7);
+                            }
+                        }
+                    }
+                }
+
                 // --- ryby ---
                 int count = (int)_FishCount;
                 [loop] for (int i = 0; i < 16; i++)
@@ -437,6 +478,48 @@ Shader "Wyspa/Water"
                     }
                 }
 
+                // --- smugi wiatru: w podmuchu (to samo czoło co kołysanie roślin) woda ciemnieje w poziomych, zmarszczonych
+                // pasach, które płyną z wiatrem; w smugach pojedyncze jasne grzbiety ---
+                if (water && d > 4.0 && _WyspaWindPower > 0.0)
+                {
+                    float wx = X * 0.5 - size.x * 0.5;                    // piksele świata (16 na kafelek)
+                    float wu = (_WyspaWindFront - wx) / 40.0;
+                    float gust = wu > 0.0 ? _WyspaWindPower * exp(-1.2 * wu) * saturate(wu * 3.0) : 0.0;
+                    if (gust > 0.05)
+                    {
+                        float sn2 = WNoise(float2((X - t * 60.0) / 34.0, Y / 1.6) + 71.0);
+                        if (sn2 > 0.76 - 0.08 * gust && th < gust * 0.9)
+                            col = (((X + Y * 3) % 11) == 0 && sn2 > 0.82) ? _ColB3.rgb : (baseCls >= 4 ? _ColO.rgb : BaseColor(baseCls + 1));
+                    }
+                }
+
+                // --- deszcz: krople na wodzie zostawiają małe kółka (rozbryzg, krąg do 4 px, gaśnie ditheringiem) ---
+                if (water && d > 2.0 && _WyspaRain > 0.01)
+                {
+                    float2 rsz = float2(14.0, 9.0);
+                    float2 rc0 = floor(float2(X, Y) / rsz);
+                    half3 light = baseCls <= 1 ? _ColB3.rgb : BaseColor(baseCls - 1);
+                    [unroll] for (int ry2 = -1; ry2 <= 1; ry2++)
+                    [unroll] for (int rx2 = -1; rx2 <= 1; rx2++)
+                    {
+                        float2 cell = rc0 + float2(rx2, ry2);
+                        float tt = t / 0.7 + WyspaHash(cell + 3.7).w;
+                        float u = frac(tt);
+                        float4 h = WyspaHash(cell * 1.31 + floor(tt) * 7.17);
+                        if (h.x < _WyspaRain * 0.55)
+                        {
+                            float2 ctr = floor(cell * rsz + 2.0 + h.yz * (rsz - 4.0));
+                            float2 v = float2(X, Y) - ctr;
+                            float rr = 0.5 + u * 3.5;
+                            float e = length(v / float2(rr, rr * 0.5));
+                            if (u < 0.15 && abs(v.x) < 0.5 && abs(v.y) < 0.5)
+                                col = _ColB3.rgb;
+                            else if (u >= 0.1 && abs(e - 1.0) * rr * 0.5 < 0.5 && th > u * 0.9)
+                                col = light;
+                        }
+                    }
+                }
+
                 // --- świecący przypływ (rzadka noc): brzeg i grzbiety fal jarzą się turkusem, plamy światła dryfują ---
                 bool glowTide = night && _WyspaBiolum > 0.0;
                 if (glowTide && water && d < 18.0)
@@ -474,6 +557,23 @@ Shader "Wyspa/Water"
                 half4 lit = WyspaLight(col, alpha, input.uv, input.lightingUV);
                 if (!emit && tideMix > 0)
                     lit.rgb = lerp(lit.rgb, _ColGlow.rgb, tideMix * saturate(_WyspaBiolum));
+
+                // --- księżycowa ścieżka: pionowy pas srebrnych iskier pod księżycem, migocą i falują (po oświetleniu,
+                // żeby były widać w nocy); gęstsza w środku pasa i w pełnię ---
+                if (!emit && water && d > 3.0 && _WyspaMoonPath.y > 0.01 && alpha > 0)
+                {
+                    float wob = sin(Y * 0.27 + t * 0.8) * 1.5;
+                    float mdx = (X * 0.5 - _WyspaMoonPath.x + wob) / 9.0;
+                    float mp = _WyspaMoonPath.y * exp(-mdx * mdx);
+                    float2 mc = float2(floor(X / 3.0), Y);
+                    float4 mh = WyspaHash(mc * 1.73 + floor(t * 4.0 + WyspaHash(mc).x * 4.0) * 5.1);
+                    if (mh.x < mp * 0.3)
+                    {
+                        int mx0 = (int)(mc.x * 3.0 + floor(mh.y * 2.0));
+                        if (X >= mx0 && X < mx0 + (mh.z < 0.4 ? 2 : 1))
+                            lit.rgb = lerp(lit.rgb, half3(0.8, 0.84, 0.88), 0.3 + 0.35 * mp);
+                    }
+                }
 
                 // --- odbicia światła: iskierki tam, gdzie pada światło (komórki 3x1 px w 32 px) ---
                 if (!emit && water && d > 3.0 && alpha > 0)

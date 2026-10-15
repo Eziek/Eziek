@@ -7,7 +7,9 @@ namespace Wyspa.Visual
 {
     /// <summary>
     /// Podaje shaderowi Wyspa/Water mapę danych wody (malowaną przez Island), ścieżki ryb, miejsce potwora
-    /// i porę dnia (świecące ryby i oko potwora tylko w nocy).
+    /// i porę dnia (świecące ryby i oko potwora tylko w nocy). Co klatkę także niebo nad wodą (GDD §9 p. 119):
+    /// księżycową ścieżkę (gdzie jest księżyc i jak jasno świeci), deszcz (kółka od kropli) i słońce (refleksy na płyciznach).
+    /// Wartości zmieniają się płynnie (kilka sekund), np. gdy zaczyna padać.
     /// </summary>
     public class WaterAnimator : MonoBehaviour
     {
@@ -21,6 +23,9 @@ namespace Wyspa.Visual
         static readonly int FishCountId = Shader.PropertyToID("_FishCount");
         static readonly int BeastId = Shader.PropertyToID("_Beast");
         static readonly int NightId = Shader.PropertyToID("_Night");
+        static readonly int MoonPathId = Shader.PropertyToID("_WyspaMoonPath");
+        static readonly int RainId = Shader.PropertyToID("_WyspaRain");
+        static readonly int SunlightId = Shader.PropertyToID("_WyspaSunlight");
 
         [SerializeField] SpriteRenderer water;
         [SerializeField] GameClock clock;
@@ -29,6 +34,7 @@ namespace Wyspa.Visual
 
         Material material;
         float timer;
+        float moonPath, rain, sunlight;
         readonly List<FishPath> fish = new List<FishPath>();
         float[] hiddenUntil = new float[0];
         bool anyHidden;
@@ -219,6 +225,7 @@ namespace Wyspa.Visual
 
         void Update()
         {
+            UpdateSky();
             UpdateDash();
             if (anyHidden)
             {
@@ -238,6 +245,44 @@ namespace Wyspa.Visual
                 return;
             timer = 1f;
             UpdateNight();
+        }
+
+        /// <summary>
+        /// Księżyc wędruje nocą z prawej na lewą jak słońce w dzień (SunShadows), nad środkiem lądu ±9 kafelków; ścieżka
+        /// jaśniejsza w pełnię, w deszczu znika, we mgle słabnie. Deszcz: ulewa 0.6, burza 1. Słońce: od wysokości, w deszczu słabiej.
+        /// </summary>
+        void UpdateSky()
+        {
+            if (clock == null)
+                return;
+            float dt = Time.unscaledDeltaTime;
+            var weather = Weather.WeatherSystem.Current;
+            bool raining = Weather.WeatherSystem.Raining;
+            float sec = clock.Second;
+            float moonX = 0f, moonTarget = 0f, sunTarget = 0f;
+            if (clock.IsNight)
+            {
+                float u = Mathf.Clamp01((sec - GameClock.DaySeconds) / GameClock.NightSeconds);
+                moonX = Mathf.Cos(u * Mathf.PI);
+                float full = 1f - Mathf.Abs(clock.MoonPhase - 0.5f) * 2f;
+                moonTarget = (0.25f + 0.75f * full) * Mathf.Clamp01(Mathf.Sin(u * Mathf.PI) * 4f)
+                           * (raining ? 0f : weather == Weather.WeatherKind.Mist ? 0.4f : 1f);
+            }
+            else
+            {
+                float u = Mathf.Clamp01(sec / GameClock.DaySeconds);
+                sunTarget = Mathf.Clamp01(Mathf.Sin(u * Mathf.PI) / 0.35f) * (raining ? 0.2f : 1f);
+            }
+            float rainTarget = weather == Weather.WeatherKind.Storm ? 1f : raining ? 0.6f : 0f;
+            moonPath = Mathf.MoveTowards(moonPath, moonTarget, dt * 0.25f);
+            sunlight = Mathf.MoveTowards(sunlight, sunTarget, dt * 0.25f);
+            rain = Mathf.MoveTowards(rain, rainTarget, dt * 0.3f);
+            var island = Island.Instance;
+            Vector2 center = island != null && island.Ready ? island.LandRect.center : Vector2.zero;
+            float px = Island.WorldToPixel(new Vector2(center.x + moonX * 9f, 0f)).x;   // piksele mapy danych
+            Shader.SetGlobalVector(MoonPathId, new Vector4(px, moonPath, 0f, 0f));
+            Shader.SetGlobalFloat(RainId, rain);
+            Shader.SetGlobalFloat(SunlightId, sunlight);
         }
 
         void UpdateNight()

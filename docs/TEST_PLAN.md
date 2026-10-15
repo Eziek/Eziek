@@ -499,3 +499,13 @@ F1: „Rzadka noc” uruchamia kolejne zjawisko (po kolei, każde do świtu albo
 6. Każde zjawisko pokazuje toast i wpis w Bestiariuszu → „Widziane”; kolejne razy dodają „×N”.
 7. Bez F1: kilka nocy pod rząd; mniej więcej co trzecia ma zjawisko. Wczytanie gry nocą nie losuje drugi raz.
 8. Bestiariusz po niemiecku: zakładki działów mieszczą się (w razie potrzeby w dwóch rzędach), treść ich nie zasłania.
+
+## 41. Woda: księżyc, deszcz, płycizny, wiatr
+Pora dnia i pogoda z F1 (przewijanie czasu, wymuszenie pogody).
+1. Noc, pogodnie: na wodzie pionowy pas migoczących srebrnych iskier; w ciągu nocy przesuwa się z prawej na lewą;
+   w pełnię wyraźniejszy, w nów ledwo widać. W deszczu znika (płynnie), we mgle słabnie. Iskry nie są jaskrawe.
+2. Deszcz: na wodzie co chwilę rozbryzgi i małe kółka; burza gęściej; po deszczu znikają w ciągu kilku sekund.
+3. Dzień, pogodnie: na płyciźnie przy brzegu przesuwa się jasna siatka refleksów (słabnie w głąb, w deszczu prawie
+   niewidoczna); na płyciźnie kołyszą się ciemne źdźbła wodorostów (przy przesuwaniu widoku płyną z dnem).
+4. Podmuch wiatru (gdy drzewa się odginają): po wodzie przebiegają cienkie, ciemniejsze poziome smugi w stronę wiatru.
+5. Żaden efekt nie wchodzi na ląd, klif ani pianę; w przezroczystym oknie widać je tylko w pasie wody przy brzegu.

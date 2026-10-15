@@ -449,6 +449,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   **własny kursor** (pikselowa strzałka z żarem, stany) i **zabawa kursorem** (rośliny się odginają, kręgi na wodzie,
   liście z drzew, ćmy z lamp, nazwy ptaków i ryb), **rzadkie noce** (świecąca toń, deszcz gwiazd, zorza, korowód
   ogników, krwawy księżyc) i dział **„Widziane”** w Bestiariuszu. Tylko wygląd, bez wpływu na ekonomię.
+- [x] Woda (wybór gracza, §9 p. 119): księżycowa ścieżka, kółka od deszczu, refleksy słońca i wodorosty na płyciznach,
+  smugi wiatru. Kolejne pomysły z listy (cienie chmur, poranna mgiełka, tęcza, dym z pieca, ćmy, motyle, sylwetki we mgle,
+  tryb zdjęcia) czekają na wybór gracza.
 
 ---
 
@@ -988,6 +991,15 @@ Obrazki referencyjne (kopie): `docs/img/`
     (plamy 22-40%, iskry przy brzegu 50%, grzbiety fal i piana 25-30%, ryby 55%), a plam i iskier jest mniej.
     Rośliny pod kursorem odginają się delikatniej: najwyżej ok. 1 px u czubka (było 2,5), tylko w pasie 8 px od kursora,
     i dopiero przy szybszym ruchu.
+119. **Woda: księżyc, deszcz, płycizny, wiatr** (wybór gracza: „całą wodę” z listy pomysłów). Wszystko w `Water.shader`,
+    wartości z `WaterAnimator.UpdateSky` (płynnie, kilka sekund): **księżycowa ścieżka** (nocą pionowy pas migoczących
+    srebrnych iskier pod księżycem, który wędruje z prawej na lewą jak słońce; jaśniejsza w pełnię, w deszczu znika, we mgle
+    słabnie, rysowana po oświetleniu, żeby była widać w ciemności); **krople deszczu** (w deszczu i burzy na wodzie
+    rozbryzgi i małe kółka do 4 px, w burzy gęściej); **płycizny w słońcu** (w dzień do 18 px od brzegu po dnie wędruje
+    siatka jasnych refleksów, słabsza w głąb i w deszczu) i **wodorosty** (pionowe źdźbła 4-8 px na płyciźnie, czubki
+    kołyszą się, przesuwają się z dnem w paralaksie); **smugi wiatru** (w podmuchu, tym samym co kołysze roślinami, woda
+    ciemnieje w cienkich poziomych pasach płynących z wiatrem, z pojedynczymi jasnymi punktami). Podgląd w przybliżeniu:
+    `tools/pixel-proto/water_effects_preview.py` → `docs/img/woda_efekty.png`.
 
 ---
 
