@@ -20,6 +20,16 @@ namespace Wyspa.World
         public Sprite[] toolGlow;
     }
 
+    /// <summary>Wyspa fabularna (§13.11): szczątki (warianty) i budowla po odbudowie (Story/ruin_*, story_*).</summary>
+    [Serializable]
+    public class StoryArt
+    {
+        public string id;
+        public Sprite[] ruins;
+        public Sprite building;
+        public Sprite buildingGlow;
+    }
+
     [Serializable]
     public class FamiliarArt
     {
@@ -99,6 +109,19 @@ namespace Wyspa.World
         public Sprite[] waterFlora;
         [Tooltip("Piksele emisyjne (ten sam indeks), puste gdy ozdobnik nie świeci.")]
         public Sprite[] waterFloraGlow;
+
+        [Header("Wyspy fabularne: szczątki, rusztowanie odbudowanej części, budowle (tools/pixel-proto/story_ruins.py)")]
+        public List<StoryArt> story = new List<StoryArt>();
+        public Sprite storyScaffold;
+
+        public StoryArt Story(string id)
+        {
+            if (story == null)
+                return null;
+            foreach (var s in story)
+                if (s != null && s.id == id) return s;
+            return null;
+        }
 
         [Header("Drzewa owocowe (GDD §15.1)")]
         public List<Farming.TreeArt> trees = new List<Farming.TreeArt>();

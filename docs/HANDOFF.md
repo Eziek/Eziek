@@ -1,14 +1,14 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-105), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-107), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
 - Gałąź robocza: **`main`** (historia przepisana: bez stopek asystenta, autor Eziek). Stara gałąź `claude/...` do usunięcia
   na GitHubie po ustawieniu `main` jako domyślnej. PR-ów nie otwieramy bez prośby gracza.
-- Wersja zapisu: **v16** (Przystań we mgle: slot między rejsami, pole `mist`; `clockOffset`: własny cykl dnia zapisu,
-  nowa wyspa zaczyna się o 07:00).
+- Wersja zapisu: **v17** (wyspy fabularne: `isletsJoined`, `ruinsFixed`, `storyTimer`; v16: Przystań we mgle, slot między
+  rejsami, pole `mist`; `clockOffset`: własny cykl dnia zapisu, nowa wyspa zaczyna się o 07:00).
 - Gracz testuje w Unity 6.6 i w buildzie Windows, odsyła zrzuty i uwagi.
 - Kod kompiluje się na atrapach (`tools/cscheck`), shadery przez `tools/shadercheck`.
 - **Gra nazywa się Misty Packland** (GDD §16.5). Pakiet do wydania: `docs/RELEASE.md`.
@@ -37,6 +37,11 @@ Historia decyzji jest w GDD §9 (punkty 1-105), a lista testów w `docs/TEST_PLA
   (`water_flora.py` + `export_unity_water.py`, `Visual/WaterFlora.cs`), odcięte wysepki do przyłączenia
   (`WorldGenerator.PlaceIslets`, `IslandMap` wysepki, `World/IsletSpot.cs`; zapis bez zmian; podgląd `docs/img/wysepki.png`). F1: „Do wysepki”.
   Wymaga Wyspa → 2. Nie testowane w Unity.
+- **Mgła bardziej kryje** (GDD §9 p. 106): pełne krycie, podstawa pod chmurami za pierwszym rzędem kłębów (`Fog.shader`).
+- **Wyspy fabularne** (GDD §9 p. 107, §13.11, TEST_PLAN 34): szczątki 4 historii na wysepkach, odbudowa części za
+  drewno, kamień i monety, budowla z produkcją przy pracy (`World/StorySites.cs`, `RuinPiece.cs`, `StoryBuilding.cs`;
+  grafika `tools/pixel-proto/story_ruins.py`). F1: „Odbuduj ruiny”. Wymaga Wyspa → 2. Koszty i produkcja do balansu.
+  Nie testowane w Unity.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,

@@ -32,6 +32,8 @@ namespace Wyspa.World
         public string LampId { get; set; }
         /// <summary>Budowla kupiona w sklepie (np. ołtarz) - do odtworzenia z zapisu.</summary>
         public string BuildingId { get; set; }
+        /// <summary>Stoi na stałe (budowla fabularna, §13.11): bez „Przenieś” i „Rozbierz”.</summary>
+        public bool Fixed { get; set; }
         public bool Wanted { get; set; }
         public bool Placed { get; set; }
         public TilePos Tile { get; set; }

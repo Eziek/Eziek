@@ -674,6 +674,17 @@ namespace Wyspa.EditorTools
             art.bonfireGlow = new[] { Obj("bonfire_0_glow"), Obj("bonfire_1_glow"), Obj("bonfire_2_glow") };
             art.dreamHouse = Obj("dreamhouse");
             art.dreamHouseGlow = Obj("dreamhouse_glow");
+            // wyspy fabularne (tools/pixel-proto/story_ruins.py): szczątki, rusztowanie, budowle
+            art.story = new List<StoryArt>();
+            foreach (var site in Wyspa.World.StorySites.All)
+                art.story.Add(new StoryArt
+                {
+                    id = site.id,
+                    ruins = new[] { LoadSprite($"Story/ruin_{site.id}_0"), LoadSprite($"Story/ruin_{site.id}_1") },
+                    building = LoadSprite("Story/story_" + site.id),
+                    buildingGlow = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Story/story_{site.id}_glow.png"),
+                });
+            art.storyScaffold = LoadSprite("Story/story_scaffold");
             // ozdobniki na wodzie (tools/pixel-proto/water_flora.py, kolejność jak FLORA i wagi w Visual/WaterFlora)
             string[] flora = { "lily_pads_0", "lily_pads_1", "lily_pads_2", "lily_pale", "lily_mist", "leaf_0", "leaf_1",
                                "duckweed_0", "duckweed_1", "twig" };

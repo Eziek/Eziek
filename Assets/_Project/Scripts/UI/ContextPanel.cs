@@ -95,7 +95,7 @@ namespace Wyspa.UI
                 info = new ContextInfo { tab = 0 };
                 what.FillContext(info);
             }
-            if (what is TileObject obj && obj.NeedsTile && obj.Placed && startMove != null)
+            if (what is TileObject obj && obj.NeedsTile && obj.Placed && !obj.Fixed && startMove != null)
                 info.Button(Loc.Get("act.move"), () => startMove(obj));
             AddDismantle(what, info);
             target = what;

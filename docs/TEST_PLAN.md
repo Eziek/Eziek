@@ -414,11 +414,26 @@ Najpierw Wyspa → 2 (nowe grafiki drzew i ozdobników). F1: „Do wysepki”, �
 2. Woda: przy brzegu kilka lilii, liści, rzęsy; każdy powoli dryfuje (pół minuty na okrążenie), bez migotania
    i rozmycia. Ozdobniki nie leżą na lądzie, pomoście ani łodzi. Nocą mglista (fioletowa) lilia lekko świeci.
 3. Po zakupie kafelka obok ozdobnika: ozdobnik pojawia się gdzie indziej, reszta zostaje. Przy większej wyspie jest ich więcej.
-4. „Do wysepki”: z mgły wyłania się wysepka (toast, piana), okno obejmuje ją; ma klif, kontur i ozdoby (drzewa, kamienie).
+4. „Do wysepki”: z mgły wyłania się wysepka (toast, piana), okno obejmuje ją; ma klif, kontur i szczątki (sekcja 34).
 5. Klik w wysepkę: panel „Odcięta wysepka” z opisem, liczbą kafelków, odległością w kafelkach wody i „Rozbudowa”.
    Na wysepce nie da się kopać ani usuwać ozdób.
 6. Tryb rozbudowy: kafelek tuż obok wysepki (także po skosie) ma „+” zamiast ceny i podpowiedź „Przyłączy wysepkę za darmo!”.
-7. Kupno tego kafelka: toast „Wysepka przyłączona: +3/4 kafelki”, znaleziska spod jej kafelków, ozdoby stają się
-   zwykłymi dekoracjami (da się je usunąć), kafelki da się przekopać; cena kolejnego kafelka rośnie tylko o jeden zakup.
+7. Kupno tego kafelka: toast „Wysepka przyłączona: +3/4 kafelki”, znaleziska spod jej kafelków, na kafelkach szczątki
+   do odbudowy (sekcja 34); cena kolejnego kafelka rośnie tylko o jeden zakup.
 8. Zapis i wczytanie: przyłączona wysepka zostaje, odcięte wracają w tych samych miejscach. Stary zapis wczytuje się
    bez błędów (wysepki tuż przy lądzie po prostu się nie pojawiają).
+
+## 34. Wyspy fabularne (szczątki do odbudowy)
+Najpierw Wyspa → 2. F1: „Do wysepki”, „Odbuduj ruiny”, waluty (drewno, kamień, monety).
+1. Odcięta wysepka: na każdym kafelku szczątki jednej z 4 historii (kaplica, strażnica, tartak, obserwatorium).
+   Klik w wysepkę: w panelu „Na wysepce leżą szczątki: …”.
+2. Po przyłączeniu: toast „Na wysepce leżą szczątki: …”. Klik w szczątki: panel z nazwą, opisem budowli i tego, co
+   daje, „Odbudowane części: 0/N”, kosztem i „Odbuduj” (wyszarzone bez surowców). Kafelków ze szczątkami nie da się
+   przekopać w trybie rozbudowy ani zabudować.
+3. „Odbuduj”: surowce znikają, część stoi w rusztowaniu, toast „Odbudowano część 1/N” z zapiskiem; zapisek jest w
+   bestiariuszu (Zapiski). Bez surowców: toast z brakującymi ilościami.
+4. Ostatnia część: rusztowania znikają, na pierwszym kafelku wysepki staje budowla (świecące okna nocą), toast
+   „Odbudowano: …” i zakończenie historii; pozostałe kafelki wysepki są wolne. Budowla nie ma „Przenieś” ani „Rozbierz”.
+5. Panel budowli: co daje i „Następny dar za ok. X min pracy”. Przy pracy (wskaźnik aktywności) po czasie z tabeli
+   GDD §13.11 pojawia się dar (plony nocy, monety, drewno albo odłamek gwiazdy); bez pracy licznik stoi.
+6. Zapis i wczytanie w trakcie odbudowy (rusztowania zostają) i po niej (budowla stoi, licznik daru zachowany).

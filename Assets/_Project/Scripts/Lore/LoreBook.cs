@@ -23,6 +23,8 @@ namespace Wyspa.Lore
                 foreach (var k in Island) yield return k;
                 foreach (var d in Sea.Destinations.All)
                     foreach (var k in d.lore) yield return k;
+                foreach (var site in World.StorySites.All)   // wyspy fabularne
+                    foreach (var k in site.AllLore()) yield return k;
                 foreach (var k in Story.Ending) yield return k;
             }
         }

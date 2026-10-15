@@ -394,3 +394,9 @@ ui.islet.size,Kafelki: {0},Tiles: {0},Landstücke: {0},マス：{0},土地格：
 ui.islet.gap,Od wyspy dzieli ją {0} {0:plural:kafelek|kafelki|kafelków} wody,{0} {0:plural:tile|tiles} of water away from your island,{0} {0:plural:Landstück|Landstücke} Wasser von deiner Insel entfernt,島から水{0}マス,距离岛屿{0}格水面,"najkrótsza odległość, także po skosie"
 ui.islet.expand,Rozbudowa,Expand,Ausbauen,拡張,扩建,otwiera tryb rozbudowy
 ui.expand.islet,Przyłączy wysepkę za darmo!,Connects an islet for free!,Schließt ein Inselchen kostenlos an!,小島が無料でつながる！,免费连接一座小岛！,podpowiedź nad kafelkiem
+ui.islet.ruin,Na wysepce leżą szczątki: {0},Ruins lie on the islet: {0},Auf dem Inselchen liegen Trümmer: {0},小島に残骸がある：{0},小岛上有残骸：{0},{0} = nazwa szczątków
+ui.ruin.desc,"Szczątki budowli „{0}”. Odbuduj wszystkie części na wysepce, a stanie na nowo.",The remains of the {0}. Rebuild every part on the islet and it will stand again.,"Die Überreste: {0}. Baue alle Teile auf dem Inselchen wieder auf, dann steht es wieder.",「{0}」の残骸。小島のすべての部分を再建すれば、再びそびえ立つ。,“{0}”的残骸。重建小岛上的所有部分，它就会重新矗立。,{0} = nazwa budowli
+ui.ruin.progress,Odbudowane części: {0}/{1},Parts rebuilt: {0}/{1},Wiederaufgebaute Teile: {0}/{1},再建した部分：{0}/{1},已重建部分：{0}/{1},
+ui.ruin.cost,"Odbudowa części: {0} drewna, {1} kamienia, {2} {2:plural:moneta|monety|monet}","Rebuilding a part: {0} wood, {1} stone, {2} {2:plural:coin|coins}","Ein Teil wiederaufbauen: {0} Holz, {1} Stein, {2} {2:plural:Münze|Münzen}",部分の再建：木材{0}、石材{1}、{2}コイン,重建一部分：{0}木材、{1}石料、{2}金币,
+ui.ruin.fixed,Ta część już stoi w rusztowaniu. Odbuduj resztę.,This part already stands in scaffolding. Rebuild the rest.,Dieser Teil steht schon im Gerüst. Baue den Rest wieder auf.,この部分はもう足場の中に立っている。残りを再建しよう。,这一部分已在脚手架中立起。重建其余部分吧。,
+ui.story.next,Następny dar za ok. {0} min pracy,Next gift in about {0} min of work,Nächste Gabe in etwa {0} Min. Arbeit,次の贈り物まで作業約{0}分,下一份馈赠约需工作{0}分钟,

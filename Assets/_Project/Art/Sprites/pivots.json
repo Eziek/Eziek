@@ -2642,6 +2642,46 @@
       "y": 0.1
     },
     {
+      "name": "ruin_chapel_0",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "ruin_chapel_1",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "ruin_observatory_0",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "ruin_observatory_1",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "ruin_sawmill_0",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "ruin_sawmill_1",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "ruin_watch_0",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "ruin_watch_1",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
       "name": "ruined_arch",
       "x": 0.51389,
       "y": 0.03125
@@ -2720,6 +2760,51 @@
       "name": "storehouse",
       "x": 0.53125,
       "y": 0.04545
+    },
+    {
+      "name": "story_chapel",
+      "x": 0.51667,
+      "y": 0.0
+    },
+    {
+      "name": "story_chapel_glow",
+      "x": 0.51667,
+      "y": 0.0
+    },
+    {
+      "name": "story_observatory",
+      "x": 0.51786,
+      "y": 0.0
+    },
+    {
+      "name": "story_observatory_glow",
+      "x": 0.51786,
+      "y": 0.0
+    },
+    {
+      "name": "story_sawmill",
+      "x": 0.51471,
+      "y": 0.0
+    },
+    {
+      "name": "story_sawmill_glow",
+      "x": 0.51471,
+      "y": 0.0
+    },
+    {
+      "name": "story_scaffold",
+      "x": 0.52778,
+      "y": 0.0
+    },
+    {
+      "name": "story_watch",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "story_watch_glow",
+      "x": 0.52083,
+      "y": 0.0
     },
     {
       "name": "stump_dead",
