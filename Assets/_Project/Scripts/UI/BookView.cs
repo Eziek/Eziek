@@ -779,7 +779,7 @@ namespace Wyspa.UI
                     desc = Loc.Get("ui.shop.tree.desc", sp.fruitCount, Loc.Get(sp.FruitKey), sp.fruitPrice),
                     buy = i => UiRoot.Instance?.StartPlacement(new PlacementMode.Request
                     {
-                        nameKey = species.NameKey, sprite = pic, cost = cost,
+                        nameKey = species.NameKey, sprite = pic, cost = cost, repeat = true, nextCost = species.Cost,
                         valid = i.IsFree,
                         ghostAt = t => (Island.TileAnchor(t, 13, out _), false),
                         confirm = t =>
@@ -879,7 +879,9 @@ namespace Wyspa.UI
                 }
                 UiRoot.Instance.StartPlacement(new PlacementMode.Request
                 {
-                    nameKey = nameKey, sprite = sprite, cost = cost, area = 0,
+                    nameKey = nameKey, sprite = sprite, cost = cost, area = 0, repeat = true,
+                    nextCost = () => Automation.AutomationSystem.Cost(kind, island.CountBuilding(kind)),
+                    canRepeat = () => island.CrateWithoutMerchant(Vector3.zero) != null,   // kolejny duszek tylko przy wolnej skrzyni
                     valid = t => island.FreeCrateAt(t) != null,
                     ghostAt = t => (Island.MerchantSpot(t), false),
                     confirm = t =>
@@ -892,9 +894,12 @@ namespace Wyspa.UI
                 });
                 return;
             }
+            string familiar = Automation.AutomationSystem.HomeOf(kind);
             UiRoot.Instance.StartPlacement(new PlacementMode.Request
             {
-                nameKey = nameKey, sprite = sprite, cost = cost, area = area,
+                nameKey = nameKey, sprite = sprite, cost = cost, area = area, repeat = true,
+                nextCost = () => Automation.AutomationSystem.Cost(kind, island.CountBuilding(kind)),   // każda kolejna droższa
+                canRepeat = () => familiar == null,   // domek chowańca: tylko jeden
                 valid = island.IsFree,
                 ghostAt = t => (Island.TileAnchor(t, 13, out _), false),
                 confirm = t =>

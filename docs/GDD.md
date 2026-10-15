@@ -1046,6 +1046,12 @@ Obrazki referencyjne (kopie): `docs/img/`
     sprawdzane piksel po pikselu. Kot nie poluje na ognika lecącego nad wodą. Kod `World/LandGrid.cs` (czysty C#),
     `Familiar.Route`. Sprawdzone poza Unity na 6 wyspach po 40 kafelków: 12 000 losowych tras, żadna nie dotyka wody
     ani klifu, ok. 0,7 ms na trasę.
+126. **Stawianie seriami** (prośba gracza: nie wracać do sklepu po każdą sztukę). Lampy, sadzonki drzew, budowle
+    (skrzynie, gniazda, runy, piece, kryształy, kotły itd.) i duszki-handlarze: po postawieniu tryb stawiania zostaje,
+    z ceną kolejnej sztuki (budowle drożeją jak w sklepie), i kończy się sam, gdy zabraknie surowców (toast „Potrzeba: …”),
+    gdy więcej postawić nie wolno (domek chowańca: jeden; duszek-handlarz: brak wolnej skrzyni) albo po PPM/Esc.
+    Pojedynczo zostają: tablica ogłoszeń, pomost, budowle na brzegu, przenoszenie. Podpowiedź „LPM: postaw (można
+    kolejne) - PPM: koniec”. Kod `PlacementMode.Request.repeat/nextCost/canRepeat`.
 
 ---
 

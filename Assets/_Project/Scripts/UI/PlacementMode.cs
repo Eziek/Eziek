@@ -38,6 +38,10 @@ namespace Wyspa.UI
             public Func<TilePos, (Vector3 pos, bool flip)> ghostAt;
             public Func<TilePos, bool> confirm;                // true = postawione
             public int area;                                   // zasięg w kafelkach (runa 1 = 3x3, ognik 2 = 5x5), 0 = brak
+            // stawianie seriami (GDD §9 p. 126): po postawieniu tryb zostaje, dopóki stać cię na kolejną sztukę
+            public bool repeat;
+            public Func<List<CurrencyAmount>> nextCost;        // cena kolejnej sztuki (budowle drożeją), null = ta sama
+            public Func<bool> canRepeat;                       // null = zawsze (np. domek: tylko jeden na chowańca)
         }
 
         TooltipView tooltip;
@@ -82,7 +86,7 @@ namespace Wyspa.UI
                 return;
             Begin(new Request
             {
-                nameKey = def.NameKey, sprite = def.sprite, light = def,
+                nameKey = def.NameKey, sprite = def.sprite, light = def, repeat = true,
                 cost = new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Coins, def.price) },
                 valid = island.IsFree, ghostAt = OnLand,
                 confirm = t =>
@@ -215,7 +219,7 @@ namespace Wyspa.UI
                 s += "\n" + Loc.Get("ui.place.lights", lit);
             if (!valid)
                 s += "\n" + Loc.Get("ui.place.blocked");
-            return s + "\n" + Loc.Get("ui.place.click");
+            return s + "\n" + Loc.Get(request.repeat ? "ui.place.click_more" : "ui.place.click");
         }
 
         /// <summary>Koszt w kilku walutach jako tekst: „30 monet, 10 drewna”.</summary>
@@ -244,6 +248,15 @@ namespace Wyspa.UI
                     foreach (var c in request.cost)
                         game.Wallet.Refund(c.type, c.amount);
                 return;
+            }
+            // seria: następna sztuka od razu (nowa cena), koniec, gdy nie wolno więcej albo zabraknie surowców
+            if (request.repeat && (request.canRepeat == null || request.canRepeat()))
+            {
+                if (request.nextCost != null)
+                    request.cost = request.nextCost();
+                if (request.cost == null || game.Wallet.CanAfford(request.cost))
+                    return;
+                GameEvents.RaiseToast("ui.place.need", CostText(request.cost));
             }
             Cancel();
         }

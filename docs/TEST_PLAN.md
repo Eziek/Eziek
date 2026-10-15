@@ -555,3 +555,11 @@ Najpierw Wyspa → 2 (materiał `Atmosphere`). F1: „Horyzont” pokazuje kolej
 3. Kot poluje na ognika tylko nad lądem (ognik nad wodą: kot go zostawia).
 4. Kruk ląduje przy grządkach na trawie i nie podskakuje do wody.
 5. Po dokupieniu kafelka chowańce chodzą także po nowym lądzie.
+
+## 47. Stawianie seriami
+1. Sklep → lampa: po postawieniu duch zostaje przy kursorze, można stawiać kolejne; dymek pokazuje koszt i „PPM: koniec”.
+2. Budowla (np. skrzynia, runa, piec): po każdej sztuce koszt w dymku rośnie jak w sklepie; gdy nie stać na kolejną,
+   toast „Potrzeba: …” i tryb się kończy.
+3. Domek chowańca: po postawieniu tryb się kończy (tylko jeden). Duszek-handlarz: seria trwa, dopóki są skrzynie bez duszka.
+4. Sadzonki drzew owocowych: kilka pod rząd.
+5. PPM (bez przeciągania) albo Esc kończy serię w każdej chwili; zajęty kafelek: duch czerwony, klik nic nie robi.
