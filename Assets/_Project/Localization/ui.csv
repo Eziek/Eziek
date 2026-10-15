@@ -402,13 +402,15 @@ ui.monument.cost,"Następny etap: {0} drewna, {1} kamienia, {2} {2:plural:moneta
 ui.monument.building,Budowa: {0}% (ogniki na rusztowaniu: {1}/{2}),Building: {0}% (wisps on the scaffold: {1}/{2}),Bau: {0} % (Irrlichter am Gerüst: {1}/{2}),建設中：{0}%（足場の鬼火：{1}/{2}）,建造中：{0}%（脚手架上的鬼火：{1}/{2}）,postęp etapu; budowa idzie tylko przy pracy gracza
 ui.monument.waiting,"Czeka na wolne ogniki. Budowa idzie, gdy pracujesz.",Waiting for free wisps. Building goes on while you work.,"Wartet auf freie Irrlichter. Gebaut wird, während du arbeitest.",手の空いた鬼火を待っている。作業中に建設が進む。,等待空闲的鬼火。你工作时建造才会推进。,
 ui.monument.no_wisps,"Na wyspie nie ma ogników, więc budowa idzie sama, wolniej. Gniazdo ogników ją przyspieszy.","There are no wisps on the island, so building goes on by itself, slowly. A wisp nest will speed it up.","Auf der Insel gibt es keine Irrlichter, also geht der Bau von allein, langsamer. Ein Irrlichtnest beschleunigt ihn.",島に鬼火がいないので、建設はひとりでにゆっくり進む。鬼火の巣があれば速くなる。,岛上没有鬼火，所以建造会自行缓慢推进。鬼火巢能加快速度。,
-ui.shop.ember_kiln.desc,"Spala nadwyżkę drewna na Żar, także gdy nie pracujesz","Burns surplus wood into Ember, even while you are away","Verbrennt überschüssiges Holz zu Glut, auch wenn du nicht arbeitest",余った木材を燃やして熾火にする（作業していなくても）,把多余的木材烧成余火（不工作时也会）,
+ui.shop.ember_kiln.desc,"Ogniki wrzucają do niego drewno, a on zamienia je w Żar (także gdy nie pracujesz)",Wisps toss wood into it and it turns it into Ember (even while you are away),"Irrlichter werfen Holz hinein, und er macht daraus Glut (auch wenn du nicht arbeitest)",鬼火が木材を投げ入れ、窯が熾火に変える（作業していなくても）,鬼火把木材扔进去，它把木材变成余火（不工作时也会）,
 ui.shop.ember_crystal.desc,Sam oddaje Żar (także nocą i bez pracy) i powiększa słój,Gives Ember by itself (also at night and while idle) and enlarges the jar,Gibt von selbst Glut ab (auch nachts und ohne Arbeit) und vergrößert das Glas,ひとりでに熾火を生み（夜も放置中も）、瓶を大きくする,自行产出余火（夜间和闲置时也会），并扩大余火罐,
 ui.kiln.desc,"Spala {0} drewna na 1 Żar co {1} s. Nie pali, gdy słój jest pełny.",Burns {0} wood into 1 Ember every {1} s. Stops when the jar is full.,"Verbrennt alle {1} s {0} Holz zu 1 Glut. Hält an, wenn das Glas voll ist.",{1}秒ごとに木材{0}を熾火1にする。瓶が満杯なら止まる。,每{1}秒把{0}木材烧成1余火。罐满时停止。,
 ui.kiln.reserve,Zostawia drewna: {0},Keeps wood: {0},Behält Holz: {0},残す木材：{0},保留木材：{0},rezerwa na budowle
 ui.kiln.burning,Pali się.,Burning.,Brennt.,燃えている。,燃烧中。,
 ui.kiln.off,Wygaszony.,Put out.,Gelöscht.,火を落としている。,已熄火。,
 ui.kiln.full,"Słój pełny, piec czeka.","The jar is full, the kiln waits.","Das Glas ist voll, der Ofen wartet.",瓶が満杯なので窯は待っている。,余火罐已满，窑在等待。,
-ui.kiln.no_wood,Brak drewna ponad rezerwę.,No wood above the reserve.,Kein Holz über der Reserve.,予備を超える木材がない。,没有超出储备的木材。,
+ui.kiln.no_wood,Skład nie ma drewna ponad rezerwę.,The store has no wood above the reserve.,Im Lager ist kein Holz über der Reserve.,倉庫に予備を超える木材がない。,仓库里没有超出储备的木材。,
 ui.kiln.toggle,Piec: {0},Kiln: {0},Ofen: {0},窯：{0},窑：{0},{0} = wł./wył.
 ui.crystal.desc,"Oddaje 1 Żar co {0} min, także nocą i gdy nie pracujesz. Słój większy o {1}.","Gives 1 Ember every {0} min, also at night and while you are away. Jar +{1}.","Gibt alle {0} Min. 1 Glut ab, auch nachts und wenn du nicht arbeitest. Glas +{1}.",{0}分ごとに熾火1を生む（夜も作業していなくても）。瓶+{1}。,每{0}分钟产出1余火（夜间和不工作时也会）。余火罐+{1}。,
+ui.kiln.fuel,W palenisku: {0}/{1} drewna,In the firebox: {0}/{1} wood,In der Feuerung: {0}/{1} Holz,火床：木材{0}/{1},炉膛：{0}/{1}木材,polana wrzucone przez ogniki
+ui.kiln.waiting,"Czeka, aż ognik przyniesie drewno.",Waiting for a wisp to bring wood.,"Wartet, bis ein Irrlicht Holz bringt.",鬼火が木材を運んでくるのを待っている。,等待鬼火送来木材。,

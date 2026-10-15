@@ -927,6 +927,10 @@ Obrazki referencyjne (kopie): `docs/img/`
     (3 Żaru na minutę), także gdy gracz nie pracuje; zostawia rezerwę drewna (domyślnie 20, panel), nie pali przy pełnym
     słoju, można go wygasić. **Kryształ Żaru** (250 monet + 15 kamienia) oddaje 1 Żar co 2 min zawsze (także nocą i bez
     pracy) i powiększa słój o 20. Grafika `tools/pixel-proto/ember_gens.py`, kod `Automation/EmberKiln.cs`, `EmberCrystal.cs`.
+110. **Ogniki palą w piecu Żaru** (gracz: „niech palą drewnem w tym piecu”). Piec spala tylko drewno z paleniska
+    (do 6 polan, w zapisie). Wolny, wypoczęty ognik bierze 2 polana ze składu przy gnieździe (tylko ponad rezerwę), leci do
+    pieca i wrzuca je do ognia (iskry); drwal po ścięciu drzewa niesie drewno najpierw do pieca, który czeka na opał, a
+    nadmiar do składu. Jeden ognik naraz na piec. Bez żadnego ognika na wyspie piec dokłada sobie sam ze składu.
 
 ---
 

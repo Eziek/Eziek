@@ -34,6 +34,7 @@ namespace Wyspa.World
         public string brew;                        // v10: kocioł - przepis w kotle
         public float brewLeft;                     // v10: sekundy do końca warzenia
         public bool brewReady;                     // v10: mikstura gotowa do wypicia
+        public int kilnFuel;                       // v18: piec Żaru - polana w palenisku
     }
 
     [Serializable]
@@ -375,7 +376,7 @@ namespace Wyspa.World
                     if (b != null && b.TryGetComponent(out Automation.Storehouse store))
                         store.Restore(o.storeReserve, o.storeOff);
                     if (b != null && b.TryGetComponent(out Automation.EmberKiln kiln))
-                        kiln.Restore(o.storeReserve, o.storeOff);   // piec: rezerwa drewna i wyłączenie w tych samych polach
+                        kiln.Restore(o.storeReserve, o.storeOff, o.kilnFuel);   // piec: rezerwa drewna i wyłączenie w tych samych polach
                     if (b != null && b.TryGetComponent(out Alchemy.Cauldron cauldron))
                     {
                         cauldron.AutoRecipe = o.brewAuto;
@@ -451,6 +452,7 @@ namespace Wyspa.World
                 {
                     os.storeReserve = kiln.Reserve;
                     os.storeOff = !kiln.On;
+                    os.kilnFuel = kiln.Fuel;
                 }
                 if (cauldron != null && cauldron.Brewing != null)
                 {

@@ -442,9 +442,11 @@ Najpierw Wyspa → 2. F1: „Do wysepki”, „Monument: etap”, waluty (drewno
 ## 35. Generatory Żaru
 Najpierw Wyspa → 2. F1: waluty (drewno, kamień, monety).
 1. Sklep → Budowle: „Piec Żaru” i „Kryształ Żaru” dostępne od początku, z opisem i ceną (kolejna sztuka droższa).
-2. Piec: przy drewnie ponad rezerwę płomień się rusza, co 20 s ubywa 2 drewna, przybywa 1 Żaru, iskry z komina.
-   Panel: opis, „Zostawia drewna: 20”, stan (pali się / słój pełny / brak drewna / wygaszony), rezerwa ±10, wł./wył.
-   Przy pełnym słoju i przy drewnie poniżej rezerwy nie pali (płomień zgaszony). Działa też bez pracy gracza.
+2. Piec z gniazdem ogników: wolny ognik leci do gniazda, bierze 2 polana (widać je pod nim), leci do pieca i wrzuca je
+   w ogień (iskry, drewno ubywa ze składu dopiero przy wrzuceniu). Drwal po ścięciu drzewa niesie drewno do pieca, gdy ten
+   czeka na opał. Panel: „W palenisku: X/6 drewna”, „Zostawia drewna: 20”, stan (pali się / słój pełny / brak drewna /
+   czeka na ognika / wygaszony), rezerwa ±10, wł./wył. Co 20 s z paleniska ubywa 2 drewna, przybywa 1 Żaru.
+   Bez żadnego ognika na wyspie piec sam bierze drewno ze składu. Działa też bez pracy gracza.
 3. Kryształ: pulsuje, słój od razu większy o 20 (HUD: np. 60 → 80), Żar rośnie powoli także bez pracy i nocą.
    Rozbiórka kryształu zmniejsza słój z powrotem.
 4. Zapis i wczytanie: rezerwa i wyłączenie pieca zostają; Żar ponad 60 przy krysztale nie przepada po wczytaniu.

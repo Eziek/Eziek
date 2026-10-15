@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Wyspa.Core;
+using Wyspa.Economy;
 using Wyspa.Farming;
 using Wyspa.Lighting;
 using Wyspa.Visual;
@@ -857,6 +858,77 @@ namespace Wyspa.Automation
             LeaveBuild();
             AddXp(1);   // budowa uczy
             yield return HoverFor(Random.Range(0.5f, 1f));
+        }
+
+        // ------------------------------------------------------------ drewno do pieca Żaru (GDD §9 p. 110)
+
+        /// <summary>Piec, do którego ognik właśnie niesie drewno (null = nie niesie).</summary>
+        public EmberKiln FeedSite { get; private set; }
+
+        void LeaveKiln()
+        {
+            if (FeedSite != null)
+                FeedSite.Release(this);
+            FeedSite = null;
+            ShowCarried(null, 0);
+        }
+
+        /// <summary>
+        /// Wolny ognik: bierze polana ze składu przy gnieździe, leci z nimi do pieca i wrzuca je do paleniska
+        /// (drewno ubywa ze składu dopiero przy wrzuceniu, więc przerwany kurs niczego nie gubi).
+        /// </summary>
+        IEnumerator StokeTrip(EmberKiln kiln)
+        {
+            FeedSite = kiln;
+            yield return FlyTo(Home, 0.2f);
+            if (kiln == null)
+            {
+                LeaveKiln();   // piec rozebrany w trakcie kursu
+                yield break;
+            }
+            ShowCarried(Ui("wood"), EmberKiln.Wood, true);
+            yield return FlyTo(kiln.Mouth + new Vector3(0.35f, 0.25f, 0f));
+            yield return Toss(kiln);
+            var game = GameLoop.Instance;
+            if (kiln != null && game != null && game.Wallet.Get(CurrencyType.Wood) >= kiln.Reserve + EmberKiln.Wood
+                && game.Wallet.TrySpend(new List<CurrencyAmount> { new CurrencyAmount(CurrencyType.Wood, EmberKiln.Wood) }))
+                game.Wallet.Add(CurrencyType.Wood, kiln.Feed(EmberKiln.Wood));
+            LeaveKiln();
+            yield return HoverFor(Random.Range(0.4f, 0.8f));
+        }
+
+        /// <summary>Drwal: świeżo ścięte drewno prosto do paleniska; co się nie zmieści, wraca do składu.</summary>
+        IEnumerator StokeWithLoad(EmberKiln kiln)
+        {
+            FeedSite = kiln;
+            yield return FlyTo(kiln.Mouth + new Vector3(0.35f, 0.25f, 0f));
+            yield return Toss(kiln);
+            if (kiln == null && loadAmount > 0)
+            {
+                yield return FlyTo(Home);   // piec zniknął po drodze: drewno do składu
+                DepositLoad();
+            }
+            else if (kiln != null && loadAmount > 0)
+            {
+                loadAmount = kiln.Feed(loadAmount);
+                if (loadAmount > 0)
+                    yield return FlyTo(Home);
+                DepositLoad();
+            }
+            LeaveKiln();
+        }
+
+        /// <summary>Zamach i wrzut: ognik nurkuje do paleniska, polana znikają w ogniu.</summary>
+        IEnumerator Toss(EmberKiln kiln)
+        {
+            if (kiln == null)
+                yield break;
+            var from = transform.position;
+            if (body != null) body.flipX = kiln.Mouth.x < from.x;
+            yield return Flight.Arc(transform, from, kiln.Mouth + new Vector3(0.15f, 0.1f, 0f), 6f, 0.08f);
+            Pose(1, 0.2f);
+            ShowCarried(null, 0);
+            yield return Flight.Arc(transform, transform.position, from, 4f, 0.08f);
         }
     }
 }

@@ -228,6 +228,7 @@ namespace Wyspa.Automation
         {
             StopAllCoroutines();
             LeaveBuild();
+            LeaveKiln();
             idling = false;
             Release();
             LeaveChat();
@@ -407,6 +408,7 @@ namespace Wyspa.Automation
         {
             StopAllCoroutines();
             LeaveBuild();
+            LeaveKiln();
             idling = false;
             Release();
             LeaveChat();
@@ -628,6 +630,14 @@ namespace Wyspa.Automation
                 {
                     idling = false;
                     yield return BuildTrip(site, spot);
+                    yield break;
+                }
+                // piec Żaru czeka na drewno: polana ze składu do paleniska
+                var kiln = Random.value < 0.7f ? EmberKiln.WantingFuel(transform.position, true) : null;
+                if (kiln != null && kiln.TryClaim(this))
+                {
+                    idling = false;
+                    yield return StokeTrip(kiln);
                     yield break;
                 }
             }
@@ -1017,11 +1027,12 @@ namespace Wyspa.Automation
         }
 
         /// <summary>Niesione rzeczy jako małe sprite'y: zbieracz w koszyku, drwal pod sobą (drewno, kamień); ogrodnik i siewca bez.</summary>
-        void ShowCarried(Sprite single = null, int singleCount = 0)
+        void ShowCarried(Sprite single = null, int singleCount = 0, bool always = false)
         {
             int count = single != null ? singleCount : carried.Count;
             // ogrodnik i siewca nie pokazują plonów ani nasion pod sobą (mają sierp i worek); zbieracz w koszyku
-            if (kind == WispKind.Gardener || kind == WispKind.Sower)
+            // (always: polana do pieca widać u każdego)
+            if (!always && (kind == WispKind.Gardener || kind == WispKind.Sower))
                 count = 0;
             while (carriedSprites.Count < count)
             {
@@ -1163,6 +1174,13 @@ namespace Wyspa.Automation
                 yield break;
             AddXp(3);
             ShowCarried(Ui(loadType == CurrencyType.Stone ? "stone" : "wood"), Mathf.Min(3, loadAmount));
+            // drewno: najpierw do pieca Żaru, który czeka na opał (o ile w składzie jest rezerwa)
+            var kiln = loadType == CurrencyType.Wood ? EmberKiln.WantingFuel(transform.position, true) : null;
+            if (kiln != null && kiln.TryClaim(this))
+            {
+                yield return StokeWithLoad(kiln);
+                yield break;
+            }
             yield return FlyTo(Home);
             DepositLoad();
         }
