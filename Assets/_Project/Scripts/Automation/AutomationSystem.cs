@@ -19,6 +19,7 @@ namespace Wyspa.Automation
         public const string Crate = "crate", Nest = "nest", Merchant = "merchant", Rune = "rune", Cauldron = "cauldron", Store = "store";
         /// <summary>Budowle ogników (GDD §9 p. 103): ognisko (spotkania, nastrój) i sennik (odpoczynek).</summary>
         public const string Bonfire = "bonfire", DreamHouse = "dreamhouse";
+        public const string Kiln = "ember_kiln", Crystal = "ember_crystal";   // generatory Żaru
         /// <summary>Domek chowańca: "home_" + id chowańca (jeden na chowańca, gdy już przyszedł).</summary>
         public const string HomePrefix = "home_";
         /// <summary>Zapisy sprzed roju: ognik-ogrodnik na własnym kafelku (wczytanie zamienia go na gniazdo z ognikiem).</summary>
@@ -27,7 +28,7 @@ namespace Wyspa.Automation
 
         static string[] BuildKinds()
         {
-            var list = new List<string> { Crate, Nest, Merchant, Rune, Cauldron, Store, Bonfire, DreamHouse };
+            var list = new List<string> { Crate, Nest, Merchant, Rune, Cauldron, Store, Kiln, Crystal, Bonfire, DreamHouse };
             foreach (var d in Familiars.FamiliarSystem.Defs)
                 list.Add(HomePrefix + d.id);
             return list.ToArray();
@@ -52,6 +53,8 @@ namespace Wyspa.Automation
                 case Store: return "bld.storehouse";
                 case Bonfire: return "bld.bonfire";
                 case DreamHouse: return "bld.dreamhouse";
+                case Kiln: return "bld.ember_kiln";
+                case Crystal: return "bld.ember_crystal";
                 default: return HomeOf(kind) != null ? "bld." + kind : kind;
             }
         }
@@ -69,6 +72,8 @@ namespace Wyspa.Automation
 
         public static bool IsUnlocked(string kind, UpgradeState upgrades)
         {
+            if (kind == Kiln || kind == Crystal)
+                return true;   // generatory Żaru od początku gry
             var familiar = HomeOf(kind);
             if (familiar != null)
                 return Familiars.FamiliarSystem.Has(familiar);   // domek dopiero, gdy chowaniec przyszedł
@@ -88,6 +93,8 @@ namespace Wyspa.Automation
                 case Store: coins = 120; extra = new CurrencyAmount(CurrencyType.Wood, 10); break;
                 case Bonfire: coins = 200; extra = new CurrencyAmount(CurrencyType.Stone, 8); break;
                 case DreamHouse: coins = 250; extra = new CurrencyAmount(CurrencyType.Wood, 10); break;
+                case Kiln: coins = 180; extra = new CurrencyAmount(CurrencyType.Stone, 12); break;
+                case Crystal: coins = 250; extra = new CurrencyAmount(CurrencyType.Stone, 15); break;
                 default: coins = 150; extra = new CurrencyAmount(CurrencyType.Stone, 5); break;
             }
             if (HomeOf(kind) != null)
@@ -188,6 +195,10 @@ namespace Wyspa.Automation
                 WildRune.All[i].Tick(dt, game);
             for (int i = Storehouse.All.Count - 1; i >= 0; i--)
                 Storehouse.All[i].Tick(dt, game);
+            for (int i = EmberKiln.All.Count - 1; i >= 0; i--)
+                EmberKiln.All[i].Tick(dt, game);   // generatory Żaru
+            for (int i = EmberCrystal.All.Count - 1; i >= 0; i--)
+                EmberCrystal.All[i].Tick(dt, game);
             for (int i = World.Monument.All.Count - 1; i >= 0; i--)
                 World.Monument.All[i].Tick(dt, game);   // monumenty wysp fabularnych: budowa i dary
         }

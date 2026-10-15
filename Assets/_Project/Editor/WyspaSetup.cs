@@ -674,6 +674,10 @@ namespace Wyspa.EditorTools
             art.bonfireGlow = new[] { Obj("bonfire_0_glow"), Obj("bonfire_1_glow"), Obj("bonfire_2_glow") };
             art.dreamHouse = Obj("dreamhouse");
             art.dreamHouseGlow = Obj("dreamhouse_glow");
+            art.emberKiln = new[] { Obj("ember_kiln_0"), Obj("ember_kiln_1"), Obj("ember_kiln_2") };   // generatory Żaru
+            art.emberKilnGlow = new[] { Obj("ember_kiln_0_glow"), Obj("ember_kiln_1_glow"), Obj("ember_kiln_2_glow") };
+            art.emberCrystal = Obj("ember_crystal");
+            art.emberCrystalGlow = Obj("ember_crystal_glow");
             // monumenty wysp fabularnych (tools/pixel-proto/monuments.py): fazy 0-4, świecące okna gotowego
             art.story = new List<StoryArt>();
             foreach (var site in Wyspa.World.StorySites.All)

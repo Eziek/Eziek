@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-108), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-109), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -42,6 +42,9 @@ Historia decyzji jest w GDD §9 (punkty 1-108), a lista testów w `docs/TEST_PLA
   (`World/Monument.cs`), 4 etapy odbudowy, budują wolne ogniki (`WispPlay.BuildTrip`), grafika
   `tools/pixel-proto/monuments.py`. Spadające liście z drzew (`IslandFx.DropLeaf`). F1: „Monument: etap”.
   Wymaga Wyspa → 2. Koszty, czas etapu i produkcja do balansu. Nie testowane w Unity.
+- **Generatory Żaru** (GDD §9 p. 109, TEST_PLAN 35): piec Żaru (drewno → Żar) i kryształ Żaru (Żar bez pracy,
+  słój +20), `Automation/EmberKiln.cs`, `EmberCrystal.cs`, grafika `tools/pixel-proto/ember_gens.py`. Wymaga Wyspa → 2.
+  Liczby do balansu. Nie testowane w Unity.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,

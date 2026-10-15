@@ -443,6 +443,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Wyspy fabularne (prośba gracza, §9 p. 107-108, §13.11): 2 wysepki na świat z **monumentem na 3x2 kafelkach**
   (jeden obiekt); odbudowa w 4 etapach, każdy opłacany surowcami i budowany ok. 10 min przez wolne ogniki, z widocznymi
   fazami budowy; gotowy monument daje walutę przy pracy. Koszty i tempo wstępne, do balansu.
+- [x] Generatory Żaru (gracz: „za mało Żaru”, §9 p. 109): piec Żaru (drewno → Żar) i kryształ Żaru (Żar bez pracy,
+  większy słój), w sklepie budowli od początku gry. Liczby wstępne, do balansu.
 
 ---
 
@@ -473,6 +475,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `homes.py` + `export_unity_homes.py` | domki chowańców, ognisko ogników (3 klatki), sennik → `Objects/`, podgląd `docs/img/domki.png` |
 | `trees2.py` + `export_unity_trees2.py` | drzewa od nowa: okrągłe, świerk, krzak, martwe, owocowe (fazy i przewracanie); nadpisuje starsze, po nim `pad_sway.py`; podgląd `docs/img/drzewa.png` |
 | `water_flora.py` + `export_unity_water.py` | ozdobniki na wodzie (lilie, liście, rzęsa, gałązka) → `Water/flora_<nazwa>.png`, podgląd `docs/img/woda_ozdobniki.png` |
+| `ember_gens.py` + `export_unity_ember.py` | generatory Żaru: piec (3 klatki płomienia) i kryształ → `Objects/ember_*`, podgląd `docs/img/generatory_zaru.png` |
 | `monuments.py` + `export_unity_story.py` | monumenty wysp fabularnych: 4 historie × 5 faz (ruina, 3 etapy budowy, gotowy) → `Story/monument_<id>_<faza>.png`, podgląd `docs/img/monumenty.png` |
 | `export_unity_stages.py` | dodatkowe fazy roślin z gotowych PNG: kiełek (`crop_<id>_shoot`) i niedojrzała (`crop_<id>_unripe`); po `pad_sway.py` |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
@@ -919,6 +922,11 @@ Obrazki referencyjne (kopie): `docs/img/`
     sypią się wióry i odpryski; etap trwa ok. 10 min pracy gracza z jednym ognikiem, szybciej z dwoma-trzema. Bez żadnego
     ognika na wyspie budowa idzie sama, o połowę wolniej. Ukończony etap odsłania zapisek, ostatni stawia gotową budowlę.
     Liście: każde drzewo (także owocowe) gubi liść średnio co ok. 8 s, nocą rzadziej, w podmuchu wiatru częściej i z prądem.
+109. **Generatory Żaru** (gracz: „problem z Żarem, naprawdę za mało się dostaje”). Dwie budowle w sklepie (od początku gry,
+    cena jak inne budowle, x1.6 za kolejną sztukę): **Piec Żaru** (180 monet + 12 kamienia) spala 2 drewna na 1 Żar co 20 s
+    (3 Żaru na minutę), także gdy gracz nie pracuje; zostawia rezerwę drewna (domyślnie 20, panel), nie pali przy pełnym
+    słoju, można go wygasić. **Kryształ Żaru** (250 monet + 15 kamienia) oddaje 1 Żar co 2 min zawsze (także nocą i bez
+    pracy) i powiększa słój o 20. Grafika `tools/pixel-proto/ember_gens.py`, kod `Automation/EmberKiln.cs`, `EmberCrystal.cs`.
 
 ---
 

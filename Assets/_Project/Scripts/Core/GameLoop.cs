@@ -185,10 +185,17 @@ namespace Wyspa.Core
             upgrades.Changed += ApplyUpgrades;
         }
 
+        /// <summary>Pojemność słoja: ulepszenie „Słój Żaru” i kryształy Żaru (+20 każdy).</summary>
+        public void RefreshEssenceCapacity()
+        {
+            if (essence != null && upgrades != null)
+                essence.SetCapacity(upgrades.Value(UpgradeIds.EssenceJar, essence.BaseCapacity) + Wyspa.Automation.EmberCrystal.TotalCapacityBonus);
+        }
+
         /// <summary>Przelicza efekty ulepszeń na systemy (wołane po zakupie i po wczytaniu gry).</summary>
         public void ApplyUpgrades()
         {
-            essence.SetCapacity(upgrades.Value(UpgradeIds.EssenceJar, essence.BaseCapacity));
+            RefreshEssenceCapacity();
             UpgradeEffects.Apply(upgrades);
             Economy.Prestige.ApplyToEffects();   // dary mgły dokładają się do drzewka
             if (automation != null)

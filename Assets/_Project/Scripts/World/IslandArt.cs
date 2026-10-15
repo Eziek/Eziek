@@ -160,6 +160,12 @@ namespace Wyspa.World
         public Sprite dreamHouse;
         public Sprite dreamHouseGlow;
 
+        [Header("Generatory Żaru: piec (3 klatki płomienia) i kryształ (tools/pixel-proto/ember_gens.py)")]
+        public Sprite[] emberKiln;
+        public Sprite[] emberKilnGlow;
+        public Sprite emberCrystal;
+        public Sprite emberCrystalGlow;
+
         public Sprite Home(string familiar, bool glow)
         {
             var list = glow ? homeGlows : homes;

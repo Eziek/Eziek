@@ -1012,6 +1012,46 @@
       "y": 0.0
     },
     {
+      "name": "ember_crystal",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "ember_crystal_glow",
+      "x": 0.53125,
+      "y": 0.0
+    },
+    {
+      "name": "ember_kiln_0",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "ember_kiln_0_glow",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "ember_kiln_1",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "ember_kiln_1_glow",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "ember_kiln_2",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
+      "name": "ember_kiln_2_glow",
+      "x": 0.52083,
+      "y": 0.0
+    },
+    {
       "name": "essence_jar_l",
       "x": 0.52778,
       "y": 0.0

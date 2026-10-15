@@ -227,3 +227,5 @@ story.watch.building,Strażnica Łańcucha,Chain Watchtower,Wachturm der Kette,�
 story.sawmill.building,Tartak rozbitków,Castaways' Sawmill,Sägewerk der Schiffbrüchigen,漂流者の製材所,漂流者锯木坊,budowla wyspy fabularnej
 story.observatory.building,Gwiezdne obserwatorium,Star Observatory,Sternwarte,星の天文台,星辰天文台,budowla wyspy fabularnej
 obj.monument,Monument,Monument,Monument,モニュメント,纪念建筑,"wielka budowla na wysepce fabularnej (3x2 kafelki), odbudowywana etapami"
+bld.ember_kiln,Piec Żaru,Ember Kiln,Glutofen,熾火の窯,余火窑,generator Żaru: spala drewno na Żar
+bld.ember_crystal,Kryształ Żaru,Ember Crystal,Glutkristall,熾火の水晶,余火水晶,"generator Żaru: sam oddaje Żar, powiększa słój"

@@ -438,3 +438,13 @@ Najpierw Wyspa → 2. F1: „Do wysepki”, „Monument: etap”, waluty (drewno
 7. Zapis i wczytanie w trakcie budowy (etap i procent zostają) i po niej (licznik daru zachowany).
 8. Liście: z każdego drzewa (także owocowych) co kilka sekund spada liść, kołysze się i chwilę leży pod drzewem; nocą
    rzadziej; w podmuchu wiatru częściej i znoszone w bok.
+
+## 35. Generatory Żaru
+Najpierw Wyspa → 2. F1: waluty (drewno, kamień, monety).
+1. Sklep → Budowle: „Piec Żaru” i „Kryształ Żaru” dostępne od początku, z opisem i ceną (kolejna sztuka droższa).
+2. Piec: przy drewnie ponad rezerwę płomień się rusza, co 20 s ubywa 2 drewna, przybywa 1 Żaru, iskry z komina.
+   Panel: opis, „Zostawia drewna: 20”, stan (pali się / słój pełny / brak drewna / wygaszony), rezerwa ±10, wł./wył.
+   Przy pełnym słoju i przy drewnie poniżej rezerwy nie pali (płomień zgaszony). Działa też bez pracy gracza.
+3. Kryształ: pulsuje, słój od razu większy o 20 (HUD: np. 60 → 80), Żar rośnie powoli także bez pracy i nocą.
+   Rozbiórka kryształu zmniejsza słój z powrotem.
+4. Zapis i wczytanie: rezerwa i wyłączenie pieca zostają; Żar ponad 60 przy krysztale nie przepada po wczytaniu.

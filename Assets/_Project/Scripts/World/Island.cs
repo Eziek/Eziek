@@ -374,6 +374,8 @@ namespace Wyspa.World
                         SpawnMerchant(b, o.merchant);
                     if (b != null && b.TryGetComponent(out Automation.Storehouse store))
                         store.Restore(o.storeReserve, o.storeOff);
+                    if (b != null && b.TryGetComponent(out Automation.EmberKiln kiln))
+                        kiln.Restore(o.storeReserve, o.storeOff);   // piec: rezerwa drewna i wyłączenie w tych samych polach
                     if (b != null && b.TryGetComponent(out Alchemy.Cauldron cauldron))
                     {
                         cauldron.AutoRecipe = o.brewAuto;
@@ -444,6 +446,11 @@ namespace Wyspa.World
                 {
                     os.storeReserve = store.Reserve;
                     os.storeOff = !store.Auto;
+                }
+                if (o.TryGetComponent(out Automation.EmberKiln kiln))
+                {
+                    os.storeReserve = kiln.Reserve;
+                    os.storeOff = !kiln.On;
                 }
                 if (cauldron != null && cauldron.Brewing != null)
                 {
@@ -1710,6 +1717,17 @@ namespace Wyspa.World
                         Glow(art.dreamHouseGlow);
                     go.AddComponent<Automation.WispDreamHouse>();
                     NightGlow.Add(go, new Vector2(0f, 1.1f), new Color(1f, 0.85f, 0.55f), 1.2f, 0.45f);
+                    break;
+                case Automation.AutomationSystem.Kiln:
+                    // piec Żaru: płomień w 3 klatkach, ciepła poświata nocą
+                    body.sprite = First(art.emberKiln);
+                    go.AddComponent<Automation.EmberKiln>().Setup(body, Glow(First(art.emberKilnGlow)), art.emberKiln, art.emberKilnGlow);
+                    NightGlow.Add(go, new Vector2(0f, 0.4f), new Color(1f, 0.6f, 0.3f), 1.3f, 0.5f);
+                    break;
+                case Automation.AutomationSystem.Crystal:
+                    body.sprite = art.emberCrystal;
+                    go.AddComponent<Automation.EmberCrystal>().Setup(Glow(art.emberCrystalGlow));
+                    NightGlow.Add(go, new Vector2(0f, 0.8f), new Color(1f, 0.55f, 0.25f), 1.2f, 0.45f);
                     break;
                 case Automation.AutomationSystem.Rune:
                     body.sprite = art.rune;
