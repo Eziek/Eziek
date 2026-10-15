@@ -178,7 +178,7 @@ namespace Wyspa.Automation
                     continue;
                 coins += Market.SellCrop(def, quality, kv.Value, channel);
                 if (def.kind == CropKind.Night)
-                    wallet.Add(CurrencyType.NightHarvest, Market.NightYield(def) * kv.Value);
+                    wallet.Add(CurrencyType.NightHarvest, Market.NightYield(def, kv.Value));
             }
             wallet.Add(CurrencyType.Coins, coins);
             contents.Clear();

@@ -201,7 +201,7 @@ namespace Wyspa.Sea
                     else if (c.kind == CropKind.Night && !c.requiresFullMoon) night.Add(c);
                 }
             var list = new System.Collections.Generic.List<Offer>();
-            // dwie paczki po 3 nasiona nocy za 60% ceny
+            // dwie paczki po 10 nasion nocy za 60% ceny
             for (int i = 0; i < 2 && night.Count > 0; i++)
             {
                 var c = night[rnd.Range(0, night.Count)];
@@ -209,9 +209,9 @@ namespace Wyspa.Sea
                 var crop = c;
                 list.Add(new Offer
                 {
-                    label = Loc.Get("ui.merchant.seeds", 3, Loc.Get("crop." + crop.id)),
-                    coins = Discounted(Mathf.RoundToInt(crop.seedPrice * 3 * 0.6f)),
-                    give = () => game.Seeds.Add(crop.id, 3),
+                    label = Loc.Get("ui.merchant.seeds", 10, Loc.Get("crop." + crop.id)),
+                    coins = Discounted(Mathf.RoundToInt(crop.seedPrice * 10 * 0.6f)),
+                    give = () => game.Seeds.Add(crop.id, 10),
                 });
             }
             list.Add(new Offer
@@ -225,9 +225,9 @@ namespace Wyspa.Sea
                 var h = hybrids[rnd.Range(0, hybrids.Count)];
                 list.Add(new Offer
                 {
-                    label = Loc.Get("ui.merchant.hybrid", Loc.Get("crop." + h.id)),
-                    coins = Discounted(Mathf.Max(120, h.sellPrice)), night = 3,
-                    give = () => game.Seeds.Add(h.id, 1),
+                    label = Loc.Get("ui.merchant.seeds", 3, Loc.Get("crop." + h.id)),
+                    coins = Discounted(Mathf.Max(60, h.sellPrice * 3)), night = 3,
+                    give = () => game.Seeds.Add(h.id, 3),
                 });
             }
             offers = list.ToArray();

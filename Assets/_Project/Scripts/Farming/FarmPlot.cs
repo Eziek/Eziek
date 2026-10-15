@@ -100,7 +100,7 @@ namespace Wyspa.Farming
                     game.Wallet.Add(CurrencyType.NightHarvest, night);
                     GameEvents.RaiseCurrencyGained(CropPosition, CurrencyType.NightHarvest, night);
                 }
-                IslandFx.Harvest(CropPosition, crop.StageSprite(3), CropOrder);
+                IslandFx.Harvest(CropPosition, crop.RipeSprite, CropOrder);
                 GameEvents.PlaySound("harvest");
                 LastCrop = crop;
                 state.Clear();
@@ -132,7 +132,7 @@ namespace Wyspa.Farming
             var crop = state.crop;
             if (crop != null)
             {
-                IslandFx.Harvest(CropPosition, crop.StageSprite(3), CropOrder);
+                IslandFx.Harvest(CropPosition, crop.RipeSprite, CropOrder);
                 LastCrop = crop;
             }
             state.Clear();

@@ -101,8 +101,21 @@ namespace Wyspa.Economy
         /// <summary>Mnożnik jakości (1-3 gwiazdki) z premią „Gwiazdy jakości”.</summary>
         public static float QualityMultiplier(int quality) => 1f + (CropDefinition.QualityMultiplier(quality) - 1f) * (1f + E.QualityBoost);
 
-        /// <summary>Plony nocy (waluta) za roślinę nocy („Obfite noce” więcej).</summary>
-        public static int NightYield(CropDefinition c) => c != null && c.kind == CropKind.Night ? c.nightHarvestYield + E.NightYieldBonus : 0;
+        /// <summary>Sekundy wzrostu rośliny nocy na 1 plon nocy (waluta): krótkie rośliny dają go czasem, długie częściej.</summary>
+        public const float NightYieldSeconds = 600f;
+
+        /// <summary>
+        /// Plony nocy (waluta) za count roślin nocy („Obfite noce” więcej). Średnio (plon + premia) × wzrost / 10 min,
+        /// reszta ułamkowa losowana (trupi grzyb: 1 co piąty zbiór, upiorna dynia: 3 na 5, cmentarny bluszcz: 1).
+        /// </summary>
+        public static int NightYield(CropDefinition c, int count = 1)
+        {
+            if (c == null || c.kind != CropKind.Night || count <= 0)
+                return 0;
+            float expected = count * (c.nightHarvestYield + E.NightYieldBonus) * c.growSeconds / NightYieldSeconds;
+            int whole = Mathf.FloorToInt(expected);
+            return whole + (UnityEngine.Random.value < expected - whole ? 1 : 0);
+        }
 
         /// <summary>Monety za count sztuk rośliny o jakości 1-3. Liczy premie, targowanie, serię i renomę.</summary>
         public static int SellCrop(CropDefinition crop, int quality, int count, SaleChannel channel)

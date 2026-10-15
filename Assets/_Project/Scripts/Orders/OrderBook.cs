@@ -234,10 +234,10 @@ namespace Wyspa.Orders
                 if (o.items.Exists(i => i.id == pick.id))
                     break;
                 bool fruit = pick.id.StartsWith("fruit:");
-                // ilość rośnie z liczbą wykonanych zamówień (rośliny nocy i owoce mniej, bo rosną wolniej)
-                int need = fruit ? UnityEngine.Random.Range(3, 7)
-                         : pick.night ? Mathf.Min(4, 1 + completed / 4 + UnityEngine.Random.Range(0, 2))
-                         : Mathf.Min(14, 3 + completed / 2 + UnityEngine.Random.Range(0, 3));
+                // ilość rośnie z liczbą wykonanych zamówień (rośliny nocy i owoce mniej: rosną tylko w nocy albo na drzewach)
+                int need = fruit ? UnityEngine.Random.Range(5, 11)
+                         : pick.night ? Mathf.Min(12, 3 + completed / 3 + UnityEngine.Random.Range(0, 3))
+                         : Mathf.Min(30, 6 + completed + UnityEngine.Random.Range(0, 5));
                 o.items.Add(new OrderItem { id = pick.id, need = need });
                 value += pick.price * need;
                 anyNight |= pick.night;

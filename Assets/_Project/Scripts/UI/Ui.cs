@@ -17,6 +17,19 @@ namespace Wyspa.UI
         public static readonly Vector2 BottomLeft = new Vector2(0, 0), BottomRight = new Vector2(1, 0);
         public static readonly Vector2 Center = new Vector2(0.5f, 0.5f);
 
+        /// <summary>Czas trwania do napisów: „40 s”, „3 min”, „1 min 30 s”.</summary>
+        public static string Duration(float seconds)
+        {
+            int s = Mathf.Max(0, Mathf.RoundToInt(seconds));
+            if (s < 60)
+                return Localization.Loc.Get("ui.time.sec", s);
+            return s % 60 == 0 ? Localization.Loc.Get("ui.time.min", s / 60) : Localization.Loc.Get("ui.time.min_sec", s / 60, s % 60);
+        }
+
+        /// <summary>Czas wzrostu rośliny: „40 s pracy” (dzień) albo „3 min nocy” (noc).</summary>
+        public static string GrowTime(Farming.CropDefinition c) =>
+            Localization.Loc.Get(c.kind == Farming.CropKind.Day ? "ui.seed.time_work" : "ui.seed.time_night", Duration(c.growSeconds));
+
         public static RectTransform Rect(string name, Transform parent)
         {
             var go = new GameObject(name, typeof(RectTransform));

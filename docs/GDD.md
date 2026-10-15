@@ -98,7 +98,8 @@ Nazwa robocza: „Esencja” (alternatywy: Żar, Dusza).
 | Wymagają aktywności | tak | **nie** (rosną też offline) |
 | Charakter | szybkie, tanie, stały dochód | wolne, rzadkie, cenne, surowce do ulepszeń |
 
-- Każda roślina ma **4 fazy**: nasiono, kiełek, rośnie, dojrzała.
+- Każda roślina ma **6 faz**: nasiono, kiełek, sadzonka, rośnie, niedojrzała (kształt dojrzałej w kolorach liści),
+  dojrzała (§9 p. 98; wcześniej 4 fazy).
 - **Sylwetki muszą się różnić** (uwaga z review): marchew to szeroki wachlarz pierzastych liści i pomarańczowa
   główka, a zboże to pionowe wąskie źdźbła, potem zielone kłosy, potem złote kłosy z **ościami**.
 - Zmiana fazy ma „pop”: squash & stretch plus wybuch listków (nagroda za pracę).
@@ -322,6 +323,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] **Menu główne: Start, Ustawienia, Wyjdź** (prośba gracza; wcześniej 3 sloty zapisu z nazwami, wycofane): jeden zapis,
   przycisk „Zapisz grę” w pierścieniu akcji i Ctrl+S, w tle burza nad wyspą (pioruny za wyspą, klik w tło = piorun),
   powrót do menu z pierścienia akcji (§12.11, §9 p. 96).
+- [x] **Krótki wzrost** (prośba gracza): rośliny najdłużej 10 min (dzień 20 s - 3 min, noc 1,5-10 min), drzewa 4-10 min,
+  mniejsze ceny za sztukę, 6 faz wzrostu (§9 p. 98). Do sprawdzenia w grze: czy satysfakcja jest, czy nie za szybko.
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
   zegara). Księżyc: 8 nocy na cykl, pełnia jedną noc (rytuał „Księżycowa rosa”: dwie). Kupiec-widmo w co trzecią noc (34%),
   w pierwszej połowie nocy, zostaje 10 min. Rośliny i drzewa rosną **x3 szybciej** (marchew 3:20, dynia 8:20); rośliny nocy
@@ -447,7 +450,8 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `wisp_hats.py` + `export_unity_hats.py` | czapki ogników (15, pivot = środek dołu) → `Automation/hat_*.png` |
 | `wisp_tools.py` + `export_unity_wisp_tools.py` | narzędzia ogników (6 zawodów, po 2 klatki, pivot = chwyt) → `Automation/tool_*.png` |
 | `gift_icons.py` + `export_unity_gifts.py` | ikony 37 Darów Mgły (12 px) → `UI/Icons/icon_gift_<id>.png`, arkusz `docs/img/ikony_darow.png` |
-| `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze |
+| `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze; argument = co ile minut gracz zagląda (domyślnie 20) |
+| `export_unity_stages.py` | dodatkowe fazy roślin z gotowych PNG: kiełek (`crop_<id>_shoot`) i niedojrzała (`crop_<id>_unripe`); po `pad_sway.py` |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
 
 Shadery sprawdzamy poza Unity: `tools/shadercheck/check.py` kompiluje bloki HLSL kompilatorem DXC na prawdziwych plikach
@@ -775,6 +779,18 @@ Obrazki referencyjne (kopie): `docs/img/`
     kłęby (ok. 10 px). Poświata także wokół ogników, duszków i run; obiekt LightShafts tworzy się sam, gdy scena go nie ma.
 40. Fonty CJK: Fusion Pixel 8px (JA i zh-Hans) jako zapasowe dla `WyspaPixel` (§16.2). Log z buildu pokazywał kwadraciki
     zamiast „日本語” i „简体中文” na przyciskach języków.
+98. **Balans: krótki wzrost** (prośba gracza: „strasznie długo się czeka”, najdłużej 10 min, reszta nawet co 20-30 s,
+    trochę mniejsze pieniądze za sztukę). Rośliny dnia 20 s - 3 min pracy (marchew 20 s, czosnek 30 s, zboże 45 s, mak 75 s,
+    dynia 2 min, piołun 3 min), nocy 1,5-10 min ciemności (wilcza jagoda 1,5, trupi grzyb 2, księżycowy kwiat 3,
+    mandragora 5, upiorna dynia 6, cmentarny bluszcz 10; krwawa róża 5 min w pełnię): każda roślina nocy dojrzewa w jedną
+    noc, krótkie kilka razy. Ceny za sztukę ok. 4-6x mniejsze (marchew 1/3, dynia 5/18, bluszcz 15/80), zysk na sekundę
+    grządki ok. 2x większy. Plony nocy (waluta) zależą od czasu wzrostu: średnio 1 na 10 min wzrostu, ułamek losowany
+    (`Market.NightYield`), bo inaczej szybkie rośliny nocy dawałyby ich kilka razy więcej. Drzewa dorosłe w 4-10 min,
+    owoce co 1,5-5 min. Zamówienia na więcej sztuk (dzień do 30, noc do 12, owoce 5-10), kupiec-widmo: paczki po
+    10 nasion, hybryda po 3. **6 faz wzrostu** zamiast 4: nowe kiełek i niedojrzała (`export_unity_stages.py`),
+    czasy w opisach nasion w sekundach i minutach. Symulacja (`tools/balance/sim.py`, krok 10 s): zaglądanie co 20 min:
+    ognik po 2 h, 25 kafelków 41 h, 100 kafelków 85 h (wcześniej 3 h / 23 h / 94 h); co 5 min: ognik po 0,8 h,
+    25 kafelków 10 h, 100 kafelków 42 h. Zarobek z miesiąca ok. 2x większy (perły w rejsie: pierwiastek, ok. 1,4x).
 
 ---
 
@@ -789,7 +805,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Core/EssenceStore.cs` | Esencja: +1 za minutę aktywności, pojemność 60 |
 | `Scripts/Core/GameLoop.cs` | tick co 1 s: aktywność, Esencja, lampy (najtańsze pierwsze), wzrost roślin. `debugTimeScale` |
 | `Scripts/Core/AppPerformance.cs` | runInBackground, vSync 0, 30 kl./s z fokusem, 12 w tle |
-| `Scripts/Farming/CropDefinition.cs`, `CropDatabase.cs` | ScriptableObjecty roślin (Day/Night, czas, 4 sprite'y faz, ceny) |
+| `Scripts/Farming/CropDefinition.cs`, `CropDatabase.cs` | ScriptableObjecty roślin (Day/Night, czas, 6 sprite'ów faz, ceny) |
 | `Scripts/Farming/PlotState.cs` | czyste dane pola + reguły wzrostu (`GrowthContext`) |
 | `Scripts/Farming/FarmPlot.cs` | grządka: klik = sadzenie lub zbiór, „pop” przy zmianie fazy |
 | `Scripts/Lighting/LampDefinition.cs`, `Lamp.cs` | lampa: Esencja na minutę, zasięg, kolor, mnożnik wzrostu, Light2D + glow (Unlit) |
@@ -838,7 +854,8 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Editor/PixelArtImporter.cs` | automatyczne ustawienia importu sprite'ów + pivoty z `pivots.json` |
 | `Editor/WyspaSetup.cs` | menu „Wyspa”: ustawienia projektu, dane (SO, także `Data/UiTheme.asset`), budowa sceny z `prototype_layout.json` (z obiektem UI) |
 
-Wartości startowe (do balansu): marchew 600 s / 5 / 12, zboże 900 s / 8 / 18, dynia 1500 s / 15 / 40 (wzrost / cena nasiona / cena sprzedaży).
+Wartości (balans §9 p. 98; wzrost / cena nasiona / cena sprzedaży): marchew 20 s / 1 / 3, zboże 45 s / 2 / 6, dynia 120 s / 5 / 18.
+Wcześniej (start): marchew 600 s / 5 / 12, zboże 900 s / 8 / 18, dynia 1500 s / 15 / 40.
 Lampy (Esencji na minutę): latarnia 0.1, czaszka 0.05, ognik 0.2 (wzrost ×1.5), grzyby 0.
 
 **Następne etapy:** patrz §11.7.
@@ -1414,6 +1431,8 @@ dekoracji na kafelku. Nagrobki i dekoracje stref przyjdą ze strefami (Etap 5).
   Krwawa jarzębina na cmentarzu rośnie x1.5. Świecące owoce: Point Light 2D z wolumetrią + `Illumination.IsLit`.
   Ognik jeszcze nie zbiera owoców (później). Ceny: jabłoń 120 (4x8 co 30 min), bez 200 (5x10 co 40 min), jarzębina 250
   (6x9 co 45 min), grusza 500 + 5 plonów nocy (4x30 co 2 h nocy), drzewo księżyca 800 + 2 odłamki (3x120 co 1 h pełni).
+  **Po balansie §9 p. 98:** dorosłe w 4/5/6/8/10 min; owoce: jabłoń 3x3 co 1,5 min, bez 4x4 co 2 min, jarzębina 5x4
+  co 2,5 min, grusza 3x10 co 5 min nocy, drzewo księżyca 2x90 co 9 min nocy pełni (dwa razy w noc).
 
 ---
 

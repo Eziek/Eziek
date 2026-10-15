@@ -247,6 +247,18 @@
       "pad": 6
     },
     {
+      "name": "crop_ashwheat_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_ashwheat_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_belladonna_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -277,6 +289,18 @@
       "pad": 6
     },
     {
+      "name": "crop_belladonna_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_belladonna_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_bloodrose_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -296,6 +320,18 @@
     },
     {
       "name": "crop_bloodrose_3",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_bloodrose_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_bloodrose_unripe",
       "x": 0.51471,
       "y": 0.11538,
       "pad": 6
@@ -331,6 +367,18 @@
       "pad": 6
     },
     {
+      "name": "crop_bloodwormwood_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_bloodwormwood_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_carrot_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -350,6 +398,18 @@
     },
     {
       "name": "crop_carrot_3",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_carrot_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_carrot_unripe",
       "x": 0.51471,
       "y": 0.11538,
       "pad": 6
@@ -379,6 +439,18 @@
       "pad": 6
     },
     {
+      "name": "crop_corpseshroom_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_corpseshroom_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_garlic_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -398,6 +470,18 @@
     },
     {
       "name": "crop_garlic_3",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_garlic_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_garlic_unripe",
       "x": 0.51471,
       "y": 0.11538,
       "pad": 6
@@ -433,6 +517,18 @@
       "pad": 6
     },
     {
+      "name": "crop_ghostpumpkin_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_ghostpumpkin_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_graveivy_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -458,6 +554,18 @@
     },
     {
       "name": "crop_graveivy_3_glow",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_graveivy_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_graveivy_unripe",
       "x": 0.51471,
       "y": 0.11538,
       "pad": 6
@@ -493,6 +601,18 @@
       "pad": 6
     },
     {
+      "name": "crop_hybridpumpkin_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_hybridpumpkin_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_mandrake_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -518,6 +638,18 @@
     },
     {
       "name": "crop_mandrake_3_glow",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_mandrake_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_mandrake_unripe",
       "x": 0.51471,
       "y": 0.11538,
       "pad": 6
@@ -553,6 +685,18 @@
       "pad": 6
     },
     {
+      "name": "crop_moonflower_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_moonflower_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_moonpoppy_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -583,6 +727,18 @@
       "pad": 6
     },
     {
+      "name": "crop_moonpoppy_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_moonpoppy_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_poppy_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -607,6 +763,18 @@
       "pad": 6
     },
     {
+      "name": "crop_poppy_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_poppy_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_pumpkin_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -626,6 +794,18 @@
     },
     {
       "name": "crop_pumpkin_3",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_pumpkin_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_pumpkin_unripe",
       "x": 0.51471,
       "y": 0.11538,
       "pad": 6
@@ -661,6 +841,18 @@
       "pad": 6
     },
     {
+      "name": "crop_screamgarlic_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_screamgarlic_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_wheat_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -680,6 +872,18 @@
     },
     {
       "name": "crop_wheat_3",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_wheat_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_wheat_unripe",
       "x": 0.51471,
       "y": 0.11538,
       "pad": 6
@@ -715,6 +919,18 @@
       "pad": 6
     },
     {
+      "name": "crop_wolfcarrot_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_wolfcarrot_unripe",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
       "name": "crop_wormwood_0",
       "x": 0.51471,
       "y": 0.11538,
@@ -734,6 +950,18 @@
     },
     {
       "name": "crop_wormwood_3",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_wormwood_shoot",
+      "x": 0.51471,
+      "y": 0.11538,
+      "pad": 6
+    },
+    {
+      "name": "crop_wormwood_unripe",
       "x": 0.51471,
       "y": 0.11538,
       "pad": 6

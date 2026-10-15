@@ -16,13 +16,15 @@ DAYS = 30
 CYCLE, DAY_MIN = 60, 40                               # minuty: doba gry i jej dzień
 
 # id: (wzrost s, nasiono, sprzedaż, noc?, cena odblokowania); rośliny nocy: sekundy nocy (noc = 1200 s)
+# balans §9 p. 98: dzień 20 s - 3 min, noc 1,5-10 min (wcześniej 200-800 s i 900-4800 s)
 CROPS = {
-    'carrot': (200, 5, 12, False, 0), 'wheat': (300, 8, 18, False, 0), 'pumpkin': (500, 15, 40, False, 0),
-    'garlic': (240, 6, 15, False, 300), 'poppy': (400, 12, 30, False, 780), 'wormwood': (800, 25, 70, False, 1800),
-    'corpseshroom': (1200, 15, 45, True, 0), 'moonflower': (1500, 20, 60, True, 0),
-    'ghostpumpkin': (2400, 30, 90, True, 0), 'belladonna': (900, 12, 35, True, 960),
-    'mandrake': (2100, 35, 120, True, 2400), 'graveivy': (4800, 60, 260, True, 4800),
+    'carrot': (20, 1, 3, False, 0), 'wheat': (45, 2, 6, False, 0), 'pumpkin': (120, 5, 18, False, 0),
+    'garlic': (30, 2, 5, False, 300), 'poppy': (75, 4, 12, False, 780), 'wormwood': (180, 8, 30, False, 1800),
+    'corpseshroom': (120, 4, 14, True, 0), 'moonflower': (180, 5, 19, True, 0),
+    'ghostpumpkin': (360, 8, 34, True, 0), 'belladonna': (90, 3, 10, True, 960),
+    'mandrake': (300, 9, 40, True, 2400), 'graveivy': (600, 15, 80, True, 4800),
 }
+STEP = 10                                             # krok symulacji w sekundach (marchew rośnie 20 s)
 START_COINS = 50
 TILE_COINS = lambda n: max(10, round((10 + 20 * n + 1.5 * n * n) * (0.4 + 0.6 * n / 20 if n < 20 else 1)))
 TILE_ESS = lambda n: 3 + n // 3
@@ -43,7 +45,7 @@ def run(cfg=None, verbose=True):
              WISP_EXTRA=WISP_EXTRA, MERCHANT_UPGRADE=MERCHANT_UPGRADE, START_COINS=START_COINS, LAMP=LAMP)
     if cfg: g.update(cfg)
     crops = g['CROPS']
-    st = dict(coins=g['START_COINS'], night=0, ess=0.0, cap=ESS_START_CAP, tiles=4, soil=2, objects=2,
+    st = dict(coins=g['START_COINS'], earned=0, night=0, ess=0.0, cap=ESS_START_CAP, tiles=4, soil=2, objects=2,
               jar=0, wisp=False, wisps=0, merchant=False, lamps=1)
     plots = [None, None]                     # [crop, wzrost s] albo None
     unlocked = {k for k, v in crops.items() if v[4] == 0}
@@ -55,8 +57,9 @@ def run(cfg=None, verbose=True):
             events[name] = clock['active'] / 60.0
 
     def profit(cid):
+        # bez ognika gracz zbiera tylko, gdy zagląda: krótka roślina stoi dojrzała do następnego zajrzenia
         s, seed, sell, nightc, _ = crops[cid]
-        return (sell - seed) / s
+        return (sell - seed) / (s if st['wisp'] else max(s, CHECK_MIN * 60))
 
     def best(nightc):
         opts = [c for c in unlocked if crops[c][3] == nightc and crops[c][1] <= st['coins']]
@@ -74,7 +77,10 @@ def run(cfg=None, verbose=True):
 
     def take(i, mult=1.0):
         p = plots[i]
-        st['coins'] += round(crops[p[0]][2] * mult); st['night'] += 1 if crops[p[0]][3] else 0; plots[i] = None
+        coins = round(crops[p[0]][2] * mult)
+        st['coins'] += coins; st['earned'] += coins
+        st['night'] += crops[p[0]][0] / 600 if crops[p[0]][3] else 0   # Market.NightYield: 1 na 10 min wzrostu
+        plots[i] = None
 
     def harvest(limit):
         n = 0
@@ -119,24 +125,26 @@ def run(cfg=None, verbose=True):
                 continue
             break
 
-    minute = 0
+    per_min = 60 // STEP
+    tick = 0
     for day in range(DAYS):
-        for m in range(24 * 60):
+        for t in range(24 * 60 * per_min):
+            m, sub = divmod(t, per_min)
             active = m < WORK_H * 60
-            is_night = (minute % CYCLE) >= DAY_MIN
-            minute += 1
+            is_night = ((tick // per_min) % CYCLE) >= DAY_MIN
+            tick += 1
             day_lit = 1.0 if not is_night else min(1.0, st['lamps'] * LAMP_PLOTS / max(1.0, len(plots) * (1 - NIGHT_SHARE)))
             if active:
-                clock['active'] += 1
-                st['ess'] = min(st['cap'], st['ess'] + 1)
+                clock['active'] += 1 / per_min
+                st['ess'] = min(st['cap'], st['ess'] + 1 / per_min)
                 if is_night:
-                    st['ess'] = max(0.0, st['ess'] - LAMP_BURN * st['lamps'])
+                    st['ess'] = max(0.0, st['ess'] - LAMP_BURN * st['lamps'] / per_min)
             for p in plots:
                 if not p: continue
                 if crops[p[0]][3]:
-                    if is_night: p[1] += 60
+                    if is_night: p[1] += STEP
                 elif active:
-                    p[1] += 60 * TEMPO * day_lit
+                    p[1] += STEP * TEMPO * day_lit
             if not active:
                 continue
             if st['wisp']:
@@ -147,17 +155,20 @@ def run(cfg=None, verbose=True):
                         take(i, 0.9 if st['merchant'] else 1.0)
                 if st['merchant']:
                     sow()
-            if m % CHECK_MIN == 0:
+            if sub == 0 and m % CHECK_MIN == 0:
                 harvest(MANUAL_CLICKS); sow(); shop()
         harvest(MANUAL_CLICKS); sow(); shop()   # rano: to, co urosło w nocy offline
     if verbose:
         for k, v in sorted(events.items(), key=lambda kv: kv[1]):
             print(f"  {k:22s} {v:7.1f} h pracy  (dzień {int(v // WORK_H) + 1})")
         print(f"  po {DAYS} dniach: kafelki {st['tiles'] - 4}, grządki {st['soil']}, lampy {st['lamps']}, "
-              f"ogniki {st['wisps']}, monety {st['coins']}, plony nocy {st['night']}")
+              f"ogniki {st['wisps']}, monety {st['coins']} (zarobione {st['earned']}), plony nocy {round(st['night'])}")
     return events
 
 
 if __name__ == "__main__":
-    print("Liczby z gry (cykl 1 h, wzrost x3):")
+    import sys
+    if len(sys.argv) > 1:
+        CHECK_MIN = int(sys.argv[1])          # np. 5: gracz zagląda częściej (szybkie rośliny)
+    print(f"Liczby z gry (cykl 1 h, rośliny 20 s - 10 min, zaglądanie co {CHECK_MIN} min):")
     run()

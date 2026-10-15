@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-14)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-97), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-98), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -20,6 +20,8 @@ Historia decyzji jest w GDD §9 (punkty 1-97), a lista testów w `docs/TEST_PLAN
   Następne z listy propozycji: zdarzenia na horyzoncie z sekcją „Widziane” w Bestiariuszu (gracz jeszcze nie wybrał).
 - **Menu główne uproszczone** (GDD §9 p. 96, §12.11, TEST_PLAN 25): Start / Ustawienia / Wyjdź, jeden zapis (bez slotów),
   „Zapisz grę” w pierścieniu i Ctrl+S, burza w tle menu (`Visual/MenuStorm.cs`). Pierścień akcji z podmenu „Menu” (p. 97, TEST_PLAN 26). Nie testowane w Unity.
+- **Balans: krótki wzrost** (GDD §9 p. 98, TEST_PLAN 27): rośliny 20 s - 10 min, drzewa 4-10 min, mniejsze ceny,
+  6 faz roślin (`tools/pixel-proto/export_unity_stages.py`), plony nocy zależne od czasu wzrostu. Wymaga Wyspa → 2.
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,

@@ -856,7 +856,7 @@ namespace Wyspa.Automation
                 var crop = plot.HarvestSilently();
                 if (crop == null)
                     continue;
-                carried.Add(new Carried { crop = crop, quality = quality, sprite = crop.StageSprite(3) });
+                carried.Add(new Carried { crop = crop, quality = quality, sprite = crop.RipeSprite });
                 ShowCarried();
                 AddXp(1);
                 var game = GameLoop.Instance;

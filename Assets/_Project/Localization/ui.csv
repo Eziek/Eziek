@@ -46,8 +46,11 @@ ui.upgrade.requires,Wymaga: {0},Requires: {0},Benötigt: {0},必要：{0},需要
 ui.toast.upgrade_bought,Kupiono: {0},Bought: {0},Gekauft: {0},購入：{0},已购买：{0},
 ui.seed.price,Cena: {0},Price: {0},Preis: {0},価格：{0},价格：{0},
 ui.seed.sell,Sprzedaż: {0},Sells for: {0},Verkauf: {0},売値：{0},售价：{0},
-ui.seed.time_work,{0} min pracy,{0} min of work,{0} Min. Arbeit,作業{0}分,工作{0}分钟,
-ui.seed.time_night,{0} h nocy,{0} h of night,{0} Std. Nacht,夜{0}時間,夜晚{0}小时,
+ui.seed.time_work,{0} pracy,{0} of work,{0} Arbeit,作業{0},工作{0},{0} = czas (ui.time.*)
+ui.seed.time_night,{0} nocy,{0} of night,{0} Nacht,夜{0},夜晚{0},{0} = czas (ui.time.*)
+ui.time.sec,{0} s,{0} s,{0} Sek.,{0}秒,{0}秒,czas trwania
+ui.time.min,{0} min,{0} min,{0} Min.,{0}分,{0}分钟,czas trwania
+ui.time.min_sec,{0} min {1} s,{0} min {1} s,{0} Min. {1} Sek.,{0}分{1}秒,{0}分{1}秒,czas trwania
 ui.seed.kind_day,"Roślina dnia: rośnie, gdy pracujesz",Day crop: grows while you work,"Tagpflanze: wächst, während du arbeitest",昼の作物：作業中に育つ,日间作物：工作时生长,
 ui.seed.kind_night,Roślina nocy: rośnie w ciemności,Night crop: grows in darkness,Nachtpflanze: wächst im Dunkeln,夜の作物：暗闇で育つ,夜间作物：在黑暗中生长,
 ui.plot.empty,"Pusta grządka: kliknij, aby posadzić",Empty plot: click to plant,Leeres Beet: klicken zum Pflanzen,空いた畑：クリックで植える,空田地：点击种植,
@@ -115,7 +118,6 @@ ui.plot.fullmoon,Pełnia: rośnie 2x szybciej,Full moon: grows 2x faster,Vollmon
 ui.seed.fertilizer,Nawóz: {0} (+1 jakości przy sadzeniu),Fertilizer: {0} (+1 quality when planting),Dünger: {0} (+1 Qualität beim Pflanzen),肥料：{0}（植えると品質+1）,肥料：{0}（种植时品质+1）,
 ui.merchant.seeds,{1} x{0},{1} x{0},{1} x{0},{1} x{0},{1} x{0},{1} = roślina
 ui.merchant.fertilizer,Nawóz x{0},Fertilizer x{0},Dünger x{0},肥料 x{0},肥料 x{0},
-ui.merchant.hybrid,{0},{0},{0},{0},{0},hybryda
 ui.merchant.price,{0} {0:plural:moneta|monety|monet},{0} {0:plural:coin|coins},{0} {0:plural:Münze|Münzen},{0}コイン,{0}金币,
 ui.merchant.price2,{0} {0:plural:moneta|monety|monet} + {1} {1:plural:plon nocy|plony nocy|plonów nocy},{0} {0:plural:coin|coins} + {1} night {1:plural:harvest|harvests},{0} {0:plural:Münze|Münzen} + {1} Nachternte,{0}コイン + 夜の作物{1},{0}金币 + 夜间作物{1},
 ui.merchant.leaves,Odpłynie za {0} min,Leaves in {0} min,Legt in {0} Min. ab,あと{0}分で去る,{0}分钟后离开,

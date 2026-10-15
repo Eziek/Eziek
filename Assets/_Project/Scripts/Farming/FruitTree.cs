@@ -29,17 +29,18 @@ namespace Wyspa.Farming
         public string FruitKey => "fruit." + id;
         public bool Glows => lightRadius > 0f;
 
-        // wzrost x3 szybciej; owoce nocne liczone w nocach cyklu gry (noc = 20 min)
+        // balans §9 p. 98: dorosłe w 4-10 min pracy, owoce co 1,5-2,5 min (grusza kilka razy w noc, drzewo księżyca
+        // dwa razy w noc pełni); noc cyklu gry = 20 min
         public static readonly TreeSpecies[] All =
         {
-            new TreeSpecies { id = "apple", saplingCoins = 120, growSeconds = 40 * 60, fruitSeconds = 10 * 60, fruitCount = 4, fruitPrice = 8 },
-            new TreeSpecies { id = "elder", saplingCoins = 200, growSeconds = 50 * 60, fruitSeconds = 800, fruitCount = 5, fruitPrice = 10 },
-            new TreeSpecies { id = "rowan", saplingCoins = 250, growSeconds = 60 * 60, fruitSeconds = 15 * 60, fruitCount = 6, fruitPrice = 9, cemeteryBonus = true },
+            new TreeSpecies { id = "apple", saplingCoins = 120, growSeconds = 4 * 60, fruitSeconds = 90, fruitCount = 3, fruitPrice = 3 },
+            new TreeSpecies { id = "elder", saplingCoins = 200, growSeconds = 5 * 60, fruitSeconds = 120, fruitCount = 4, fruitPrice = 4 },
+            new TreeSpecies { id = "rowan", saplingCoins = 250, growSeconds = 6 * 60, fruitSeconds = 150, fruitCount = 5, fruitPrice = 4, cemeteryBonus = true },
             new TreeSpecies { id = "ghostpear", saplingCoins = 500, extraCost = new CurrencyAmount(CurrencyType.NightHarvest, 5),
-                              growSeconds = 80 * 60, fruitSeconds = 2 * GameClock.NightSeconds * 0.95f, fruitCount = 4, fruitPrice = 30, fruitsAtNight = true,
+                              growSeconds = 8 * 60, fruitSeconds = 300, fruitCount = 3, fruitPrice = 10, fruitsAtNight = true,
                               lightColor = new Color(0.45f, 1.15f, 1.05f), lightRadius = 34f / 16f },
             new TreeSpecies { id = "moon", saplingCoins = 800, extraCost = new CurrencyAmount(CurrencyType.StarShard, 2),
-                              growSeconds = 100 * 60, fruitSeconds = GameClock.NightSeconds * 0.95f, fruitCount = 3, fruitPrice = 120, fruitsAtNight = true, fruitsAtFullMoon = true,
+                              growSeconds = 10 * 60, fruitSeconds = GameClock.NightSeconds * 0.45f, fruitCount = 2, fruitPrice = 90, fruitsAtNight = true, fruitsAtFullMoon = true,
                               lightColor = new Color(0.9f, 0.85f, 1.25f), lightRadius = 40f / 16f },
         };
 

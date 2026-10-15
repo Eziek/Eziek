@@ -284,9 +284,7 @@ namespace Wyspa.UI
 
         static string Describe(CropDefinition c)
         {
-            string time = c.kind == CropKind.Day
-                ? Loc.Get("ui.seed.time_work", Mathf.RoundToInt(c.growSeconds / 60f))
-                : Loc.Get("ui.seed.time_night", Mathf.Round(c.growSeconds / 360f) / 10f);
+            string time = Ui.GrowTime(c);
             var game = GameLoop.Instance;
             int inBag = game != null ? game.Seeds.Count(c.id) : 0;
             string price = c.hybrid ? Loc.Get("ui.seed.hybrid") : Loc.Get("ui.seed.price", Economy.Market.SeedPrice(c));

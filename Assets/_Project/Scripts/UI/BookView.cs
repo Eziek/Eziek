@@ -739,9 +739,7 @@ namespace Wyspa.UI
             foreach (var c in list)
             {
                 var crop = c;
-                string time = c.kind == Farming.CropKind.Day
-                    ? Loc.Get("ui.seed.time_work", Mathf.RoundToInt(c.growSeconds / 60f))
-                    : Loc.Get("ui.seed.time_night", Mathf.Round(c.growSeconds / 360f) / 10f);
+                string time = Ui.GrowTime(c);
                 seaItems.Add(new ShopItem
                 {
                     nameKey = "crop." + c.id, icon = c.SeedIcon, buyKey = "ui.shop.unlock",

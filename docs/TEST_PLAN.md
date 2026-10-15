@@ -323,3 +323,16 @@ Najpierw **Wyspa → 2** (grafiki czapek).
 4. Menu główne → Ustawienia: Księga bez kolumny zakładek po lewej, strona przy lewej krawędzi, krzyżyk w rogu.
    W grze Księga ma zakładki jak dawniej.
 
+## 27. Krótki wzrost i 6 faz
+Najpierw Wyspa → 2 (nowe czasy, ceny i sprite'y faz).
+1. Marchew przy pracy w dzień: dojrzewa w ok. 20 s (z tempem pracy szybciej), po drodze 6 faz: nasiono, kiełek z listkami,
+   sadzonka, rośnie, niedojrzała (zielona główka), dojrzała. Przy każdej zmianie „pyknięcie”.
+2. Dynia: niedojrzała to zielona dynia, po 2 min pomarańczowa. Zboże: zielone kłosy, potem złote.
+3. Rośliny nocy: trupi grzyb w 2 min nocy, cmentarny bluszcz w 10 min; świecenie dopiero w fazie dojrzałej.
+4. Koło nasion i Sklep → Nasiona: czasy „20 s pracy”, „2 min pracy”, „1 min 30 s nocy”, „10 min nocy” (bez „0 min”).
+5. Zbiór rośliny nocy: plony nocy nie przy każdym zbiorze krótkich roślin (trupi grzyb ok. co piąty), bluszcz zawsze 1.
+6. Drzewo: jabłoń dorosła po ok. 4 min pracy, owoce co 1,5 min.
+7. Zamówienia: więcej sztuk (np. 6-10 marchwi na początku), zapłata proporcjonalna.
+8. Kupiec-widmo: paczki po 10 nasion, hybryda po 3 nasiona.
+9. Stary zapis: rośliny w trakcie wzrostu od razu dojrzałe albo prawie (wzrost liczony w sekundach), nic się nie psuje.
+

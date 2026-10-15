@@ -35,16 +35,17 @@ namespace Wyspa.Farming
         public bool IsEmpty => crop == null;
         public bool IsRipe => crop != null && growth >= crop.growSeconds;
 
-        /// <summary>-1 puste, 0 nasiono, 1 kiełek, 2 rośnie, 3 dojrzała.</summary>
+        /// <summary>-1 puste, 0 nasiono ... crop.RipeStage dojrzała (fazy przed nią dzielą czas wzrostu po równo).</summary>
         public int Stage
         {
             get
             {
                 if (crop == null)
                     return -1;
+                int ripe = crop.RipeStage;
                 if (IsRipe)
-                    return 3;
-                return Mathf.Clamp((int)(growth / crop.growSeconds * 3f), 0, 2);
+                    return ripe;
+                return Mathf.Clamp((int)(growth / crop.growSeconds * ripe), 0, ripe - 1);
             }
         }
 

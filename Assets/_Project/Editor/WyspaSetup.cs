@@ -56,37 +56,42 @@ namespace Wyspa.EditorTools
         struct LampSpec { public string name; public int price; public float perMinute, growth; public bool flicker; }
 
         // wzrost roślin dnia x3 szybciej (marchew 10 min → 3:20)
+        // fazy roślin (pliki crop_<id>_<faza>.png) i zapasowa faza, gdy dodatkowej grafiki jeszcze nie ma
+        static readonly string[] StageFiles = { "0", "shoot", "1", "2", "unripe", "3" };
+        static readonly string[] StageFallback = { "0", "0", "1", "2", "3", "3" };
+
+        // balans §9 p. 98: rośliny dnia 20 s - 3 min pracy, nocy 1,5-10 min ciemności; mniejsze ceny za sztukę
         static readonly CropSpec[] CropSpecs =
         {
-            new CropSpec { id = "carrot", name = "Marchew", sprite = "crop_carrot", kind = CropKind.Day, seconds = 200, seed = 5, sell = 12 },
-            new CropSpec { id = "wheat", name = "Zboże", sprite = "crop_wheat", kind = CropKind.Day, seconds = 300, seed = 8, sell = 18 },
-            new CropSpec { id = "pumpkin", name = "Dynia", sprite = "crop_pumpkin", kind = CropKind.Day, seconds = 500, seed = 15, sell = 40 },
+            new CropSpec { id = "carrot", name = "Marchew", sprite = "crop_carrot", kind = CropKind.Day, seconds = 20, seed = 1, sell = 3 },
+            new CropSpec { id = "wheat", name = "Zboże", sprite = "crop_wheat", kind = CropKind.Day, seconds = 45, seed = 2, sell = 6 },
+            new CropSpec { id = "pumpkin", name = "Dynia", sprite = "crop_pumpkin", kind = CropKind.Day, seconds = 120, seed = 5, sell = 18 },
             // do odblokowania w Sklep → Nasiona (unlock = monety, jednorazowo)
-            new CropSpec { id = "garlic", name = "Czosnek", sprite = "crop_garlic", kind = CropKind.Day, seconds = 240, seed = 6, sell = 15, unlock = 300 },
-            new CropSpec { id = "poppy", name = "Mak", sprite = "crop_poppy", kind = CropKind.Day, seconds = 400, seed = 12, sell = 30, unlock = 780 },
-            new CropSpec { id = "wormwood", name = "Piołun", sprite = "crop_wormwood", kind = CropKind.Day, seconds = 800, seed = 25, sell = 70, unlock = 1800 },
-            // rośliny nocy: czas = sekundy ciemności (rosną też offline). Noc cyklu gry trwa 1200 s (20 min):
-            // wilcza jagoda w 3/4 nocy, trupi grzyb w 1 noc, cmentarny bluszcz w 4 noce
-            new CropSpec { id = "corpseshroom", name = "Trupi grzyb", sprite = "crop_corpseshroom", kind = CropKind.Night, seconds = 1200, seed = 15, sell = 45 },
-            new CropSpec { id = "moonflower", name = "Księżycowy kwiat", sprite = "crop_moonflower", kind = CropKind.Night, seconds = 1500, seed = 20, sell = 60 },
-            new CropSpec { id = "ghostpumpkin", name = "Upiorna dynia", sprite = "crop_ghostpumpkin", kind = CropKind.Night, seconds = 2400, seed = 30, sell = 90 },
-            new CropSpec { id = "bloodrose", name = "Krwawa róża", sprite = "crop_bloodrose", kind = CropKind.Night, seconds = 1200, seed = 50, sell = 200, fullMoon = true },
-            new CropSpec { id = "belladonna", name = "Wilcza jagoda", sprite = "crop_belladonna", kind = CropKind.Night, seconds = 900, seed = 12, sell = 35, unlock = 960 },
-            new CropSpec { id = "mandrake", name = "Mandragora", sprite = "crop_mandrake", kind = CropKind.Night, seconds = 2100, seed = 35, sell = 120, unlock = 2400 },
-            new CropSpec { id = "graveivy", name = "Cmentarny bluszcz", sprite = "crop_graveivy", kind = CropKind.Night, seconds = 4800, seed = 60, sell = 260, unlock = 4800 },
+            new CropSpec { id = "garlic", name = "Czosnek", sprite = "crop_garlic", kind = CropKind.Day, seconds = 30, seed = 2, sell = 5, unlock = 300 },
+            new CropSpec { id = "poppy", name = "Mak", sprite = "crop_poppy", kind = CropKind.Day, seconds = 75, seed = 4, sell = 12, unlock = 780 },
+            new CropSpec { id = "wormwood", name = "Piołun", sprite = "crop_wormwood", kind = CropKind.Day, seconds = 180, seed = 8, sell = 30, unlock = 1800 },
+            // rośliny nocy: czas = sekundy ciemności (rosną też offline). Noc cyklu gry trwa 1200 s (20 min), każda roślina nocy
+            // dojrzewa w jedną noc (najdłużej cmentarny bluszcz: 10 min), krótsze da się w nocy zebrać kilka razy
+            new CropSpec { id = "corpseshroom", name = "Trupi grzyb", sprite = "crop_corpseshroom", kind = CropKind.Night, seconds = 120, seed = 4, sell = 14 },
+            new CropSpec { id = "moonflower", name = "Księżycowy kwiat", sprite = "crop_moonflower", kind = CropKind.Night, seconds = 180, seed = 5, sell = 19 },
+            new CropSpec { id = "ghostpumpkin", name = "Upiorna dynia", sprite = "crop_ghostpumpkin", kind = CropKind.Night, seconds = 360, seed = 8, sell = 34 },
+            new CropSpec { id = "bloodrose", name = "Krwawa róża", sprite = "crop_bloodrose", kind = CropKind.Night, seconds = 300, seed = 12, sell = 60, fullMoon = true },
+            new CropSpec { id = "belladonna", name = "Wilcza jagoda", sprite = "crop_belladonna", kind = CropKind.Night, seconds = 90, seed = 3, sell = 10, unlock = 960 },
+            new CropSpec { id = "mandrake", name = "Mandragora", sprite = "crop_mandrake", kind = CropKind.Night, seconds = 300, seed = 9, sell = 40, unlock = 2400 },
+            new CropSpec { id = "graveivy", name = "Cmentarny bluszcz", sprite = "crop_graveivy", kind = CropKind.Night, seconds = 600, seed = 15, sell = 80, unlock = 4800 },
             // hybryda: nasiona tylko z mutacji dyni i upiornej dyni na sąsiednich grządkach
-            new CropSpec { id = "hybridpumpkin", name = "Dynia-upiór", sprite = "crop_hybridpumpkin", kind = CropKind.Night, seconds = 2400, seed = 0, sell = 150,
+            new CropSpec { id = "hybridpumpkin", name = "Dynia-upiór", sprite = "crop_hybridpumpkin", kind = CropKind.Night, seconds = 360, seed = 0, sell = 50,
                            hybrid = true, parentA = "pumpkin", parentB = "ghostpumpkin", seedIcon = "seed_hybrid" },
             // hybrydy z mutacji (treść: 5 nowych par, część dnia, krwawy piołun tylko w pełnię); ikony nasion icon_seed_<id>
-            new CropSpec { id = "wolfcarrot", name = "Wilcza marchew", sprite = "crop_wolfcarrot", kind = CropKind.Day, seconds = 400, seed = 0, sell = 55,
+            new CropSpec { id = "wolfcarrot", name = "Wilcza marchew", sprite = "crop_wolfcarrot", kind = CropKind.Day, seconds = 90, seed = 0, sell = 15,
                            hybrid = true, parentA = "carrot", parentB = "belladonna" },
-            new CropSpec { id = "ashwheat", name = "Popielne zboże", sprite = "crop_ashwheat", kind = CropKind.Day, seconds = 600, seed = 0, sell = 70,
+            new CropSpec { id = "ashwheat", name = "Popielne zboże", sprite = "crop_ashwheat", kind = CropKind.Day, seconds = 150, seed = 0, sell = 25,
                            hybrid = true, parentA = "wheat", parentB = "corpseshroom" },
-            new CropSpec { id = "moonpoppy", name = "Księżycowy mak", sprite = "crop_moonpoppy", kind = CropKind.Night, seconds = 1800, seed = 0, sell = 160,
+            new CropSpec { id = "moonpoppy", name = "Księżycowy mak", sprite = "crop_moonpoppy", kind = CropKind.Night, seconds = 300, seed = 0, sell = 50,
                            hybrid = true, parentA = "poppy", parentB = "moonflower" },
-            new CropSpec { id = "screamgarlic", name = "Wrzeszczący czosnek", sprite = "crop_screamgarlic", kind = CropKind.Night, seconds = 2400, seed = 0, sell = 220,
+            new CropSpec { id = "screamgarlic", name = "Wrzeszczący czosnek", sprite = "crop_screamgarlic", kind = CropKind.Night, seconds = 420, seed = 0, sell = 70,
                            hybrid = true, parentA = "garlic", parentB = "mandrake" },
-            new CropSpec { id = "bloodwormwood", name = "Krwawy piołun", sprite = "crop_bloodwormwood", kind = CropKind.Night, seconds = 1200, seed = 0, sell = 450,
+            new CropSpec { id = "bloodwormwood", name = "Krwawy piołun", sprite = "crop_bloodwormwood", kind = CropKind.Night, seconds = 300, seed = 0, sell = 140,
                            fullMoon = true, hybrid = true, parentA = "wormwood", parentB = "bloodrose" },
         };
 
@@ -383,12 +388,15 @@ namespace Wyspa.EditorTools
                 crop.parentB = spec.parentB;
                 crop.seedIcon = spec.seedIcon;
                 crop.unlockPrice = spec.unlock;
-                crop.stages = new Sprite[4];
-                crop.glowStages = new Sprite[4];
-                for (int i = 0; i < 4; i++)
+                // 6 faz: dodatkowe kiełek i niedojrzała z tools/pixel-proto/export_unity_stages.py (brak pliku = faza sąsiednia)
+                crop.stages = new Sprite[StageFiles.Length];
+                crop.glowStages = new Sprite[StageFiles.Length];
+                for (int i = 0; i < StageFiles.Length; i++)
                 {
-                    crop.stages[i] = LoadSprite($"Crops/{spec.sprite}_{i}");
-                    crop.glowStages[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Crops/{spec.sprite}_{i}_glow.png");
+                    string f = StageFiles[i];
+                    var stage = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Crops/{spec.sprite}_{f}.png");
+                    crop.stages[i] = stage != null ? stage : LoadSprite($"Crops/{spec.sprite}_{StageFallback[i]}");
+                    crop.glowStages[i] = AssetDatabase.LoadAssetAtPath<Sprite>($"{Sprites}Crops/{spec.sprite}_{f}_glow.png");
                 }
                 EditorUtility.SetDirty(crop);
                 db.crops.Add(crop);

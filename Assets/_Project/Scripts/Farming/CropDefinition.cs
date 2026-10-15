@@ -20,11 +20,11 @@ namespace Wyspa.Farming
         [Tooltip("Dzień: sekundy aktywności w świetle. Noc: sekundy ciemności.")]
         public float growSeconds = 600f;
 
-        [Tooltip("4 fazy: 0 nasiono, 1 kiełek, 2 rośnie, 3 dojrzała.")]
-        public Sprite[] stages = new Sprite[4];
+        [Tooltip("Fazy od nasiona do dojrzałej (ostatnia). Teraz 6: nasiono, kiełek, sadzonka, rośnie, niedojrzała, dojrzała.")]
+        public Sprite[] stages = new Sprite[6];
 
         [Tooltip("Piksele emisyjne faz (*_glow), puste gdy faza nie świeci. Rysowane na materiale bez oświetlenia.")]
-        public Sprite[] glowStages = new Sprite[4];
+        public Sprite[] glowStages = new Sprite[6];
 
         public int seedPrice = 5;
         public int sellPrice = 12;
@@ -55,6 +55,12 @@ namespace Wyspa.Farming
 
         public bool IsParentPair(string a, string b) =>
             hybrid && ((a == parentA && b == parentB) || (a == parentB && b == parentA));
+
+        /// <summary>Numer fazy dojrzałej (ostatniej). Fazy przed nią dzielą czas wzrostu po równo.</summary>
+        public int RipeStage => stages != null && stages.Length > 1 ? stages.Length - 1 : 3;
+
+        /// <summary>Dojrzała roślina (zbiór, niesione plony).</summary>
+        public Sprite RipeSprite => StageSprite(RipeStage);
 
         public Sprite StageSprite(int stage)
         {
