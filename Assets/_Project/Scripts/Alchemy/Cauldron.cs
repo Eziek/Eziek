@@ -27,6 +27,7 @@ namespace Wyspa.Alchemy
         void OnEnable() => All.Add(this);
         void OnDisable() => All.Remove(this);
 
+        Plume steam;         // para znad kotła, gdy coś się warzy (GDD §9 p. 124)
         string brewing;      // id przepisu w kotle
         float left;          // sekundy do końca warzenia
         bool ready;
@@ -71,6 +72,15 @@ namespace Wyspa.Alchemy
                 }
             }
             Animate();
+            if (body != null && body.sprite != null)
+            {
+                // ujście pary: środek górnej krawędzi sprite'a, 2 px niżej (w kotle)
+                var rim = new Vector3(body.bounds.center.x - transform.position.x, body.bounds.max.y - transform.position.y - 2f / 16f, 0f);
+                if (steam == null)
+                    steam = Plume.Attach(gameObject, Plume.Kind.Steam, rim, body.sortingOrder + 3);
+                steam.SetMouth(rim, body.sortingOrder + 3);
+                steam.Emitting = brewing != null;
+            }
         }
 
         void Animate()

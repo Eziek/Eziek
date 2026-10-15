@@ -291,6 +291,19 @@ namespace Wyspa.Visual
         static readonly Color DayMote = new Color(1f, 0.9f, 0.6f, 0.8f);
         static readonly Color NightMote = new Color(0.45f, 1f, 0.9f, 0.7f);
 
+        /// <summary>
+        /// Siła bieżącego podmuchu w kolumnie świata x (w jednostkach świata), jak WyspaGust w WyspaSway.hlsl: 0 przed czołem,
+        /// za nim fala gasnąca w ciągu kilku szerokości. Dla dymu i pary (Visual/Plume). Wiatr wieje w prawo.
+        /// </summary>
+        public static float GustAt(float worldX)
+        {
+            var fx = Instance;
+            if (fx == null || !fx.gusting || fx.gustPower <= 0f)
+                return 0f;
+            float u = (fx.gustFront - worldX * Ppu) / 40f;
+            return u <= 0f ? 0f : fx.gustPower * 2f * Mathf.Exp(-1.6f * u) * Mathf.Sin(3f * u);
+        }
+
         /// <summary>Sprite z kodu: pozioma smuga (jaśniejsza z przodu) albo jeden piksel.</summary>
         static Sprite MakeSprite(int w, bool gradient)
         {

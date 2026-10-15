@@ -540,3 +540,11 @@ Najpierw Wyspa → 2 (materiał `Atmosphere`). F1: „Horyzont” pokazuje kolej
 2. Ulepszenie z 2-3 poziomami: na dolnej krawędzi węzła ciemna plakietka z kreskami; kupione jasnopomarańczowe, reszta szara.
 3. Gdy stać cię na kolejny poziom, jego kreska miga; po zakupie zapala się na stałe.
 4. Plakietka nie zasłania ikony ani nie wchodzi na węzeł poniżej.
+
+## 45. Dym z pieca, para nad kotłem
+1. Piec Żaru, gdy się pali (w palenisku drewno): z komina stale unosi się szary dym, kłęby rosną i rzedną, smuga lekko
+   pochyla się w prawo. Zgaszony albo bez drewna: dymu nie ma (ostatnie kłęby dolatują i znikają).
+2. Kocioł: w trakcie warzenia i gdy wywar czeka gotowy, nad kotłem unosi się jasna para; pusty kocioł bez pary.
+3. Podmuch wiatru (rośliny się odginają): smuga dymu i pary wyraźnie odchyla się w prawo, potem wraca do pionu.
+4. Deszcz i burza: dym od razu bardziej pochylony.
+5. Przeniesienie pieca lub kotła: dym idzie z nowego miejsca; dym nie odbija się w wodzie i nie trzęsie się z obiektem.

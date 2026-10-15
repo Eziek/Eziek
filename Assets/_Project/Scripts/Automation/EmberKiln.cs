@@ -32,6 +32,7 @@ namespace Wyspa.Automation
         int frame;
         int fuel;
         Wisp feeder;                          // ognik, który właśnie niesie drewno do tego pieca
+        Plume smoke;                          // dym z komina, gdy się pali (GDD §9 p. 124)
 
         public int Reserve => reserve;
         public bool On => on;
@@ -146,6 +147,14 @@ namespace Wyspa.Automation
 
         void Update()
         {
+            if (body != null)
+            {
+                var chimney = new Vector3(4.5f / 16f, 25f / 16f, 0f);
+                if (smoke == null)
+                    smoke = Plume.Attach(gameObject, Plume.Kind.Smoke, chimney, body.sortingOrder + 3);
+                smoke.SetMouth(chimney, body.sortingOrder + 3);   // po przeniesieniu pieca zmienia się kolejność rysowania
+                smoke.Emitting = burning;
+            }
             animTimer -= Time.unscaledDeltaTime;
             if (animTimer > 0f)
                 return;

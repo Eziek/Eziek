@@ -452,7 +452,7 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   ogników, krwawy księżyc) i dział **„Widziane”** w Bestiariuszu. Tylko wygląd, bez wpływu na ekonomię.
 - [x] Woda (wybór gracza, §9 p. 119): księżycowa ścieżka, kółka od deszczu, refleksy słońca i wodorosty na płyciznach,
   smugi wiatru. Potem (§9 p. 120) sylwetki we mgle (wieloryb, wąż morski, statek-widmo), cienie chmur, poranna mgiełka
-  z rosą. Z listy zostały: tęcza, dym z pieca i para z kotła, ćmy przy lampach, motyle i ważki, tryb zdjęcia.
+  z rosą, dym z pieca i para nad kotłem (p. 124). Tęczę, motyle, ważki i tryb zdjęcia gracz odrzucił.
 
 ---
 
@@ -1032,6 +1032,13 @@ Obrazki referencyjne (kopie): `docs/img/`
     24 px co 27 px (było 22 co 28, przerwa 3 px zamiast 6). Poziomy na ciemnej plakietce na dolnej krawędzi węzła:
     kreska na poziom, kupione jasnym żarem (#f2b866), brakujące przygaszone, a następny poziom, gdy stać cię na niego,
     miga. Szerokość kreski 5 px przy 2-3 poziomach (3 px przy 4-5). Podgląd `docs/img/ulepszenia_poziomy.png`.
+124. **Dym z pieca Żaru i para nad kotłem** (wybór gracza; motyle, ważki, tęcza i tryb zdjęcia pominięte, ćmy przy
+    lampach już były w `AmbientLife`). Gdy piec się pali, z komina co ok. 0,25 s wychodzi szary kłąb; gdy w kotle coś się
+    warzy (albo czeka gotowe), znad całej szerokości kotła unosi się jasna para. Kłęby (3 → 6 px, z kodu) wznoszą się
+    zwalniając, rosną i rzedną (dithering, potem przezroczystość); dym żyje 3-4 s, para 2 s. Znosi je stały lekki wiatr
+    w prawo (mocniej w deszczu i burzy), a przechodzący podmuch (ten sam co odgina rośliny, `IslandFx.GustAt`) wyraźnie
+    odrywa smugę w bok. Kod `Visual/Plume.cs` (podpięty w `EmberKiln` i `Cauldron`), podgląd
+    `tools/pixel-proto/plume_preview.py` → `docs/img/dym_para.png`.
 
 ---
 
@@ -1091,6 +1098,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Visual/GameCursor.cs`, `CursorPlay.cs` | własny kursor (stany, iskierki) i zabawa kursorem: odginanie roślin, kręgi na wodzie, liście, ćmy, nazwy ptaków i ryb |
 | `Scripts/Visual/RareNights.cs` | rzadkie noce: świecąca toń, deszcz gwiazd, zorza, korowód ogników, krwawy księżyc |
 | `Scripts/Visual/HorizonSights.cs` | sylwetki na horyzoncie we mgle: wieloryb, wąż morski, statek-widmo |
+| `Scripts/Visual/Plume.cs` | dym z pieca Żaru i para nad kotłem: kłęby z kodu, znoszone wiatrem i podmuchami |
 | `Scripts/Visual/Atmosphere.cs` | cienie chmur, poranna mgiełka i rosa (sprite z obrazem lądu, `Atmosphere.shader`) |
 | `Scripts/Visual/LightShafts.cs`, `NightGlow.cs` | snopy słońca/księżyca (Sprite Light 2D z wolumetrią, za kamerą), nocna poświata ogników, duszków i run |
 | `Scripts/World/Decoration.cs`, `ChopProgress.cs` | dekoracja na kafelku: usuwanie serią szybkich kliknięć (kropki postępu), animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
