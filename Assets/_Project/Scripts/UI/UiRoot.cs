@@ -405,6 +405,15 @@ namespace Wyspa.UI
                 });
             var cam = Camera.main;
             var hit = cam != null ? Wyspa.Input.ClickRouter.Pick(cam.ScreenToWorldPoint(screen)) : null;
+            // drzewo owocowe: lewy klik zbiera i ścina, więc szczegóły (stan, „Zetnij”, „Przenieś”) są tutaj
+            if (hit != null && hit.TryGetComponent(out FruitTree ringTree) && hit.TryGetComponent(out TileObject ringObj)
+                && ringTree.Species != null)
+                list.Insert(0, new ActionRing.Entry
+                {
+                    icon = "fruit_" + ringTree.Species.id,
+                    nameKey = "act.details",
+                    run = () => { if (ringObj != null) GameEvents.RequestContext(ringObj); },
+                });
             if (hit != null && hit.TryGetComponent(out FarmPlot grown) && !grown.State.IsEmpty && !grown.State.IsRipe)
                 list.Insert(0, new ActionRing.Entry
                 {
@@ -480,7 +489,17 @@ namespace Wyspa.UI
             }
             if (hit != null && hit.TryGetComponent(out Decoration deco) && !deco.Removing)
             {
-                Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + "\n" + Loc.Get("ui.deco.hint"));
+                var da = deco.Art;
+                if (da != null && da.removable && !da.landmark)   // koszt, nagroda i jak usunąć (seria kliknięć, GDD §9 p. 121)
+                    Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + "\n" + Loc.Get("ui.deco.cost", da.essenceCost) + "\n"
+                        + Loc.Get("ui.deco.reward." + da.reward.ToString().ToLowerInvariant(), da.rewardAmount) + "\n" + Loc.Get("ui.deco.hint"));
+                else
+                    Tooltip.Show(plotHoverOwner, Loc.Get(deco.NameKey) + (da != null && da.landmark ? "\n" + Loc.Get("ui.object.hint") : ""));
+                return;
+            }
+            if (hit != null && hit.TryGetComponent(out FruitTree tree) && hit.TryGetComponent(out TileObject treeObj))
+            {
+                Tooltip.Show(plotHoverOwner, Loc.Get(treeObj.NameKey) + "\n" + tree.StatusLine() + "\n" + Loc.Get("ui.tree.hint"));
                 return;
             }
             if (hit != null && hit.TryGetComponent(out TileObject obj))

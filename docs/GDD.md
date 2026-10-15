@@ -360,7 +360,8 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
 - [x] Do Etapu 3c lampa startowa, skrzynia i automatyka **stają same** na wolnym kafelku trawy (najbliżej startu);
   bez wolnego kafelka czekają (toast). Tryb stawiania przyjdzie w 3c.
 - [x] Sklep lamp: płaci się dopiero przy postawieniu (PPM w trybie stawiania = nic nie kosztuje). Lamp można mieć dowolnie dużo.
-- [x] Obiekty klika się w kafelek pod nimi (podstawa); klik otwiera panel kontekstowy (Usuń / Sprzedaj / Przenieś).
+- [x] Obiekty klika się w kafelek pod nimi (podstawa); klik otwiera panel kontekstowy (Sprzedaj / Przenieś). Dzicz
+  (drzewa, kamienie, krzaki) usuwa się serią szybkich kliknięć, a drzewo owocowe ścina tak samo (§9 p. 121).
 - [ ] Pasma światła lamp z ditheringiem Bayera (§4.4): przesunięte na później (wymaga własnego światła 2D albo post-processu).
 - [x] Krzywa cen kafelków: kwadratowa, mocniejsza od 6d (§13.2).
 - [x] Łowienie ryb wchodzi do gry (pomost, sieci, §11 F).
@@ -1011,6 +1012,15 @@ Obrazki referencyjne (kopie): `docs/img/`
     pogodzie (duże miękkie plamy z ditheringiem suną powoli w prawo, 17% cienia), **poranna mgiełka** od 6:00 do 8:00
     nad wodą (poziome blade smugi, gęstsze przy brzegu, rzedną do 8:00) i **rosa** (pojedyncze piksele trawy migoczą
     o świcie). Materiał `Atmosphere` tworzy Wyspa → 2.
+121. **Ścinanie i rozbijanie seriami kliknięć** (prośba gracza: zamiast panelu „Usuń”). Każde kliknięcie w drzewo, kamień,
+    krzak, pień czy gruz to jedno uderzenie (drgnięcie o piksel, odpryski, stuk), a nad obiektem rząd kropek pokazuje
+    postęp. Obiekt znika po serii szybkich uderzeń: krzaki i drobiazgi 3, pnie i kłody 4, drzewa 5, kamienie i mury 6.
+    Przerwa dłuższa niż 2,5 s kasuje serię, więc pojedyncze kliknięcie niczego nie niszczy. Koszt w Żarze i nagroda bez
+    zmian (sprawdzane przy pierwszym uderzeniu, pobierane przy ostatnim); widać je w dymku po najechaniu. **Drzewo
+    owocowe**: pierwsze kliknięcie zbiera owoce (jak dotąd), kolejne szybkie kliknięcia to uderzenia siekierą (dorosłe
+    6 kliknięć razem z pierwszym, młode 3), potem drzewo pada. Szczegóły drzewa (stan, „Zetnij”, „Przenieś”): PPM na
+    drzewie → pierścień → ikona owocu. Zabytki dalej otwierają panel z historią. Kod `World/ChopProgress.cs`,
+    `Decoration.OnClick`, `FruitTree.TryClick`.
 
 ---
 
@@ -1072,7 +1082,7 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/Visual/HorizonSights.cs` | sylwetki na horyzoncie we mgle: wieloryb, wąż morski, statek-widmo |
 | `Scripts/Visual/Atmosphere.cs` | cienie chmur, poranna mgiełka i rosa (sprite z obrazem lądu, `Atmosphere.shader`) |
 | `Scripts/Visual/LightShafts.cs`, `NightGlow.cs` | snopy słońca/księżyca (Sprite Light 2D z wolumetrią, za kamerą), nocna poświata ogników, duszków i run |
-| `Scripts/World/Decoration.cs` | dekoracja na kafelku: panel „Usuń”, animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
+| `Scripts/World/Decoration.cs`, `ChopProgress.cs` | dekoracja na kafelku: usuwanie serią szybkich kliknięć (kropki postępu), animacje usuwania (potrząśnięcie, przewracanie, pęknięcie, ścięcie), cząsteczki |
 | `Scripts/Core/ContextActions.cs`, `Scripts/UI/ContextPanel.cs` | panel kontekstowy przy obiekcie: komponenty dopisują linie i przyciski (`IContextActions`) |
 | `Scripts/UI/PlacementMode.cs` | tryb stawiania: duch na kafelku, okrąg zasięgu światła, licznik oświetlonych grządek, kupno lampy, przenoszenie |
 | `Scripts/UI/ExpansionMode.cs`, `TileFrame.cs` | tryb rozbudowy: ramki z ceną lub „?”, dymek z kosztem, kupno, przekopywanie |

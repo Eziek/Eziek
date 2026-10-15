@@ -522,3 +522,15 @@ Najpierw Wyspa → 2 (materiał `Atmosphere`). F1: „Horyzont” pokazuje kolej
    w deszczu i nocą ich nie ma; w przezroczystym oknie nie ma ich na pulpicie.
 7. Świt (6:00-8:00): nad wodą blade, poziome smugi mgiełki, najgęstsze o 6:00, rzedną do 8:00; na trawie migoczą pojedyncze
    piksele rosy.
+
+## 43. Ścinanie i rozbijanie seriami kliknięć
+1. Najechanie na drzewo, kamień albo krzak: dymek z nazwą, kosztem w Żarze, nagrodą i „Kliknij szybko kilka razy”.
+2. Jedno kliknięcie: obiekt drga, lecą odpryski, stuk, nad nim kropki (1 pełna); po ok. 2,5 s bez kliknięcia kropki znikają
+   i obiekt zostaje.
+3. Szybka seria: krzak znika po 3 kliknięciach, pień po 4, drzewo po 5, kamień po 6 (animacja usuwania, nagroda, Żar ubywa).
+4. Za mało Żaru: kliknięcie pokazuje „Potrzeba X Żaru” i nic nie robi.
+5. Drzewo owocowe z owocami: jedno kliknięcie zbiera owoce i nic więcej; dalsze szybkie kliknięcia (razem 6) ścinają je
+   (drewno). Bez owoców: każde kliknięcie to uderzenie, po 6 szybkich drzewo pada; sadzonka po 3.
+6. PPM na drzewie owocowym → w pierścieniu ikona owocu „Szczegóły” → panel ze stanem, „Zetnij” i „Przenieś”.
+7. Zabytek (np. stary posąg): klik dalej otwiera panel z historią.
+8. Ognik-drwal dalej sam rozbiera dzicz (bez zmian).

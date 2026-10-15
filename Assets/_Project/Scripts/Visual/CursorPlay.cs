@@ -14,7 +14,7 @@ namespace Wyspa.Visual
     /// Zabawa kursorem (GDD §9 p. 115), same efekty, bez wpływu na grę:
     /// - kursor przechodzący przez rośliny i drzewa odgina je (shader kołysania, globalnie _WyspaCursor),
     /// - klik w wodę: rozchodzący się krąg (płynnie rośnie, cienieje i gaśnie), ryby w pobliżu dają nura, lilie odpływają,
-    /// - klik w drzewo albo krzak: sypią się liście, siedzące obok ptaki odlatują,
+    /// - klik w drzewo albo krzak: sypie się kilka liści, siedzące obok ptaki odlatują,
     /// - klik w zapaloną lampę nocą: z kloszy wylatuje kilka ciem.
     /// </summary>
     public class CursorPlay : MonoBehaviour
@@ -180,13 +180,12 @@ namespace Wyspa.Visual
             var sr = tree.GetComponent<SpriteRenderer>();
             if (sr == null)
                 return;
+            // uderzenie (stuk, drgnięcie) robi samo drzewo (seria kliknięć ścina, GDD §9 p. 121); tu tylko liście i ptaki
             var b = sr.bounds;
-            for (int i = 0; i < 2; i++)
-                IslandFx.LeafBurst(new Vector3(Random.Range(b.min.x + b.size.x * 0.3f, b.max.x - b.size.x * 0.3f),
-                                               b.min.y + b.size.y * Random.Range(0.55f, 0.85f), 0f), 3, sr.sortingOrder + 2);
+            IslandFx.LeafBurst(new Vector3(Random.Range(b.min.x + b.size.x * 0.3f, b.max.x - b.size.x * 0.3f),
+                                           b.min.y + b.size.y * Random.Range(0.55f, 0.85f), 0f), 2, sr.sortingOrder + 2);
             if (AmbientBirds.Instance != null)
                 AmbientBirds.Instance.ScareNear(b.center, Mathf.Max(1.2f, b.extents.y + 0.5f));
-            GameEvents.PlaySound("plant", 0.3f);
         }
 
         void Moths(Vector2 at, Collider2D hit)

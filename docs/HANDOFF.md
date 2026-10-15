@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-120), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-121), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -53,6 +53,8 @@ Historia decyzji jest w GDD §9 (punkty 1-120), a lista testów w `docs/TEST_PLA
   `_WyspaCursor` w `WyspaSway.hlsl`, zdarzenie `ClickRouter.Clicked`. Nie testowane w Unity.
 - **Woda: księżycowa ścieżka, deszcz, płycizny, wiatr** (GDD §9 p. 119, TEST_PLAN 41): `Water.shader`,
   `WaterAnimator.UpdateSky`, podgląd `tools/pixel-proto/water_effects_preview.py`. Nie testowane w Unity.
+- **Ścinanie seriami kliknięć** (GDD §9 p. 121, TEST_PLAN 43): `World/ChopProgress.cs`, `Decoration.OnClick`,
+  `FruitTree.TryClick`; szczegóły drzewa owocowego w pierścieniu PPM. Panel „Usuń” dekoracji nie otwiera się już z kliku.
 - **Horyzont, cienie chmur, poranna mgiełka** (GDD §9 p. 120, TEST_PLAN 42): `Visual/HorizonSights.cs`,
   `Visual/Atmosphere.cs` + `Shaders/Atmosphere.shader`. F1: „Horyzont”. Wymaga Wyspa → 2. Nie testowane w Unity.
 - **Rzadkie noce i „Widziane”** (GDD §9 p. 116, TEST_PLAN 40): `Visual/RareNights.cs`, `_WyspaBiolum` w `Water.shader`,

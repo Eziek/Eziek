@@ -9,7 +9,9 @@ using Wyspa.Visual;
 namespace Wyspa.World
 {
     /// <summary>
-    /// Dekoracja na kafelku (drzewo, kamień, krzak, pień, gruz). Klik = panel „Usuń” z kosztem w Esencji i nagrodą (GDD §14).
+    /// Dekoracja na kafelku (drzewo, kamień, krzak, pień, gruz). Kilka szybkich kliknięć usuwa ją (koszt w Żarze, nagroda,
+    /// GDD §14, §9 p. 121): każde kliknięcie to uderzenie (drgnięcie, odpryski), przerwa ponad ChopProgress.Window kasuje serię.
+    /// Zabytek (landmark): klik otwiera panel z kawałkiem historii.
     /// Animacje skokowe ~10 kl./s: potrząśnięcie, przewracanie / pęknięcie / ścięcie, cząsteczki, potem pozostałość.
     /// </summary>
     public class Decoration : MonoBehaviour, IClickable, IContextActions
@@ -21,6 +23,8 @@ namespace Wyspa.World
         DecoArt art;
         SpriteRenderer sr;
         bool removing;
+        Coroutine shake;
+        Vector3 home;   // pozycja sprzed drgania (szybkie kliknięcia nie przesuwają obiektu)
 
         public TilePos Tile { get; private set; }
         public DecoKind Kind { get; private set; }
@@ -37,10 +41,75 @@ namespace Wyspa.World
             sr = renderer;
         }
 
+        /// <summary>Ile szybkich uderzeń potrzeba: krzaki i drobiazgi 3, pnie i kłody 4, drzewa 5, kamienie 6.</summary>
+        public int HitsNeeded
+        {
+            get
+            {
+                switch (Kind)
+                {
+                    case DecoKind.Rock: case DecoKind.BrokenWall: case DecoKind.FallenColumn: case DecoKind.BrokenPillar: return 6;
+                    case DecoKind.TreeRound: case DecoKind.Spruce: case DecoKind.DeadTree: case DecoKind.Mangrove: return 5;
+                    case DecoKind.Stump: case DecoKind.StumpSpruce: case DecoKind.StumpDead: case DecoKind.RottenLog: return 4;
+                    default: return 3;
+                }
+            }
+        }
+
         public void OnClick()
         {
-            if (!removing && art != null && (art.removable || art.landmark))
+            if (removing || art == null)
+                return;
+            if (art.landmark)
+            {
                 GameEvents.RequestContext(this);
+                return;
+            }
+            if (!art.removable)
+                return;
+            var game = GameLoop.Instance;
+            if (game != null && game.Essence.Amount < art.essenceCost)
+            {
+                GameEvents.RaiseToast("ui.deco.need", art.essenceCost);
+                return;
+            }
+            var top = sr != null ? new Vector3(transform.position.x, sr.bounds.max.y, 0f) : transform.position + Vector3.up;
+            int hits = ChopProgress.For(gameObject).Hit(HitsNeeded, top);
+            StopShake();
+            if (hits >= HitsNeeded)
+            {
+                ChopProgress.For(gameObject).Clear();
+                island.TryRemove(this);
+                return;
+            }
+            home = transform.position;
+            shake = StartCoroutine(HitShake());
+        }
+
+        void StopShake()
+        {
+            if (shake == null)
+                return;
+            StopCoroutine(shake);
+            shake = null;
+            transform.position = home;
+        }
+
+        /// <summary>Jedno uderzenie: drgnięcie o piksel, kilka odprysków (drzazgi, okruchy, liście), stuk.</summary>
+        IEnumerator HitShake()
+        {
+            var fx = PixelParticles.Instance;
+            int order = sr != null ? sr.sortingOrder : 0;
+            if (fx != null && art.chips != null && art.chips.Length > 0)
+                fx.Burst(transform.position + new Vector3(0f, 6f / Ppu, 0f), art.chips, 2, 30f, 140f, 0.45f, order + 2);
+            GameEvents.PlaySound("chop", 0.6f);
+            for (int i = 0; i < 3 && !removing; i++)
+            {
+                transform.position = home + new Vector3((i % 2 == 0 ? 1f : -1f) / Ppu, 0f, 0f);
+                yield return new WaitForSecondsRealtime(0.04f);
+            }
+            transform.position = home;
+            shake = null;
         }
 
         public void FillContext(ContextInfo info)

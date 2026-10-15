@@ -92,7 +92,7 @@ ui.deco.cost,Koszt: {0} Żaru,Cost: {0} Ember,Kosten: {0} Glut,コスト：熾�
 ui.deco.reward.wood,Nagroda: drewno x{0},Reward: wood x{0},Belohnung: Holz x{0},報酬：木材 x{0},奖励：木材 x{0},
 ui.deco.reward.stone,Nagroda: kamień x{0},Reward: stone x{0},Belohnung: Stein x{0},報酬：石材 x{0},奖励：石料 x{0},
 ui.deco.need,Potrzeba {0} Żaru,You need {0} Ember,Benötigt: {0} Glut,熾火が{0}必要,需要{0}余火,toast
-ui.deco.hint,LPM: usuń...,Left click: remove...,Linksklick: entfernen ...,左クリック：撤去…,左键：移除……,
+ui.deco.hint,"Kliknij szybko kilka razy, aby usunąć",Click quickly a few times to clear,Mehrmals schnell klicken zum Entfernen,素早く数回クリックで撤去,快速点击几次即可清除,seria kliknięć (przerwa kasuje postęp)
 ui.object.hint,LPM: opcje,Left click: options,Linksklick: Optionen,左クリック：オプション,左键：选项,
 ui.crate.sell,Sprzedaj,Sell,Verkaufen,売る,出售,
 ui.lamp.info,Zasięg {0:0.0} - {1:0.0} Żaru/h,Range {0:0.0} - {1:0.0} Ember/h,Reichweite {0:0.0} - {1:0.0} Glut/h,範囲 {0:0.0} - 熾火 {1:0.0}/時,范围 {0:0.0} - 余火 {1:0.0}/小时,zasięg w kafelkach
@@ -415,3 +415,4 @@ ui.crystal.desc,"Oddaje 1 Żar co {0} min, także nocą i gdy nie pracujesz. Sł
 ui.kiln.fuel,W palenisku: {0}/{1} drewna,In the firebox: {0}/{1} wood,In der Feuerung: {0}/{1} Holz,火床：木材{0}/{1},炉膛：{0}/{1}木材,polana wrzucone przez ogniki
 ui.kiln.waiting,"Czeka, aż ognik przyniesie drewno.",Waiting for a wisp to bring wood.,"Wartet, bis ein Irrlicht Holz bringt.",鬼火が木材を運んでくるのを待っている。,等待鬼火送来木材。,
 ui.bestiary.seen.count,{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{1} = ile razy widziane
+ui.tree.hint,Klik: zbierz owoce; kilka szybkich: zetnij; PPM: szczegóły,Click: pick fruit; several quick clicks: chop; RMB: details,Klick: Obst pflücken; mehrmals schnell: fällen; RMT: Details,クリック：収穫、素早く数回：伐採、右クリック：詳細,点击：摘果，快速多次：砍伐，右键：详情,dymek nad drzewem owocowym
