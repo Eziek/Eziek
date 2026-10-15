@@ -9,6 +9,9 @@ namespace Wyspa.Input
     {
         [SerializeField] Camera targetCamera;
 
+        /// <summary>Każde kliknięcie w świat: punkt i trafiony collider (null = nic, np. woda). Dla efektów (Visual/CursorPlay).</summary>
+        public static event System.Action<Vector2, Collider2D> Clicked;
+
         void Update()
         {
             if (!PointerPressed(out Vector2 screenPos))
@@ -28,6 +31,7 @@ namespace Wyspa.Input
             var hit = Pick(world);
             if (hit != null && hit.TryGetComponent(out IClickable clickable))
                 clickable.OnClick();
+            Clicked?.Invoke(world, hit);
         }
 
         /// <summary>Collider pod punktem: zwykłe obiekty mają pierwszeństwo przed obszarami o niskim priorytecie (łowisko).</summary>

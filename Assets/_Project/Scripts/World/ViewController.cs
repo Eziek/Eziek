@@ -86,6 +86,8 @@ namespace Wyspa.World
         public int PixelRatio => Mathf.Max(1, Mathf.Min(Screen.width / Mathf.Max(1, view.x), Screen.height / Mathf.Max(1, view.y)));
         /// <summary>Ostatnie puszczenie PPM było przeciąganiem kamery (nie kliknięciem).</summary>
         public bool LastRightWasDrag { get; private set; }
+        /// <summary>Gracz właśnie przesuwa widok prawym przyciskiem (kursor przeciągania).</summary>
+        public bool Dragging => dragging && dragDistance > 4f && CanPan();
 
         public void Setup(PixelPerfectCamera ppc) => pixelCamera = ppc;
 

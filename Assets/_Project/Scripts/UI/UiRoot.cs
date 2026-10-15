@@ -72,6 +72,10 @@ namespace Wyspa.UI
         // W Start, bo GameLoop.Instance ustawia się w Awake innego obiektu (kolejność Awake nie jest pewna).
         void Start()
         {
+            if (GetComponent<Visual.GameCursor>() == null)
+                gameObject.AddComponent<Visual.GameCursor>();   // własny kursor (pikselowa strzałka z żarem)
+            if (GetComponent<Visual.CursorPlay>() == null)
+                gameObject.AddComponent<Visual.CursorPlay>();   // kręgi na wodzie, liście, ćmy, rośliny odginane kursorem
             ApplySavedOptions();
             if (PlayerPrefs.GetInt("hintRing", 0) == 0 && !Save.SaveSystem.InMenu)
                 StartCoroutine(RingHint());

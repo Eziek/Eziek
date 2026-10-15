@@ -36,6 +36,18 @@ namespace Wyspa.Visual
             public bool leaving, scared;
         }
 
+        public static AmbientBirds Instance { get; private set; }
+        void Awake() => Instance = this;
+        void OnDestroy() { if (Instance == this) Instance = null; }
+
+        /// <summary>Klik w drzewo: siedzące w pobliżu ptaki zrywają się do lotu.</summary>
+        public void ScareNear(Vector2 world, float radius)
+        {
+            foreach (var b in birds)
+                if (!b.leaving && b.sr != null && ((Vector2)b.sr.transform.position - world).sqrMagnitude < radius * radius)
+                    b.scared = true;
+        }
+
         readonly List<Kind> kinds = new List<Kind>();
         GameClock clock;
         float spawnTimer = 20f;

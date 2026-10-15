@@ -155,6 +155,39 @@ namespace Wyspa.Visual
         public bool IsGlowing(int i) => i >= 0 && i < fish.Count && fish[i].glow;
         public Vector2 FishPosition(int i) => FishCenter(i);
 
+        float[] dash;   // ryby spłoszone kliknięciem: pozostały zryw (radiany fazy)
+
+        /// <summary>Klik w wodę: ryby w promieniu dają nura - przez chwilę płyną kilka razy szybciej po swojej ścieżce.</summary>
+        public void Scare(Vector2 world, float radius)
+        {
+            if (dash == null || dash.Length != fish.Count)
+                dash = new float[fish.Count];
+            for (int i = 0; i < fish.Count; i++)
+                if (Vector2.Distance(FishCenter(i), world) <= radius)
+                    dash[i] = 1.6f;
+        }
+
+        void UpdateDash()
+        {
+            if (dash == null || dash.Length != fish.Count)
+                return;
+            bool any = false;
+            float dt = Time.unscaledDeltaTime;
+            for (int i = 0; i < dash.Length; i++)
+            {
+                if (dash[i] <= 0f)
+                    continue;
+                float step = Mathf.Min(dash[i], dt * 3.2f);
+                dash[i] -= step;
+                var f = fish[i];
+                f.phase += step;
+                fish[i] = f;
+                any = true;
+            }
+            if (any)
+                PushFish();
+        }
+
         /// <summary>Złowiona ryba znika na chwilę (wraca po seconds).</summary>
         public void Hide(int i, float seconds)
         {
@@ -166,6 +199,7 @@ namespace Wyspa.Visual
 
         void Update()
         {
+            UpdateDash();
             if (anyHidden)
             {
                 float now = Time.timeSinceLevelLoad;

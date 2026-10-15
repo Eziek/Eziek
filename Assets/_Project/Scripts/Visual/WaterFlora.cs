@@ -27,6 +27,8 @@ namespace Wyspa.Visual
             public Transform t;
             public Vector2 home;            // piksele obrazu wyspy (y w dół)
             public float phase, period, rx, ry;
+            public Vector2 kick;            // odepchnięcie (klik w wodę), wygasa w KickSeconds
+            public float kickAt = -100f;
         }
 
         readonly List<Item> items = new List<Item>();
@@ -141,10 +143,44 @@ namespace Wyspa.Visual
             return it;
         }
 
+        const float KickSeconds = 2.5f;
+
+        /// <summary>Klik w wodę: ozdobniki w promieniu odpływają od miejsca kliknięcia i wolno wracają.</summary>
+        public static void Nudge(Vector2 world, float radius)
+        {
+            foreach (var f in All)
+                f.NudgeHere(world, radius);
+        }
+
+        static readonly List<WaterFlora> All = new List<WaterFlora>();
+        void Awake() => All.Add(this);
+        void OnDestroy() => All.Remove(this);
+
+        void NudgeHere(Vector2 world, float radius)
+        {
+            var c = Island.WorldToPixel(world);
+            float r = radius * Ppu;
+            foreach (var it in items)
+            {
+                if (it.t == null)
+                    continue;
+                var p = Island.WorldToPixel(it.t.position);
+                var d = p - c;
+                float dist = d.magnitude;
+                if (dist > r)
+                    continue;
+                it.kick = (dist > 0.01f ? d / dist : Vector2.right) * 7f * (1f - dist / r);
+                it.kickAt = Time.unscaledTime;
+            }
+        }
+
         static void Place(Item it, float time)
         {
             float a = time * Mathf.PI * 2f / it.period + it.phase;
             var px = it.home + new Vector2(Mathf.Sin(a) * it.rx, Mathf.Sin(a * 0.7f + it.phase) * it.ry);
+            float k = (time - it.kickAt) / KickSeconds;
+            if (k >= 0f && k < 1f)
+                px += it.kick * Mathf.Sin(Mathf.Min(1f, k * 4f) * Mathf.PI * 0.5f) * (1f - k);   // szybko odpływa, wolno wraca
             // przyciągnięte do siatki wody (32 px na kafelek): ruch po pół piksela grafiki, bez rozmycia
             var w = Island.PixelToWorld(px.x, px.y);
             it.t.position = new Vector3(Mathf.Round(w.x * 32f) / 32f, Mathf.Round(w.y * 32f) / 32f, 0f);

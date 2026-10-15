@@ -25,6 +25,21 @@ float WyspaGust(float x)
     return _WyspaWindPower * 2.0 * exp(-1.6 * u) * sin(3.0 * u);
 }
 
+// Kursor (globalnie, ustawia Visual/CursorPlay): xy = pozycja w pikselach świata, z = siła 0..1 (rośnie, gdy kursor się
+// rusza, i powoli gaśnie). Roślina, przez którą przechodzi kursor, odgina się od niego (do 2.5 px u czubka).
+float4 _WyspaCursor;
+
+float WyspaCursorPush()
+{
+    if (_WyspaCursor.z <= 0.0)
+        return 0;
+    float dx = _SwayX - _WyspaCursor.x;
+    float dy = _WyspaCursor.y - _SwayY;
+    if (abs(dx) > 12.0 || dy < -4.0 || dy > 36.0)
+        return 0;
+    return sign(dx) * _WyspaCursor.z * 2.5 * (1.0 - abs(dx) / 12.0);
+}
+
 float2 WyspaSwayUV(float2 uv)
 {
     float h = floor(uv.y * _MainTex_TexelSize.w) * _MainTex_TexelSize.y;   // 0 = dolny wiersz tekstury
@@ -33,7 +48,7 @@ float2 WyspaSwayUV(float2 uv)
     float s = sin(6.2831853 * _SwaySpeed * t + _SwayPhase);
     float g = WyspaGust(_SwayX);
     float flutter = abs(g) * 0.4 * sin(t * 11.0 + _SwayPhase * 3.0);   // drżenie liści, póki wieje
-    float shift = round(_SwayAmount * (s * (1.0 + 0.5 * abs(g)) + 2.2 * g + flutter) * bend);
+    float shift = round(_SwayAmount * (s * (1.0 + 0.5 * abs(g)) + 2.2 * g + flutter) * bend - WyspaCursorPush() * bend);
     uv.x -= shift * _MainTex_TexelSize.x;
     return uv;
 }
