@@ -20,14 +20,13 @@ namespace Wyspa.World
         public Sprite[] toolGlow;
     }
 
-    /// <summary>Wyspa fabularna (§13.11): szczątki (warianty) i budowla po odbudowie (Story/ruin_*, story_*).</summary>
+    /// <summary>Monument wyspy fabularnej (§13.11): fazy 0 (ruina) - 4 (gotowy) i świecące okna gotowego (Story/monument_*).</summary>
     [Serializable]
     public class StoryArt
     {
         public string id;
-        public Sprite[] ruins;
-        public Sprite building;
-        public Sprite buildingGlow;
+        public Sprite[] phases;
+        public Sprite doneGlow;
     }
 
     [Serializable]
@@ -110,9 +109,8 @@ namespace Wyspa.World
         [Tooltip("Piksele emisyjne (ten sam indeks), puste gdy ozdobnik nie świeci.")]
         public Sprite[] waterFloraGlow;
 
-        [Header("Wyspy fabularne: szczątki, rusztowanie odbudowanej części, budowle (tools/pixel-proto/story_ruins.py)")]
+        [Header("Wyspy fabularne: monumenty w fazach odbudowy (tools/pixel-proto/monuments.py)")]
         public List<StoryArt> story = new List<StoryArt>();
-        public Sprite storyScaffold;
 
         public StoryArt Story(string id)
         {

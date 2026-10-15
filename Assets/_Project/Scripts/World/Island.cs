@@ -34,7 +34,6 @@ namespace Wyspa.World
         public string brew;                        // v10: kocioł - przepis w kotle
         public float brewLeft;                     // v10: sekundy do końca warzenia
         public bool brewReady;                     // v10: mikstura gotowa do wypicia
-        public float storyTimer;                   // v17: budowla fabularna - sekundy pracy do następnego daru
     }
 
     [Serializable]
@@ -53,8 +52,7 @@ namespace Wyspa.World
         public int pierDir;   // +1 deski w prawo, -1 w lewo (0 w starszych zapisach = z lądu)
         public bool nets;
         public bool boat;
-        public List<int> isletsJoined = new List<int>();        // v17: przyłączone wysepki fabularne (§13.11)
-        public List<TilePos> ruinsFixed = new List<TilePos>();   // v17: odbudowane części szczątków
+        public List<MonumentSave> monuments = new List<MonumentSave>();   // v18: monumenty wysp fabularnych (§13.11)
     }
 
     /// <summary>
@@ -267,7 +265,7 @@ namespace Wyspa.World
         }
 
         public bool IsFree(TilePos p) => map.Owns(p) && map.KindAt(p) == TileKind.Grass
-                                         && !decorations.ContainsKey(p) && !occupied.ContainsKey(p) && !ruins.ContainsKey(p);
+                                         && !decorations.ContainsKey(p) && !occupied.ContainsKey(p) && !monumentTiles.Contains(p);
 
         public List<TilePos> FreeTiles()
         {
@@ -317,7 +315,7 @@ namespace Wyspa.World
             Rebuild();
             SyncPlots();
             RefreshIslets(false);
-            RestoreRuins(save);
+            RestoreMonuments(save);
             if (save.zonesFound != null)
                 foreach (var z in save.zonesFound)
                     zonesFound.Add((ZoneKind)z);
@@ -355,12 +353,6 @@ namespace Wyspa.World
                     SpawnBoard(tile, o.id);
                 else if (o.building == TreeBuilding && IsFree(tile))
                     SpawnTree(Farming.TreeSpecies.Find(o.tree), tile, o.id, o.growth, o.fruit, o.fallen);
-                else if (o.building != null && o.building.StartsWith(StoryPrefix, StringComparison.Ordinal) && IsFree(tile))
-                {
-                    var site = StorySites.Find(o.building.Substring(StoryPrefix.Length));
-                    if (site != null)
-                        SpawnStoryBuilding(site, tile, o.id, o.storyTimer);
-                }
                 else if (o.building == Automation.AutomationSystem.Wisp && IsFree(tile))
                 {
                     // zapis sprzed roju: ognik-ogrodnik stał na własnym kafelku - teraz gniazdo z tym ognikiem
@@ -390,7 +382,6 @@ namespace Wyspa.World
                     }
                 }
             }
-            EnsureStoryBuildings();
             // duszki ze starych zapisów: do skrzyni bez duszka, a gdy takiej nie ma - skrzynia na ich dawnym kafelku
             foreach (var (tile, id) in legacyMerchants)
             {
@@ -418,8 +409,9 @@ namespace Wyspa.World
             s.boat = boat != null;
             foreach (var z in zonesFound)
                 s.zonesFound.Add((int)z);
-            s.isletsJoined.AddRange(isletsJoined);
-            s.ruinsFixed.AddRange(ruinsFixed);
+            foreach (var m in monuments.Values)
+                if (m != null)
+                    s.monuments.Add(m.Snapshot());
             if (boat != null)
                 s.expedition = boat.Snapshot();
             foreach (var kv in map.Tiles)
@@ -459,8 +451,6 @@ namespace Wyspa.World
                     os.brewLeft = cauldron.Left;
                     os.brewReady = cauldron.Ready;
                 }
-                if (o.TryGetComponent(out StoryBuilding story))
-                    os.storyTimer = story.Timer;
                 if (o.TryGetComponent(out Farming.FruitTree tree) && tree.Species != null)
                 {
                     os.tree = tree.Species.id;
@@ -497,11 +487,10 @@ namespace Wyspa.World
             critters.Clear();
             foreach (int i in new List<int>(isletViews.Keys))
                 DestroyIsletView(i);
-            foreach (var r in ruins.Values)
-                if (r != null) { r.gameObject.SetActive(false); Destroy(r.gameObject); }
-            ruins.Clear();
-            isletsJoined.Clear();
-            ruinsFixed.Clear();
+            foreach (var m in monuments.Values)
+                if (m != null) { m.gameObject.SetActive(false); Destroy(m.gameObject); }
+            monuments.Clear();
+            monumentTiles.Clear();
             lampCounter = 0;
             claiming = false;
             StopAllCoroutines();
@@ -825,7 +814,7 @@ namespace Wyspa.World
         }
 
         /// <summary>Czy obiekt można rozebrać (kupiony w grze, nie ze sceny). Drzewa się ścina, nie rozbiera.</summary>
-        public bool CanDismantle(TileObject obj) => obj != null && spawned.Contains(obj) && obj.NeedsTile && obj.BuildingId != TreeBuilding && !obj.Fixed;
+        public bool CanDismantle(TileObject obj) => obj != null && spawned.Contains(obj) && obj.NeedsTile && obj.BuildingId != TreeBuilding;
 
         // ================================================================ drzewa owocowe (GDD §15.1)
 
@@ -1076,11 +1065,19 @@ namespace Wyspa.World
         List<GameObject> CreateIsletView(int i)
         {
             var list = new List<GameObject>();
+            if (map.Plan.monuments.TryGetValue(i, out var origin))
+            {
+                // wysepka fabularna: ruina monumentu jako jeden obiekt (tylko widok)
+                var sa = art != null ? art.Story(StoryOf(i).id) : null;
+                var ruin = NewSprite("IsletMonument", decoRoot, MonumentAnchor(origin, out int order), order);
+                ruin.sprite = sa != null && sa.phases != null && sa.phases.Length > 0 ? sa.phases[0] : null;
+                list.Add(ruin.gameObject);
+            }
             foreach (var p in map.IsletTiles(i))
             {
-                var ruin = NewSprite("IsletRuin", decoRoot, TileAnchor(p, 13, out int order), order);
-                ruin.sprite = RuinSprite(StoryOf(i), p);
-                list.Add(ruin.gameObject);
+                var deco = map.Plan.monuments.ContainsKey(i) ? null : IsletDeco(p);
+                if (deco.HasValue)
+                    list.Add(DecoSprite(p, deco.Value, out _).gameObject);
                 var spot = new GameObject("Islet_" + p);
                 spot.transform.SetParent(decoRoot, false);
                 spot.transform.position = TileCenter(p);
@@ -1091,9 +1088,15 @@ namespace Wyspa.World
             return list;
         }
 
+        const float IsletDecoChance = 0.6f;
+
+        /// <summary>Ozdoba kafelka zwykłej wysepki (stała dla miejsca): ta sama przed przyłączeniem i po nim.</summary>
+        DecoKind? IsletDeco(TilePos p) =>
+            WHash.Value(p.c, p.r, map.Seed + 916) < IsletDecoChance ? NewTileDeco(p) : (DecoKind?)null;
+
         /// <summary>
-        /// Po dojściu kafelka: przyłączone wysepki (merged = ich kafelki, już własne) dostają szczątki do odbudowy
-        /// i wydają znaleziska, a wysepki, do których ląd się zbliżył, wyłaniają się z mgły.
+        /// Po dojściu kafelka: przyłączone wysepki (merged = ich kafelki, już własne) dostają dekoracje albo monument
+        /// do odbudowy i wydają znaleziska, a wysepki, do których ląd się zbliżył, wyłaniają się z mgły.
         /// </summary>
         void AfterGrowth(List<TilePos> merged, Wallet wallet)
         {
@@ -1101,16 +1104,19 @@ namespace Wyspa.World
             if (merged == null || merged.Count == 0 || map.Plan == null)
                 return;
             for (int i = 0; i < map.Plan.islets.Count; i++)
-                foreach (var q in map.IsletTiles(i))
-                    if (merged.Contains(q))
-                    {
-                        if (isletsJoined.Add(i))
-                        {
-                            SpawnRuins(i);
-                            GameEvents.RaiseToast("toast.islet.ruins", Localization.Loc.Get(StoryOf(i).NameKey));
-                        }
-                        break;
-                    }
+            {
+                if (!merged.Contains(map.IsletTiles(i)[0]))
+                    continue;
+                if (map.Plan.monuments.ContainsKey(i))
+                {
+                    if (!monuments.ContainsKey(i) && SpawnMonument(i, null) != null)
+                        GameEvents.RaiseToast("toast.islet.ruins", Localization.Loc.Get(StoryOf(i).NameKey));
+                }
+                else
+                    foreach (var q in map.IsletTiles(i))
+                        if (IsletDeco(q) is DecoKind deco && IsFree(q))
+                            AddDecoration(q, deco);
+            }
             foreach (var q in merged)
                 IslandFx.TileClaimed(TileCenter(q), art != null ? art.foam : null);
             if (wallet != null)
@@ -1123,179 +1129,61 @@ namespace Wyspa.World
 
         // ================================================================ wyspy fabularne (§13.11)
 
-        public const string StoryPrefix = "story_";
-        readonly HashSet<int> isletsJoined = new HashSet<int>();
-        readonly HashSet<TilePos> ruinsFixed = new HashSet<TilePos>();
-        readonly Dictionary<TilePos, RuinPiece> ruins = new Dictionary<TilePos, RuinPiece>();
+        readonly Dictionary<int, Monument> monuments = new Dictionary<int, Monument>();
+        readonly HashSet<TilePos> monumentTiles = new HashSet<TilePos>();
 
         /// <summary>Historia wysepki (stała dla ziarna świata).</summary>
         public StorySite StoryOf(int islet) => StorySites.ForIslet(map.Seed, islet);
 
-        public int RuinsFixedOn(int islet)
-        {
-            int n = 0;
-            foreach (var p in map.IsletTiles(islet))
-                if (ruinsFixed.Contains(p)) n++;
-            return n;
-        }
+        /// <summary>Wysepka ma monument (wysepka fabularna).</summary>
+        public bool IsMonumentIslet(int islet) => map.Plan != null && map.Plan.monuments.ContainsKey(islet);
 
-        bool StoryDone(int islet) => RuinsFixedOn(islet) >= map.IsletTiles(islet).Count;
+        public void NotifyChanged() => Changed?.Invoke();
 
-        Sprite RuinSprite(StorySite site, TilePos p)
+        /// <summary>Podstawa monumentu: środek prostokąta 3x2 w poziomie, dolny rząd prostokąta.</summary>
+        static Vector3 MonumentAnchor(TilePos origin, out int order) =>
+            TileAnchor(new TilePos(origin.c + WorldGenerator.MonumentW / 2, origin.r + WorldGenerator.MonumentH - 1), 13, out order);
+
+        /// <summary>Monument na przyłączonej wysepce: jeden obiekt na prostokącie 3x2 (te kafelki nie są wolne).</summary>
+        Monument SpawnMonument(int islet, MonumentSave state)
         {
+            if (map.Plan == null || !map.Plan.monuments.TryGetValue(islet, out var origin) || monuments.ContainsKey(islet))
+                return null;
+            var site = StoryOf(islet);
             var sa = art != null ? art.Story(site.id) : null;
-            if (sa == null || sa.ruins == null || sa.ruins.Length == 0)
-                return null;
-            return sa.ruins[(int)(WHash.Hash(p.c, p.r, map.Seed + 917) % (uint)sa.ruins.Length)];
+            var body = NewSprite("Monument_" + site.id, decoRoot, MonumentAnchor(origin, out int order), order);
+            var glow = NewSprite("Glow", body.transform, body.transform.position, order + 1);
+            if (art != null && art.glow != null)
+                glow.sharedMaterial = art.glow;
+            var col = body.gameObject.AddComponent<BoxCollider2D>();
+            col.size = new Vector2(WorldGenerator.MonumentW, 3.6f);
+            col.offset = new Vector2(0f, 1.6f);
+            var m = body.gameObject.AddComponent<Monument>();
+            m.Init(this, sa, body, glow, site, islet, origin, state);
+            monuments[islet] = m;
+            for (int r = 0; r < WorldGenerator.MonumentH; r++)
+                for (int c = 0; c < WorldGenerator.MonumentW; c++)
+                    monumentTiles.Add(new TilePos(origin.c + c, origin.r + r));
+            Changed?.Invoke();
+            return m;
         }
 
-        /// <summary>Szczątki na każdym kafelku przyłączonej wysepki (odbudowane części jako rusztowanie).</summary>
-        void SpawnRuins(int islet)
+        void RestoreMonuments(IslandSave save)
         {
-            var site = StoryOf(islet);
-            foreach (var p in map.IsletTiles(islet))
-            {
-                if (ruins.ContainsKey(p) || !map.Owns(p))
-                    continue;
-                bool done = ruinsFixed.Contains(p);
-                var sr = NewSprite("Ruin_" + site.id, decoRoot, TileAnchor(p, 13, out int order), order);
-                sr.sprite = done && art != null && art.storyScaffold != null ? art.storyScaffold : RuinSprite(site, p);
-                AddTileCollider(sr.gameObject);
-                var piece = sr.gameObject.AddComponent<RuinPiece>();
-                piece.Init(this, islet, p, done, sr);
-                ruins[p] = piece;
-            }
-        }
-
-        void RestoreRuins(IslandSave save)
-        {
-            if (map.Plan == null)
+            if (map.Plan == null || save.monuments == null)
                 return;
-            if (save.isletsJoined != null)
-                foreach (int i in save.isletsJoined)
-                    if (i >= 0 && i < map.Plan.islets.Count && !map.IsletCut(i))
-                        isletsJoined.Add(i);
-            if (save.ruinsFixed != null)
-                ruinsFixed.UnionWith(save.ruinsFixed);
-            foreach (int i in isletsJoined)
-                if (!StoryDone(i))
-                    SpawnRuins(i);
+            foreach (var ms in save.monuments)
+                foreach (var kv in map.Plan.monuments)
+                    if (kv.Value.c == ms.c && kv.Value.r == ms.r && !map.IsletCut(kv.Key) && map.Owns(kv.Value))
+                        SpawnMonument(kv.Key, ms);
         }
 
-        /// <summary>Odbudowa części szczątków: drewno, kamień i monety; kolejny zapisek historii; po ostatniej stoi budowla.</summary>
-        public bool TryRepair(RuinPiece piece, Wallet wallet)
+        /// <summary>F1: każdy monument o etap dalej (rozpoczęty za darmo albo dokończony od razu).</summary>
+        public void DebugAdvanceMonuments()
         {
-            if (piece == null || piece.Fixed || wallet == null || !ruins.TryGetValue(piece.Tile, out var found) || found != piece)
-                return false;
-            var site = StoryOf(piece.Islet);
-            if (!wallet.TrySpend(site.RepairCost()))
-            {
-                GameEvents.RaiseToast("toast.ruin.need", site.wood, site.stone, site.coins);
-                return false;
-            }
-            ruinsFixed.Add(piece.Tile);
-            piece.SetFixed(art != null ? art.storyScaffold : null);
-            IslandFx.Planted(piece.transform.position, 0);
-            GameEvents.PlaySound("dig");
-            int done = RuinsFixedOn(piece.Islet), total = map.IsletTiles(piece.Islet).Count;
-            string lore = site.Lore(Mathf.Clamp(done, 1, StorySite.LoreLines));
-            Lore.Chronicle.Note("lore:" + lore);
-            GameEvents.RaiseToast("toast.ruin.fixed", Localization.Loc.Get(lore), done, total);
-            if (done >= total)
-                CompleteStory(piece.Islet);
-            Changed?.Invoke();
-            return true;
-        }
-
-        /// <summary>Wszystkie części odbudowane: szczątki znikają (kafelki wolne), na pierwszym kafelku staje budowla.</summary>
-        void CompleteStory(int islet)
-        {
-            var site = StoryOf(islet);
-            foreach (var p in map.IsletTiles(islet))
-            {
-                if (ruins.TryGetValue(p, out var r) && r != null)
-                {
-                    r.gameObject.SetActive(false);
-                    Destroy(r.gameObject);
-                }
-                ruins.Remove(p);
-                IslandFx.TileClaimed(TileCenter(p), art != null ? art.foam : null);
-            }
-            SpawnStoryBuilding(site, map.IsletTiles(islet)[0]);
-            foreach (var key in site.AllLore())
-                Lore.Chronicle.Note("lore:" + key);   // pozostałe zapiski (wysepka z 3 kafelkami) i zakończenie
-            GameEvents.RaiseToast("toast.story.built", Localization.Loc.Get(site.BuildingKey));
-            GameEvents.RaiseToast("toast.find.lore", Localization.Loc.Get(site.EndKey));
-            GameEvents.PlaySound("tile");
-            Lore.Chronicle.Count("story");
-        }
-
-        /// <summary>Zapis z odbudowaną wysepką, ale bez budowli (np. zajęty kafelek): stawia ją na pierwszym wolnym kafelku wysepki.</summary>
-        void EnsureStoryBuildings()
-        {
-            foreach (int i in isletsJoined)
-            {
-                if (!StoryDone(i))
-                    continue;
-                string kind = StoryPrefix + StoryOf(i).id;
-                if (CountBuilding(kind) > 0)
-                    continue;
-                foreach (var p in map.IsletTiles(i))
-                    if (IsFree(p) && SpawnStoryBuilding(StoryOf(i), p) != null)
-                        break;
-            }
-        }
-
-        /// <summary>Budowla fabularna na kafelku: sprite, świecące okna, produkcja (StoryBuilding), bez przenoszenia i rozbiórki.</summary>
-        public TileObject SpawnStoryBuilding(StorySite site, TilePos tile, string id = null, float timer = 0f)
-        {
-            if (site == null || art == null || !IsFree(tile))
-                return null;
-            var sa = art.Story(site.id);
-            var go = new GameObject("Story_" + site.id);
-            go.transform.SetParent(decoRoot, false);
-            var body = go.AddComponent<SpriteRenderer>();
-            body.sprite = sa != null ? sa.building : null;
-            if (sa != null && sa.buildingGlow != null)
-            {
-                var g = NewSprite("Glow", go.transform, Vector3.zero, 1);
-                g.transform.localPosition = Vector3.zero;
-                g.sprite = sa.buildingGlow;
-                if (art.glow != null)
-                    g.sharedMaterial = art.glow;
-            }
-            NightGlow.Add(go, new Vector2(0f, 1.4f), new Color(1f, 0.85f, 0.6f), 1.6f, 0.45f);
-            AddTileCollider(go);
-            go.AddComponent<StoryBuilding>().Setup(site, timer);
-            var obj = go.AddComponent<TileObject>();
-            string kind = StoryPrefix + site.id;
-            if (string.IsNullOrEmpty(id) || BuildingIdTaken(id))
-                id = NewBuildingId(kind);
-            obj.Setup(id, site.BuildingKey);
-            obj.BuildingId = kind;
-            obj.Wanted = true;
-            obj.Fixed = true;
-            spawned.Add(obj);
-            PutOnTile(obj, tile);
-            Changed?.Invoke();
-            return obj;
-        }
-
-        /// <summary>F1: odbudowuje za darmo wszystkie szczątki na przyłączonych wysepkach.</summary>
-        public void DebugRepairRuins()
-        {
-            foreach (var piece in new List<RuinPiece>(ruins.Values))
-                if (piece != null && !piece.Fixed)
-                {
-                    var game = GameLoop.Instance;
-                    if (game == null)
-                        return;
-                    var site = StoryOf(piece.Islet);
-                    game.Wallet.Add(CurrencyType.Wood, site.wood);
-                    game.Wallet.Add(CurrencyType.Stone, site.stone);
-                    game.Wallet.Add(site.coins);
-                    TryRepair(piece, game.Wallet);
-                }
+            foreach (var m in new List<Monument>(monuments.Values))
+                if (m != null)
+                    m.DebugAdvance();
         }
 
         /// <summary>Klikalny obszar = kafelek pod obiektem (podstawa stoi 6 px pod środkiem kafelka).</summary>

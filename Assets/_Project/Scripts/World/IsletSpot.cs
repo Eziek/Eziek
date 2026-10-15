@@ -31,7 +31,8 @@ namespace Wyspa.World
             info.title = Loc.Get("ui.islet.title");
             info.worldAnchor = transform.position + new Vector3(0f, 1f, 0f);
             info.lines.Add(Loc.Get("ui.islet.desc"));
-            info.lines.Add(Loc.Get("ui.islet.ruin", Loc.Get(island.StoryOf(index).NameKey)));
+            if (island.IsMonumentIslet(index))
+                info.lines.Add(Loc.Get("ui.islet.ruin", Loc.Get(island.StoryOf(index).NameKey)));
             info.lines.Add(Loc.Get("ui.islet.size", island.Map.IsletTiles(index).Count));
             info.lines.Add(Loc.Get("ui.islet.gap", island.Map.IsletGap(index)));
             var ui = UI.UiRoot.Instance;

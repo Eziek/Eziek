@@ -188,8 +188,8 @@ namespace Wyspa.Automation
                 WildRune.All[i].Tick(dt, game);
             for (int i = Storehouse.All.Count - 1; i >= 0; i--)
                 Storehouse.All[i].Tick(dt, game);
-            for (int i = World.StoryBuilding.All.Count - 1; i >= 0; i--)
-                World.StoryBuilding.All[i].Tick(dt, game);   // budowle wysp fabularnych
+            for (int i = World.Monument.All.Count - 1; i >= 0; i--)
+                World.Monument.All[i].Tick(dt, game);   // monumenty wysp fabularnych: budowa i dary
         }
     }
 }

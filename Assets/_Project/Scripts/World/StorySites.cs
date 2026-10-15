@@ -4,14 +4,14 @@ using Wyspa.Economy;
 namespace Wyspa.World
 {
     /// <summary>
-    /// Historia wysepki (§13.11): szczątki dawnej budowli Łańcucha Latarni. Każdą część (kafelek wysepki) odbudowuje się
-    /// za drewno, kamień i monety; po odbudowie wszystkich stoi budowla, która przy pracy gracza daje walutę.
+    /// Historia wysepki fabularnej (§13.11): monument dawnego Łańcucha Latarni. Odbudowa w 4 etapach (Monument), koszt
+    /// pierwszego etapu poniżej (kolejne drożeją); gotowy monument przy pracy gracza daje walutę.
     /// Klucze tekstów: story.&lt;id&gt;.ruin / .building / .desc, zapiski lore.story.&lt;id&gt;.1-4 i .end.
     /// </summary>
     public class StorySite
     {
         public string id;
-        public int wood, stone, coins;        // koszt odbudowy jednej części
+        public int wood, stone, coins;        // koszt pierwszego etapu odbudowy
         public CurrencyType product;
         public int amount;
         public float interval;                // sekundy pracy na jeden dar
@@ -23,13 +23,6 @@ namespace Wyspa.World
         public string DescKey => "story." + id + ".desc";
         public string Lore(int line) => "lore.story." + id + "." + line;
         public string EndKey => "lore.story." + id + ".end";
-
-        public List<CurrencyAmount> RepairCost() => new List<CurrencyAmount>
-        {
-            new CurrencyAmount(CurrencyType.Wood, wood),
-            new CurrencyAmount(CurrencyType.Stone, stone),
-            new CurrencyAmount(CurrencyType.Coins, coins),
-        };
 
         /// <summary>Wszystkie zapiski historii w kolejności czytania (strona Zapiski w bestiariuszu).</summary>
         public IEnumerable<string> AllLore()

@@ -2582,6 +2582,126 @@
       "y": 0.07143
     },
     {
+      "name": "monument_chapel_0",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_chapel_1",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_chapel_2",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_chapel_3",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_chapel_4",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_chapel_4_glow",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_observatory_0",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_observatory_1",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_observatory_2",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_observatory_3",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_observatory_4",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_observatory_4_glow",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_sawmill_0",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_sawmill_1",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_sawmill_2",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_sawmill_3",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_sawmill_4",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_sawmill_4_glow",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_watch_0",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_watch_1",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_watch_2",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_watch_3",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_watch_4",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
+      "name": "monument_watch_4_glow",
+      "x": 0.50962,
+      "y": 0.0
+    },
+    {
       "name": "moth_0",
       "x": 0.5,
       "y": 0.0
@@ -2640,46 +2760,6 @@
       "name": "rubble",
       "x": 0.52778,
       "y": 0.1
-    },
-    {
-      "name": "ruin_chapel_0",
-      "x": 0.52778,
-      "y": 0.0
-    },
-    {
-      "name": "ruin_chapel_1",
-      "x": 0.52778,
-      "y": 0.0
-    },
-    {
-      "name": "ruin_observatory_0",
-      "x": 0.52778,
-      "y": 0.0
-    },
-    {
-      "name": "ruin_observatory_1",
-      "x": 0.52778,
-      "y": 0.0
-    },
-    {
-      "name": "ruin_sawmill_0",
-      "x": 0.52778,
-      "y": 0.0
-    },
-    {
-      "name": "ruin_sawmill_1",
-      "x": 0.52778,
-      "y": 0.0
-    },
-    {
-      "name": "ruin_watch_0",
-      "x": 0.52778,
-      "y": 0.0
-    },
-    {
-      "name": "ruin_watch_1",
-      "x": 0.52778,
-      "y": 0.0
     },
     {
       "name": "ruined_arch",
@@ -2760,51 +2840,6 @@
       "name": "storehouse",
       "x": 0.53125,
       "y": 0.04545
-    },
-    {
-      "name": "story_chapel",
-      "x": 0.51667,
-      "y": 0.0
-    },
-    {
-      "name": "story_chapel_glow",
-      "x": 0.51667,
-      "y": 0.0
-    },
-    {
-      "name": "story_observatory",
-      "x": 0.51786,
-      "y": 0.0
-    },
-    {
-      "name": "story_observatory_glow",
-      "x": 0.51786,
-      "y": 0.0
-    },
-    {
-      "name": "story_sawmill",
-      "x": 0.51471,
-      "y": 0.0
-    },
-    {
-      "name": "story_sawmill_glow",
-      "x": 0.51471,
-      "y": 0.0
-    },
-    {
-      "name": "story_scaffold",
-      "x": 0.52778,
-      "y": 0.0
-    },
-    {
-      "name": "story_watch",
-      "x": 0.52083,
-      "y": 0.0
-    },
-    {
-      "name": "story_watch_glow",
-      "x": 0.52083,
-      "y": 0.0
     },
     {
       "name": "stump_dead",

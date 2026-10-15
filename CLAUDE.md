@@ -25,7 +25,7 @@ a lampy zasilane Żarem (energia z pracy; w kodzie `Essence`) oświetlają wysp�
   (dopisują do `pivots.json`). Po eksporcie zawsze `tools/pixel-proto/pad_sway.py` (margines na kołysanie, bez niego wiatr ucina liście),
   a po nim `export_unity_stages.py` (dodatkowe fazy roślin z gotowych PNG). Chowańce: `export_unity_familiars.py`, domki i budowle ogników: `export_unity_homes.py`.
   Drzewa: `export_unity_trees2.py` (nadpisuje starsze drzewa z `export_unity.py`, `export_unity_trees.py` i `export_unity_zones.py`, więc idzie po nich, przed `pad_sway.py`),
-  ozdobniki na wodzie: `export_unity_water.py`, wyspy fabularne (szczątki i budowle): `export_unity_story.py`.
+  ozdobniki na wodzie: `export_unity_water.py`, monumenty wysp fabularnych: `export_unity_story.py` (rysunki w `monuments.py`).
   Grafiki świata i teren są w **16 px**, tylko woda (shader) liczy obraz w 32 px, dlatego kamera ma PPU 32 i skala okna jest parzysta.
   `tools/art32/convert32.py` (przeróbka na 32 px) gracz odrzucił, nie uruchamiać. Docelowe assety rysuje się ręcznie.
 - Gracz woli mroczną, stonowaną estetykę (odrzucił „cukierkową”). Bez postaci, animacje tylko przez shadery i cząsteczki.

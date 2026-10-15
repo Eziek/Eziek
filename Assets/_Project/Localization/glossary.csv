@@ -154,8 +154,8 @@ term.note,Karteczka,Note,Zettel,張り紙,便条,zadanie przybite do tablicy og�
 term.save_slot,Zapis,Save,Spielstand,セーブ,存档,slot zapisu w menu głównym (3 sloty)
 menu.main,Menu główne,Main menu,Hauptmenü,メインメニュー,主菜单,pierścień akcji: powrót do menu (gra się zapisuje)
 menu.game,Menu,Menu,Menü,メニュー,菜单,"pierścień akcji: podmenu (opcje, zapis, menu główne, wyjście)"
-time.dawn,Świt,Dawn,Morgengrauen,夜明け,黎明,"pora dnia 06-08: rosną rośliny dnia i nocy"
-time.dusk,Zmierzch,Dusk,Dämmerung,黄昏,黄昏,"pora dnia 18-20: rosną rośliny dnia i nocy"
+time.dawn,Świt,Dawn,Morgengrauen,夜明け,黎明,pora dnia 06-08: rosną rośliny dnia i nocy
+time.dusk,Zmierzch,Dusk,Dämmerung,黄昏,黄昏,pora dnia 18-20: rosną rośliny dnia i nocy
 term.order,Zamówienie,Order,Auftrag,依頼,委托,karteczka z prośbą na tablicy ogłoszeń
 npc.herbalist,Zielarka z mgły,Fog Herbalist,Nebelkräuterin,霧の薬草師,雾中草药师,zamawiająca (bez postaci na ekranie)
 npc.gravedigger,Grabarz,Gravedigger,Totengräber,墓守,掘墓人,zamawiający
@@ -221,9 +221,9 @@ term.first_keeper,Pierwszy Opiekun,The First Keeper,Der Erste Hüter,最初の�
 term.keepers_light,Światło Opiekunów,The Keepers' Light,Das Licht der Hüter,守り人の光,守护人之光,"finał historii, stała nagroda"
 bld.storehouse,Skład,Storehouse,Lagerhaus,倉庫,仓库,sprzedaje nadwyżkę drewna i kamienia
 obj.islet,Wysepka,Islet,Inselchen,小島,小岛,odcięty skrawek lądu na wodzie; przyłącza się kupnem kafelka obok
-obj.ruins,Szczątki,Ruins,Trümmer,残骸,残骸,części dawnej budowli na wyspie fabularnej
 act.rebuild,Odbuduj,Rebuild,Wiederaufbauen,再建する,重建,szczątki na wysepce
 story.chapel.building,Kaplica Dzwonu,Bell Chapel,Glockenkapelle,鐘の礼拝堂,钟之礼拜堂,budowla wyspy fabularnej
 story.watch.building,Strażnica Łańcucha,Chain Watchtower,Wachturm der Kette,鎖の見張り塔,灯链哨塔,budowla wyspy fabularnej; Łańcuch = Łańcuch Latarni
 story.sawmill.building,Tartak rozbitków,Castaways' Sawmill,Sägewerk der Schiffbrüchigen,漂流者の製材所,漂流者锯木坊,budowla wyspy fabularnej
 story.observatory.building,Gwiezdne obserwatorium,Star Observatory,Sternwarte,星の天文台,星辰天文台,budowla wyspy fabularnej
+obj.monument,Monument,Monument,Monument,モニュメント,纪念建筑,"wielka budowla na wysepce fabularnej (3x2 kafelki), odbudowywana etapami"

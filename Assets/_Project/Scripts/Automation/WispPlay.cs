@@ -818,5 +818,45 @@ namespace Wyspa.Automation
                 if (who[i] == this || Still(who[i]))
                     who[i].transform.position = at[i];
         }
+
+        // ------------------------------------------------------------ budowa monumentu (§13.11)
+
+        /// <summary>Monument, przy którym ognik teraz buduje (null = nie buduje).</summary>
+        public World.Monument BuildSite { get; private set; }
+        /// <summary>Doleciał na rusztowanie i stuka (liczy się do tempa budowy).</summary>
+        public bool AtBuildSpot { get; private set; }
+
+        void LeaveBuild()
+        {
+            if (BuildSite != null)
+                BuildSite.Leave(this);
+            BuildSite = null;
+            AtBuildSpot = false;
+        }
+
+        /// <summary>
+        /// Budowa: lot na miejsce przy rusztowaniu, potem pół minuty stukania (krótki dołek co 0.8 s, wióry sypie monument),
+        /// dopóki etap trwa. Potem wraca do zwykłego krążenia; inny wolny ognik może go zmienić.
+        /// </summary>
+        IEnumerator BuildTrip(World.Monument site, Vector3 spot)
+        {
+            BuildSite = site;
+            AtBuildSpot = false;
+            yield return FlyTo(spot, 0.35f);
+            AtBuildSpot = true;
+            float stay = Random.Range(30f, 50f);
+            for (float t = 0f; t < stay && site != null && site.Building && BuildSite == site; t += Time.unscaledDeltaTime)
+            {
+                float k = (t + seed) % 0.8f / 0.8f;
+                float dip = k < 0.25f ? Mathf.Sin(k / 0.25f * Mathf.PI) * 2f / 16f : 0f;
+                transform.position = spot - new Vector3(0f, dip, 0f);
+                if (body != null) body.flipX = site.transform.position.x < spot.x;
+                yield return null;
+            }
+            transform.position = spot;
+            LeaveBuild();
+            AddXp(1);   // budowa uczy
+            yield return HoverFor(Random.Range(0.5f, 1f));
+        }
     }
 }

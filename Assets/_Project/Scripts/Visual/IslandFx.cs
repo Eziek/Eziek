@@ -243,9 +243,11 @@ namespace Wyspa.Visual
             leafTimer -= dt;
             if (leafTimer <= 0f)
             {
-                leafTimer = Random.Range(5f, 12f);
-                if (!night)
-                    DropLeaf();
+                // każde drzewo gubi liść średnio co ok. 8 s (nocą rzadziej), w podmuchu wiatru kilka razy częściej
+                int trees = CollectTrees();
+                float every = Random.Range(5f, 11f) / Mathf.Max(1, trees) * (night ? 2f : 1f) / (gusting ? 1f + 3f * gustPower : 1f);
+                leafTimer = Mathf.Max(0.25f, every);
+                DropLeaf();
             }
         }
 
@@ -455,24 +457,47 @@ namespace Wyspa.Visual
             }
         }
 
+        readonly System.Collections.Generic.List<SpriteRenderer> leafTrees = new System.Collections.Generic.List<SpriteRenderer>();
+
+        /// <summary>Drzewa, z których spadają liście: okrągłe drzewa i świerki (dekoracje) oraz podrośnięte drzewa owocowe.</summary>
+        int CollectTrees()
+        {
+            leafTrees.Clear();
+            if (Island.Instance != null)
+            {
+                foreach (var t in Island.Instance.Trees)
+                    if (t != null && t.TryGetComponent(out SpriteRenderer sr)) leafTrees.Add(sr);
+            }
+            else if (trees != null)
+                foreach (var t in trees)
+                    if (t != null && t.TryGetComponent(out SpriteRenderer sr)) leafTrees.Add(sr);
+            foreach (var f in Farming.FruitTree.All)
+                if (f != null && f.isActiveAndEnabled && f.Growth > 0f && f.TryGetComponent(out SpriteRenderer sr) && sr.sprite != null)
+                    leafTrees.Add(sr);
+            return leafTrees.Count;
+        }
+
+        /// <summary>
+        /// Liść odrywa się w losowym miejscu korony (górna część sprite'a drzewa), opada kołysząc się na boki i zostaje
+        /// chwilę pod drzewem. W podmuchu wiatru leci z prądem, dalej od drzewa.
+        /// </summary>
         void DropLeaf()
         {
-            var list = new System.Collections.Generic.List<Transform>();
-            if (Island.Instance != null)
-                list.AddRange(Island.Instance.Trees);
-            else if (trees != null)
-                list.AddRange(trees);
-            if (particles == null || leafFall == null || list.Count == 0)
+            if (particles == null || leafFall == null || leafTrees.Count == 0)
                 return;
-            var tree = list[Random.Range(0, list.Count)];
-            if (tree == null)
+            var sr = leafTrees[Random.Range(0, leafTrees.Count)];
+            if (sr == null || sr.sprite == null)
                 return;
-            float startUp = Random.Range(18, 29);
-            float landDown = Random.Range(0, 6);
-            var pos = tree.position + new Vector3(Random.Range(-8, 9) / Ppu, startUp / Ppu, 0f);
-            var sr = tree.GetComponent<SpriteRenderer>();
-            int order = sr != null ? sr.sortingOrder + 1 : 500;
-            particles.Spawn(pos, new[] { leafFall }, new Vector2(0f, -10f), 0f, 5f, order, false, 10f, true, startUp + landDown);
+            var b = sr.bounds;
+            // korona: środek szerokości (bez marginesu na kołysanie), od ok. 45% do 90% wysokości sprite'a
+            float x = Random.Range(b.min.x + b.size.x * 0.3f, b.max.x - b.size.x * 0.3f);
+            float y = Random.Range(b.min.y + b.size.y * 0.45f, b.min.y + b.size.y * 0.9f);
+            float ground = sr.transform.position.y;
+            float fall = Mathf.Max(2f, (y - ground) * Ppu + Random.Range(-2f, 5f));
+            var frames = leaves != null && leaves.Length > 0 && Random.value < 0.35f ? new[] { leaves[Random.Range(0, leaves.Length)] } : new[] { leafFall };
+            float wind = gusting ? Random.Range(5f, 11f) * gustPower : Random.Range(-2f, 2f);   // nie za daleko: liść ma wylądować na lądzie
+            particles.Spawn(new Vector3(Mathf.Round(x * Ppu) / Ppu, Mathf.Round(y * Ppu) / Ppu, 0f), frames,
+                            new Vector2(wind, -Random.Range(8f, 12f)), 0f, Random.Range(4.5f, 6.5f), sr.sortingOrder + 1, false, 10f, true, fall);
         }
     }
 }

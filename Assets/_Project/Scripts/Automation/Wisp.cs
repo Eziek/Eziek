@@ -227,6 +227,7 @@ namespace Wyspa.Automation
         public void OnNestMoved()
         {
             StopAllCoroutines();
+            LeaveBuild();
             idling = false;
             Release();
             LeaveChat();
@@ -405,6 +406,7 @@ namespace Wyspa.Automation
         public void RecallHome()
         {
             StopAllCoroutines();
+            LeaveBuild();
             idling = false;
             Release();
             LeaveChat();
@@ -618,6 +620,17 @@ namespace Wyspa.Automation
         /// <summary>Bez pracy: krąży wokół gniazda, zagląda do drzew i lamp albo odpoczywa nad pniem.</summary>
         IEnumerator Idle()
         {
+            // monument w budowie (§13.11): wolny, wypoczęty ognik leci pomagać (najwyżej 3 naraz)
+            if (!Save.SaveSystem.InMenu && mood >= Content)
+            {
+                var site = World.Monument.WantingBuilder(transform.position);
+                if (site != null && site.TryJoin(this, out var spot))
+                {
+                    idling = false;
+                    yield return BuildTrip(site, spot);
+                    yield break;
+                }
+            }
             idling = true;
             // zabawa z innymi wolnymi ognikami (berek, wyścig, podrzucanie, taniec, drzemka) - WispPlay.cs
             if (playCooldown <= 0f && !Save.SaveSystem.InMenu)

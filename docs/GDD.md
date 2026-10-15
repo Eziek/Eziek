@@ -440,9 +440,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   (wokół wyrastają drzewa i kamienie). Szczegóły w §11.3 E. Zapis v12 (stary ognik → gniazdo z ogrodnikiem).
 - [x] Drzewa, ozdobniki na wodzie i wysepki (prośba gracza, §9 p. 105): nowe grafiki drzew (`trees2.py`), pływające
   lilie, liście i rzęsa przy brzegu, odcięte wysepki 3-4 kafelków do przyłączenia (§13.10). Grafiki nadal placeholdery.
-- [x] Wyspy fabularne (prośba gracza, §9 p. 107, §13.11): każda wysepka ma historię i szczątki dawnej budowli Łańcucha
-  Latarni; po przyłączeniu każdą część odbudowuje się za dużo drewna, kamienia i monet, po odbudowie wszystkich staje
-  budowla dająca walutę przy pracy. Koszty i tempo produkcji wstępne, do balansu.
+- [x] Wyspy fabularne (prośba gracza, §9 p. 107-108, §13.11): 2 wysepki na świat z **monumentem na 3x2 kafelkach**
+  (jeden obiekt); odbudowa w 4 etapach, każdy opłacany surowcami i budowany ok. 10 min przez wolne ogniki, z widocznymi
+  fazami budowy; gotowy monument daje walutę przy pracy. Koszty i tempo wstępne, do balansu.
 
 ---
 
@@ -473,7 +473,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `homes.py` + `export_unity_homes.py` | domki chowańców, ognisko ogników (3 klatki), sennik → `Objects/`, podgląd `docs/img/domki.png` |
 | `trees2.py` + `export_unity_trees2.py` | drzewa od nowa: okrągłe, świerk, krzak, martwe, owocowe (fazy i przewracanie); nadpisuje starsze, po nim `pad_sway.py`; podgląd `docs/img/drzewa.png` |
 | `water_flora.py` + `export_unity_water.py` | ozdobniki na wodzie (lilie, liście, rzęsa, gałązka) → `Water/flora_<nazwa>.png`, podgląd `docs/img/woda_ozdobniki.png` |
-| `story_ruins.py` + `export_unity_story.py` | wyspy fabularne: szczątki (4 historie × 2), rusztowanie, budowle → `Story/`, podgląd `docs/img/wyspy_fabularne.png` |
+| `monuments.py` + `export_unity_story.py` | monumenty wysp fabularnych: 4 historie × 5 faz (ruina, 3 etapy budowy, gotowy) → `Story/monument_<id>_<faza>.png`, podgląd `docs/img/monumenty.png` |
 | `export_unity_stages.py` | dodatkowe fazy roślin z gotowych PNG: kiełek (`crop_<id>_shoot`) i niedojrzała (`crop_<id>_unripe`); po `pad_sway.py` |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
 
@@ -910,6 +910,15 @@ Obrazki referencyjne (kopie): `docs/img/`
     odciętej wysepce; po przyłączeniu każdy kafelek to część do odbudowy (panel: koszt, postęp, co da budowla), każda
     odbudowana część odsłania zapisek historii (toast, strona Zapiski w bestiariuszu) i stoi w rusztowaniu. Po ostatniej
     części szczątki znikają (kafelki wolne), a na pierwszym kafelku staje budowla z zakończeniem historii. Szczegóły §13.11.
+108. **Monumenty zamiast szczątków na kafelkach, spadające liście** (gracz: „wielkie monumenty na 6-7 kratkach jako jeden
+    obiekt”, „każda naprawa trwa np. 10 minut, lecą duszki, które nie pracują, i budują”, „są fazy budowania”; „drzewa
+    powinny mieć particle spadających liści”). Każdy świat ma 2 wysepki fabularne: prostokąt 3x2 pod monument (czasem
+    siódmy kafelek obok) i 1-2 zwykłe wysepki z drzewami i kamieniami. Monument (`World/Monument.cs`, grafika
+    `tools/pixel-proto/monuments.py`) ma 5 wyglądów: ruina, 3 etapy z rusztowaniem i rosnącym murem, gotowy. Etap
+    opłaca się surowcami (kolejne o 40% drożej), potem wolne i wypoczęte ogniki (najwyżej 3) lecą na rusztowanie i stukają,
+    sypią się wióry i odpryski; etap trwa ok. 10 min pracy gracza z jednym ognikiem, szybciej z dwoma-trzema. Bez żadnego
+    ognika na wyspie budowa idzie sama, o połowę wolniej. Ukończony etap odsłania zapisek, ostatni stawia gotową budowlę.
+    Liście: każde drzewo (także owocowe) gubi liść średnio co ok. 8 s, nocą rzadziej, w podmuchu wiatru częściej i z prądem.
 
 ---
 
@@ -1479,37 +1488,41 @@ Podgląd: `docs/img/wyspa_strefy.png` (wyspa z trzema strefami), `docs/img/arkus
 - **Odkrycie:** na starcie wysepki są schowane we mgle. Wyłaniają się (toast i piana), gdy własny ląd podejdzie na
   **4 kafelki** (także po skosie). Malarz wyspy rysuje je jak ląd (klif, kontur, piana), więc okno i kamera je obejmują.
 - **Odcięta wysepka nie należy do gracza:** nie da się na niej kopać, budować ani usuwać dekoracji; leżą na niej
-  szczątki jej historii (§13.11). Klik: panel z opisem, liczbą kafelków, odległością w kafelkach wody
+  ozdoby (drzewa, krzaki, kamienie) albo ruina monumentu (wysepka fabularna, §13.11). Klik: panel z opisem, liczbą kafelków, odległością w kafelkach wody
   i przyciskiem „Rozbudowa”.
 - **Przyłączenie:** zakup (albo darmowy kafelek pod budowlę) **tuż obok wysepki, także po skosie** przyłącza ją całą:
-  jej kafelki stają się własne **za darmo** (nie podnoszą ceny kolejnych), szczątki można odbudowywać (§13.11),
+  jej kafelki stają się własne **za darmo** (nie podnoszą ceny kolejnych), ozdoby stają się zwykłymi dekoracjami,
+  a monument można odbudowywać (§13.11),
   wypadają znaleziska spod kafelków, toast „Wysepka przyłączona”. W trybie rozbudowy taki kafelek ma „+”
   zamiast ceny i podpowiedź „Przyłączy wysepkę za darmo!”.
 - **Zapis:** stan wysepki (odcięta czy nie) wynika z kafelków (odcięta = żaden jej kafelek nie należy do gracza ani nie dotyka
   jego lądu). Przyłączona to zwykłe posiadane kafelki; w starszych zapisach wysepka, do której ląd już dorósł, się nie pojawia.
 
-### 13.11 Wyspy fabularne (prośba gracza, §9 p. 107)
-Kod: `World/StorySites.cs` (definicje), `RuinPiece.cs`, `StoryBuilding.cs`, `Island` (sekcja „wyspy fabularne”).
-Grafika: `tools/pixel-proto/story_ruins.py` + `export_unity_story.py`, podgląd `docs/img/wyspy_fabularne.png`.
-- **Historia wysepki** jest stała dla ziarna świata; wysepki jednego świata (najwyżej 4) mają różne historie.
-  Wszystkie to dawne miejsca Łańcucha Latarni (§11.3 H), zapiski dopowiadają, co się stało z ludźmi i skąd mgła.
+### 13.11 Wyspy fabularne: monumenty (prośba gracza, §9 p. 107-108)
+Kod: `World/StorySites.cs` (historie), `World/Monument.cs` (etapy, budowa, dary), budowanie ogników w `WispPlay.cs`
+(`BuildTrip`), `Island` (sekcja „wyspy fabularne”). Grafika: `tools/pixel-proto/monuments.py` + `export_unity_story.py`,
+podgląd `docs/img/monumenty.png`.
+- **2 wysepki fabularne na świat** (`WorldPlan.monuments`): prostokąt 3x2 kafelki pod monument, czasem z siódmym kafelkiem
+  obok (wolny po przyłączeniu), 7-11 kafelków od startu. Historia stała dla ziarna świata, obie różne. Pozostałe 1-2
+  wysepki są zwykłe (§13.10).
+- **Monument to jeden obiekt** na całym prostokącie (52x64 px), jego kafelków nie da się przekopać ani zabudować.
+  Przed przyłączeniem widać ruinę; po przyłączeniu klik otwiera panel.
+- **Odbudowa w 4 etapach.** Etap trzeba opłacić (tabela: koszt pierwszego, każdy kolejny +40%), potem budują go
+  **wolne ogniki**: wypoczęty ognik bez pracy (nastrój ≥ 60) leci na rusztowanie, stuka pół minuty, potem może go zmienić
+  inny; najwyżej 3 naraz. Etap trwa ok. **10 min pracy gracza** z jednym ognikiem (2 ogniki: x1.3, 3: x1.6); bez pracy
+  gracza budowa stoi, bez ognika na rusztowaniu też (wyjątek: na wyspie nie ma ani jednego ognika, wtedy idzie sama, x0.5).
+- **Fazy wyglądu:** 0 ruina (poszarpany kikut, gruz, mech), 1-3 mur rośnie od dołu (45/65/85% wysokości) w rusztowaniu
+  z żurawiem i stosem materiałów, 4 gotowy (świecące okna, poświata nocą). Każdy ukończony etap odsłania zapisek historii.
 
-| Szczątki | Budowla | Koszt jednej części | Daje (tylko w czasie pracy, z tempem pracy) |
+| Monument (ruina) | Gotowy | Koszt 1. etapu (kolejne +40%) | Daje (tylko w czasie pracy, z tempem pracy) |
 |---|---|---|---|
 | Zatopiona kaplica | Kaplica Dzwonu | 40 drewna, 20 kamienia, 200 monet | +2 plony nocy co 8 min |
 | Rozbita strażnica | Strażnica Łańcucha | 30 drewna, 40 kamienia, 250 monet | +80 monet co 5 min |
 | Szczątki tartaku | Tartak rozbitków | 20 drewna, 30 kamienia, 300 monet | +8 drewna co 4 min |
 | Zawalone obserwatorium | Gwiezdne obserwatorium | 60 drewna, 40 kamienia, 400 monet | +1 odłamek gwiazdy co 20 min |
 
-- **Przed przyłączeniem** szczątki leżą na każdym kafelku wysepki (tylko widok); panel wysepki mówi, czyje to szczątki.
-- **Po przyłączeniu** każdy kafelek to część do odbudowy: klik → panel z kosztem, postępem („Odbudowane części 1/4”)
-  i opisem budowli; „Odbuduj” zabiera surowce. Odbudowana część stoi w rusztowaniu, toast pokazuje kolejny zapisek.
-  Kafelków ze szczątkami nie da się przekopać ani zabudować.
-- **Po ostatniej części** szczątki znikają (kafelki wysepki są wolne), na pierwszym kafelku wysepki staje budowla,
-  odsłaniają się pozostałe zapiski i zakończenie historii. Budowli nie da się przenieść ani rozebrać. Panel budowli:
-  co daje, za ile minut pracy następny dar, zakończenie historii.
-- **Zapis v17:** `isletsJoined` (przyłączone wysepki), `ruinsFixed` (odbudowane części), `storyTimer` budowli. Wysepki
-  przyłączone przed v17 nie mają szczątków (ich ozdoby zostały zwykłymi dekoracjami).
+- **Zapis v18:** lista `monuments` (lewy górny kafelek, etap, czy trwa budowa, postęp, licznik daru). Pola v17
+  (szczątki na kafelkach) są pomijane.
 
 ---
 

@@ -423,17 +423,18 @@ Najpierw Wyspa → 2 (nowe grafiki drzew i ozdobników). F1: „Do wysepki”, �
 8. Zapis i wczytanie: przyłączona wysepka zostaje, odcięte wracają w tych samych miejscach. Stary zapis wczytuje się
    bez błędów (wysepki tuż przy lądzie po prostu się nie pojawiają).
 
-## 34. Wyspy fabularne (szczątki do odbudowy)
-Najpierw Wyspa → 2. F1: „Do wysepki”, „Odbuduj ruiny”, waluty (drewno, kamień, monety).
-1. Odcięta wysepka: na każdym kafelku szczątki jednej z 4 historii (kaplica, strażnica, tartak, obserwatorium).
-   Klik w wysepkę: w panelu „Na wysepce leżą szczątki: …”.
-2. Po przyłączeniu: toast „Na wysepce leżą szczątki: …”. Klik w szczątki: panel z nazwą, opisem budowli i tego, co
-   daje, „Odbudowane części: 0/N”, kosztem i „Odbuduj” (wyszarzone bez surowców). Kafelków ze szczątkami nie da się
-   przekopać w trybie rozbudowy ani zabudować.
-3. „Odbuduj”: surowce znikają, część stoi w rusztowaniu, toast „Odbudowano część 1/N” z zapiskiem; zapisek jest w
-   bestiariuszu (Zapiski). Bez surowców: toast z brakującymi ilościami.
-4. Ostatnia część: rusztowania znikają, na pierwszym kafelku wysepki staje budowla (świecące okna nocą), toast
-   „Odbudowano: …” i zakończenie historii; pozostałe kafelki wysepki są wolne. Budowla nie ma „Przenieś” ani „Rozbierz”.
-5. Panel budowli: co daje i „Następny dar za ok. X min pracy”. Przy pracy (wskaźnik aktywności) po czasie z tabeli
-   GDD §13.11 pojawia się dar (plony nocy, monety, drewno albo odłamek gwiazdy); bez pracy licznik stoi.
-6. Zapis i wczytanie w trakcie odbudowy (rusztowania zostają) i po niej (budowla stoi, licznik daru zachowany).
+## 34. Wyspy fabularne: monumenty, spadające liście
+Najpierw Wyspa → 2. F1: „Do wysepki”, „Monument: etap”, waluty (drewno, kamień, monety), „Ogniki wypoczęte”.
+1. Nowy świat: 2 wysepki z ruiną monumentu (jeden duży obiekt na 3x2 kafelkach) i 1-2 zwykłe z drzewami i kamieniami.
+   Klik w wysepkę z monumentem: „Na wysepce stoi zrujnowany monument: …”.
+2. Po przyłączeniu: toast o monumencie. Klik w monument: opis odbudowy, co da budowla, „Etap odbudowy: 0/4”, koszt,
+   „Odbuduj” (wyszarzone bez surowców). Kafelków pod monumentem nie da się przekopać ani zabudować.
+3. „Odbuduj”: surowce znikają, toast „Ogniki zaczynają budowę”. Wolne, wypoczęte ogniki (najwyżej 3) lecą do monumentu,
+   stukają przy rusztowaniu (dołek co chwilę), sypią się wióry i odpryski. Panel: „Budowa: X% (ogniki na rusztowaniu: n/3)”.
+4. Bez pracy gracza procent stoi. Z jednym ognikiem etap trwa ok. 10 min pracy, z trzema wyraźnie krócej.
+5. Koniec etapu: monument zmienia wygląd (mur wyżej, rusztowanie), kłęby pyłu, toast „Ukończono etap 1/4” z zapiskiem;
+   ogniki wracają do swoich zajęć. Następny etap droższy o 40%.
+6. Etap 4: gotowa budowla (świecące okna nocą), toast z nazwą i zakończeniem historii; panel: co daje i kiedy następny dar.
+7. Zapis i wczytanie w trakcie budowy (etap i procent zostają) i po niej (licznik daru zachowany).
+8. Liście: z każdego drzewa (także owocowych) co kilka sekund spada liść, kołysze się i chwilę leży pod drzewem; nocą
+   rzadziej; w podmuchu wiatru częściej i znoszone w bok.

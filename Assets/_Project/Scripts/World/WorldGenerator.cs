@@ -14,8 +14,10 @@ namespace Wyspa.World
         public readonly List<TilePos> startSoil = new List<TilePos>();
         public TilePos startDecoTile;
         public DecoKind startDeco;
-        /// <summary>Wysepki (§13.10): odcięte skrawki lądu po 3-4 kafelki. Nie należą do gracza, dopóki ich nie przyłączy.</summary>
+        /// <summary>Wysepki (§13.10): odcięte skrawki lądu. Nie należą do gracza, dopóki ich nie przyłączy.</summary>
         public readonly List<List<TilePos>> islets = new List<List<TilePos>>();
+        /// <summary>Wysepki fabularne (§13.11): indeks wysepki → lewy górny kafelek monumentu 3x2.</summary>
+        public readonly Dictionary<int, TilePos> monuments = new Dictionary<int, TilePos>();
 
         public ZoneKind ZoneAt(TilePos p) => zones.TryGetValue(p, out var z) ? z : ZoneKind.None;
         public FindKind FindAt(TilePos p) => finds.TryGetValue(p, out var f) ? f : FindKind.None;
@@ -122,31 +124,57 @@ namespace Wyspa.World
             return plan;
         }
 
+        public const int MonumentW = 3, MonumentH = 2;   // monument na wysepce fabularnej: prostokąt 3x2 kafelki
+
         /// <summary>
-        /// Wysepki (§13.10): 2-4 skrawki po 3-4 kafelki, 6-10 kafelków od środka startu, poza strefami, co najmniej 2 kafelki
-        /// wody między sobą. Na każdej leży co najmniej jedno znalezisko. Osobny generator liczb, więc dawne światy (zapisy)
-        /// mają te same strefy i znaleziska co przed dodaniem wysepek.
+        /// Wysepki (§13.10, §13.11): najpierw 2 wysepki fabularne z monumentem (prostokąt 3x2, czasem z jednym kafelkiem
+        /// obok: 6-7 kafelków), 7-11 kafelków od środka startu, potem 1-2 zwykłe po 3-4 kafelki, 6-10 kafelków od środka.
+        /// Poza strefami, co najmniej 2 kafelki wody między sobą, na każdej co najmniej jedno znalezisko.
+        /// Osobny generator liczb, więc strefy i znaleziska świata są te same co przed dodaniem wysepek.
         /// </summary>
         static void PlaceIslets(WorldPlan plan, int seed)
         {
             var rnd = new WRandom(seed * 53L + 19);
-            int count = rnd.Range(2, 5);
+            int small = rnd.Range(1, 3);
             var taken = new List<TilePos>();
-            for (int guard = 0; plan.islets.Count < count && guard < 300; guard++)
+            for (int guard = 0; plan.islets.Count < 2 + small && guard < 600; guard++)
             {
-                double a = rnd.Range(0.0, 2 * Math.PI), d = rnd.Range(6.5, 10.0);
+                bool monument = plan.monuments.Count < 2;
+                double a = rnd.Range(0.0, 2 * Math.PI), d = monument ? rnd.Range(7.5, 11.0) : rnd.Range(6.5, 10.0);
                 var first = new TilePos((int)Math.Round(15.5 + d * Math.Cos(a)), (int)Math.Round(15.5 + d * Math.Sin(a)));
-                int size = rnd.Range(3, 5);
-                var cells = new List<TilePos> { first };
-                for (int g = 0; cells.Count < size && g < 60; g++)
+                var cells = new List<TilePos>();
+                if (monument)
                 {
-                    var p = cells[rnd.Range(0, cells.Count)];
-                    var (dc, dr) = Dirs[rnd.Range(0, 4)];
-                    var q = new TilePos(p.c + dc, p.r + dr);
-                    if (!cells.Contains(q))
-                        cells.Add(q);
+                    for (int r = 0; r < MonumentH; r++)
+                        for (int c = 0; c < MonumentW; c++)
+                            cells.Add(new TilePos(first.c + c, first.r + r));
+                    if (rnd.Value() < 0.5)
+                    {
+                        // siódmy kafelek: wolne miejsce obok monumentu
+                        int side = rnd.Range(0, 4);
+                        var extra = side == 0 ? new TilePos(first.c - 1, first.r + rnd.Range(0, MonumentH))
+                                  : side == 1 ? new TilePos(first.c + MonumentW, first.r + rnd.Range(0, MonumentH))
+                                  : side == 2 ? new TilePos(first.c + rnd.Range(0, MonumentW), first.r - 1)
+                                  : new TilePos(first.c + rnd.Range(0, MonumentW), first.r + MonumentH);
+                        cells.Add(extra);
+                    }
                 }
-                bool ok = cells.Count == size;
+                else
+                {
+                    cells.Add(first);
+                    int size = rnd.Range(3, 5);
+                    for (int g = 0; cells.Count < size && g < 60; g++)
+                    {
+                        var p = cells[rnd.Range(0, cells.Count)];
+                        var (dc, dr) = Dirs[rnd.Range(0, 4)];
+                        var q = new TilePos(p.c + dc, p.r + dr);
+                        if (!cells.Contains(q))
+                            cells.Add(q);
+                    }
+                    if (cells.Count != size)
+                        continue;
+                }
+                bool ok = true;
                 foreach (var p in cells)
                 {
                     if (p.c < 2 || p.r < 2 || p.c > Size - 3 || p.r > Size - 3 || plan.zones.ContainsKey(p))
@@ -161,6 +189,8 @@ namespace Wyspa.World
                 if (!ok)
                     continue;
                 taken.AddRange(cells);
+                if (monument)
+                    plan.monuments[plan.islets.Count] = first;
                 plan.islets.Add(cells);
                 bool hasFind = false;
                 foreach (var p in cells)
