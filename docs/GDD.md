@@ -327,6 +327,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   mniejsze ceny za sztukę, 6 faz wzrostu (§9 p. 98). Do sprawdzenia w grze: czy satysfakcja jest, czy nie za szybko.
 - [x] **Pory dnia: świt i zmierzch** (prośba gracza): świt 06-08 i zmierzch 18-20 (po ok. 5:43) to część dnia, w której
   rosną oba rodzaje roślin. Siewca nie wykopuje roślin urośniętych ponad połowę (§9 p. 99).
+- [x] **Wschód i zachód słońca, światło i cienie** (prośba gracza): kolory światła o świcie i zmierzchu, ciepła poświata
+  od strony słońca, snopy obracają się za słońcem, cienie obiektów od słońca (dzień) i od lamp (noc) (§9 p. 100).
+  Do oceny w grze: siła cieni (0,3 w dzień, do 0,42 przy lampie) i kolory wschodu/zachodu.
 - [x] **Cykl gry zamiast zegara komputera** (prośba gracza po 6d): 1 h = 40 min dnia + 20 min nocy, tylko cykl gry (bez opcji
   zegara). Księżyc: 8 nocy na cykl, pełnia jedną noc (rytuał „Księżycowa rosa”: dwie). Kupiec-widmo w co trzecią noc (34%),
   w pierwszej połowie nocy, zostaje 10 min. Rośliny i drzewa rosną **x3 szybciej** (marchew 3:20, dynia 8:20); rośliny nocy
@@ -453,6 +456,7 @@ Python 3 + Pillow. Sprite'y generowane proceduralnie (cieniowane elipsy, automat
 | `wisp_tools.py` + `export_unity_wisp_tools.py` | narzędzia ogników (6 zawodów, po 2 klatki, pivot = chwyt) → `Automation/tool_*.png` |
 | `gift_icons.py` + `export_unity_gifts.py` | ikony 37 Darów Mgły (12 px) → `UI/Icons/icon_gift_<id>.png`, arkusz `docs/img/ikony_darow.png` |
 | `../balance/sim.py` | Etap 6d: symulacja progresji (godziny pracy do kamieni milowych), liczby jak w grze; argument = co ile minut gracz zagląda (domyślnie 20) |
+| `shadow_preview.py` | podgląd słońca i cieni (wzory jak w `SunShadows.cs` i `DayNightLighting.cs`) → `docs/img/cienie_pory_dnia.png` |
 | `export_unity_stages.py` | dodatkowe fazy roślin z gotowych PNG: kiełek (`crop_<id>_shoot`) i niedojrzała (`crop_<id>_unripe`); po `pad_sway.py` |
 | `export_unity_fx.py` | Etap 3a: `water_base.png`, mapa danych `water_data.png` (odległość od brzegu, klasa piksela), `Art/water_layout.json` (ryby, potwór), sprite'y cząsteczek `Fx/` |
 
@@ -802,6 +806,17 @@ Obrazki referencyjne (kopie): `docs/img/`
     („świt, dzień za”, „zmierzch za”, „zmierzch, noc za”, „świt za”), dymek grządki „Świt: rośnie jeszcze 2 min”.
     Snopy światła o świcie ciepłe jak o zmierzchu. Rytuał Zmierzchowe ziarno (wcześniej: rośliny nocy o zmierzchu,
     teraz to zasada gry): o świcie i zmierzchu rośliny +50%.
+100. **Wschód i zachód słońca, światło i cienie** (prośba gracza: noc i dzień jak są, ale widać wschód i zachód, brakuje
+    światła i cieni). Światło globalne (`DayNightLighting`, klucze w kodzie zamiast gradientu ze sceny): przed świtem
+    fiolet, potem róż, złote poranne słońce, dzień bez zmian; o zmierzchu złota godzina, pomarańcz z czerwienią, fiolet,
+    noc bez zmian. Ciepła poświata od strony słońca (`SunShadows`: Point Light 2D, rano z prawej, wieczorem z lewej,
+    najmocniejsza nisko nad horyzontem). Snopy światła obracają się za słońcem. **Cienie** każdego stojącego obiektu
+    (drzewa, krzaki, kamienie, budowle, lampy, drzewa owocowe; bez płaskich, niższych niż 7 px): sylwetka obiektu
+    położona na ziemi i ścięta od światła (para obiektów obrót × skala × obrót, bez shadera), tylko na lądzie (maska).
+    Dzień: słońce wschodzi po prawej, rano cienie długie w lewo, w południe krótkie, wieczorem długie w prawo, bledną
+    przy horyzoncie i w deszczu. Noc: cień od najbliższej zapalonej lampy (w przeciwną stronę, dłuższy dalej od lampy,
+    wyraźniejszy bliżej), poza lampami słaby cień od księżyca (mocniejszy w pełnię). Podgląd:
+    `docs/img/cienie_pory_dnia.png` (`tools/pixel-proto/shadow_preview.py`).
 
 ---
 

@@ -347,3 +347,15 @@ Najpierw Wyspa → 2 (nowe czasy, ceny i sprite'y faz).
 5. Zamknij grę na ok. 1 h: rośliny nocy urosły o ok. 31 min (noc + świt + zmierzch), nie 20.
 6. Rytuał Zmierzchowe ziarno: opis „O świcie i zmierzchu rośliny rosną 50% szybciej”.
 
+## 29. Wschód, zachód, światło i cienie
+1. F1, godziny po kolei 05:30 → 08:30: przed świtem fioletowo, potem różowo, złoto, dzień jak wcześniej. Po prawej stronie
+   wyspy ciepła poświata, gaśnie około 08:00. Snopy światła padają z prawej.
+2. 18:00 → 21:00: złota godzina, pomarańcz, fiolet, noc jak wcześniej. Poświata z lewej strony. Snopy z lewej.
+3. Cienie w dzień: ok. 07:00 długie w lewo, 13:00 krótkie (prawie pod obiektem), 17:00-19:00 długie w prawo. Cienie
+   nie wychodzą na wodę, są pod obiektami i nad grządkami, nie migają przy przesuwaniu kamery.
+4. Deszcz: cienie słabsze. Przeniesienie budowli, nowa dekoracja, ścięte drzewo: cień idzie za obiektem albo znika (do 0,5 s).
+5. Noc: obiekty przy zapalonej lampie mają cień od lampy (w przeciwną stronę); dalej od lamp słaby cień od księżyca.
+   Lampa nie rzuca cienia od własnego światła.
+6. Wydajność: duża wyspa (F1, kilkadziesiąt obiektów) bez spadku płynności.
+7. Przezroczyste okno i menu główne: cienie i kolory działają, nic nie wychodzi poza ląd.
+

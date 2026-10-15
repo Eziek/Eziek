@@ -96,6 +96,8 @@ namespace Wyspa.World
 
         public IslandMap Map => map;
         public IslandArt Art => art;
+        /// <summary>Stojące obiekty wyspy (dekoracje, drzewa, lampy, budowle): cienie (SunShadows) biorą je stąd.</summary>
+        public Transform DecoRoot => decoRoot;
         public bool Ready => map.Count > 0;
         /// <summary>Po każdym przemalowaniu wyspy (zakup kafelka, nowy świat, wczytanie).</summary>
         public event Action Rebuilt;
@@ -116,6 +118,7 @@ namespace Wyspa.World
         void Start()
         {
             EnsureLightShafts();
+            EnsureSunShadows();
             // ptaki: tworzone w locie (bez przebudowy sceny), sprite'y z IslandArt (Wyspa → 2)
             if (art != null && art.birdCrow != null && art.birdCrow.Length >= 4 && FindAnyObjectByType<AmbientBirds>() == null)
             {
@@ -135,6 +138,16 @@ namespace Wyspa.World
             var go = new GameObject("LightShafts");
             go.transform.SetParent(transform.parent, false);
             go.AddComponent<LightShafts>().Setup(null, null, FindAnyObjectByType<GameClock>());
+        }
+
+        /// <summary>Słońce i cienie obiektów (tworzone w locie, bez przebudowy sceny).</summary>
+        void EnsureSunShadows()
+        {
+            if (FindAnyObjectByType<SunShadows>() != null)
+                return;
+            var go = new GameObject("SunShadows");
+            go.transform.SetParent(transform.parent, false);
+            go.AddComponent<SunShadows>().Setup(FindAnyObjectByType<GameClock>());
         }
 
         void Awake()

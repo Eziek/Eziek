@@ -7,7 +7,8 @@ namespace Wyspa.Visual
     /// <summary>
     /// Snopy światła: Sprite Light 2D z wygenerowanym obrazem ukośnych
     /// snopów, z włączoną wolumetrią (Light2D.volumeIntensity), więc snopy rozjaśniają wyspę jak lampa i widać je w powietrzu.
-    /// Dzień: ciepłe słońce, zmierzch: pomarańczowe, noc: blade promienie księżyca (mocniejsze w pełnię). Snopy wolno dryfują.
+    /// Dzień: ciepłe słońce, świt i zmierzch: pomarańczowe, noc: blade promienie księżyca (mocniejsze w pełnię). Snopy wolno
+    /// dryfują i obracają się za słońcem (rano z prawej, wieczorem z lewej).
     /// Światło idzie za kamerą, więc obejmuje zawsze cały kadr.
     /// </summary>
     public class LightShafts : MonoBehaviour
@@ -100,6 +101,13 @@ namespace Wyspa.Visual
             var center = cam != null ? cam.transform.position : Vector3.zero;
             float drift = Mathf.Sin(Time.unscaledTime * 0.05f) * 2.5f;
             shaft.transform.position = new Vector3(center.x + drift, center.y, 0f);
+            // snopy idą za słońcem: rano padają z prawej, w południe prawie pionowo, wieczorem z lewej (noc: księżyc z lewej)
+            if (clock != null)
+            {
+                float u = clock.IsNight ? 0.25f : clock.Second / GameClock.DaySeconds;
+                float tilt = Mathf.Lerp(-45f, 20f, u);   // obraz snopów pada z lewej góry: -45° = z prawej, +20° = mocniej z lewej
+                shaft.transform.localRotation = Quaternion.Euler(0f, 0f, tilt);
+            }
 
             timer -= Time.unscaledDeltaTime;
             if (timer > 0f || clock == null)

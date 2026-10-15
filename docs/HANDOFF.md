@@ -1,7 +1,7 @@
 # Przekazanie sesji (stan na 2026-10-14)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-99), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-100), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
@@ -24,6 +24,8 @@ Historia decyzji jest w GDD §9 (punkty 1-99), a lista testów w `docs/TEST_PLAN
   6 faz roślin (`tools/pixel-proto/export_unity_stages.py`), plony nocy zależne od czasu wzrostu. Wymaga Wyspa → 2.
 - **Pory dnia: świt i zmierzch** (GDD §9 p. 99, TEST_PLAN 28): rosną w nich oba rodzaje roślin, siewca nie wykopuje
   roślin urośniętych ponad połowę.
+- **Wschód/zachód, światło i cienie** (GDD §9 p. 100, TEST_PLAN 29): `Visual/SunShadows.cs` (cienie, poświata słońca),
+  `DayNightLighting` z kluczami w kodzie, snopy za słońcem. Nie testowane w Unity (ścięcie przez obrót × skalę × obrót).
 - **Prestiż przebudowany:** Przystań we mgle między rejsami, dary losowane za perły z animacją walki, 37 darów z rzadkością
   (GDD §11.8, §9 p. 81, TEST_PLAN 12). Przenosiny `CLAUDE.md` gracz chce zrobić później.
 - **Pogaduszki ogników** (dymki z runami, szczebiot z `tools/audio/gen_babble.py`), ogniki ocierają się zamiast przenikać,
