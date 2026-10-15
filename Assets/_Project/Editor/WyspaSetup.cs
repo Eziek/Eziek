@@ -741,6 +741,7 @@ namespace Wyspa.EditorTools
             art.swayTreeGlow = LoadMat("SwayTreeGlow");
             art.glow = GlowMaterial();
             art.floatMat = FxMaterialAsset("Float", "SpriteFloat", null);   // łodzie i boja w wodzie (Visual/Floating)
+            art.reflection = FxMaterialAsset("WaterReflection", "WaterReflection", null);   // odbicia w wodzie (Visual/WaterReflections)
             EditorUtility.SetDirty(art);
             return art;
         }

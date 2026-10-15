@@ -123,6 +123,12 @@ namespace Wyspa.World
         {
             EnsureLightShafts();
             EnsureSunShadows();
+            if (art != null && art.reflection != null)
+            {
+                var refl = new GameObject("WaterReflections");
+                refl.transform.SetParent(transform.parent, false);
+                refl.AddComponent<WaterReflections>().Setup(this, art.reflection);
+            }
             if (art != null && art.waterFlora != null && art.waterFlora.Length > 0)
             {
                 var flora = new GameObject("WaterFlora");

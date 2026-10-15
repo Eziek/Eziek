@@ -14,6 +14,8 @@ namespace Wyspa.Visual
         const int MaxFish = 16;   // rozmiar tablic w Water.shader
 
         static readonly int DataTexId = Shader.PropertyToID("_DataTex");
+        static readonly int WaterDataGlobalId = Shader.PropertyToID("_WyspaWaterData");
+        static readonly int WaterSizeGlobalId = Shader.PropertyToID("_WyspaWaterSize");
         static readonly int FishId = Shader.PropertyToID("_Fish");
         static readonly int FishBId = Shader.PropertyToID("_FishB");
         static readonly int FishCountId = Shader.PropertyToID("_FishCount");
@@ -74,6 +76,10 @@ namespace Wyspa.Visual
                 return;
             m.SetTexture(DataTexId, data);
             m.SetFloat(ShoreRangeId, shoreRange);
+            // maska wody dla odbić (WaterReflection.shader)
+            Shader.SetGlobalTexture(WaterDataGlobalId, data);
+            if (data != null)
+                Shader.SetGlobalVector(WaterSizeGlobalId, new Vector4(data.width, data.height, 0f, 0f));
             fish.Clear();
             if (picture != null)
                 foreach (var f in picture.fish)

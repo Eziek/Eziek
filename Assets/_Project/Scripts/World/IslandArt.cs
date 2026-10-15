@@ -252,6 +252,8 @@ namespace Wyspa.World
         public Material glow;
         [Tooltip("Sprite na wodzie: linia wody, piana, kołysanie (SpriteFloat.shader, Visual/Floating).")]
         public Material floatMat;
+        [Tooltip("Odbicia w wodzie (WaterReflection.shader, Visual/WaterReflections).")]
+        public Material reflection;
 
         public LampDefinition Lamp(string id)
         {
