@@ -68,6 +68,15 @@ namespace Wyspa.Visual
             }
             else
                 target.enabled = false;
+            // brak materiału efektu (np. scena bez materiałów z Wyspa → 2/3): w Player.log od razu widać, co zniknęło
+            if (fx == null && !warned)
+            {
+                warned = true;
+                Debug.LogWarning($"[Wyspa] {target.name}: brak materiału efektu" + (fallback == null ? ", obiekt ukryty" : ", zwykły materiał")
+                                 + ". Uruchom Wyspa → 2 i Wyspa → 3.");
+            }
         }
+
+        bool warned;
     }
 }
