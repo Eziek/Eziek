@@ -89,6 +89,7 @@ Shader "Wyspa/Water"
             float _WyspaWindFront;  // podmuch wiatru (IslandFx, jak w WyspaSway.hlsl): czoło w pikselach świata
             float _WyspaWindPower;
             float _WyspaWinter;     // 0..1: zima (pory roku, WaterAnimator): lód i kra przy brzegu
+            float _WyspaDebugFx;    // diagnostyka (HUD F1): 1 = dane wody jako kolor, 2 = cały sprite na różowo
 
             Varyings WaterVertex(Attributes input)
             {
@@ -243,6 +244,10 @@ Shader "Wyspa/Water"
                 float2 pix = floor(input.uv * size);
                 half4 data = SAMPLE_TEXTURE2D_LOD(_DataTex, sampler_DataTex, (pix + 0.5) * _DataTex_TexelSize.xy, 0);
                 int cls = (int)round(data.g * 255.0 / 32.0);
+                if (_WyspaDebugFx > 1.5)
+                    return half4(1, 0, 1, 1);
+                if (_WyspaDebugFx > 0.5)
+                    return half4(data.r, data.g, 0.25, 1);   // czerwony = odległość od brzegu, zielony = klasa
                 // obraz w 32 px na kafelek (2 piksele na piksel danych), X/Y w pikselach 32 px (y w dół),
                 // x/y w pikselach danych (ryby, potwór i klasy brzegu jak dotąd)
                 float2 hp = floor(input.uv * size * 2.0);

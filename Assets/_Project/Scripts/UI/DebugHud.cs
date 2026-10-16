@@ -16,6 +16,8 @@ namespace Wyspa.UI
     /// </summary>
     public class DebugHud : MonoBehaviour
     {
+        static int debugFx;
+
         [Tooltip("F1 przełącza. Bez docelowego UI (UiRoot) HUD debugowy jest widoczny od startu.")]
         [SerializeField] bool visible;
 
@@ -179,6 +181,12 @@ namespace Wyspa.UI
             GameLoop.DebugAlwaysMutate = GUILayout.Toggle(GameLoop.DebugAlwaysMutate, "Mutacje zawsze (zamiast 3%)");
             bool fx = GUILayout.Toggle(FxMaterial.Enabled, "Shadery efektów (woda, mgła, kołysanie)");
             if (fx != FxMaterial.Enabled) FxMaterial.Enabled = fx;
+            // diagnostyka wody i mgły: 1 = dane wody (odległość czerwona, klasa zielona), 2 = cały sprite różowy
+            if (GUILayout.Button($"Diagnostyka wody/mgły: {debugFx} (0 zwykle, 1 dane, 2 różowe)"))
+            {
+                debugFx = (debugFx + 1) % 3;
+                Shader.SetGlobalFloat("_WyspaDebugFx", debugFx);
+            }
             if (GUILayout.Button("Cheat: +500 monet, +5 plonów nocy"))
             {
                 wallet.Add(CurrencyType.Coins, 500);

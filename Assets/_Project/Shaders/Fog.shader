@@ -71,6 +71,7 @@ Shader "Wyspa/Fog"
                 float _FogPeriod;
                 float _FogOuter;
             CBUFFER_END
+            float _WyspaDebugFx;    // diagnostyka (HUD F1): 1 = dane wody jako kolor, 2 = cały sprite na różowo
 
             Varyings FogVertex(Attributes input)
             {
@@ -193,6 +194,10 @@ Shader "Wyspa/Fog"
                 float2 p = float2(q.x + 0.5, fsize.y - q.y - 0.5);   // środek piksela mgły, y w dół
                 float2 pd = FogToData(p, fsize);
                 half4 data = SAMPLE_TEXTURE2D_LOD(_MainTex, sampler_MainTex, (floor(pd) + 0.5) / size, 0);
+                if (_WyspaDebugFx > 1.5)
+                    return half4(1, 0, 1, 0.5);
+                if (_WyspaDebugFx > 0.5)
+                    return half4(data.r, data.g, 0.6, 0.5);   // półprzezroczyste: pod spodem widać diagnostykę wody
                 bool water = data.g > 0.06;
                 float d = FogDistSmooth(pd, size);    // odległość od brzegu w pikselach danych (do ok. 64)
                 float T = 6.2831853 * frac(_Time.y / _FogPeriod);   // płynny dryf chmur
