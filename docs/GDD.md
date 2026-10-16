@@ -58,14 +58,16 @@ Inspiracje gatunkowe: Rusty's Retirement (farma przy krawędzi ekranu), desktopo
 
 ## 2.1 Telefony (plan, §9 p. 134)
 
-- **Sterowanie dotykiem (zrobione, `UI/UiInput`):** stuknięcie = lewy klik (przy puszczeniu palca), przytrzymanie w miejscu
-  ~0,45 s = prawy klik (pierścień akcji, czyli Księga, sklep, rozbudowa), przeciągnięcie jednym palcem = przesuwanie widoku,
-  dwa palce: przesuwanie i szczypanie (przybliżenie x2-x8). Dymki pokazują się w miejscu ostatniego dotyku. Na Windows
-  z ekranem dotykowym udawane kliknięcia myszy są pomijane (bez podwójnych kliknięć).
+- **Sterowanie dotykiem (zrobione, `UI/UiInput`, przebudowa §9 p. 136):** stuknięcie = lewy klik (przy puszczeniu palca),
+  przytrzymanie w miejscu ~0,45 s = prawy klik (panel informacji o obiekcie, na pustym miejscu pierścień akcji),
+  przytrzymanie drzewa, kamienia czy krzaka ścina je (kółko postępu), przeciągnięcie jednym palcem = przesuwanie widoku,
+  dwa palce: przesuwanie i szczypanie (przybliżenie x2-x8). Menu jest zawsze pod ręką: pasek przycisków w prawym dolnym rogu.
+  Przy dotyku dymki po najechaniu się nie pokazują (opis jest w panelu informacji). Na Windows z ekranem dotykowym
+  udawane kliknięcia myszy są pomijane (bez podwójnych kliknięć). Rozmiar UI na telefonie z gęstości ekranu (dpi).
 - **Telefon w Opcjach:** tylko przybliżenie i rozmiar UI (bez rozmiaru okna, mini-trybu, ramki, rogu i przezroczystości);
   kadr z całego ekranu. Funkcje Windows (okno na pulpicie, zasobnik, autostart) są tylko w buildzie na Windows.
-- **Do zrobienia przy porcie:** ustawienia buildu Android/iOS (orientacja pozioma na start), większe pola dotyku w UI
-  (min. ok. 9 mm), dymki po przytrzymaniu zamiast najechania (grządka, drzewo), powiadomienia (dojrzałe plony nocy,
+- **Do zrobienia przy porcie:** ustawienia buildu iOS, większe pola dotyku w kole nasion i Księdze (test na telefonie),
+  powiadomienia (dojrzałe plony nocy,
   powrót łodzi), zapis przy `OnApplicationPause`, test wydajności (shadery wody i mgły na słabszych GPU).
 
 ---
@@ -416,6 +418,9 @@ Wszystkie są w siatce 16 px, w mrocznej palecie, wyeksportowane do `Assets/_Pro
   w Opcje → Okno i Ctrl + kółko myszy.
 - [x] Przezroczyste okno: pas wody 18 px, mgła tylko nad nim (gęstnieje ku krawędzi), nad pulpitem nic (pierścień nad pulpitem
   wyglądał jak szum).
+- [x] **Sterowanie (§9 p. 136, wybór gracza: „trochę ciężkie”):** pasek przycisków w rogu (Księga, Sklep, Rozbudowa,
+  Menu) na komputerze i telefonie, panel informacji pod prawym klikiem / przytrzymaniem palca (zamiast dymków na telefonie),
+  ścinanie przytrzymaniem z kółkiem postępu zamiast serii kliknięć. Pierścień PPM zostaje jako skrót na pustym miejscu.
 - [x] UI na pulpicie (§12.10): gracz wybrał **wariant C**, pierścień akcji pod PPM zamiast przycisków w rogu okna. Pasek walut
   i rytm pracy zostają na razie w rogach (do decyzji przy dalszym dopracowaniu UI w 6d).
 - [x] HUD (Etap 6d, wybór gracza): **jeden pasek nad wyspą** (waluty i Esencja u góry, rytm, tempo i zegar pod spodem),
@@ -1180,6 +1185,24 @@ Obrazki referencyjne (kopie): `docs/img/`
       samo dopasowuje się do wyspy (największe parzyste, przy którym ląd z zapasem mieści się w kadrze), dopóki gracz
       nie przybliży sam (kółko, palce, Opcje); w Opcjach przycisk „Auto” przywraca; menu główne zawsze auto.
     - **Android:** Wyspa → Wydanie → 3. Zbuduj Android: APK do testów (ARM64, IL2CPP, poziomo), instrukcja `docs/RELEASE.md` §3a.
+136. **Nowe sterowanie** (gracz: „trochę ciężkie jest to sterowanie, przemyśl je”; wybrał trzy zalecane warianty).
+    - **Pasek przycisków** (`UI/MenuBar.cs`): prawy dolny róg, zawsze widoczny na wyspie, na komputerze i telefonie:
+      Księga, Sklep, Rozbudowa wyspy (podświetlony, gdy tryb trwa; drugi klik wychodzi), Menu (koło przy przycisku:
+      Opcje, Zapisz grę, Menu główne, Wyjdź; na telefonie bez „Wyjdź”). W trybie stawiania jeden przycisk „Anuluj”.
+      Schowany w menu głównym, w Przystani, w scenkach rejsu, przy otwartej Księdze i w mini-trybie.
+    - **Panel informacji:** prawy klik (puszczenie bez przeciągania) albo przytrzymanie palca ~0,45 s na obiekcie otwiera
+      panel kontekstowy: grządka (`UI/PlotInfo.cs`: opis jak w dymku, Posadź / Zbierz / Wykop, Zasyp, Obsiej losowo),
+      drzewo owocowe, dekoracja, budowle, chowańce. Panel z `ContextInfo.live` odświeża się co 0,5 s, gdy treść się zmieni.
+      Na pustym miejscu (woda, trawa) dalej pierścień akcji (bez akcji grządki i drzewa, które są teraz w panelu).
+      Przy dotyku dymki po najechaniu są wyłączone. Na telefonie rozmiar UI z dpi ekranu (ok. dpi/90, co najmniej x2).
+    - **Ścinanie przytrzymaniem** (zamiast serii szybkich kliknięć z p. 121): wciśnięcie na drzewie, kamieniu czy krzaku
+      (`Input/IHoldAction`, sterowanie w `ClickRouter`) napełnia kółko nad obiektem (`World/ChopProgress.cs`, 11 px),
+      w trakcie padają uderzenia (odpryski, stuk). Czas 0,6 s + 0,1 s na uderzenie (krzak 0,9 s, kamień i dorosłe drzewo
+      1,2 s). Puszczenie wcześniej, zjazd kursora z obiektu albo przesunięcie palca przerywa. Krótki klik (< 0,25 s):
+      drzewo z owocami zbiera owoce, inaczej otwiera panel. Dotyk przejęty przez ścinanie nie staje się stuknięciem ani
+      panelem informacji (`UiInput.ClaimPointer`). Ścięcie owocującego drzewa najpierw zbiera owoce.
+    - Teksty: podpowiedź (toast) o panelu informacji i pasku, wprowadzenie (kroki 2, 4, 5) i dymki trybów bez „PPM” jako
+      jedynej drogi. Nie wymaga Wyspa → 2 ani 3 (UI budowane z kodu).
 
 ---
 
@@ -1210,7 +1233,9 @@ Instrukcja uruchomienia: `docs/UNITY_SETUP.md`. Kod kompiluje się poza Unity na
 | `Scripts/UI/UiRoot.cs` | korzeń UI: Canvas (Constant Pixel Size, skala UI = skala świata − 1), EventSystem, font TMP tworzony w locie z `WyspaPixel.ttf`, dymek nad grządką |
 | `Scripts/UI/Ui.cs`, `UiTheme.cs`, `UiInput.cs`, `LocText.cs` | fabryka elementów (9-slice, tekst, przycisk, pasek), motyw (sprite'y, ikony, kolory, tabele), wejście, tekst z klucza odświeżany po zmianie języka |
 | `Scripts/UI/HudView.cs` | HUD: waluty (pokazane po zdobyciu), Esencja, zegar i pora roku; chowa się po 5 s bez ruchu myszy |
-| `Scripts/UI/ActionRing.cs` | pierścień akcji (PPM na wyspie): Księga, Sklep, Rozbudowa, Menu (podmenu: Opcje, Zapisz, Menu główne, Wyjdź); wyzwalany w `UiRoot` (bez przeciągania, gdy nic nie jest otwarte) |
+| `Scripts/UI/ActionRing.cs` | pierścień akcji (PPM na pustym miejscu): Księga, Sklep, Rozbudowa, Menu (podmenu: Opcje, Zapisz, Menu główne, Wyjdź); wyzwalany w `UiRoot` (bez przeciągania, gdy nic nie jest otwarte); PPM na obiekcie otwiera panel informacji |
+| `Scripts/UI/MenuBar.cs` | pasek przycisków w prawym dolnym rogu (Księga, Sklep, Rozbudowa, Menu; w trybie stawiania „Anuluj”), §9 p. 136 |
+| `Scripts/UI/PlotInfo.cs` | panel informacji o grządce (opis wzrostu na żywo, Posadź / Zbierz / Wykop, Zasyp, Obsiej losowo), §9 p. 136 |
 | `Scripts/UI/SeedWheel.cs` | koło nasion wokół pustej grządki, dymki z opisem, PPM/Esc zamyka |
 | `Scripts/UI/BookView.cs` | Księga: zakładki Sklep (Lampy, Morze), Ulepszenia, Rytuały, Bestiariusz, Statystyki, Opcje (język, jasność nocy, okno, przybliżenie) |
 | `Scripts/UI/ToastView.cs`, `TooltipView.cs` | toasty (maks. 3, 4 s) i dymek przy kursorze |
@@ -1564,8 +1589,9 @@ Makiety: `docs/img/ui_hud.png`, `ui_ksiega_sklep.png`, `ui_ksiega_ulepszenia.png
 ### 12.2 HUD
 - **Pasek nad wyspą (Etap 6d):** górny wiersz: monety, Esencja (ikona + pasek + liczby), plony nocy, odłamki gwiazd, drewno, kamień
   (waluty pojawiają się dopiero po zdobyciu); dolny wiersz: zegar gry i pora roku (rytm pracy usunięty, §9 p. 134). Pasek idzie za lądem.
-- **Menu:** pierścień akcji pod prawym klikiem na wyspie (Księga, Sklep, Rozbudowa, Menu z podmenu: Opcje, Zapisz grę,
-  Menu główne, Wyjdź; do tego akcje tego, co pod kursorem), §12.10, §9 p. 97. Przycisków w rogu okna już nie ma.
+- **Menu (§9 p. 136):** pasek czterech przycisków w prawym dolnym rogu, zawsze widoczny na wyspie (Księga, Sklep,
+  Rozbudowa, Menu; Menu otwiera przy przycisku koło: Opcje, Zapisz grę, Menu główne, Wyjdź). Pierścień akcji pod prawym
+  klikiem na pustym miejscu zostaje jako skrót (§12.10, §9 p. 97). W trybie stawiania pasek ma tylko „Anuluj”.
 - **Mini-tryb:** HUD całkiem ukryty, zostaje tylko wyspa.
 
 ### 12.3 Interakcje na wyspie
@@ -1574,6 +1600,11 @@ Makiety: `docs/img/ui_hud.png`, `ui_ksiega_sklep.png`, `ui_ksiega_ulepszenia.png
 - **Klik dojrzałej:** zbiór (cząsteczki, monety lecą do licznika).
 - **Najechanie na rosnącą:** tooltip z fazą, czasem do dojrzenia i **warunkami** (czy ma światło, czy noc).
 - **Obiekty** (skrzynia, łódź, ołtarz, kupiec, słój) otwierają małe panele kontekstowe przy obiekcie.
+- **Panel informacji (§9 p. 136):** prawy klik albo przytrzymanie palca na obiekcie otwiera panel ze stanem (odświeża się
+  na żywo) i akcjami: grządka (opis wzrostu, Posadź / Zbierz, Wykop, Zasyp, Obsiej losowo), drzewo (stan, zbiór, Zetnij,
+  Przenieś), dekoracja (koszt, nagroda, Usuń), budowle i chowańce (ich panel). Puste miejsce: pierścień akcji.
+- **Ścinanie przytrzymaniem (§9 p. 136):** wciśnięcie i trzymanie na drzewie, kamieniu czy krzaku napełnia kółko nad nim
+  (0,9-1,2 s), puszczenie wcześniej przerywa. Krótki klik: drzewo z owocami zbiera owoce, inaczej panel.
 
 ### 12.4 Księga (główne menu)
 Lewa kolumna: zakładki-ikony. Prawa strona to pergamin z treścią. Na dole pasek opisu zaznaczonego elementu i przycisk **KUP + cena**.
@@ -1793,8 +1824,8 @@ podgląd `docs/img/monumenty.png`.
 Podgląd: `docs/img/wyspa_strefy.png` (drzewo w trakcie wycinki), `docs/img/arkusz_usuwanie.png`.
 
 ### 14.1 Zasady
-- Kliknięcie w dekorację (drzewo, świerk, martwe drzewo, krzak, kamień, nagrobek, gruz, dekoracje stref poza zabytkami)
-  otwiera tooltip **„USUŃ”** z kosztem w Esencji i nagrodą. LPM potwierdza.
+- Przytrzymanie dekoracji (drzewo, świerk, martwe drzewo, krzak, kamień, nagrobek, gruz, dekoracje stref poza zabytkami)
+  usuwa ją, gdy kółko nad nią się napełni (§9 p. 136). Krótki klik otwiera panel z kosztem w Żarze, nagrodą i „Usuń”.
 - Usunięcie zwalnia kafelek pod grządkę lub budowlę. Dotyczy to też losowego obiektu na startowej wyspie 2×2.
 - Usuwa się **na zawsze**: dekoracje nie odrastają. Nowe pojawiają się tylko na nowo odkrytych kafelkach (ok. 25%).
 

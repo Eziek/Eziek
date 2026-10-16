@@ -35,12 +35,15 @@ namespace Wyspa.UI
         public PlacementMode Placement { get; private set; }
         public TooltipView Tooltip { get; private set; }
         public ActionRing Ring { get; private set; }
+        /// <summary>Pasek przycisków w rogu (Księga, Sklep, Rozbudowa, Menu; §9 p. 136).</summary>
+        public MenuBar Bar { get; private set; }
         /// <summary>Menu główne (tylko gdy nie wybrano jeszcze slotu zapisu).</summary>
         public MainMenuView Menu { get; private set; }
         public MistHarborView Harbor { get; private set; }
         public VoyageScene Scenes { get; private set; }
 
-        // prawy klik na wyspie otwiera pierścień akcji (GDD §12.10): uzbrojony przy wciśnięciu, otwiera się po puszczeniu bez przeciągania
+        // prawy klik (albo przytrzymanie palca) na obiekcie otwiera panel informacji, na pustym miejscu pierścień akcji
+        // (GDD §12.10, §9 p. 136): uzbrojony przy wciśnięciu, otwiera się po puszczeniu bez przeciągania (palec: od razu)
         bool ringArmed;
         bool busyLastFrame;   // panel/tryb otwarty w poprzedniej klatce (ten sam PPM, który go zamyka, nie otwiera koła)
         Vector2 ringPress;
@@ -81,7 +84,7 @@ namespace Wyspa.UI
                 StartCoroutine(RingHint());
         }
 
-        /// <summary>Podpowiedź dla nowego gracza: menu jest pod prawym przyciskiem (aż raz go użyje).</summary>
+        /// <summary>Podpowiedź dla nowego gracza: prawy klik albo przytrzymanie obiektu otwiera panel informacji (aż raz go użyje).</summary>
         System.Collections.IEnumerator RingHint()
         {
             yield return new WaitForSecondsRealtime(3f);
@@ -234,6 +237,9 @@ namespace Wyspa.UI
             Context = ContextPanel.Create(canvasRect, StartMove);
             Placement = PlacementMode.Create(transform, Tooltip);
             Ring = ActionRing.Create(canvasRect, Tooltip);
+            Bar = MenuBar.Create(canvasRect, Tooltip, BarItems(), () => Placement.Cancel(), () => PlacementMode.Active,
+                                 () => Save.SaveSystem.InMenu || Save.SaveSystem.InMist || VoyageScene.Playing || Book.IsOpen
+                                       || (World.ViewController.Instance != null && World.ViewController.Instance.Mini));
             Scenes = VoyageScene.Create(canvasRect);   // scenki rejsu (przypłynięcie startuje samo po wczytaniu)
             if (Save.SaveSystem.InMist)
                 Harbor = MistHarborView.Create(canvasRect, Tooltip);   // między rejsami: losowanie darów, potem nowa wyspa
@@ -265,7 +271,13 @@ namespace Wyspa.UI
         public static int DesiredUiScale()
         {
             int want = UiScaleSetting;
-            if (want == 0)
+            if (want == 0 && Application.isMobilePlatform)
+            {
+                // telefon (§9 p. 136): rozmiar od gęstości ekranu, żeby przyciski dało się trafić palcem (ok. 4-5 mm)
+                float dpi = Screen.dpi > 0f ? Screen.dpi : 400f;
+                want = Mathf.Max(2, Mathf.RoundToInt(dpi / 90f));
+            }
+            else if (want == 0)
                 want = Mathf.Max(1, Mathf.RoundToInt(Screen.currentResolution.height / 540f));
             return want;
         }
@@ -336,7 +348,7 @@ namespace Wyspa.UI
             UpdatePlotTooltip();
         }
 
-        bool Busy => VoyageScene.Playing || Ring.IsOpen || Book.IsOpen || Wheel.IsOpen || Context.IsOpen || Expansion.IsActive || PlacementMode.Active;
+        bool Busy => VoyageScene.Playing || Ring.IsOpen || Wyspa.Input.ClickRouter.Holding || Book.IsOpen || Wheel.IsOpen || Context.IsOpen || Expansion.IsActive || PlacementMode.Active;
 
         void LateUpdate() => busyLastFrame = Busy;
 
@@ -353,21 +365,85 @@ namespace Wyspa.UI
             {
                 ringPress = mouse;
                 ringArmed = !busyLastFrame && !Busy && !PointerOverUi && !DebugHud.IsPointerOverHud(mouse);
+                if (ringArmed && UiInput.TouchUsed)
+                {
+                    // palec: panel albo koło od razu po przytrzymaniu (czekanie na podniesienie palca wygląda jak brak reakcji)
+                    ringArmed = false;
+                    OpenInfoOrRing(mouse);
+                }
             }
             if (UiInput.RightReleased && ringArmed)
             {
                 ringArmed = false;
                 if ((mouse - ringPress).sqrMagnitude <= 16f)   // przeciąganie PPM przesuwa kamerę, nie otwiera menu
-                {
-                    Tooltip.Hide(plotHoverOwner);
-                    Ring.Open(mouse, RingEntries(mouse));
-                    PlayerPrefs.SetInt("hintRing", 1);
-                }
+                    OpenInfoOrRing(mouse);
             }
         }
 
-        /// <summary>Stałe menu pierścienia + akcje tego, co leży pod kursorem (grządka: zasyp).</summary>
-        List<ActionRing.Entry> RingEntries(Vector2 screen)
+        /// <summary>Obiekt pod kursorem z czymś do pokazania: panel informacji; puste miejsce (woda, trawa): pierścień akcji.</summary>
+        void OpenInfoOrRing(Vector2 screen)
+        {
+            Tooltip.Hide(plotHoverOwner);
+            PlayerPrefs.SetInt("hintRing", 1);
+            var cam = Camera.main;
+            var hit = cam != null ? Wyspa.Input.ClickRouter.Pick(cam.ScreenToWorldPoint(screen)) : null;
+            var info = InfoTarget(hit);
+            if (info != null)
+            {
+                GameEvents.PlaySound("click", 0.4f);
+                Context.Show(info);
+                return;
+            }
+            Ring.Open(screen, RingEntries());
+        }
+
+        /// <summary>Co pokazać w panelu informacji o obiekcie: grządka (opis wzrostu), obiekt na kafelku, dekoracja, chowaniec...</summary>
+        static IContextActions InfoTarget(Collider2D hit)
+        {
+            if (hit == null)
+                return null;
+            IContextActions target;
+            if (hit.TryGetComponent(out FarmPlot plot))
+                target = new PlotInfo(plot);
+            else if (hit.TryGetComponent(out TileObject obj))
+                target = obj;
+            else
+                target = hit.GetComponent<IContextActions>();
+            if (target == null)
+                return null;
+            // obiekt bez treści (np. dekoracja, której nie da się usunąć): zamiast pustego panelu pierścień
+            var probe = new ContextInfo();
+            target.FillContext(probe);
+            return probe.lines.Count > 0 || probe.buttons.Count > 0 || probe.tabs.Count > 0 ? target : null;
+        }
+
+        /// <summary>Przyciski paska w rogu: te same co stałe wpisy pierścienia, Menu otwiera koło podmenu przy przycisku.</summary>
+        List<MenuBar.Item> BarItems() => new List<MenuBar.Item>
+        {
+            new MenuBar.Item { icon = "book", nameKey = "term.grimoire", run = _ => OpenBook(BookView.Tab.Upgrades) },
+            new MenuBar.Item { icon = "shop", nameKey = "menu.shop", run = _ => OpenBook(BookView.Tab.Shop) },
+            new MenuBar.Item { icon = "plus", nameKey = "menu.expand", on = () => Expansion.IsActive,
+                               run = _ => { bool was = Expansion.IsActive; CloseAll(); if (!was) Expansion.Toggle(); } },
+            new MenuBar.Item { icon = "menu", nameKey = "menu.game", run = at => { CloseAll(); Ring.Open(at, GameMenu()); } },
+        };
+
+        /// <summary>Podmenu gry: opcje, zapis, menu główne, wyjście (pasek i pierścień).</summary>
+        List<ActionRing.Entry> GameMenu()
+        {
+            var list = new List<ActionRing.Entry>
+            {
+                new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
+                new ActionRing.Entry { icon = "save", nameKey = "act.save", run = SaveGame },
+                new ActionRing.Entry { icon = "home", nameKey = "menu.main", run = BackToMenu },
+            };
+            // telefon: aplikację zamyka system (Application.Quit na iOS jest niedozwolone), więc bez „Wyjdź”
+            if (!Application.isMobilePlatform)
+                list.Add(new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame });
+            return list;
+        }
+
+        /// <summary>Stałe menu pierścienia (pusty kawałek wyspy albo woda); akcje obiektów są w panelu informacji.</summary>
+        List<ActionRing.Entry> RingEntries()
         {
             var list = new List<ActionRing.Entry>
             {
@@ -375,13 +451,7 @@ namespace Wyspa.UI
                 new ActionRing.Entry { icon = "shop", nameKey = "menu.shop", run = () => OpenBook(BookView.Tab.Shop) },
                 new ActionRing.Entry { icon = "plus", nameKey = "menu.expand", run = () => { CloseAll(); Expansion.Toggle(); } },
                 // opcje, zapis, menu główne i wyjście w podmenu: pierwsze koło ma najwyżej 7 ikon
-                new ActionRing.Entry { icon = "menu", nameKey = "menu.game", children = new List<ActionRing.Entry>
-                {
-                    new ActionRing.Entry { icon = "settings", nameKey = "menu.options", run = () => OpenBook(BookView.Tab.Options) },
-                    new ActionRing.Entry { icon = "save", nameKey = "act.save", run = SaveGame },
-                    new ActionRing.Entry { icon = "home", nameKey = "menu.main", run = BackToMenu },
-                    new ActionRing.Entry { icon = "exit", nameKey = "act.quit", run = QuitGame },
-                } },
+                new ActionRing.Entry { icon = "menu", nameKey = "menu.game", children = GameMenu() },
             };
             // losowe sadzenie na wszystkich pustych grządkach: w nocy rośliny nocy, w dzień rośliny dnia
             bool anyEmpty = false;
@@ -399,31 +469,6 @@ namespace Wyspa.UI
                         if (game != null && game.PlantRandomEverywhere() == 0)
                             GameEvents.RaiseToast("toast.plant_random.none");
                     },
-                });
-            var cam = Camera.main;
-            var hit = cam != null ? Wyspa.Input.ClickRouter.Pick(cam.ScreenToWorldPoint(screen)) : null;
-            // drzewo owocowe: lewy klik zbiera i ścina, więc szczegóły (stan, „Zetnij”, „Przenieś”) są tutaj
-            if (hit != null && hit.TryGetComponent(out FruitTree ringTree) && hit.TryGetComponent(out TileObject ringObj)
-                && ringTree.Species != null)
-                list.Insert(0, new ActionRing.Entry
-                {
-                    icon = "fruit_" + ringTree.Species.id,
-                    nameKey = "act.details",
-                    run = () => { if (ringObj != null) GameEvents.RequestContext(ringObj); },
-                });
-            if (hit != null && hit.TryGetComponent(out FarmPlot grown) && !grown.State.IsEmpty && !grown.State.IsRipe)
-                list.Insert(0, new ActionRing.Entry
-                {
-                    icon = "sapling",
-                    tip = () => Loc.Get("act.dig_up") + (grown != null && !grown.State.IsEmpty ? "\n" + Loc.Get("ui.dig_up.back", Loc.Get("crop." + grown.State.crop.id)) : ""),
-                    run = () => { if (grown != null) grown.DigUp(); },
-                });
-            if (hit != null && hit.TryGetComponent(out FarmPlot plot) && Island.Instance != null)
-                list.Insert(0, new ActionRing.Entry
-                {
-                    icon = "fill",
-                    tip = () => Loc.Get("act.fill") + (plot != null && !plot.State.IsEmpty ? "\n" + Loc.Get("ui.fill.lose", Loc.Get("crop." + plot.State.crop.id)) : ""),
-                    run = () => { if (plot != null && Island.Instance != null) Island.Instance.TryFill(plot); },
                 });
             return list;
         }
@@ -464,8 +509,9 @@ namespace Wyspa.UI
             var game = GameLoop.Instance;
             var cam = Camera.main;
             FarmPlot.Hovered = null;
+            // dotyk: palec nie „najeżdża”, dymek zostawałby w miejscu stuknięcia (opis jest w panelu informacji)
             if (game == null || cam == null || PointerOverUi || Book.IsOpen || Wheel.IsOpen || Expansion.IsActive
-                || Context.IsOpen || PlacementMode.Active)
+                || Context.IsOpen || PlacementMode.Active || UiInput.TouchUsed || Wyspa.Input.ClickRouter.Holding)
             {
                 Tooltip.Hide(plotHoverOwner);
                 return;
@@ -518,7 +564,8 @@ namespace Wyspa.UI
             Tooltip.Show(plotHoverOwner, Describe(plot, game));
         }
 
-        static string Describe(FarmPlot plot, GameLoop game)
+        /// <summary>Opis grządki: dymek i panel informacji (PlotInfo).</summary>
+        internal static string Describe(FarmPlot plot, GameLoop game)
         {
             var s = plot.State;
             if (s.IsEmpty)

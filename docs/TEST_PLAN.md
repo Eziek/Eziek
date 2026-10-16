@@ -636,3 +636,19 @@ Najpierw Wyspa → 2 (nowe wartości ulepszeń). Scena `MainLevel` nie ma już `
    akcji, przeciągnięcie palcem przesuwa widok, szczypanie zmienia przybliżenie; stuknięcie nie klika podwójnie.
 7. Lore 1 i 2 mówią o czuwaniu, nie o pracy; wprowadzenie (krok 2) nie każe pracować przy komputerze.
 
+## 55. Nowe sterowanie: pasek przycisków, panel informacji, ścinanie przytrzymaniem
+Bez Wyspa → 2/3. Najlepiej i na komputerze, i na telefonie (APK z Wyspa → Wydanie → 3).
+1. Prawy dolny róg: cztery przyciski (Księga, Sklep, Rozbudowa, Menu), dymki z nazwami po najechaniu. Menu otwiera koło
+   przy przycisku (Opcje, Zapisz grę, Menu główne, Wyjdź; na telefonie bez Wyjdź). W menu głównym, w Przystani,
+   przy otwartej Księdze i w mini-trybie paska nie ma.
+2. Rozbudowa z paska: przycisk podświetlony, drugie kliknięcie wychodzi z trybu. Kupno lampy: w rogu tylko „Anuluj”, działa.
+3. PPM (albo przytrzymanie palca) na grządce: panel z opisem i procentem, który rośnie na oczach; pusta grządka: Posadź
+   (koło nasion), Obsiej losowo; rosnąca: Wykop; dojrzała: Zbierz; zawsze Zasyp (z rośliną: „przepadnie”).
+4. PPM na drzewie owocowym, dekoracji, lampie, skrzyni, chowańcu: ich panel. PPM na wodzie albo trawie: pierścień akcji.
+5. Przytrzymanie LPM (albo palca) na krzaku, kamieniu, drzewie: kółko nad nim się napełnia, co chwilę stuk i odpryski,
+   po ok. 1 s obiekt znika (Żar pobrany jak dawniej). Puszczenie w połowie, zjazd kursora albo przesunięcie palca: kółko
+   znika, nic się nie dzieje. Za mało Żaru: krótkie „nie” i toast, bez kółka.
+6. Krótki klik w drzewo z owocami: zbiór; bez owoców: panel. Krótki klik w kamień: panel z kosztem i „Usuń”.
+   Przytrzymanie owocującego drzewa: najpierw owoce do portfela, potem drzewo pada.
+7. Telefon: przytrzymanie drzewa nie otwiera panelu informacji (ścina), stuknięcie w grządkę dalej otwiera koło nasion,
+   dymki po dotyku nie zostają na ekranie, przyciski UI da się trafić palcem.

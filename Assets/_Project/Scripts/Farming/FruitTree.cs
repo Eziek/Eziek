@@ -82,11 +82,11 @@ namespace Wyspa.Farming
 
     /// <summary>
     /// Drzewo owocowe (GDD §15.1): sadzonka rośnie cały czas przy włączonej grze (§9 p. 134), owoce dnia za dnia,
-    /// dorosłe owocuje cyklicznie. Klik w owocujące drzewo = zbiór (monety); kilka kolejnych szybkich kliknięć ścina drzewo
-    /// (GDD §9 p. 121, ChopProgress), przerwa kasuje serię. Panel (PPM → pierścień): stan, „Zetnij”, „Przenieś”.
+    /// dorosłe owocuje cyklicznie. Klik w owocujące drzewo = zbiór (monety), klik w drzewo bez owoców = panel (stan, „Zetnij”,
+    /// „Przenieś”); przytrzymanie ścina drzewo (GDD §9 p. 136, kółko ChopProgress), puszczenie przed końcem przerywa.
     /// Upiorna grusza i drzewo księżyca, gdy owocują w nocy, świecą jak mała lampa (liczy się do wzrostu roślin).
     /// </summary>
-    public class FruitTree : MonoBehaviour, IContextActions, IClickShortcut
+    public class FruitTree : MonoBehaviour, IContextActions, IClickShortcut, Wyspa.Input.IHoldAction
     {
         public static readonly List<FruitTree> All = new List<FruitTree>();
 
@@ -333,39 +333,62 @@ namespace Wyspa.Farming
             RefreshVisual();
         }
 
-        /// <summary>Szybkich kliknięć do ścięcia (pierwsze może zebrać owoce): dorosłe 6, młode 3.</summary>
+        /// <summary>Uderzeń w trakcie przytrzymania (i długość): dorosłe 6 (1,2 s), młode 3 (0,9 s).</summary>
         public int HitsNeeded => Adult ? 6 : 3;
 
+        public bool CanHold => !chopping && species != null;
+        public float HoldSeconds => 0.6f + 0.1f * HitsNeeded;
+        public Vector3 HoldAnchor => transform.position + new Vector3(0f, Adult ? 2.1f : 1.1f, 0f);
+
+        float lastProgress;
+        int strikes;
+
+        /// <summary>W trakcie przytrzymania: uderzenia siekierą rozłożone na cały czas (liście, stuk, drgnięcie).</summary>
+        public void HoldTick(float progress)
+        {
+            if (progress < lastProgress)
+                strikes = 0;   // nowe przytrzymanie
+            lastProgress = progress;
+            int due = Mathf.Min(HitsNeeded - 1, Mathf.FloorToInt(progress * HitsNeeded));
+            if (due <= strikes - 1 || chopping)
+                return;
+            strikes = due + 1;
+            int order = body != null ? body.sortingOrder : 0;
+            IslandFx.LeafBurst(transform.position + new Vector3(0f, Adult ? 1.4f : 0.6f, 0f), 1, order);
+            GameEvents.PlaySound("chop", 0.6f);
+            Bounce(0.05f, 0.3f);
+        }
+
+        /// <summary>Kółko pełne: najpierw zbiór owoców (żeby nie przepadły), potem drzewo pada.</summary>
+        public void HoldComplete()
+        {
+            lastProgress = 0f;
+            strikes = 0;
+            if (chopping)
+                return;
+            if (fallen.Count > 0)
+                PickAllFallen();
+            if (Fruiting)
+                HarvestFruit();
+            Chop(true);
+        }
+
         /// <summary>
-        /// Lewy klik: pierwszy w serii zbiera owoce (jeśli są), każdy następny w ciągu ChopProgress.Window to uderzenie
-        /// siekierą; po HitsNeeded drzewo pada. Panel nie otwiera się z lewego kliku (szczegóły w pierścieniu PPM).
+        /// Krótki lewy klik (albo stuknięcie): zbiera owoce, jeśli są. Bez owoców false, więc TileObject otwiera panel.
+        /// Ścinanie jest przytrzymaniem (HoldComplete).
         /// </summary>
         public bool TryClick()
         {
             if (chopping)
                 return true;
-            var progress = ChopProgress.For(gameObject);
-            var top = transform.position + new Vector3(0f, Adult ? 2.1f : 1.1f, 0f);
-            bool fresh = !progress.Active;
-            int hits = progress.Hit(HitsNeeded, top, 2);
-            if (fresh && (Fruiting || fallen.Count > 0))
+            if (Fruiting || fallen.Count > 0)
             {
                 PickAllFallen();
                 if (Fruiting)
                     HarvestFruit();
                 return true;
             }
-            if (hits >= HitsNeeded)
-            {
-                progress.Clear();
-                Chop(true);
-                return true;
-            }
-            int order = body != null ? body.sortingOrder : 0;
-            IslandFx.LeafBurst(transform.position + new Vector3(0f, Adult ? 1.4f : 0.6f, 0f), 1, order);
-            GameEvents.PlaySound("chop", 0.6f);
-            Bounce(0.05f, 0.3f);
-            return true;
+            return false;
         }
 
         void HarvestFruit()
@@ -433,7 +456,9 @@ namespace Wyspa.Farming
         {
             if (species == null)
                 return;
+            info.live = true;   // postęp wzrostu i owoców na bieżąco
             info.lines.Add(StatusLine());
+            info.lines.Add(Loc.Get("ui.tree.hold_hint"));
             if (fallen.Count > 0)
                 info.Button(Loc.Get("ui.tree.pick", fallen.Count, fallen.Count * species.fruitPrice), PickAllFallen);
             if (Fruiting)
@@ -455,7 +480,7 @@ namespace Wyspa.Farming
         }
 
         /// <summary>Ścięcie: drzewo przewraca się (klatki z prototypu), drewno do portfela, kafelek wolny.
-        /// byPlayer: gracz już uderzał klikami, więc bez trzech uderzeń na początku.</summary>
+        /// byPlayer: gracz już uderzał w trakcie przytrzymania, więc bez trzech uderzeń na początku.</summary>
         public void Chop() => Chop(false);
 
         public void Chop(bool byPlayer)

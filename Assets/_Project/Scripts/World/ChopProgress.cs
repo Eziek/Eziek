@@ -3,24 +3,19 @@ using UnityEngine;
 namespace Wyspa.World
 {
     /// <summary>
-    /// Ścinanie i rozbijanie seriami kliknięć (GDD §9 p. 121): każde kliknięcie w drzewo, kamień czy krzak to jedno uderzenie,
-    /// a obiekt znika po kilku szybkich uderzeniach. Przerwa dłuższa niż Window kasuje serię (pojedyncze kliknięcie nic nie
-    /// niszczy). Nad obiektem rząd kropek: ile uderzeń już padło (żar) i ile zostało (ciemne).
+    /// Ścinanie i rozbijanie przytrzymaniem (GDD §9 p. 136, wcześniej serie kliknięć z p. 121): gracz trzyma przycisk albo palec
+    /// na drzewie, kamieniu czy krzaku, a nad obiektem napełnia się kółko (żar na ciemnym tle). Puszczenie przed końcem kasuje
+    /// postęp. Kółkiem steruje Input/ClickRouter, obiekt podaje tylko czas i miejsce (IHoldAction).
     /// </summary>
     public class ChopProgress : MonoBehaviour
     {
-        public const float Window = 2.5f;   // tyle sekund może minąć między kliknięciami w serii
         const float Ppu = 16f;
         const int PipOrder = 4600;
+        const int Steps = 16;   // ile różnych stanów kółka (sprite'y w pamięci podręcznej)
         static readonly Color32 Filled = new Color32(240, 138, 58, 255), Empty = new Color32(28, 21, 32, 255),
                                 Outline = new Color32(15, 10, 16, 255);
 
-        int hits, need;
-        float last = -100f;
-        SpriteRenderer pips;
-
-        /// <summary>Czy seria trwa (było uderzenie w ostatnich Window sekundach).</summary>
-        public bool Active => hits > 0 && Time.unscaledTime - last <= Window;
+        SpriteRenderer ring;
 
         public static ChopProgress For(GameObject go)
         {
@@ -28,84 +23,70 @@ namespace Wyspa.World
             return cp != null ? cp : go.AddComponent<ChopProgress>();
         }
 
-        /// <summary>Jedno uderzenie; zwraca, ile padło w tej serii. showFrom: od którego uderzenia pokazać kropki.</summary>
-        public int Hit(int required, Vector3 top, int showFrom = 1)
+        /// <summary>Kółko nad punktem top, wypełnione w progress (0..1).</summary>
+        public void Show(Vector3 top, float progress)
         {
-            if (!Active)
-                hits = 0;
-            need = Mathf.Max(1, required);
-            hits++;
-            last = Time.unscaledTime;
-            if (hits >= showFrom && hits < need)
-                ShowPips(top);
-            else
-                HidePips();
-            return hits;
-        }
-
-        public void Clear()
-        {
-            hits = 0;
-            HidePips();
-        }
-
-        void Update()
-        {
-            if (hits > 0 && !Active)
-                Clear();
-        }
-
-        void OnDisable() => HidePips();
-
-        void ShowPips(Vector3 top)
-        {
-            if (pips == null)
+            if (ring == null)
             {
-                var go = new GameObject("ChopPips");
+                var go = new GameObject("ChopRing");
                 // w korzeniu sceny: nie trzęsie się ani nie skaluje z obiektem i nie trafia do odbić w wodzie (skan dzieci DecoRoot)
-                pips = go.AddComponent<SpriteRenderer>();
-                pips.sortingOrder = PipOrder;
+                ring = go.AddComponent<SpriteRenderer>();
+                ring.sortingOrder = PipOrder;
                 var art = Island.Instance != null ? Island.Instance.Art : null;
                 if (art != null && art.glow != null)
-                    pips.sharedMaterial = art.glow;   // bez oświetlenia: czytelne także nocą
+                    ring.sharedMaterial = art.glow;   // bez oświetlenia: czytelne także nocą
             }
-            pips.sprite = Pips(hits, need);
-            pips.enabled = true;
-            pips.transform.position = new Vector3(Mathf.Round(top.x * Ppu) / Ppu, Mathf.Round((top.y + 3f / Ppu) * Ppu) / Ppu, 0f);
+            ring.sprite = Ring(Mathf.Clamp(Mathf.FloorToInt(progress * Steps), 0, Steps));
+            ring.enabled = true;
+            ring.transform.position = new Vector3(Mathf.Round(top.x * Ppu) / Ppu, Mathf.Round((top.y + 3f / Ppu) * Ppu) / Ppu, 0f);
         }
 
-        void HidePips()
+        public void Hide()
         {
-            if (pips != null)
-                pips.enabled = false;
+            if (ring != null)
+                ring.enabled = false;
         }
+
+        void OnDisable() => Hide();
 
         void OnDestroy()
         {
-            if (pips != null)
-                Destroy(pips.gameObject);
+            if (ring != null)
+                Destroy(ring.gameObject);
         }
 
-        static readonly System.Collections.Generic.Dictionary<int, Sprite> cache = new System.Collections.Generic.Dictionary<int, Sprite>();
+        static readonly Sprite[] cache = new Sprite[Steps + 1];
 
-        /// <summary>Kropki 2x2 z odstępem 1 px w ciemnej obwódce: done pełnych z need.</summary>
-        static Sprite Pips(int done, int need)
+        /// <summary>Pierścień 11x11 px w ciemnej obwódce, wypełniany od góry zgodnie z ruchem wskazówek zegara (step z Steps).</summary>
+        static Sprite Ring(int step)
         {
-            int key = need * 100 + done;
-            if (cache.TryGetValue(key, out var s) && s != null)
-                return s;
-            int w = need * 3 + 1, h = 4;
-            var px = new Color32[w * h];
-            for (int i = 0; i < px.Length; i++) px[i] = Outline;
-            for (int i = 0; i < need; i++)
-                for (int y = 1; y <= 2; y++)
-                    for (int x = 0; x < 2; x++)
-                        px[y * w + 1 + i * 3 + x] = i < done ? Filled : Empty;
-            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
+            if (cache[step] != null)
+                return cache[step];
+            const int size = 11;
+            var px = new Color32[size * size];
+            float c = (size - 1) / 2f;
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = x - c, dy = y - c;
+                    float r = Mathf.Sqrt(dx * dx + dy * dy);
+                    if (r > 5.3f)
+                        continue;   // poza kółkiem: przezroczyste
+                    if (r > 4.4f || r < 1.6f)
+                    {
+                        px[y * size + x] = Outline;
+                        continue;
+                    }
+                    // kąt od góry, zgodnie z ruchem wskazówek zegara (0..1)
+                    float a = Mathf.Atan2(dx, dy) / (2f * Mathf.PI);
+                    if (a < 0f) a += 1f;
+                    px[y * size + x] = a < step / (float)Steps ? Filled : Empty;
+                }
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
             tex.SetPixels32(px);
             tex.Apply(false);
-            s = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0f), Ppu);
-            cache[key] = s;
+            var s = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0f), Ppu);
+            cache[step] = s;
             return s;
         }
     }

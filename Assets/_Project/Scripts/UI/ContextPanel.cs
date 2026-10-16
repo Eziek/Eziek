@@ -9,9 +9,16 @@ using Wyspa.World;
 
 namespace Wyspa.UI
 {
+    /// <summary>Cel panelu, który nie jest obiektem Unity (np. opis grządki): Alive = false zamyka panel.</summary>
+    public interface IContextAlive
+    {
+        bool Alive { get; }
+    }
+
     /// <summary>
     /// Mały panel przy obiekcie (GDD §12.3): nazwa, opis, przyciski (Usuń, Sprzedaj, Przenieś).
     /// Klik obok, PPM albo Esc zamyka. Obiekt na kafelku dostaje też „Przenieś” (tryb stawiania).
+    /// Otwiera go klik w obiekt albo panel informacji (prawy klik, przytrzymanie palca; §9 p. 136).
     /// </summary>
     public class ContextPanel : MonoBehaviour
     {
@@ -86,6 +93,26 @@ namespace Wyspa.UI
                 tabOwner = what;
                 selectedTab = 0;
             }
+            var info = Collect(what);
+            target = what;
+            anchor = info.worldAnchor;
+            live = info.live;
+            liveTimer = LiveEvery;
+            shownSignature = Signature(info);
+            // najpierw aktywny: TextMeshPro źle mierzy teksty na nieaktywnych obiektach (za wąskie przyciski)
+            blocker.SetActive(true);
+            blocker.transform.SetAsLastSibling();
+            Build(info);
+            Follow();
+        }
+
+        const float LiveEvery = 0.5f;
+        bool live;
+        float liveTimer;
+        string shownSignature;
+
+        ContextInfo Collect(IContextActions what)
+        {
             var info = new ContextInfo { tab = selectedTab };
             what.FillContext(info);
             if (info.tabs.Count > 0 && selectedTab >= info.tabs.Count)
@@ -98,11 +125,34 @@ namespace Wyspa.UI
             if (what is TileObject obj && obj.NeedsTile && obj.Placed && startMove != null)
                 info.Button(Loc.Get("act.move"), () => startMove(obj));
             AddDismantle(what, info);
-            target = what;
+            return info;
+        }
+
+        /// <summary>Treść panelu jako tekst: odświeżamy tylko, gdy coś się zmieniło (przebudowa kasuje wciśnięty przycisk).</summary>
+        static string Signature(ContextInfo info)
+        {
+            var sb = new System.Text.StringBuilder(info.title);
+            foreach (var l in info.lines) sb.Append('\n').Append(l);
+            foreach (var t in info.tabs) sb.Append('\t').Append(t);
+            foreach (var b in info.buttons) sb.Append('\r').Append(b.label).Append(b.enabled ? '+' : '-');
+            return sb.ToString();
+        }
+
+        /// <summary>Panel na żywo (ContextInfo.live): nowa treść, gdy się zmieniła i gracz nie trzyma właśnie przycisku.</summary>
+        void RefreshLive()
+        {
+            if (!live || target == null)
+                return;
+            liveTimer -= Time.unscaledDeltaTime;
+            if (liveTimer > 0f || UiInput.PointerHeld)
+                return;
+            liveTimer = LiveEvery;
+            var info = Collect(target);
+            string sig = Signature(info);
+            if (sig == shownSignature)
+                return;
+            shownSignature = sig;
             anchor = info.worldAnchor;
-            // najpierw aktywny: TextMeshPro źle mierzy teksty na nieaktywnych obiektach (za wąskie przyciski)
-            blocker.SetActive(true);
-            blocker.transform.SetAsLastSibling();
             Build(info);
             Follow();
         }
@@ -261,8 +311,13 @@ namespace Wyspa.UI
         {
             if (!IsOpen)
                 return;
-            if (UiInput.EscapePressed || UiInput.RightPressed || (target is UnityEngine.Object o && o == null))
+            if (UiInput.EscapePressed || UiInput.RightPressed || (target is UnityEngine.Object o && o == null)
+                || (target is IContextAlive alive && !alive.Alive))
+            {
                 Close();
+                return;
+            }
+            RefreshLive();
         }
 
         void LateUpdate()

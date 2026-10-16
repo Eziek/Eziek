@@ -9,12 +9,12 @@ using Wyspa.Visual;
 namespace Wyspa.World
 {
     /// <summary>
-    /// Dekoracja na kafelku (drzewo, kamień, krzak, pień, gruz). Kilka szybkich kliknięć usuwa ją (koszt w Żarze, nagroda,
-    /// GDD §14, §9 p. 121): każde kliknięcie to uderzenie (drgnięcie, odpryski), przerwa ponad ChopProgress.Window kasuje serię.
-    /// Zabytek (landmark): klik otwiera panel z kawałkiem historii.
+    /// Dekoracja na kafelku (drzewo, kamień, krzak, pień, gruz). Przytrzymanie usuwa ją (koszt w Żarze, nagroda, GDD §14,
+    /// §9 p. 136): w trakcie co chwilę uderzenie (drgnięcie, odpryski), nad obiektem napełnia się kółko (ChopProgress).
+    /// Krótki klik otwiera panel (koszt, nagroda, „Usuń”). Zabytek (landmark): klik otwiera panel z kawałkiem historii.
     /// Animacje skokowe ~10 kl./s: potrząśnięcie, przewracanie / pęknięcie / ścięcie, cząsteczki, potem pozostałość.
     /// </summary>
-    public class Decoration : MonoBehaviour, IClickable, IContextActions
+    public class Decoration : MonoBehaviour, IClickable, IContextActions, IHoldAction
     {
         const float Ppu = 16f;
         const float Step = 0.1f;
@@ -41,7 +41,7 @@ namespace Wyspa.World
             sr = renderer;
         }
 
-        /// <summary>Ile szybkich uderzeń potrzeba: krzaki i drobiazgi 3, pnie i kłody 4, drzewa 5, kamienie 6.</summary>
+        /// <summary>Ile uderzeń w trakcie przytrzymania (i jak długo trzymać): krzaki i drobiazgi 3, pnie i kłody 4, drzewa 5, kamienie 6.</summary>
         public int HitsNeeded
         {
             get
@@ -56,6 +56,47 @@ namespace Wyspa.World
             }
         }
 
+        bool Affordable
+        {
+            get
+            {
+                var game = GameLoop.Instance;
+                return art != null && (game == null || game.Essence.Amount >= art.essenceCost);
+            }
+        }
+
+        public bool CanHold => !removing && art != null && art.removable && !art.landmark && Affordable;
+        /// <summary>Krzak 0,9 s, kamień 1,2 s.</summary>
+        public float HoldSeconds => 0.6f + 0.1f * HitsNeeded;
+        public Vector3 HoldAnchor => sr != null ? new Vector3(transform.position.x, sr.bounds.max.y, 0f) : transform.position + Vector3.up;
+
+        float lastProgress;
+        int strikes;
+
+        /// <summary>W trakcie przytrzymania: HitsNeeded uderzeń rozłożonych na cały czas (drgnięcie, odpryski, stuk).</summary>
+        public void HoldTick(float progress)
+        {
+            if (progress < lastProgress)
+                strikes = 0;   // nowe przytrzymanie
+            lastProgress = progress;
+            int due = Mathf.Min(HitsNeeded - 1, Mathf.FloorToInt(progress * HitsNeeded));
+            if (due <= strikes - 1 || removing)
+                return;
+            strikes = due + 1;
+            StopShake();
+            home = transform.position;
+            shake = StartCoroutine(HitShake());
+        }
+
+        public void HoldComplete()
+        {
+            lastProgress = 0f;
+            strikes = 0;
+            StopShake();
+            if (!removing && island != null)
+                island.TryRemove(this);
+        }
+
         public void OnClick()
         {
             if (removing || art == null)
@@ -67,27 +108,18 @@ namespace Wyspa.World
             }
             if (!art.removable)
                 return;
-            var game = GameLoop.Instance;
-            if (game != null && game.Essence.Amount < art.essenceCost)
+            if (!Affordable)
             {
                 // za mało Żaru: wyraźne „nie” (drgnięcie bez odprysków) i ile brakuje, zamiast cichego braku reakcji
+                var game = GameLoop.Instance;
                 GameEvents.RaiseToast("ui.deco.need_have", art.essenceCost, Mathf.FloorToInt(game.Essence.Amount));
                 StopShake();
                 home = transform.position;
                 shake = StartCoroutine(Refuse());
                 return;
             }
-            var top = sr != null ? new Vector3(transform.position.x, sr.bounds.max.y, 0f) : transform.position + Vector3.up;
-            int hits = ChopProgress.For(gameObject).Hit(HitsNeeded, top);
-            StopShake();
-            if (hits >= HitsNeeded)
-            {
-                ChopProgress.For(gameObject).Clear();
-                island.TryRemove(this);
-                return;
-            }
-            home = transform.position;
-            shake = StartCoroutine(HitShake());
+            // krótki klik: panel z kosztem, nagrodą i podpowiedzią (usuwa przytrzymanie albo „Usuń”)
+            GameEvents.RequestContext(this);
         }
 
         void StopShake()
@@ -144,8 +176,10 @@ namespace Wyspa.World
             }
             if (art == null || !art.removable)
                 return;
+            info.live = true;   // Żar przybywa: przycisk „Usuń” sam się włącza
             info.lines.Add(Loc.Get("ui.deco.cost", art.essenceCost));
             info.lines.Add(Loc.Get("ui.deco.reward." + art.reward.ToString().ToLowerInvariant(), art.rewardAmount));
+            info.lines.Add(Loc.Get("ui.deco.hint"));
             var game = GameLoop.Instance;
             bool afford = game != null && game.Essence.Amount >= art.essenceCost;
             info.Button(Loc.Get("act.remove"), () => island.TryRemove(this), afford);

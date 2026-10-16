@@ -21,6 +21,8 @@ namespace Wyspa.Core
         public Vector3 worldAnchor;
         /// <summary>Przyciski jeden pod drugim, na całą szerokość (np. oferta kupca).</summary>
         public bool verticalButtons;
+        /// <summary>Panel odświeża się sam (co pół sekundy), gdy treść się zmieni: postęp wzrostu, Żar na usunięcie.</summary>
+        public bool live;
         public readonly List<string> lines = new List<string>();
         public readonly List<ContextButton> buttons = new List<ContextButton>();
 

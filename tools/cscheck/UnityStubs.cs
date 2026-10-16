@@ -37,7 +37,7 @@ namespace UnityEngine
     public class Texture2D : Texture { public static Texture2D whiteTexture; public Texture2D(int w, int h, TextureFormat f, bool mip, bool linear) { } public void SetPixels32(Color32[] c) { } public void SetPixel(int x, int y, Color c) { } public void LoadRawTextureData(byte[] d) { } public void Apply(bool mips) { } }
     public class Camera : Behaviour { public static Camera main; public float aspect; public bool orthographic; public float orthographicSize; public CameraClearFlags clearFlags; public Color backgroundColor; public bool allowHDR; public Vector3 ScreenToWorldPoint(Vector3 p) => p; public Vector3 WorldToScreenPoint(Vector3 p) => p; public Vector3 WorldToViewportPoint(Vector3 p) => p; }
     public enum CameraClearFlags { Skybox, SolidColor }
-    public class Collider2D : Behaviour { public Bounds bounds => default; public Vector2 offset; }
+    public class Collider2D : Behaviour { public Bounds bounds => default; public Vector2 offset; public bool OverlapPoint(Vector2 point) => false; }
     public class BoxCollider2D : Collider2D { public Vector2 size; }
     public static class Input { public static Vector3 mousePosition; public static Vector2 mouseScrollDelta; public static bool GetKey(KeyCode k) => false; public static bool GetMouseButtonDown(int b) => false; public static bool GetMouseButton(int b) => false; public static bool GetMouseButtonUp(int b) => false; public static bool GetKeyDown(KeyCode k) => false; }
     public static class Physics2D { public static Collider2D OverlapPoint(Vector2 p) => null; public static Collider2D[] OverlapPointAll(Vector2 p) => null; }
@@ -58,7 +58,7 @@ namespace UnityEngine
     public static class Application { public static void Quit() { } public static bool isMobilePlatform => false; public static SystemLanguage systemLanguage; public static bool runInBackground; public static bool isFocused; public static int targetFrameRate; public static string persistentDataPath, version; public static event Action<bool> focusChanged; }
     public static class QualitySettings { public static int vSyncCount; }
     public static class Time { public static float unscaledDeltaTime, unscaledTime, timeSinceLevelLoad; public static int frameCount; }
-    public static class Screen { public static int width, height; public static FullScreenMode fullScreenMode; public static Resolution currentResolution; public static void SetResolution(int w, int h, FullScreenMode m) { } }
+    public static class Screen { public static int width, height; public static FullScreenMode fullScreenMode; public static Resolution currentResolution; public static float dpi => 0f; public static void SetResolution(int w, int h, FullScreenMode m) { } }
     public static class Debug { public static void Log(object o) { } public static void LogWarning(object o) { } public static void LogError(object o) { } }
     public static class JsonUtility { public static string ToJson(object o, bool p) => ""; public static T FromJson<T>(string s) => default; }
     public class Gradient { public void SetKeys(GradientColorKey[] c, GradientAlphaKey[] a) { } public Color Evaluate(float t) => default; }

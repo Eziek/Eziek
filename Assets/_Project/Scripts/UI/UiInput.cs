@@ -4,7 +4,8 @@ namespace Wyspa.UI
 {
     /// <summary>
     /// Wejście dla UI i świata - działa z Input System i ze starym Input. Dotyk (telefon, ekran dotykowy; §9 p. 134)
-    /// udaje mysz: krótkie stuknięcie = lewy klik (przy puszczeniu), przytrzymanie w miejscu = prawy przycisk (pierścień akcji),
+    /// udaje mysz: krótkie stuknięcie = lewy klik (przy puszczeniu), przytrzymanie w miejscu = prawy przycisk (panel informacji
+    /// o obiekcie albo pierścień akcji; §9 p. 136), chyba że świat przejął dotyk (ClaimPointer: przytrzymanie drzewa ścina je),
     /// przeciągnięcie jednym palcem = przesuwanie widoku (TouchPan), dwa palce: przesuwanie i szczypanie (PinchStep = przybliżenie).
     /// Pozycja „kursora” przy dotyku to ostatnie miejsce palca (dymki pokazują się tam, gdzie był palec).
     /// </summary>
@@ -25,6 +26,12 @@ namespace Wyspa.UI
         // przy dotyku przyciski myszy się nie liczą: Windows z ekranem dotykowym udaje też mysz (klik byłby podwójny)
         static bool MouseOk => M != null && !touchUsed;
         public static bool LeftPressed { get { Poll(); return (MouseOk && M.leftButton.wasPressedThisFrame) || tap; } }
+        /// <summary>Wciśnięcie lewego albo dotknięcie ekranu jednym palcem (od razu, nie przy puszczeniu; np. przytrzymanie, by ściąć).</summary>
+        public static bool PointerDown { get { Poll(); return (MouseOk && M.leftButton.wasPressedThisFrame) || touchDown; } }
+        /// <summary>Lewy trzymany albo jeden palec trzymany w miejscu (przesunięty palec to już przesuwanie widoku).</summary>
+        public static bool PointerHeld { get { Poll(); return (MouseOk && M.leftButton.isPressed) || (fingers == 1 && !multi && !moved); } }
+        /// <summary>Puszczenie lewego albo podniesienie palca w tej klatce.</summary>
+        public static bool PointerUp { get { Poll(); return (MouseOk && M.leftButton.wasReleasedThisFrame) || touchUp; } }
         public static bool RightPressed { get { Poll(); return (MouseOk && M.rightButton.wasPressedThisFrame) || longStart; } }
         public static bool RightHeld { get { Poll(); return (MouseOk && M.rightButton.isPressed) || (longFired && fingers == 1); } }
         public static bool RightReleased { get { Poll(); return (MouseOk && M.rightButton.wasReleasedThisFrame) || longEnd; } }
@@ -38,6 +45,9 @@ namespace Wyspa.UI
 #else
         public static Vector2 MousePosition => UnityEngine.Input.mousePosition;
         public static bool LeftPressed => UnityEngine.Input.GetMouseButtonDown(0);
+        public static bool PointerDown => UnityEngine.Input.GetMouseButtonDown(0);
+        public static bool PointerHeld => UnityEngine.Input.GetMouseButton(0);
+        public static bool PointerUp => UnityEngine.Input.GetMouseButtonUp(0);
         public static bool RightPressed => UnityEngine.Input.GetMouseButtonDown(1);
         public static bool RightHeld => UnityEngine.Input.GetMouseButton(1);
         public static bool RightReleased => UnityEngine.Input.GetMouseButtonUp(1);
@@ -52,6 +62,12 @@ namespace Wyspa.UI
         public static Vector2 TouchPan { get { Poll(); return pan; } }
         /// <summary>Szczypanie w tej klatce: +1 przybliż, -1 oddal, 0 nic (stopniami, jak kółko myszy).</summary>
         public static int PinchStep { get { Poll(); return pinchStep; } }
+        /// <summary>
+        /// Ten dotyk należy już do świata (przytrzymanie, by ściąć): przy puszczeniu nie będzie stuknięcia, a trzymanie
+        /// nie zamieni się w prawy przycisk (panel informacji). Ważne do podniesienia palca.
+        /// </summary>
+        public static void ClaimPointer() => claimed = true;
+
         /// <summary>Ostatnie wejście było dotykiem (np. żeby nie chować HUD-u, bo palec nie „rusza myszą”).</summary>
         public static bool TouchUsed { get { Poll(); return touchUsed; } }
 
@@ -60,8 +76,8 @@ namespace Wyspa.UI
         static int fingers;                       // palce na ekranie w poprzedniej klatce
         static Vector2 touchPos, downPos, lastCenter;
         static float downTime, lastDistance, pinchAccum = 1f;
-        static bool touchUsed, multi, moved, longFired;
-        static bool tap, longStart, longEnd;      // zdarzenia tej klatki
+        static bool touchUsed, multi, moved, longFired, claimed;
+        static bool tap, longStart, longEnd, touchDown, touchUp;   // zdarzenia tej klatki
         static Vector2 pan;
         static int pinchStep;
 
@@ -70,7 +86,7 @@ namespace Wyspa.UI
             if (polledFrame == Time.frameCount)
                 return;
             polledFrame = Time.frameCount;
-            tap = longStart = longEnd = false;
+            tap = longStart = longEnd = touchDown = touchUp = false;
             pan = Vector2.zero;
             pinchStep = 0;
 #if ENABLE_INPUT_SYSTEM
@@ -107,6 +123,7 @@ namespace Wyspa.UI
                 else
                     pinchAccum = 1f;
                 if (longFired) { longFired = false; longEnd = true; }
+                if (!multi && fingers == 1) touchUp = true;   // drugi palec kończy przytrzymanie pierwszego
                 multi = true;
                 lastCenter = center;
                 lastDistance = distance;
@@ -118,7 +135,8 @@ namespace Wyspa.UI
                 {
                     downPos = a;
                     downTime = Time.unscaledTime;
-                    multi = moved = longFired = false;
+                    multi = moved = longFired = claimed = false;
+                    touchDown = true;
                 }
                 else if (!multi)
                 {
@@ -126,7 +144,7 @@ namespace Wyspa.UI
                         moved = true;
                     if (moved && !longFired)
                         pan = a - touchPos;   // jeden palec przeciąga widok
-                    if (!moved && !longFired && Time.unscaledTime - downTime >= LongPress)
+                    if (!moved && !longFired && !claimed && Time.unscaledTime - downTime >= LongPress)
                     {
                         longFired = true;     // przytrzymanie = prawy przycisk
                         longStart = true;
@@ -139,8 +157,10 @@ namespace Wyspa.UI
                 // palec puszczony: krótko i w miejscu = lewy klik, po przytrzymaniu = puszczenie prawego
                 if (longFired)
                     longEnd = true;
-                else if (!multi && !moved && Time.unscaledTime - downTime < LongPress)
+                else if (!multi && !moved && !claimed && Time.unscaledTime - downTime < LongPress)
                     tap = true;
+                if (!multi)
+                    touchUp = true;
                 longFired = false;
             }
             fingers = n;
