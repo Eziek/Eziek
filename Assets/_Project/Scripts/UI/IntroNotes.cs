@@ -42,7 +42,7 @@ namespace Wyspa.UI
         /// <summary>Dopisek z gestem pod zadaniem (tylko dotyk): w kroku „rośnie” przesuwanie i przybliżanie itd.</summary>
         string TipKey => !Touch ? null : Step == 1 ? "intro.tip.pan" : Step == 3 ? "intro.tip.chop" : Step == Steps ? "intro.tip.info" : null;
 
-        /// <summary>Przycisk paska w rogu, który miga w tym kroku (rozbudowa, sklep z lampami).</summary>
+        /// <summary>Przycisk paska na dole, który miga w tym kroku (rozbudowa, sklep z lampami).</summary>
         string BarIcon => Step == 3 ? "plus" : Step == 4 ? "shop" : null;
 
         HudView hud;
@@ -239,7 +239,8 @@ namespace Wyspa.UI
             float wantX = side ? local.x - r.xMin - 8f - size.x / 2f : local.x - r.xMin;
             float wantY = side ? local.y - r.yMin + size.y / 2f : local.y - r.yMin - 2f;
             float x = Mathf.Clamp(wantX, size.x / 2f + 2f, Mathf.Max(size.x / 2f + 2f, r.width - size.x / 2f - 2f));
-            float y = Mathf.Clamp(wantY, size.y + 2f, Mathf.Max(size.y + 2f, r.height - 2f));
+            float low = size.y + 2f + MenuBar.Height;   // nad paskiem przycisków na dole ekranu
+            float y = Mathf.Clamp(wantY, low, Mathf.Max(low, r.height - 2f));
             note.anchoredPosition = new Vector2(Mathf.Round(x - size.x / 2f) + size.x / 2f, Mathf.Round(y));
         }
 

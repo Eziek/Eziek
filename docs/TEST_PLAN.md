@@ -638,7 +638,7 @@ Najpierw Wyspa → 2 (nowe wartości ulepszeń). Scena `MainLevel` nie ma już `
 
 ## 55. Nowe sterowanie: pasek przycisków, panel informacji, ścinanie przytrzymaniem
 Bez Wyspa → 2/3. Najlepiej i na komputerze, i na telefonie (APK z Wyspa → Wydanie → 3).
-1. Prawy dolny róg: cztery przyciski (Księga, Sklep, Rozbudowa, Menu), dymki z nazwami po najechaniu. Menu otwiera koło
+1. Na dole ekranu, pośrodku: cztery przyciski (Księga, Sklep, Rozbudowa, Menu), dymki z nazwami po najechaniu. Menu otwiera koło
    przy przycisku (Opcje, Zapisz grę, Menu główne, Wyjdź; na telefonie bez Wyjdź). W menu głównym, w Przystani,
    przy otwartej Księdze i w mini-trybie paska nie ma.
 2. Rozbudowa z paska: przycisk podświetlony, drugie kliknięcie wychodzi z trybu. Kupno lampy: w rogu tylko „Anuluj”, działa.
@@ -661,5 +661,6 @@ Nowa gra (nowy zapis), najlepiej na telefonie (APK z Wyspa → Wydanie → 3).
    „Kliknij” (dotknięcie ekranu dotykowego na Windows przełącza na wersję z palcem).
 2. Krok 2: pod zadaniem szary dopisek o przeciąganiu i dwóch palcach. Krok 4: dopisek o ścinaniu przytrzymaniem.
    „Gotowe”: dopisek o panelu informacji.
-3. Krok 4: miga przycisk Rozbudowa w prawym dolnym rogu; krok 5: miga Sklep. Po wprowadzeniu nic nie miga.
+3. Krok 4: miga przycisk Rozbudowa na dole ekranu; krok 5: miga Sklep. Po wprowadzeniu nic nie miga.
 4. Teksty w EN, DE, JA, ZH mieszczą się na karteczce (z boku wyspy i pod nią).
+5. Wąskie okno: karteczka pod wyspą stoi nad paskiem przycisków, nie zasłania go.

@@ -78,7 +78,7 @@ ui.expand.find,Coś błyszczy we mgle...,Something glimmers in the fog...,Etwas 
 ui.expand.click,LPM: wyrwij z mgły,Left click: claim from the fog,Linksklick: dem Nebel entreißen,左クリック：霧から取り戻す,左键：从迷雾中夺回,
 ui.expand.missing_coins,Brakuje monet: {0},Coins missing: {0},Fehlende Münzen: {0},コインが足りない：{0},缺少金币：{0},
 ui.expand.missing_ember,Brakuje Żaru: {0},Ember missing: {0},Fehlende Glut: {0},熾火が足りない：{0},缺少余火：{0},
-ui.expand.panel,Rozbudowa: {0} {0:plural:kafelek|kafelki|kafelków} - wyjście: przycisk w rogu albo PPM,Expanding: {0} {0:plural:tile|tiles} - exit: corner button or right click,Ausbau: {0} {0:plural:Landstück|Landstücke} - beenden: Knopf in der Ecke oder Rechtsklick,拡張：{0}マス - 終了：隅のボタンか右クリック,扩建：{0}格 - 退出：角落按钮或右键,
+ui.expand.panel,Rozbudowa: {0} {0:plural:kafelek|kafelki|kafelków} - wyjście: przycisk na dole albo PPM,Expanding: {0} {0:plural:tile|tiles} - exit: bottom button or right click,Ausbau: {0} {0:plural:Landstück|Landstücke} - beenden: Knopf unten oder Rechtsklick,拡張：{0}マス - 終了：下のボタンか右クリック,扩建：{0}格 - 退出：底部按钮或右键,
 ui.expand.need,Potrzeba {0} {0:plural:monety|monet|monet} i {1} Żaru,You need {0} {0:plural:coin|coins} and {1} Ember,Benötigt: {0} {0:plural:Münze|Münzen} und {1} Glut,{0}コインと{1}熾火が必要,需要{0}金币和{1}余火,toast
 ui.dig.title,Przekop na grządkę,Dig a plot,Beet anlegen,畑を耕す,开垦田地,
 ui.dig.cost,{0} {0:plural:moneta|monety|monet},{0} {0:plural:coin|coins},{0} {0:plural:Münze|Münzen},{0}コイン,{0}金币,
@@ -97,7 +97,7 @@ ui.lamp.off,Zgaszona,Out,Erloschen,消灯,熄灭,
 ui.place.cost,Koszt: {0} {0:plural:moneta|monety|monet},Cost: {0} {0:plural:coin|coins},Kosten: {0} {0:plural:Münze|Münzen},コスト：{0}コイン,花费：{0}金币,
 ui.place.lights,Oświetli: {0} {0:plural:grządkę|grządki|grządek},Will light: {0} {0:plural:plot|plots},Beleuchtet: {0} {0:plural:Beet|Beete},照らす畑：{0},可照亮：{0}块田地,
 ui.place.blocked,Tu nie można postawić,Can't place here,Hier nicht möglich,ここには置けない,无法放在这里,
-ui.place.click,Klik: postaw - anuluj: przycisk w rogu albo PPM,Click: place - cancel: corner button or right click,Klick: setzen - abbrechen: Knopf in der Ecke oder Rechtsklick,クリック：設置 - キャンセル：隅のボタンか右クリック,点击：放置 - 取消：角落按钮或右键,
+ui.place.click,Klik: postaw - anuluj: przycisk na dole albo PPM,Click: place - cancel: bottom button or right click,Klick: setzen - abbrechen: Knopf unten oder Rechtsklick,クリック：設置 - キャンセル：下のボタンか右クリック,点击：放置 - 取消：底部按钮或右键,
 ui.toast.placed,Postawiono: {0},Placed: {0},Aufgestellt: {0},設置した：{0},已放置：{0},
 ui.shop.lamps,Lampy,Lamps,Lampen,ランプ,灯,
 ui.shop.more,Budowle i Morze wkrótce.,Buildings and Sea coming soon.,Bauwerke und Meer folgen bald.,建物と海は近日公開。,建筑与海洋即将推出。,
@@ -423,7 +423,7 @@ ui.kiln.waiting,"Czeka, aż ognik przyniesie drewno.",Waiting for a wisp to brin
 ui.bestiary.seen.count,{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{1} = ile razy widziane
 ui.tree.hint,Klik: owoce albo szczegóły; przytrzymaj: zetnij,Click: fruit or details; hold: chop,Klick: Obst oder Details; gedrückt halten: fällen,クリック：収穫か詳細、長押し：伐採,点击：摘果或详情；长按：砍伐,dymek nad drzewem owocowym (§9 p. 136)
 ui.tree.hold_hint,"Przytrzymaj drzewo, aby je ściąć",Hold the tree to chop it down,"Halte den Baum gedrückt, um ihn zu fällen",木を長押しで伐採,长按树木即可砍伐,panel drzewa owocowego (§9 p. 136)
-ui.place.click_more,Klik: postaw (można kolejne) - koniec: przycisk w rogu albo PPM,Click: place (keep placing) - done: corner button or right click,Klick: setzen (weitere möglich) - fertig: Knopf in der Ecke oder Rechtsklick,クリック：設置（続けて置ける） - 終了：隅のボタンか右クリック,点击：放置（可继续放置） - 结束：角落按钮或右键,tryb stawiania seriami (GDD §9 p. 126)
+ui.place.click_more,Klik: postaw (można kolejne) - koniec: przycisk na dole albo PPM,Click: place (keep placing) - done: bottom button or right click,Klick: setzen (weitere möglich) - fertig: Knopf unten oder Rechtsklick,クリック：設置（続けて置ける） - 終了：下のボタンか右クリック,点击：放置（可继续放置） - 结束：底部按钮或右键,tryb stawiania seriami (GDD §9 p. 126)
 ui.deco.need_have,"Za mało Żaru: potrzeba {0}, masz {1}","Not enough Ember: need {0}, you have {1}","Zu wenig Glut: {0} nötig, du hast {1}",熾火が足りない：必要{0}、所持{1},余火不足：需要{0}，现有{1},toast: kliknięcie w dzicz bez Żaru
 ui.deco.cost_missing,Koszt: {0} Żaru (masz {1}),Cost: {0} Ember (you have {1}),Kosten: {0} Glut (du hast {1}),コスト：熾火{0}（所持{1}）,消耗：{0}余火（现有{1}）,"dymek dziczy, gdy brakuje Żaru (na czerwono)"
 ui.hud.season,{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},{0} {1}/{2},pasek HUD: pora roku i jej dzień (1-6)

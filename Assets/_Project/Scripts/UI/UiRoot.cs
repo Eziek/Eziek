@@ -35,7 +35,7 @@ namespace Wyspa.UI
         public PlacementMode Placement { get; private set; }
         public TooltipView Tooltip { get; private set; }
         public ActionRing Ring { get; private set; }
-        /// <summary>Pasek przycisków w rogu (Księga, Sklep, Rozbudowa, Menu; §9 p. 136).</summary>
+        /// <summary>Pasek przycisków na dole ekranu (Księga, Sklep, Rozbudowa, Menu; §9 p. 136).</summary>
         public MenuBar Bar { get; private set; }
         /// <summary>Menu główne (tylko gdy nie wybrano jeszcze slotu zapisu).</summary>
         public MainMenuView Menu { get; private set; }
@@ -417,7 +417,7 @@ namespace Wyspa.UI
             return probe.lines.Count > 0 || probe.buttons.Count > 0 || probe.tabs.Count > 0 ? target : null;
         }
 
-        /// <summary>Przyciski paska w rogu: te same co stałe wpisy pierścienia, Menu otwiera koło podmenu przy przycisku.</summary>
+        /// <summary>Przyciski paska na dole: te same co stałe wpisy pierścienia, Menu otwiera koło podmenu przy przycisku.</summary>
         List<MenuBar.Item> BarItems() => new List<MenuBar.Item>
         {
             new MenuBar.Item { icon = "book", nameKey = "term.grimoire", run = _ => OpenBook(BookView.Tab.Upgrades) },

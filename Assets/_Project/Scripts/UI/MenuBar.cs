@@ -7,7 +7,7 @@ using Wyspa.Localization;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// Pasek przycisków w prawym dolnym rogu (GDD §9 p. 136): Księga, Sklep, Rozbudowa wyspy, Menu (opcje, zapis, menu główne,
+    /// Pasek przycisków na dole ekranu, pośrodku (GDD §9 p. 136, 139): Księga, Sklep, Rozbudowa wyspy, Menu (opcje, zapis, menu główne,
     /// wyjście w kole przy przycisku). Widoczny zawsze na wyspie, na komputerze i na telefonie; pierścień pod prawym
     /// przyciskiem zostaje na komputerze jako skrót. W trybie stawiania pasek ma tylko „Anuluj” (na telefonie nie ma Esc).
     /// </summary>
@@ -35,6 +35,9 @@ namespace Wyspa.UI
 
         /// <summary>Ikona przycisku, który miga (samouczek wskazuje rozbudowę albo sklep); null = żaden.</summary>
         public string Highlight { get; set; }
+
+        /// <summary>Ile pikseli UI od dołu płótna zajmuje pasek (karteczki i panele stoją nad nim).</summary>
+        public const float Height = Size + Margin + 2f;
         Func<bool> placing;
 
         public static MenuBar Create(RectTransform canvasRoot, TooltipView tooltip, List<Item> items, Action cancel,
@@ -46,7 +49,8 @@ namespace Wyspa.UI
             view.hidden = hidden;
             view.placing = placing;
             view.group = root.gameObject.AddComponent<CanvasGroup>();
-            view.bar = Ui.Place(root, Ui.BottomRight, Ui.BottomRight, new Vector2(-Margin, Margin),
+            var bottom = new Vector2(0.5f, 0f);
+            view.bar = Ui.Place(root, bottom, bottom, new Vector2(0f, Margin),
                                 new Vector2(items.Count * (Size + Gap) - Gap, Size));
             for (int i = 0; i < items.Count; i++)
             {

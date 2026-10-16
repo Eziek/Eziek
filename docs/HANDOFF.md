@@ -1,11 +1,11 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-138), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-139), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
-- **Nowe sterowanie** (GDD §9 p. 136, TEST_PLAN 55): pasek przycisków w rogu (`UI/MenuBar.cs`), panel informacji pod PPM /
+- **Nowe sterowanie** (GDD §9 p. 136, TEST_PLAN 55): pasek przycisków na dole pośrodku (`UI/MenuBar.cs`, p. 139), panel informacji pod PPM /
   przytrzymaniem palca (`UiRoot.OpenInfoOrRing`, `UI/PlotInfo.cs`), ścinanie przytrzymaniem (`Input/IHoldAction`,
   `ClickRouter`, `World/ChopProgress.cs` jako kółko). Nie testowane w Unity ani na telefonie.
 - **URP musi mieć renderer 2D** (GDD §9 p. 135): z rendererem 3D woda i mgła się nie rysują. W repo już jest
