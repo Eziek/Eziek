@@ -52,6 +52,18 @@ Po zmianie nazwy produktu Unity zapisuje gry w nowym folderze: `SaveSystem` sam 
 (`DefaultCompany/My project (5)`), a autostart przenosi się na nowy plik .exe. Ustawienia z `PlayerPrefs` (język, okno)
 zaczynają się od nowa (rejestr pod nową nazwą).
 
+## 3a. Android (APK do testów)
+1. **Unity Hub → Installs → Unity 6.6 → Add modules → Android Build Support** (zaznacz OpenJDK oraz Android SDK & NDK Tools).
+2. Projekt musi mieć **renderer 2D** w `Assets/Settings/PC_RPAsset` i `Mobile_RPAsset` (Renderer List) i wyłączony
+   **GPU Resident Drawer**; z rendererem 3D woda i mgła się nie rysują (ostrzeżenie Wyspa → 1).
+3. **Wyspa → Wydanie → 3. Zbuduj Android (APK do testów)**: przełącza platformę (za pierwszym razem długo), buduje
+   `Builds/MistyPackland-<wersja>.apk` (ARM64, IL2CPP, poziomo, podpis kluczem debug Unity).
+4. Wyślij plik `.apk`. Na telefonie: otwórz plik, zezwól na instalację z tego źródła („Nieznane aplikacje”), zainstaluj.
+   Kolejne wersje instalują się na poprzedniej (ten sam klucz debug, ten sam komputer); `Version` w `ReleaseBuild.cs`
+   musi rosnąć.
+5. Do Google Play: plik `.aab` (`EditorUserBuildSettings.buildAppBundle = true`) i własny klucz (keystore) w Player
+   Settings → Publishing Settings; zrobimy przy wydaniu na telefony.
+
 ## 4. Sprawy prawne i biznesowe
 
 - [ ] **Nazwa:** sprawdzić „Misty Packland” w bazach znaków towarowych (EUIPO, USPTO, WIPO Global Brand Database)

@@ -154,6 +154,10 @@ namespace UnityEditor
         public static void SetApplicationIdentifier(UnityEditor.Build.NamedBuildTarget buildTarget, string identifier) { }
         public static int[] GetIconSizes(UnityEditor.Build.NamedBuildTarget buildTarget, IconKind kind) => null;
         public static void SetIcons(UnityEditor.Build.NamedBuildTarget buildTarget, Texture2D[] icons, IconKind kind) { }
+        public static UIOrientation defaultInterfaceOrientation;
+        public static bool allowedAutorotateToPortrait, allowedAutorotateToPortraitUpsideDown, allowedAutorotateToLandscapeLeft, allowedAutorotateToLandscapeRight;
+        public static void SetScriptingBackend(UnityEditor.Build.NamedBuildTarget buildTarget, ScriptingImplementation backend) { }
+        public static class Android { public static int bundleVersionCode; public static AndroidArchitecture targetArchitectures; }
         public struct SplashScreenLogo { public static SplashScreenLogo Create(float duration = 2f, Sprite logo = null) => default; }
         public sealed class SplashScreen
         {
@@ -163,10 +167,15 @@ namespace UnityEditor
             public static AnimationMode animationMode; public static DrawMode drawMode; public static SplashScreenLogo[] logos;
         }
     }
-    public enum BuildTarget { StandaloneWindows = 5, StandaloneWindows64 = 19 }
+    public enum BuildTarget { StandaloneWindows = 5, Android = 13, StandaloneWindows64 = 19 }
+    public enum BuildTargetGroup { Unknown = 0, Standalone = 1, Android = 7 }
+    public enum UIOrientation { Portrait = 0, PortraitUpsideDown = 1, LandscapeRight = 2, LandscapeLeft = 3, AutoRotation = 4 }
+    public enum ScriptingImplementation { Mono2x = 0, IL2CPP = 1 }
+    [Flags] public enum AndroidArchitecture : uint { None = 0, ARMv7 = 1, ARM64 = 2, X86_64 = 8 }
+    public static class EditorUserBuildSettings { public static bool buildAppBundle; }
     [Flags] public enum BuildOptions { None = 0, Development = 1 }
-    public struct BuildPlayerOptions { public string[] scenes; public string locationPathName; public BuildTarget target; public BuildOptions options; }
-    public static class BuildPipeline { public static UnityEditor.Build.Reporting.BuildReport BuildPlayer(BuildPlayerOptions o) => null; }
+    public struct BuildPlayerOptions { public string[] scenes; public string locationPathName; public BuildTarget target; public BuildTargetGroup targetGroup; public BuildOptions options; }
+    public static class BuildPipeline { public static UnityEditor.Build.Reporting.BuildReport BuildPlayer(BuildPlayerOptions o) => null; public static bool IsBuildTargetSupported(BuildTargetGroup buildTargetGroup, BuildTarget target) => true; }
     public class SerializedObject { public SerializedObject(UnityEngine.Object o) { } public SerializedProperty FindProperty(string n) => null; public bool ApplyModifiedPropertiesWithoutUndo() => true; }
     public class SerializedProperty { public UnityEngine.Object objectReferenceValue; public bool isArray; public int arraySize; public int intValue; public SerializedProperty GetArrayElementAtIndex(int i) => null; public void InsertArrayElementAtIndex(int i) { } }
     public class EditorBuildSettingsScene { public EditorBuildSettingsScene(string p, bool e) { } public string path; public bool enabled; }
@@ -174,7 +183,7 @@ namespace UnityEditor
 }
 namespace UnityEditor.Build
 {
-    public struct NamedBuildTarget { public static readonly NamedBuildTarget Unknown, Standalone; }
+    public struct NamedBuildTarget { public static readonly NamedBuildTarget Unknown, Standalone, Android; }
 }
 namespace UnityEditor.Build.Reporting
 {

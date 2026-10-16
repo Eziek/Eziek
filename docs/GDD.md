@@ -1170,6 +1170,16 @@ Obrazki referencyjne (kopie): `docs/img/`
       przybycie 6.
     - **Telefony:** sterowanie dotykiem (§2.1), Opcje bez ustawień okna na telefonie. Build Android/iOS później.
     - Wymaga **Wyspa → 2** (nowe wartości ulepszeń). Scena: komponent `ActivityTracker` usunięty z `MainLevel.unity`.
+135. **Woda i mgła znikły: renderer 3D w URP; auto-przybliżenie; APK na Androida.**
+    - Przyczyna (log edytora): projekt miał w `PC_RPAsset` renderer **3D** (ustawienia z szablonu w repo), a shadery wody,
+      mgły, atmosfery i odbić mają tylko przebieg `Universal2D`, więc się nie rysowały (ląd i rośliny tak, bo zwykły
+      shader sprite'ów działa w obu). Naprawa w Unity: URP 2D Renderer w Renderer List obu assetów i wyłączony GPU Resident
+      Drawer (wymaga Forward+). Do repo trzeba wypchnąć `Assets/Settings` z rendererem 2D. W F1 zostaje diagnostyka
+      wody i mgły (dane jako kolor, różowy sprite).
+    - **Auto-przybliżenie** (zrzut gracza: w menu wyspa była kropką w morzu mgły): okno zostaje stałe, ale przybliżenie
+      samo dopasowuje się do wyspy (największe parzyste, przy którym ląd z zapasem mieści się w kadrze), dopóki gracz
+      nie przybliży sam (kółko, palce, Opcje); w Opcjach przycisk „Auto” przywraca; menu główne zawsze auto.
+    - **Android:** Wyspa → Wydanie → 3. Zbuduj Android: APK do testów (ARM64, IL2CPP, poziomo), instrukcja `docs/RELEASE.md` §3a.
 
 ---
 

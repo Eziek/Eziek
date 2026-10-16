@@ -108,6 +108,7 @@ namespace Wyspa.World
         {
             Instance = this;
             windowScale = Even(PlayerPrefs.GetInt("viewScale", windowScale));
+            autoZoom = PlayerPrefs.GetInt("viewAutoZoom", 1) == 1;
             mini = PlayerPrefs.GetInt("viewMini", 0) == 1;
             sizePreset = Mathf.Clamp(PlayerPrefs.GetInt("winPreset", 1), -1, SizePresets - 1);
             windowSize = new Vector2Int(PlayerPrefs.GetInt("winW", 0), PlayerPrefs.GetInt("winH", 0));
@@ -158,6 +159,34 @@ namespace Wyspa.World
         /// <summary>Przybliżenie z Opcji (względem środka okna).</summary>
         public void SetScale(int scale) => ZoomTo(scale, new Vector2(Screen.width / 2f, Screen.height / 2f));
 
+        bool autoZoom;
+
+        /// <summary>
+        /// Przybliżenie samo dopasowane do wyspy (ląd z zapasem mieści się w kadrze, jak dawny kadr rosnący z wyspą). Wyłącza się,
+        /// gdy gracz przybliży kółkiem, palcami albo w Opcjach; w menu głównym zawsze automatyczne.
+        /// </summary>
+        public bool AutoZoom
+        {
+            get => autoZoom;
+            set
+            {
+                autoZoom = value;
+                PlayerPrefs.SetInt("viewAutoZoom", value ? 1 : 0);
+                Refit();
+            }
+        }
+
+        /// <summary>Największe parzyste przybliżenie, przy którym ląd z zapasem (Margin) mieści się w oknie.</summary>
+        int FitZoom(Vector2Int win)
+        {
+            var land = LandPixels();
+            float w = land.width + 2 * Margin.x, h = land.height + 2 * Margin.y;
+            for (int s = MaxZoom; s > 2; s -= 2)
+                if (win.x / s >= w && win.y / s >= h)
+                    return Mathf.Max(s, MinZoom());
+            return MinZoom();
+        }
+
         /// <summary>
         /// Przybliżenie z punktem pod kursorem w miejscu: przesunięcie kamery o różnicę odległości kursora od środka okna
         /// w pikselach gry przed i po zmianie skali.
@@ -166,6 +195,11 @@ namespace Wyspa.World
         {
             int old = windowScale;
             int next = Mathf.Max(Even(scale), MinZoom());
+            if (autoZoom)
+            {
+                autoZoom = false;   // gracz sam wybrał przybliżenie
+                PlayerPrefs.SetInt("viewAutoZoom", 0);
+            }
             if (next != old)
             {
                 var off = screenPoint - new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -235,7 +269,7 @@ namespace Wyspa.World
             // pełny ekran: kadr z całego ekranu (inaczej Pixel Perfect Camera powiększyłaby obraz ponad przybliżenie)
             var win = Screen.fullScreenMode == FullScreenMode.Windowed ? WindowSize : new Vector2Int(Screen.width, Screen.height);
 #endif
-            windowScale = Mathf.Max(windowScale, MinZoom());
+            windowScale = autoZoom || Save.SaveSystem.InMenu ? FitZoom(win) : Mathf.Max(windowScale, MinZoom());
             view = new Vector2Int(Mathf.Max(32, win.x / windowScale), Mathf.Max(32, win.y / windowScale));
             Apply(true);
         }

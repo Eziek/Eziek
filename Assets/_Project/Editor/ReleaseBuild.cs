@@ -12,6 +12,7 @@ namespace Wyspa.EditorTools
     /// 1. Ustawienia: nazwa, firma, wersja, ikony, ekran startowy, jedna kopia gry naraz (ProjectSettings ustawia kod, nie ręcznie).
     /// 2. Zbuduj Windows: build 64-bit do Builds/MistyPackland-wersja-win64, pliki README i licencji obok, bez folderów
     ///    „DoNotShip”, a na końcu archiwum .zip (PowerShell Compress-Archive).
+    /// 3. Zbuduj Android: Builds/MistyPackland-wersja.apk do instalacji z pliku (testy na telefonie).
     /// Z linii poleceń: Unity.exe -batchmode -quit -projectPath . -executeMethod Wyspa.EditorTools.ReleaseBuild.BuildWindowsCli
     /// Grafiki (ikony, logo) generuje tools/release/release_art.py.
     /// </summary>
@@ -157,6 +158,77 @@ namespace Wyspa.EditorTools
             Zip(dir, dir + ".zip");
             Debug.Log($"[Wyspa] Gotowe: {dir} ({report.summary.totalSize / (1024 * 1024)} MB)");
             return dir;
+        }
+
+        // ------------------------------------------------------------ Android (APK do testów, §9 p. 135)
+
+        [MenuItem("Wyspa/Wydanie/3. Zbuduj Android (APK do testów)", priority = 22)]
+        public static void BuildAndroidMenu()
+        {
+            string apk = BuildAndroid();
+            if (apk != null)
+                EditorUtility.RevealInFinder(apk);
+        }
+
+        /// <summary>
+        /// APK do wysłania na telefon (instalacja z pliku, podpis kluczem debug Unity): ARM64, IL2CPP, poziomo (obie strony).
+        /// Wymaga modułu Android Build Support (z OpenJDK, Android SDK i NDK) w Unity Hub. Unity przełącza platformę sam
+        /// (pierwszy raz trwa długo: przeimportowanie tekstur). Do sklepu Google Play potrzebny .aab i własny klucz (docs/RELEASE.md).
+        /// </summary>
+        static string BuildAndroid()
+        {
+            if (!BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
+            {
+                Debug.LogError("[Wyspa] Brak modułu Android Build Support: Unity Hub → Installs → Unity 6.6 → Add modules → "
+                               + "Android Build Support (z OpenJDK oraz Android SDK & NDK Tools).");
+                return null;
+            }
+            ApplySettings();
+            var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
+            if (scenes.Length == 0)
+            {
+                Debug.LogError("[Wyspa] Brak scen w Build Settings - uruchom Wyspa → 3.");
+                return null;
+            }
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, BundleId);
+            PlayerSettings.Android.bundleVersionCode = VersionCode();
+            PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
+            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;   // współczesne telefony; Google Play wymaga 64 bitów
+            // wyspa jest szeroka: tylko poziomo, w obie strony
+            PlayerSettings.defaultInterfaceOrientation = UIOrientation.AutoRotation;
+            PlayerSettings.allowedAutorotateToPortrait = false;
+            PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
+            PlayerSettings.allowedAutorotateToLandscapeLeft = true;
+            PlayerSettings.allowedAutorotateToLandscapeRight = true;
+            EditorUserBuildSettings.buildAppBundle = false;   // .apk do wysłania znajomemu (sklep: .aab)
+
+            Directory.CreateDirectory("Builds");
+            string apk = Path.GetFullPath(Path.Combine("Builds", $"{ExeName}-{Version}.apk"));
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            {
+                scenes = scenes,
+                locationPathName = apk,
+                target = BuildTarget.Android,
+                targetGroup = BuildTargetGroup.Android,
+                options = BuildOptions.None,
+            });
+            if (report.summary.result != BuildResult.Succeeded)
+            {
+                Debug.LogError($"[Wyspa] Build Android nieudany: {report.summary.result}, błędów: {report.summary.totalErrors}");
+                return null;
+            }
+            Debug.Log("[Wyspa] Gotowe: " + apk);
+            return apk;
+        }
+
+        /// <summary>Numer wersji dla Androida z Version („0.9.0” → 900): musi rosnąć z każdym wydaniem.</summary>
+        static int VersionCode()
+        {
+            var parts = Version.Split('.');
+            int code = 0;
+            for (int i = 0; i < 3; i++)
+                code = code * 100 + (i < parts.Length && int.TryParse(parts[i], out int v) ? v : 0);
+            return Mathf.Max(1, code);
         }
 
         static void Zip(string dir, string zip)

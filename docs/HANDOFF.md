@@ -1,10 +1,12 @@
 # Przekazanie sesji (stan na 2026-10-15)
 
 Notatka dla nowej sesji po czyszczeniu kontekstu. Najpierw przeczytaj `CLAUDE.md` i `docs/GDD.md`.
-Historia decyzji jest w GDD §9 (punkty 1-134), a lista testów w `docs/TEST_PLAN.md`.
+Historia decyzji jest w GDD §9 (punkty 1-135), a lista testów w `docs/TEST_PLAN.md`.
 
 ## Gdzie jesteśmy
 
+- **URP musi mieć renderer 2D** (GDD §9 p. 135): z rendererem 3D woda i mgła się nie rysują. APK na Androida:
+  Wyspa → Wydanie → 3 (`docs/RELEASE.md` §3a). Auto-przybliżenie dopasowane do wyspy (`ViewController.AutoZoom`).
 - **NOWA KONCEPCJA (GDD §9 p. 134, TEST_PLAN 54): gra bez pracy i rytmu.** Żar płynie sam z czasu (+ piec, kryształy),
   rośliny dnia rosną w świetle, wszystko tylko przy włączonej grze (offline jak dawniej tylko rośliny nocy). Usunięte
   `ActivityTracker`, `WorkRhythm`, `SystemIdle`; ulepszenia i dary pracy mają nowe efekty (te same id). Sterowanie dotykiem

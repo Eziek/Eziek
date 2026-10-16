@@ -1539,11 +1539,14 @@ namespace Wyspa.UI
 
             OptLabel("ui.options.scale", y);
             float x = OptCol;
-            for (int s = 2; s <= ViewController.MaxZoom; s += 2)   // przybliżenie parzyste (woda w 32 px), też kółko myszy
+            // auto: przybliżenie dopasowane do wyspy; x2-x8 parzyste (woda w 32 px), też kółko myszy
+            x += OptButton("ScaleAuto", Loc.Get("ui.options.ui_size.auto"), x, y, 20f, () => { if (view != null) view.AutoZoom = true; },
+                           view != null && view.AutoZoom) + 4;
+            for (int s = 2; s <= ViewController.MaxZoom; s += 2)
             {
                 int scale = s;
                 x += OptButton("Scale" + s, "x" + s, x, y, 20f, () => { if (view != null) view.SetScale(scale); },
-                               view != null && view.Scale == s) + 4;
+                               view != null && !view.AutoZoom && view.Scale == s) + 4;
             }
             y += OptRow;
 
