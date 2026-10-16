@@ -32,6 +32,9 @@ namespace Wyspa.UI
         Func<bool> hidden;
         readonly List<(Image img, Item item)> slots = new List<(Image, Item)>();
         GameObject cancelSlot;
+
+        /// <summary>Ikona przycisku, który miga (samouczek wskazuje rozbudowę albo sklep); null = żaden.</summary>
+        public string Highlight { get; set; }
         Func<bool> placing;
 
         public static MenuBar Create(RectTransform canvasRoot, TooltipView tooltip, List<Item> items, Action cancel,
@@ -96,8 +99,9 @@ namespace Wyspa.UI
             foreach (var (img, item) in slots)
             {
                 img.gameObject.SetActive(!place);
-                // włączony tryb: ramka jak wybrany slot
-                img.sprite = item.on != null && item.on() ? Ui.Theme.slotSelected : Ui.Theme.slot;
+                // włączony tryb: ramka jak wybrany slot; samouczek: przycisk miga (pół sekundy jasny, pół zwykły)
+                bool blink = Highlight != null && item.icon == Highlight && Mathf.Repeat(Time.unscaledTime, 1f) < 0.5f;
+                img.sprite = (item.on != null && item.on()) || blink ? Ui.Theme.slotSelected : Ui.Theme.slot;
             }
         }
     }

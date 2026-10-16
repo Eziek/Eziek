@@ -654,3 +654,12 @@ Bez Wyspa → 2/3. Najlepiej i na komputerze, i na telefonie (APK z Wyspa → Wy
    dymki po dotyku nie zostają na ekranie, przyciski UI da się trafić palcem.
 8. Telefon (albo szerokie okno): karteczka wprowadzenia stoi z lewej strony wyspy, nie zasłania jej dołu; po przesunięciu
    widoku idzie za lądem. Wąskie okno na komputerze: karteczka jak dawniej pod wyspą.
+
+## 56. Samouczek na telefon
+Nowa gra (nowy zapis), najlepiej na telefonie (APK z Wyspa → Wydanie → 3).
+1. Karteczki mówią „Stuknij pustą grządkę”, „Przytrzymaj palec na grządce”, „Stuknij go”; na komputerze myszą dalej
+   „Kliknij” (dotknięcie ekranu dotykowego na Windows przełącza na wersję z palcem).
+2. Krok 2: pod zadaniem szary dopisek o przeciąganiu i dwóch palcach. Krok 4: dopisek o ścinaniu przytrzymaniem.
+   „Gotowe”: dopisek o panelu informacji.
+3. Krok 4: miga przycisk Rozbudowa w prawym dolnym rogu; krok 5: miga Sklep. Po wprowadzeniu nic nie miga.
+4. Teksty w EN, DE, JA, ZH mieszczą się na karteczce (z boku wyspy i pod nią).

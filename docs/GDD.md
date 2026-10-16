@@ -1207,6 +1207,12 @@ Obrazki referencyjne (kopie): `docs/img/`
     karteczka pod wyspą zasłaniała jej dół). Gdy z lewej strony lądu jest co najmniej 90 px UI wolnego miejsca, karteczka
     stoi tam, na wysokości środka lądu (szerokość do 150 px UI, tekst łamie się na więcej linii); na wąskim oknie dalej
     pod wyspą. Prawy dolny róg zajmuje pasek przycisków (p. 136), prawy górny toasty.
+138. **Samouczek na telefon** (prośba gracza: „trzeba zrobić samouczek pod mobilkę”). Te same kroki co na komputerze
+    (zapis bez zmian), ale przy dotyku (telefon albo ekran dotykowy) teksty z „stuknij” i „przytrzymaj palec” zamiast
+    „kliknij” i „prawy klik” (`intro.*.touch`), a pod zadaniem szary dopisek z gestem: krok 2 (roślina rośnie)
+    przesuwanie widoku palcem i przybliżanie dwoma palcami, krok 4 (rozbudowa) ścinanie przytrzymaniem aż kółko się
+    napełni, „gotowe” panel informacji pod przytrzymaniem palca. Na każdej platformie w krokach 4 i 5 miga przycisk
+    paska w rogu (Rozbudowa, Sklep), który trzeba stuknąć (`MenuBar.Highlight`).
 
 ---
 
@@ -1649,6 +1655,10 @@ Cel jest podświetlony pulsem.
 Po wykonanym kroku karteczka odpada (iskierki) i przybija się nowa. Karteczka z treścią wisi pod wyspą (pasek HUD jest nad nią)
 i chowa się razem z HUD-em. Klik w tablicę: treść + „Rozbierz” (koniec wprowadzenia w każdej chwili, 3 drewna).
 Krok zapisany w `SaveData.intro` (v8); zapisy sprzed v8 kończą wprowadzenie od razu.
+**Pasek i telefon (§9 p. 136-138):** kroki 4 i 5 wskazują migający przycisk paska w rogu (Rozbudowa, Sklep) zamiast
+prawego kliku. Na telefonie (albo po użyciu dotyku) teksty mówią „stuknij / przytrzymaj palec” (klucze `intro.*.touch`),
+a karteczka ma szary dopisek z gestem: krok 2 przesuwanie palcem i przybliżanie dwoma palcami, krok 4 ścinanie
+przytrzymaniem, „gotowe” panel informacji pod przytrzymaniem. Karteczka stoi z lewej strony wyspy, gdy jest miejsce.
 
 ### 12.9 Technicznie (Unity)
 - **uGUI:** Canvas Screen Space - Overlay + Canvas Scaler **Constant Pixel Size**, `scaleFactor` = skala okna (całkowita),

@@ -13,6 +13,8 @@ namespace Wyspa.UI
     /// (pokazuje się i chowa razem z paskiem HUD), a nad celem unosi się złota strzałka. Kroki: posadź, pracuj, zbierz,
     /// dokup kafelek, kup lampę (najpierw kafelek: na wyspie 2x2 nie ma wolnego miejsca na lampę); na końcu karteczka „gotowe”.
     /// Rozebranie tablicy kończy wprowadzenie w każdej chwili.
+    /// Na telefonie i przy dotyku (§9 p. 138) teksty mówią „stuknij / przytrzymaj” (klucze .touch), karteczka ma dopisek
+    /// z gestem (przesuwanie i przybliżanie, ścinanie, panel informacji), a przycisk paska z bieżącego kroku miga.
     /// </summary>
     public class IntroNotes : MonoBehaviour
     {
@@ -32,7 +34,16 @@ namespace Wyspa.UI
         public bool Active => Step < Done;
         /// <summary>Wszystkie zadania wykonane, została karteczka „gotowe”.</summary>
         public bool Finished => Step == Steps;
-        public string CurrentKey => Active ? Keys[Step] : null;
+        public string CurrentKey => Active ? Keys[Step] + (Touch && Step < Steps ? ".touch" : "") : null;
+
+        /// <summary>Gracz używa dotyku (telefon albo ekran dotykowy): samouczek mówi o palcach, nie o myszy.</summary>
+        static bool Touch => Application.isMobilePlatform || UiInput.TouchUsed;
+
+        /// <summary>Dopisek z gestem pod zadaniem (tylko dotyk): w kroku „rośnie” przesuwanie i przybliżanie itd.</summary>
+        string TipKey => !Touch ? null : Step == 1 ? "intro.tip.pan" : Step == 3 ? "intro.tip.chop" : Step == Steps ? "intro.tip.info" : null;
+
+        /// <summary>Przycisk paska w rogu, który miga w tym kroku (rozbudowa, sklep z lampami).</summary>
+        string BarIcon => Step == 3 ? "plus" : Step == 4 ? "shop" : null;
 
         HudView hud;
         RectTransform root, note;
@@ -63,6 +74,7 @@ namespace Wyspa.UI
             note = Ui.Place(img.rectTransform, Ui.BottomLeft, new Vector2(0.5f, 1f), Vector2.zero, new Vector2(80, 20));
             text = Ui.Txt(note, "Text", t.panelPage != null ? t.textDark : t.textLight);
             text.textWrappingMode = TextWrappingModes.Normal;
+            text.richText = true;   // dopisek z gestem w kolorze szarym
             counter = Ui.Txt(note, "Counter", t.textMutedOnPage, TextAlignmentOptions.TopRight);
         }
 
@@ -103,12 +115,16 @@ namespace Wyspa.UI
             // tablica rozebrana (albo jej nie ma, np. stary zapis): koniec wprowadzenia
             if (ready && Active && island.Board == null)
                 Step = Done;
+            var bar = UiRoot.Instance != null ? UiRoot.Instance.Bar : null;
             if (!ready || !Active)
             {
                 group.alpha = 0f;
                 ShowArrow(null, 0f);
+                if (bar != null) bar.Highlight = null;
                 return;
             }
+            if (bar != null)
+                bar.Highlight = BarIcon;
             check -= Time.unscaledDeltaTime;
             if (check <= 0f)
             {
@@ -117,7 +133,8 @@ namespace Wyspa.UI
                     Advance(island);
             }
             float side = SideSpace(island);
-            if (shownStep != Step || !Mathf.Approximately(shownWidth, root.rect.width) || !Mathf.Approximately(shownSide, side))
+            if (shownStep != Step || !Mathf.Approximately(shownWidth, root.rect.width) || !Mathf.Approximately(shownSide, side)
+                || shownTouch != Touch)
                 Layout(side);
             float alpha = hud != null ? hud.Alpha : 1f;
             group.alpha = alpha;
@@ -162,6 +179,7 @@ namespace Wyspa.UI
         }
 
         float shownSide;
+        bool shownTouch;
 
         /// <summary>
         /// Wolne miejsce (piksele UI) między lewą krawędzią płótna a lądem, zaokrąglone do 8 px (karteczka nie skacze przy
@@ -185,7 +203,10 @@ namespace Wyspa.UI
             shownStep = Step;
             shownWidth = root.rect.width;
             shownSide = side;
-            text.text = Loc.Get(CurrentKey);
+            shownTouch = Touch;
+            string tip = TipKey;
+            text.text = Loc.Get(CurrentKey) + (tip != null
+                ? "\n<color=#" + ColorUtility.ToHtmlStringRGB(Ui.Theme.textMutedOnPage) + ">" + Loc.Get(tip) + "</color>" : "");
             counter.text = Finished ? "" : Loc.Get("ui.intro.counter", Step + 1, Steps);
             float cw = counter.text.Length > 0 ? Ui.Width(counter) : 0f;
             // pergamin ma grube brzegi (9-slice): tekst z zapasem 8 px, licznik w prawym górnym rogu obok tekstu
