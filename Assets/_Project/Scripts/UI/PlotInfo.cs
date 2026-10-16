@@ -34,11 +34,7 @@ namespace Wyspa.UI
             if (s.IsEmpty)
             {
                 info.Button(Loc.Get("act.plant"), () => { if (p != null) p.OnClick(); });
-                info.Button(Loc.Get("act.plant_random"), () =>
-                {
-                    if (GameLoop.Instance != null && GameLoop.Instance.PlantRandomEverywhere() == 0)
-                        GameEvents.RaiseToast("toast.plant_random.none");
-                });
+                info.Button(Loc.Get("act.plant_random"), UiRoot.PlantRandom);
             }
             else if (s.IsRipe)
                 info.Button(Loc.Get("act.harvest"), () => { if (p != null) p.OnClick(); });

@@ -1216,6 +1216,15 @@ Obrazki referencyjne (kopie): `docs/img/`
 139. **Pasek przycisków na dole, pośrodku** (gracz: „te przyciski można dać na dół środek, będzie przyjemniejsze”). Pasek
     z p. 136 przeniesiony z prawego dolnego rogu na środek dolnej krawędzi. Karteczka wprowadzenia pod wyspą stoi nad nim
     (`MenuBar.Height`); teksty („przycisk na dole ekranu”, „przycisk na dole albo PPM”) poprawione w 5 językach.
+140. **Uwagi kolegi gracza z telefonu.**
+    - **Pasek mniejszy i z podpisami:** jeden ciemny pasek, w nim ikona 12 px z krótkim podpisem obok (Księga, Sklep,
+      Rozbudowa, Losowe nasiona, Menu; klucze `ui.bar.*`). Gdy podpisy nie mieszczą się w płótnie (małe okno na
+      komputerze), same ikony, a nazwa w dymku. Włączony tryb i miganie samouczka: złoty podpis.
+    - **Przycisk „Losowe nasiona”** na pasku (wcześniej tylko w pierścieniu pod przytrzymaniem na pustym miejscu):
+      obsiewa puste grządki losowo, w nocy roślinami nocy, w dzień dnia (`UiRoot.PlantRandom`).
+    - **Opis ulepszenia znikał po puszczeniu palca:** przy dotyku dymki (`HoverTip`) zostają po podniesieniu palca do
+      następnego dotknięcia (najwyżej 8 s). Ulepszenia w Księdze: pierwsze stuknięcie w węzeł pokazuje opis
+      („Stuknij jeszcze raz, aby kupić”), drugie w ten sam węzeł kupuje; myszą jak dotąd klik kupuje.
 
 ---
 
@@ -1602,7 +1611,7 @@ Makiety: `docs/img/ui_hud.png`, `ui_ksiega_sklep.png`, `ui_ksiega_ulepszenia.png
 ### 12.2 HUD
 - **Pasek nad wyspą (Etap 6d):** górny wiersz: monety, Esencja (ikona + pasek + liczby), plony nocy, odłamki gwiazd, drewno, kamień
   (waluty pojawiają się dopiero po zdobyciu); dolny wiersz: zegar gry i pora roku (rytm pracy usunięty, §9 p. 134). Pasek idzie za lądem.
-- **Menu (§9 p. 136, 139):** pasek czterech przycisków na dole ekranu, pośrodku, zawsze widoczny na wyspie (Księga, Sklep,
+- **Menu (§9 p. 136, 139, 140):** pasek przycisków z podpisami na dole ekranu, pośrodku (także Losowe nasiona), zawsze widoczny na wyspie (Księga, Sklep,
   Rozbudowa, Menu; Menu otwiera przy przycisku koło: Opcje, Zapisz grę, Menu główne, Wyjdź). Pierścień akcji pod prawym
   klikiem na pustym miejscu zostaje jako skrót (§12.10, §9 p. 97). W trybie stawiania pasek ma tylko „Anuluj”.
 - **Mini-tryb:** HUD całkiem ukryty, zostaje tylko wyspa.

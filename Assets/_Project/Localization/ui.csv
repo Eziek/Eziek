@@ -342,6 +342,7 @@ ui.upgrade.tree_hint,"Najedź, by zobaczyć, kliknij, by kupić. Kupione odkrywa
 ui.upgrade.hidden,Ukryte we mgle. Najpierw: {0},Hidden in the fog. First: {0},Im Nebel verborgen. Zuerst: {0},霧に隠れている。先に：{0},藏在雾中。需先：{0},
 ui.upgrade.cost,Koszt: {0},Cost: {0},Kosten: {0},コスト：{0},花费：{0},
 ui.upgrade.click_buy,"Kliknij, aby kupić",Click to buy,Klicken zum Kaufen,クリックで購入,点击购买,
+ui.upgrade.tap_buy,"Stuknij jeszcze raz, aby kupić",Tap again to buy,Nochmal tippen zum Kaufen,もう一度タップで購入,再点一次即可购买,dotyk: pierwsze stuknięcie pokazuje opis (§9 p. 140)
 ui.upgrade.cant_afford,Za mało środków,Not enough resources,Nicht genug Mittel,資源が足りない,资源不足,
 ui.altar.finale_hint,Na ołtarzu pojawił się świeży napis: zapal tu światło w noc pełni.,Fresh words have appeared on the altar: light the flame here on a full-moon night.,Auf dem Altar steht eine frische Inschrift: Entzünde hier das Licht in einer Vollmondnacht.,祭壇に新しい文字が現れた。満月の夜、ここに灯をともせ。,祭坛上出现了新刻的字：在满月之夜，于此点亮光芒。,
 ui.altar.finale,Zapal Światło Opiekunów ({0}),Light the Keepers' Light ({0}),Entzünde das Licht der Hüter ({0}),守り人の光をともす（{0}）,点亮守护人之光（{0}）,{0} = koszt
@@ -423,6 +424,11 @@ ui.kiln.waiting,"Czeka, aż ognik przyniesie drewno.",Waiting for a wisp to brin
 ui.bestiary.seen.count,{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{0} ×{1},{1} = ile razy widziane
 ui.tree.hint,Klik: owoce albo szczegóły; przytrzymaj: zetnij,Click: fruit or details; hold: chop,Klick: Obst oder Details; gedrückt halten: fällen,クリック：収穫か詳細、長押し：伐採,点击：摘果或详情；长按：砍伐,dymek nad drzewem owocowym (§9 p. 136)
 ui.tree.hold_hint,"Przytrzymaj drzewo, aby je ściąć",Hold the tree to chop it down,"Halte den Baum gedrückt, um ihn zu fällen",木を長押しで伐採,长按树木即可砍伐,panel drzewa owocowego (§9 p. 136)
+ui.bar.book,Księga,Grimoire,Grimoire,魔導書,魔典,podpis przycisku na pasku na dole (krótki)
+ui.bar.shop,Sklep,Shop,Laden,ショップ,商店,podpis przycisku na pasku na dole (krótki)
+ui.bar.expand,Rozbudowa,Expand,Ausbau,拡張,扩建,podpis przycisku na pasku na dole (krótki)
+ui.bar.random,Losowe nasiona,Random seeds,Zufallssamen,ランダム種,随机种子,pasek na dole: obsiewa puste grządki losowo
+ui.bar.menu,Menu,Menu,Menü,メニュー,菜单,podpis przycisku na pasku na dole (krótki)
 ui.place.click_more,Klik: postaw (można kolejne) - koniec: przycisk na dole albo PPM,Click: place (keep placing) - done: bottom button or right click,Klick: setzen (weitere möglich) - fertig: Knopf unten oder Rechtsklick,クリック：設置（続けて置ける） - 終了：下のボタンか右クリック,点击：放置（可继续放置） - 结束：底部按钮或右键,tryb stawiania seriami (GDD §9 p. 126)
 ui.deco.need_have,"Za mało Żaru: potrzeba {0}, masz {1}","Not enough Ember: need {0}, you have {1}","Zu wenig Glut: {0} nötig, du hast {1}",熾火が足りない：必要{0}、所持{1},余火不足：需要{0}，现有{1},toast: kliknięcie w dzicz bez Żaru
 ui.deco.cost_missing,Koszt: {0} Żaru (masz {1}),Cost: {0} Ember (you have {1}),Kosten: {0} Glut (du hast {1}),コスト：熾火{0}（所持{1}）,消耗：{0}余火（现有{1}）,"dymek dziczy, gdy brakuje Żaru (na czerwono)"

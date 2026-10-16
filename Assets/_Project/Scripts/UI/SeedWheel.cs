@@ -340,27 +340,54 @@ namespace Wyspa.UI
         public void OnPointerEnter(PointerEventData e)
         {
             hovered = true;
+            stickyUntil = 0f;
             refresh = 0.25f;
             if (tooltip != null && content != null)
-                tooltip.Show(this, content());
+                ShowNow();
+        }
+
+        /// <summary>Treść null (np. przycisk z podpisem, który nie potrzebuje dymku): bez dymku.</summary>
+        void ShowNow()
+        {
+            string c = content();
+            if (c == null) tooltip.Hide(this);
+            else tooltip.Show(this, c);
         }
 
         public void OnPointerExit(PointerEventData e)
         {
             hovered = false;
+            // dotyk (§9 p. 140): palec „wychodzi” przy podniesieniu, więc dymek zostaje do następnego dotknięcia (max 8 s)
+            if (UiInput.TouchUsed)
+            {
+                stickyUntil = Time.unscaledTime + 8f;
+                return;
+            }
             if (tooltip != null)
                 tooltip.Hide(this);
         }
 
+        float stickyUntil;
+
         void Update()
         {
+            if (!hovered && stickyUntil > 0f)
+            {
+                if (Time.unscaledTime > stickyUntil || UiInput.PointerDown)
+                {
+                    stickyUntil = 0f;
+                    if (tooltip != null)
+                        tooltip.Hide(this);
+                }
+                return;
+            }
             if (!hovered || tooltip == null || content == null)
                 return;
             refresh -= Time.unscaledDeltaTime;
             if (refresh > 0f)
                 return;
             refresh = 0.25f;
-            tooltip.Show(this, content());   // bez zmiany tekstu dymek nic nie przelicza
+            ShowNow();   // bez zmiany tekstu dymek nic nie przelicza
         }
 
         void OnDisable()

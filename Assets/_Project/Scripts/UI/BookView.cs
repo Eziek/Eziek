@@ -434,11 +434,21 @@ namespace Wyspa.UI
             s += "\n" + Loc.Get("ui.upgrade.cost", PlacementMode.CostText(ups.CostOf(next)));
             if (!ups.RequirementsMet(d))
                 return s + "\n" + Loc.Get("ui.upgrade.requires", RequirementNames(d));
-            return s + "\n" + Loc.Get(ups.CanBuy(d, game.Wallet) ? "ui.upgrade.click_buy" : "ui.upgrade.cant_afford");
+            return s + "\n" + Loc.Get(!ups.CanBuy(d, game.Wallet) ? "ui.upgrade.cant_afford"
+                                       : UiInput.TouchUsed ? "ui.upgrade.tap_buy" : "ui.upgrade.click_buy");
         }
+
+        UpgradeDefinition armedUpgrade;   // dotyk: pierwsze stuknięcie pokazuje opis, drugie w ten sam węzeł kupuje
 
         void Buy(UpgradeDefinition d)
         {
+            if (UiInput.TouchUsed && armedUpgrade != d)
+            {
+                armedUpgrade = d;
+                GameEvents.PlaySound("click", 0.4f);
+                return;
+            }
+            armedUpgrade = null;
             var game = GameLoop.Instance;
             if (game != null && game.Upgrades.TryBuy(d, game.Wallet))
             {

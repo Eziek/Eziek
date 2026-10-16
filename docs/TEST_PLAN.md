@@ -664,3 +664,12 @@ Nowa gra (nowy zapis), najlepiej na telefonie (APK z Wyspa → Wydanie → 3).
 3. Krok 4: miga przycisk Rozbudowa na dole ekranu; krok 5: miga Sklep. Po wprowadzeniu nic nie miga.
 4. Teksty w EN, DE, JA, ZH mieszczą się na karteczce (z boku wyspy i pod nią).
 5. Wąskie okno: karteczka pod wyspą stoi nad paskiem przycisków, nie zasłania go.
+
+## 57. Pasek z podpisami, losowe nasiona, opisy na telefonie
+1. Na dole: ciemny pasek, ikony z podpisami (Księga, Sklep, Rozbudowa, Losowe nasiona, Menu); w każdym języku się mieści.
+   Małe okno na komputerze (mini albo mały rozmiar): same ikony, nazwy w dymkach po najechaniu.
+2. Losowe nasiona: puste grządki obsiane (w dzień rośliny dnia, w nocy nocy); bez pustych grządek toast.
+3. Rozbudowa włączona: złoty podpis; w samouczku podpis Rozbudowy, potem Sklepu miga.
+4. Telefon, Księga → Ulepszenia: stuknięcie w węzeł pokazuje opis i „Stuknij jeszcze raz, aby kupić”, opis zostaje
+   po puszczeniu palca; drugie stuknięcie kupuje. Stuknięcie gdzie indziej chowa opis. Myszą klik kupuje od razu.
+5. Telefon, sklep i inne dymki (opisy nasion, budowli): po puszczeniu palca opis zostaje, znika przy kolejnym dotknięciu.

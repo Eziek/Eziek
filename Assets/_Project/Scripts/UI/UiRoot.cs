@@ -420,12 +420,25 @@ namespace Wyspa.UI
         /// <summary>Przyciski paska na dole: te same co stałe wpisy pierścienia, Menu otwiera koło podmenu przy przycisku.</summary>
         List<MenuBar.Item> BarItems() => new List<MenuBar.Item>
         {
-            new MenuBar.Item { icon = "book", nameKey = "term.grimoire", run = _ => OpenBook(BookView.Tab.Upgrades) },
-            new MenuBar.Item { icon = "shop", nameKey = "menu.shop", run = _ => OpenBook(BookView.Tab.Shop) },
-            new MenuBar.Item { icon = "plus", nameKey = "menu.expand", on = () => Expansion.IsActive,
+            new MenuBar.Item { icon = "book", labelKey = "ui.bar.book", run = _ => OpenBook(BookView.Tab.Upgrades) },
+            new MenuBar.Item { icon = "shop", labelKey = "ui.bar.shop", run = _ => OpenBook(BookView.Tab.Shop) },
+            new MenuBar.Item { icon = "plus", labelKey = "ui.bar.expand", on = () => Expansion.IsActive,
                                run = _ => { bool was = Expansion.IsActive; CloseAll(); if (!was) Expansion.Toggle(); } },
-            new MenuBar.Item { icon = "menu", nameKey = "menu.game", run = at => { CloseAll(); Ring.Open(at, GameMenu()); } },
+            // losowe sadzenie wprost z paska (wcześniej tylko w pierścieniu pod przytrzymaniem, §9 p. 140)
+            new MenuBar.Item { icon = "dice", labelKey = "ui.bar.random", tip = RandomTip, run = _ => { CloseAll(); PlantRandom(); } },
+            new MenuBar.Item { icon = "menu", labelKey = "ui.bar.menu", run = at => { CloseAll(); Ring.Open(at, GameMenu()); } },
         };
+
+        static string RandomTip() => Loc.Get("act.plant_random") + "\n" + Loc.Get(GameLoop.Instance != null && GameLoop.Instance.Clock.IsNight
+                                                                               ? "ui.wheel.random_night" : "ui.wheel.random_day");
+
+        /// <summary>Obsiewa wszystkie puste grządki losowo (w nocy rośliny nocy, w dzień dnia); brak pustych: toast.</summary>
+        public static void PlantRandom()
+        {
+            var game = GameLoop.Instance;
+            if (game != null && game.PlantRandomEverywhere() == 0)
+                GameEvents.RaiseToast("toast.plant_random.none");
+        }
 
         /// <summary>Podmenu gry: opcje, zapis, menu główne, wyjście (pasek i pierścień).</summary>
         List<ActionRing.Entry> GameMenu()
@@ -461,14 +474,8 @@ namespace Wyspa.UI
                 list.Insert(0, new ActionRing.Entry
                 {
                     icon = "dice",
-                    tip = () => Loc.Get("act.plant_random") + "\n" + Loc.Get(GameLoop.Instance != null && GameLoop.Instance.Clock.IsNight
-                                                                            ? "ui.wheel.random_night" : "ui.wheel.random_day"),
-                    run = () =>
-                    {
-                        var game = GameLoop.Instance;
-                        if (game != null && game.PlantRandomEverywhere() == 0)
-                            GameEvents.RaiseToast("toast.plant_random.none");
-                    },
+                    tip = RandomTip,
+                    run = PlantRandom,
                 });
             return list;
         }

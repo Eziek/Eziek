@@ -225,8 +225,9 @@ namespace UnityEngine.UI
     public class RawImage : MaskableGraphic { public UnityEngine.Texture texture; }
     public class Image : MaskableGraphic { public enum Type { Simple, Sliced, Tiled, Filled } public UnityEngine.Sprite sprite; public Type type; public float pixelsPerUnitMultiplier; public bool preserveAspect; }
     public struct SpriteState { public UnityEngine.Sprite highlightedSprite, pressedSprite, selectedSprite, disabledSprite; }
+    public struct ColorBlock { public UnityEngine.Color normalColor, highlightedColor, pressedColor, selectedColor, disabledColor; public float colorMultiplier, fadeDuration; }
     public struct Navigation { public enum Mode { None, Horizontal, Vertical, Automatic, Explicit } public Mode mode; }
-    public class Selectable : UIBehaviour { public enum Transition { None, ColorTint, SpriteSwap, Animation } public Transition transition; public Graphic targetGraphic; public SpriteState spriteState; public Navigation navigation; public bool interactable; }
+    public class Selectable : UIBehaviour { public enum Transition { None, ColorTint, SpriteSwap, Animation } public Transition transition; public Graphic targetGraphic; public SpriteState spriteState; public ColorBlock colors; public Navigation navigation; public bool interactable; }
     public class Button : Selectable { public class ButtonClickedEvent : UnityEngine.Events.UnityEvent { } public ButtonClickedEvent onClick; }
     public class CanvasScaler : UIBehaviour { public enum ScaleMode { ConstantPixelSize, ScaleWithScreenSize, ConstantPhysicalSize } public ScaleMode uiScaleMode; public float referencePixelsPerUnit; public float scaleFactor; }
     public class GraphicRaycaster : UIBehaviour { }
