@@ -8,7 +8,8 @@ using Wyspa.World;
 namespace Wyspa.UI
 {
     /// <summary>
-    /// Wprowadzenie bez postaci (GDD §12.8): kroki z tablicy ogłoszeń. Karteczka z bieżącym zadaniem wisi pod wyspą
+    /// Wprowadzenie bez postaci (GDD §12.8): kroki z tablicy ogłoszeń. Karteczka z bieżącym zadaniem wisi z lewej strony
+    /// wyspy, gdy jest tam miejsce (szeroki ekran, telefon; §9 p. 137), inaczej pod wyspą
     /// (pokazuje się i chowa razem z paskiem HUD), a nad celem unosi się złota strzałka. Kroki: posadź, pracuj, zbierz,
     /// dokup kafelek, kup lampę (najpierw kafelek: na wyspie 2x2 nie ma wolnego miejsca na lampę); na końcu karteczka „gotowe”.
     /// Rozebranie tablicy kończy wprowadzenie w każdej chwili.
@@ -19,6 +20,9 @@ namespace Wyspa.UI
         const int Steps = 5;   // zadania; szósta karteczka to „gotowe”
         const float Ppu = 16f;
         const float MaxWidth = 200f;
+        /// <summary>Od tylu pikseli UI wolnego miejsca z lewej strony lądu karteczka stoi z boku zamiast pod wyspą.</summary>
+        const float SideMin = 90f;
+        const float SideMaxWidth = 150f;
         static readonly string[] Keys = { "intro.plant", "intro.grow", "intro.harvest", "intro.expand", "intro.lamp", "intro.done" };
 
         public static IntroNotes Instance { get; private set; }
@@ -112,8 +116,9 @@ namespace Wyspa.UI
                 if (Completed(island))
                     Advance(island);
             }
-            if (shownStep != Step || !Mathf.Approximately(shownWidth, root.rect.width))
-                Layout();
+            float side = SideSpace(island);
+            if (shownStep != Step || !Mathf.Approximately(shownWidth, root.rect.width) || !Mathf.Approximately(shownSide, side))
+                Layout(side);
             float alpha = hud != null ? hud.Alpha : 1f;
             group.alpha = alpha;
             Follow(island);
@@ -156,15 +161,36 @@ namespace Wyspa.UI
                 nb.TearNote();
         }
 
-        void Layout()
+        float shownSide;
+
+        /// <summary>
+        /// Wolne miejsce (piksele UI) między lewą krawędzią płótna a lądem, zaokrąglone do 8 px (karteczka nie skacze przy
+        /// przesuwaniu widoku); 0, gdy za mało na karteczkę z boku.
+        /// </summary>
+        float SideSpace(Island island)
+        {
+            var cam = Camera.main;
+            if (cam == null)
+                return 0f;
+            var land = island.LandRect;
+            Vector2 screen = cam.WorldToScreenPoint(new Vector3(land.xMin, land.center.y, 0f));
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(root, screen, null, out var local))
+                return 0f;
+            float space = Mathf.Floor((local.x - root.rect.xMin - 8f) / 8f) * 8f;
+            return space >= SideMin ? space : 0f;
+        }
+
+        void Layout(float side)
         {
             shownStep = Step;
             shownWidth = root.rect.width;
+            shownSide = side;
             text.text = Loc.Get(CurrentKey);
             counter.text = Finished ? "" : Loc.Get("ui.intro.counter", Step + 1, Steps);
             float cw = counter.text.Length > 0 ? Ui.Width(counter) : 0f;
             // pergamin ma grube brzegi (9-slice): tekst z zapasem 8 px, licznik w prawym górnym rogu obok tekstu
-            float maxW = Mathf.Max(60f, Mathf.Min(MaxWidth, root.rect.width - 28f - (cw > 0 ? cw + 6 : 0)));
+            float room = side > 0f ? Mathf.Min(SideMaxWidth, side) : root.rect.width;
+            float maxW = Mathf.Max(60f, Mathf.Min(MaxWidth, room - 28f - (cw > 0 ? cw + 6 : 0)));
             float w = Mathf.Min(maxW, Ui.Width(text));
             float h = Mathf.Ceil(text.GetPreferredValues(text.text, w, 0f).y);
             Ui.Place(text.rectTransform, Ui.TopLeft, Ui.TopLeft, new Vector2(8, -7), new Vector2(w, h));
@@ -172,20 +198,27 @@ namespace Wyspa.UI
             note.sizeDelta = new Vector2(Mathf.Ceil(w + 16 + (cw > 0 ? cw + 6 : 0)), h + 14);
         }
 
-        /// <summary>Karteczka pod środkiem lądu (pasek HUD jest nad wyspą), w granicach okna.</summary>
+        /// <summary>
+        /// Karteczka z lewej strony lądu, na wysokości jego środka (szeroki ekran), albo pod środkiem lądu (pasek HUD jest
+        /// nad wyspą); zawsze w granicach okna.
+        /// </summary>
         void Follow(Island island)
         {
             var cam = Camera.main;
             if (cam == null)
                 return;
             var land = island.LandRect;
-            Vector2 screen = cam.WorldToScreenPoint(new Vector3(land.center.x, land.yMin, 0f));
+            bool side = shownSide > 0f;
+            Vector2 screen = cam.WorldToScreenPoint(side ? new Vector3(land.xMin, land.center.y, 0f) : new Vector3(land.center.x, land.yMin, 0f));
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(root, screen, null, out var local))
                 return;
             var r = root.rect;
             var size = note.sizeDelta;
-            float x = Mathf.Clamp(local.x - r.xMin, size.x / 2f + 2f, Mathf.Max(size.x / 2f + 2f, r.width - size.x / 2f - 2f));
-            float y = Mathf.Clamp(local.y - r.yMin - 2f, size.y + 2f, Mathf.Max(size.y + 2f, r.height - 2f));
+            // z boku: prawa krawędź karteczki 8 px przed lądem, środek na wysokości środka lądu (pivot: środek górnej krawędzi)
+            float wantX = side ? local.x - r.xMin - 8f - size.x / 2f : local.x - r.xMin;
+            float wantY = side ? local.y - r.yMin + size.y / 2f : local.y - r.yMin - 2f;
+            float x = Mathf.Clamp(wantX, size.x / 2f + 2f, Mathf.Max(size.x / 2f + 2f, r.width - size.x / 2f - 2f));
+            float y = Mathf.Clamp(wantY, size.y + 2f, Mathf.Max(size.y + 2f, r.height - 2f));
             note.anchoredPosition = new Vector2(Mathf.Round(x - size.x / 2f) + size.x / 2f, Mathf.Round(y));
         }
 

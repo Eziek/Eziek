@@ -652,3 +652,5 @@ Bez Wyspa → 2/3. Najlepiej i na komputerze, i na telefonie (APK z Wyspa → Wy
    Przytrzymanie owocującego drzewa: najpierw owoce do portfela, potem drzewo pada.
 7. Telefon: przytrzymanie drzewa nie otwiera panelu informacji (ścina), stuknięcie w grządkę dalej otwiera koło nasion,
    dymki po dotyku nie zostają na ekranie, przyciski UI da się trafić palcem.
+8. Telefon (albo szerokie okno): karteczka wprowadzenia stoi z lewej strony wyspy, nie zasłania jej dołu; po przesunięciu
+   widoku idzie za lądem. Wąskie okno na komputerze: karteczka jak dawniej pod wyspą.

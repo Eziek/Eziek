@@ -1203,6 +1203,10 @@ Obrazki referencyjne (kopie): `docs/img/`
       panelem informacji (`UiInput.ClaimPointer`). Ścięcie owocującego drzewa najpierw zbiera owoce.
     - Teksty: podpowiedź (toast) o panelu informacji i pasku, wprowadzenie (kroki 2, 4, 5) i dymki trybów bez „PPM” jako
       jedynej drogi. Nie wymaga Wyspa → 2 ani 3 (UI budowane z kodu).
+137. **Karteczka wprowadzenia z boku wyspy** (zrzut gracza z telefonu: „masz dużo miejsca po prawej i lewej stronie”;
+    karteczka pod wyspą zasłaniała jej dół). Gdy z lewej strony lądu jest co najmniej 90 px UI wolnego miejsca, karteczka
+    stoi tam, na wysokości środka lądu (szerokość do 150 px UI, tekst łamie się na więcej linii); na wąskim oknie dalej
+    pod wyspą. Prawy dolny róg zajmuje pasek przycisków (p. 136), prawy górny toasty.
 
 ---
 
