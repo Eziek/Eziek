@@ -15,11 +15,27 @@ MonoBehaviour:
   id: pumpkin
   displayName: Dynia
   kind: 0
-  growSeconds: 1500
+  growSeconds: 120
   stages:
   - {fileID: 21300000, guid: f493f12c653da244b87b7a0ff7506ffc, type: 3}
+  - {fileID: 21300000, guid: 70537ef0ded5644488c7f4e6bcc5007f, type: 3}
   - {fileID: 21300000, guid: 45dc23768023e194bb72ee50b505faf5, type: 3}
   - {fileID: 21300000, guid: 2c92d3c6aa2dd7c4099d9663b7a35de7, type: 3}
+  - {fileID: 21300000, guid: 984e83d51491d364aa8b0395bdc4903f, type: 3}
   - {fileID: 21300000, guid: 17f0f53825aebb641aa42de38956d10e, type: 3}
-  seedPrice: 15
-  sellPrice: 40
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  seedPrice: 5
+  sellPrice: 18
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 0

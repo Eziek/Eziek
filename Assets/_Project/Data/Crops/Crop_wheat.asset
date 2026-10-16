@@ -15,11 +15,27 @@ MonoBehaviour:
   id: wheat
   displayName: "Zbo\u017Ce"
   kind: 0
-  growSeconds: 900
+  growSeconds: 45
   stages:
   - {fileID: 21300000, guid: 52180c7ed6d5a7f44b7b466d1fa97c11, type: 3}
+  - {fileID: 21300000, guid: d92904ea64778ee47ac6654eef8089d3, type: 3}
   - {fileID: 21300000, guid: 5908fd4737454884d8353c260185f843, type: 3}
   - {fileID: 21300000, guid: 4ffd58c6693e3174c9c820205c142ced, type: 3}
+  - {fileID: 21300000, guid: de0ae4388fc574c4b95e073018e97ee9, type: 3}
   - {fileID: 21300000, guid: 5d234ed961d9abb4e84aaff2a1f87805, type: 3}
-  seedPrice: 8
-  sellPrice: 18
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  seedPrice: 2
+  sellPrice: 6
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 0

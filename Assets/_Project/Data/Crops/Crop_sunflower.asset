@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_sunflower
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: sunflower
+  displayName: "\u017Ba\u0142obny s\u0142onecznik"
+  kind: 0
+  growSeconds: 240
+  stages:
+  - {fileID: 21300000, guid: 240dbff35c4b4ab489b185683b7d4012, type: 3}
+  - {fileID: 21300000, guid: 9a4d322b7b70705489d53af5aa70d841, type: 3}
+  - {fileID: 21300000, guid: 35e385da49534fe48bdb929d3d5433c7, type: 3}
+  - {fileID: 21300000, guid: 848fa17c75cb4c7449b9c8b74798467f, type: 3}
+  - {fileID: 21300000, guid: 2df299c639a00f5499bf4710020f7f18, type: 3}
+  - {fileID: 21300000, guid: 6ac87d6c85a604941989a53257e55476, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  seedPrice: 10
+  sellPrice: 42
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 2000

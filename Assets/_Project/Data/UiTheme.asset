@@ -1,0 +1,286 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de71748a25208414f9b9c096bb790af2, type: 3}
+  m_Name: UiTheme
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.UI.UiTheme
+  font: {fileID: 12800000, guid: 46bcf4d946c7d61409c5643815b653d1, type: 3}
+  cjkJa: {fileID: 12800000, guid: cdd9f1de431fe124fb654b83d4935bd7, type: 3}
+  cjkZhHans: {fileID: 12800000, guid: d9f4708c567f60844a5213853937db7a, type: 3}
+  fontReadable: {fileID: 12800000, guid: 0b7e85d3476ee7d44a0e976ffc0439ab, type: 3}
+  tables:
+  - {fileID: 4900000, guid: aad7802f658f85a4f996b96e59cc80c1, type: 3}
+  - {fileID: 4900000, guid: f1ae72c884b9e3040b773c5e36f4ba5e, type: 3}
+  - {fileID: 4900000, guid: 6858f4d21f40ef3469d5e9a4df9995a1, type: 3}
+  panel: {fileID: 21300000, guid: c42a5ec9fbb118d44810f2aa6a9a631a, type: 3}
+  panelPage: {fileID: 21300000, guid: c4d7a2b66c750a04d9b9ef819f7f05d0, type: 3}
+  buttonNormal: {fileID: 21300000, guid: c99b2f6c5d75e314289e299a5c1fbe86, type: 3}
+  buttonHover: {fileID: 21300000, guid: 19997d6929fc1f44e86481e1212cf3d1, type: 3}
+  buttonPressed: {fileID: 21300000, guid: 7dbac4f7c85f41f4998ae4ca742170e3, type: 3}
+  buttonDisabled: {fileID: 21300000, guid: d7e6fa35620ce5d49a53a1efd609fc5d, type: 3}
+  tabActive: {fileID: 21300000, guid: a10bd68698ae6c646a46bebc4959b85d, type: 3}
+  tabInactive: {fileID: 21300000, guid: 48db057b701ea4e4f8b6223b2a84fd6f, type: 3}
+  slot: {fileID: 21300000, guid: bad2655340d616048ac4416163fb1255, type: 3}
+  slotSelected: {fileID: 21300000, guid: 50b71c668708aaf46b477aead3df3c70, type: 3}
+  slotLocked: {fileID: 21300000, guid: 293fae4136448ba4a86ea70f179eb000, type: 3}
+  tooltip: {fileID: 21300000, guid: 4ac785c0837ad1843bafafbcc6127fae, type: 3}
+  toast: {fileID: 21300000, guid: c5e26c98fb9053b40ad93ecbf5079687, type: 3}
+  barFrame: {fileID: 21300000, guid: 9b1c1cb123ba66b40aeac905f4a32817, type: 3}
+  barFillEssence: {fileID: 21300000, guid: dd6286af56b283342a691e8060100858, type: 3}
+  barFillGrowth: {fileID: 21300000, guid: b6c30193bbe13e641ae5896d520a9762, type: 3}
+  barFillRhythm: {fileID: 21300000, guid: 736de04b3bb862140b99e7e73afc0051, type: 3}
+  wheel: {fileID: 21300000, guid: dc1060c9109182f489af93ff6bb31079, type: 3}
+  logo: {fileID: 21300000, guid: d0285a2e97966f744a3af2e837e03e3f, type: 3}
+  icons:
+  - name: bestiary
+    sprite: {fileID: 21300000, guid: 3ab3b735d1ee3ce46b49e6483da643a4, type: 3}
+  - name: boat
+    sprite: {fileID: 21300000, guid: 645d6f8510d2fcc4aa90583ad7051d10, type: 3}
+  - name: book
+    sprite: {fileID: 21300000, guid: b3beb2d14b7304b48acec15e2f961f92, type: 3}
+  - name: break
+    sprite: {fileID: 21300000, guid: d45a4e67703510d4b82fc640f5aa0969, type: 3}
+  - name: close
+    sprite: {fileID: 21300000, guid: 8848bbb00f6058e4aa64453d7713a965, type: 3}
+  - name: coin
+    sprite: {fileID: 21300000, guid: ed92dd5e2ccbb3f438e59e55f13eafa4, type: 3}
+  - name: crate
+    sprite: {fileID: 21300000, guid: 6949ec537c7344f448d3ae82653cd472, type: 3}
+  - name: deepgift
+    sprite: {fileID: 21300000, guid: 51d2df6f88bdddb49a2c1007ef210ed6, type: 3}
+  - name: dice
+    sprite: {fileID: 21300000, guid: 5d9ff03666f5173458e33d4effddcf23, type: 3}
+  - name: drop
+    sprite: {fileID: 21300000, guid: 5dcdd1d63e191c14eae034c8c5c3ab74, type: 3}
+  - name: essence
+    sprite: {fileID: 21300000, guid: 2eefee2dd13d8c64b93b3a1527da0594, type: 3}
+  - name: exit
+    sprite: {fileID: 21300000, guid: d4ada39c1418b444aabf3a31c75254e2, type: 3}
+  - name: fatigue
+    sprite: {fileID: 21300000, guid: 5c6b3e1476ddbf24fbaa1f013b08814e, type: 3}
+  - name: fill
+    sprite: {fileID: 21300000, guid: 156b9cc32ffc04443bd2d7182a10d29c, type: 3}
+  - name: focus
+    sprite: {fileID: 21300000, guid: 4175d5fe6da48b148ad4d76c9493728b, type: 3}
+  - name: fruit_apple
+    sprite: {fileID: 21300000, guid: 1ca356994848bfb48bba2ab6c7c4ef6a, type: 3}
+  - name: fruit_elder
+    sprite: {fileID: 21300000, guid: 95e86ff9f64b96a46b81d7ec66d9b49a, type: 3}
+  - name: fruit_ghostpear
+    sprite: {fileID: 21300000, guid: 5d9976b59f33cf442a6d02fc4975d4fa, type: 3}
+  - name: fruit_moon
+    sprite: {fileID: 21300000, guid: 346230dee29cd2545a1349c012e92166, type: 3}
+  - name: fruit_rowan
+    sprite: {fileID: 21300000, guid: c005da064a4684e4c92d6573753d7034, type: 3}
+  - name: gift_ancestral_orchard
+    sprite: {fileID: 21300000, guid: 00e1bc4010e9dd04992d85707cb9c03a, type: 3}
+  - name: gift_axe_trade
+    sprite: {fileID: 21300000, guid: 6ca06f54293f66a48a3e557d89b6c35b, type: 3}
+  - name: gift_cheap_land
+    sprite: {fileID: 21300000, guid: 0795f7f8f478f314aab4e17d2e623da7, type: 3}
+  - name: gift_cozy_nest
+    sprite: {fileID: 21300000, guid: 8adb4def4ba8f07439bb1798a25843f7, type: 3}
+  - name: gift_day_wage
+    sprite: {fileID: 21300000, guid: a154dc06d7d70f84a9f59f554bb58ac6, type: 3}
+  - name: gift_deep_crates
+    sprite: {fileID: 21300000, guid: 9915f913a5ff08344a5dbcb8ca6c3e77, type: 3}
+  - name: gift_dowry
+    sprite: {fileID: 21300000, guid: 57363e307bc51694685507c049e7d357, type: 3}
+  - name: gift_ember_reserve
+    sprite: {fileID: 21300000, guid: b306b6bd1afb0d048a1e2705f4880ce9, type: 3}
+  - name: gift_faithful_wisp
+    sprite: {fileID: 21300000, guid: 515fc4a6cb72e1746ada347a53b6ea76, type: 3}
+  - name: gift_fickle_seeds
+    sprite: {fileID: 21300000, guid: 440bc523754fd404eb8288cd473bb9a7, type: 3}
+  - name: gift_full_cellar
+    sprite: {fileID: 21300000, guid: 6d9f061a17e5de042a75b80b8365256c, type: 3}
+  - name: gift_generous_spirit
+    sprite: {fileID: 21300000, guid: 4807b6a132b56424c9462c26395fa2f5, type: 3}
+  - name: gift_ghost_friend
+    sprite: {fileID: 21300000, guid: 1cc6dad436e1a1446be505f6b5c2f91d, type: 3}
+  - name: gift_golden_fleece
+    sprite: {fileID: 21300000, guid: b2afbe74402fd0d4a82f7110c68b5a78, type: 3}
+  - name: gift_green_hands
+    sprite: {fileID: 21300000, guid: 1233d69851e34464dbfd75d173a92586, type: 3}
+  - name: gift_island_heart
+    sprite: {fileID: 21300000, guid: 16755ae10cbc9be45ad97ffcff72113e, type: 3}
+  - name: gift_keepers_ember
+    sprite: {fileID: 21300000, guid: b5f35e595c2f62a4587133367aea5361, type: 3}
+  - name: gift_lucky_shard
+    sprite: {fileID: 21300000, guid: 79afb770831357544a9c2c806d43c551, type: 3}
+  - name: gift_mason_trade
+    sprite: {fileID: 21300000, guid: dd6d78fe7eeae2641bc6babc759f2440, type: 3}
+  - name: gift_mist_compost
+    sprite: {fileID: 21300000, guid: 4b7de60776d0c31459ab8e45c09a5737, type: 3}
+  - name: gift_mist_crown
+    sprite: {fileID: 21300000, guid: 1a09cd04eb8b46847a4a2b7fe4b81b33, type: 3}
+  - name: gift_mist_market
+    sprite: {fileID: 21300000, guid: 935007e0a051a7b459de7abf5465bcce, type: 3}
+  - name: gift_mist_wind
+    sprite: {fileID: 21300000, guid: 060e25790239a7d438b4ff0a0de97eef, type: 3}
+  - name: gift_mist_wings
+    sprite: {fileID: 21300000, guid: 3b5666feef4cd494faeb7346bfa000b4, type: 3}
+  - name: gift_moon_dew
+    sprite: {fileID: 21300000, guid: b3a70842344eaf2498f5f6c6061a55e4, type: 3}
+  - name: gift_night_fair
+    sprite: {fileID: 21300000, guid: 15f78d030574ec64085fc48c41518c8e, type: 3}
+  - name: gift_notice_board
+    sprite: {fileID: 21300000, guid: 009e2daeae91b9f4a987113956083b83, type: 3}
+  - name: gift_old_friends
+    sprite: {fileID: 21300000, guid: c459e74d93ea21b4895913373e75b702, type: 3}
+  - name: gift_pearl_grace
+    sprite: {fileID: 21300000, guid: c7c1f6e265e9eaa48b2080d7848a801e, type: 3}
+  - name: gift_pearl_luck
+    sprite: {fileID: 21300000, guid: 763abf7cdc4b38146a58f359bfccf2cb, type: 3}
+  - name: gift_piggy_bank
+    sprite: {fileID: 21300000, guid: 11bc8a4c4d69a2b45987c73015cbc5f2, type: 3}
+  - name: gift_regulars
+    sprite: {fileID: 21300000, guid: 746eea5cc6445074e81aa272fe66e541, type: 3}
+  - name: gift_seed_memory
+    sprite: {fileID: 21300000, guid: 8229b47047605fb4c8e237440418b8b0, type: 3}
+  - name: gift_sun_seeds
+    sprite: {fileID: 21300000, guid: ea63600b71100f849abba9a8f0266ea5, type: 3}
+  - name: gift_thick_oil
+    sprite: {fileID: 21300000, guid: 2321131d9988fc2489fd5ed238bc248a, type: 3}
+  - name: gift_tireless
+    sprite: {fileID: 21300000, guid: a55494335d2e261458c820bb6a1f1439, type: 3}
+  - name: gift_wise_wisps
+    sprite: {fileID: 21300000, guid: 227ec4b2c9adf074ba15b6b0a19c288a, type: 3}
+  - name: home
+    sprite: {fileID: 21300000, guid: a242b0eee53df304295b4b7ed58b15f1, type: 3}
+  - name: keys
+    sprite: {fileID: 21300000, guid: 8ce7e9626b627bc4c9befba1993625b7, type: 3}
+  - name: lamp
+    sprite: {fileID: 21300000, guid: a2204f8a7fdbdc743be197ac8416cc8c, type: 3}
+  - name: lock
+    sprite: {fileID: 21300000, guid: d397e94917193fd45aa3d00a8033b783, type: 3}
+  - name: menu
+    sprite: {fileID: 21300000, guid: 7feac5a735158eb499a61f91522acb85, type: 3}
+  - name: moon
+    sprite: {fileID: 21300000, guid: dfd4663eedbd846429267f44eba9e77e, type: 3}
+  - name: mouse
+    sprite: {fileID: 21300000, guid: d8267c40c451ab641b92d9d40a6c502a, type: 3}
+  - name: nightcrop
+    sprite: {fileID: 21300000, guid: 2ff4b05a36718a34ebaff39f6febd6ab, type: 3}
+  - name: pearl
+    sprite: {fileID: 21300000, guid: 16d67dff4ce1409459182299cc4e91c9, type: 3}
+  - name: plus
+    sprite: {fileID: 21300000, guid: bb2447f4439ee2b49be2d2b79df94f77, type: 3}
+  - name: ritual
+    sprite: {fileID: 21300000, guid: 8592f45b14fa64240881ba4be733a728, type: 3}
+  - name: sapling
+    sprite: {fileID: 21300000, guid: 6ad4db1aa93bbc348916fe96373a910f, type: 3}
+  - name: save
+    sprite: {fileID: 21300000, guid: 12130ce907e704741a6581c1a34e5498, type: 3}
+  - name: scale
+    sprite: {fileID: 21300000, guid: b35789e99a98a3d429f3815069b02da7, type: 3}
+  - name: seed_ashwheat
+    sprite: {fileID: 21300000, guid: 0619b5982c669bf43aecc3a6546a961c, type: 3}
+  - name: seed_belladonna
+    sprite: {fileID: 21300000, guid: 9c37880dcb769e243b86183b85850d6c, type: 3}
+  - name: seed_bloodrose
+    sprite: {fileID: 21300000, guid: d7d4154aff7ed15409343bf3e608f2b1, type: 3}
+  - name: seed_bloodwormwood
+    sprite: {fileID: 21300000, guid: 3f4055cc654b3ba419805891a0c6734f, type: 3}
+  - name: seed_carrot
+    sprite: {fileID: 21300000, guid: fdb2309002a3c7b4d828a0b8aa61ecc0, type: 3}
+  - name: seed_catseye
+    sprite: {fileID: 21300000, guid: 1a6d8adc3cf255d4a98c1d1cf95069f0, type: 3}
+  - name: seed_corpseshroom
+    sprite: {fileID: 21300000, guid: 8ec705dc46a4d854a8497a6a3294b3a3, type: 3}
+  - name: seed_fernflower
+    sprite: {fileID: 21300000, guid: 9506e90b878a35b47828c6d00b533a67, type: 3}
+  - name: seed_frostbloom
+    sprite: {fileID: 21300000, guid: ac1c3e956ded63747b31dba5e3cab4f0, type: 3}
+  - name: seed_garlic
+    sprite: {fileID: 21300000, guid: 2b19f2ff19db1d147b5ac507eeba7dd0, type: 3}
+  - name: seed_ghostpumpkin
+    sprite: {fileID: 21300000, guid: e8ad78f6e87f2094596709d5af3da8bc, type: 3}
+  - name: seed_graveivy
+    sprite: {fileID: 21300000, guid: 038161e8a57c03346a7821756b97c33f, type: 3}
+  - name: seed_heather
+    sprite: {fileID: 21300000, guid: ccd40a7766e41a1439a20af57edb871e, type: 3}
+  - name: seed_hellebore
+    sprite: {fileID: 21300000, guid: 69c4d06835354ab4fa43e9d5fccf2988, type: 3}
+  - name: seed_hybrid
+    sprite: {fileID: 21300000, guid: 975a76f3a51485a4484b6d7140ccc877, type: 3}
+  - name: seed_kale
+    sprite: {fileID: 21300000, guid: e47a016ab0fb392419ce545aa9b37368, type: 3}
+  - name: seed_lanternfruit
+    sprite: {fileID: 21300000, guid: 2a10ba62c30947748a1bb3e78bf23c7a, type: 3}
+  - name: seed_lavender
+    sprite: {fileID: 21300000, guid: 300da5eaa50789c4a89db5ba02d5feb9, type: 3}
+  - name: seed_mandrake
+    sprite: {fileID: 21300000, guid: a9128482ba382a540ae9028fa22c6595, type: 3}
+  - name: seed_mistletoe
+    sprite: {fileID: 21300000, guid: 40491c3b8613faa4f9afa6a564c00c0f, type: 3}
+  - name: seed_moonflower
+    sprite: {fileID: 21300000, guid: 6fe9f7d1ddbb13546a4c4b2f03dfa985, type: 3}
+  - name: seed_moonpoppy
+    sprite: {fileID: 21300000, guid: 8d14d652d0e863048aa955d27004f097, type: 3}
+  - name: seed_nightjasmine
+    sprite: {fileID: 21300000, guid: 2816cb9fb878bcb48909d66265796e4d, type: 3}
+  - name: seed_poppy
+    sprite: {fileID: 21300000, guid: b31bfb80c3997c6439c3eca77756059b, type: 3}
+  - name: seed_puffball
+    sprite: {fileID: 21300000, guid: 83762b02317b5654a9e48e6db9342200, type: 3}
+  - name: seed_pumpkin
+    sprite: {fileID: 21300000, guid: a62f0d6337a373c4d82827285a94cdd0, type: 3}
+  - name: seed_radish
+    sprite: {fileID: 21300000, guid: ab475fbfa6c88be4c977f452b617a008, type: 3}
+  - name: seed_rhubarb
+    sprite: {fileID: 21300000, guid: ef4d6564cead075478aa23440c9c8418, type: 3}
+  - name: seed_screamgarlic
+    sprite: {fileID: 21300000, guid: d1d3d2e41257a8f4ab6d39946e03688e, type: 3}
+  - name: seed_sunflower
+    sprite: {fileID: 21300000, guid: 95d0518fefdaa0c4995802c933b1e709, type: 3}
+  - name: seed_turnip
+    sprite: {fileID: 21300000, guid: d1bdb99e40773f944a686ace0253bced, type: 3}
+  - name: seed_wheat
+    sprite: {fileID: 21300000, guid: be05f362f2f2d4b4fbb522f24a66957f, type: 3}
+  - name: seed_wolfcarrot
+    sprite: {fileID: 21300000, guid: a68fa7ec9dc65e244b4d12c971b54339, type: 3}
+  - name: seed_wolfsbane
+    sprite: {fileID: 21300000, guid: e39cf913111aa934aae74161d7bb58b1, type: 3}
+  - name: seed_wormwood
+    sprite: {fileID: 21300000, guid: 817c270c38b6f3641ab7b48d1eef6d27, type: 3}
+  - name: settings
+    sprite: {fileID: 21300000, guid: 55e07a8de1151d542ae256dfdbc6e74e, type: 3}
+  - name: shop
+    sprite: {fileID: 21300000, guid: 71f95f7794e33224dac6a4644e5f5c98, type: 3}
+  - name: star
+    sprite: {fileID: 21300000, guid: 2d1b42fa24eae9444966dcb9643528bf, type: 3}
+  - name: star_empty
+    sprite: {fileID: 21300000, guid: bcbfcebceb92e594f9605808872312cb, type: 3}
+  - name: starshard
+    sprite: {fileID: 21300000, guid: fc79e76e703efc4409b66e0908c8e4b0, type: 3}
+  - name: stats
+    sprite: {fileID: 21300000, guid: 09597a4f16f582d439c44da3dd388cd3, type: 3}
+  - name: stone
+    sprite: {fileID: 21300000, guid: 2b1cde3b9a9de164ca380ed409f1cb07, type: 3}
+  - name: sun
+    sprite: {fileID: 21300000, guid: 82f79b154f320e643bfaa8267002172c, type: 3}
+  - name: upgrade
+    sprite: {fileID: 21300000, guid: 8617ccbd2c7befc45b3bf3707b5c16e7, type: 3}
+  - name: wing
+    sprite: {fileID: 21300000, guid: e395c6467e961274a99b89f4d02bbab0, type: 3}
+  - name: wisp
+    sprite: {fileID: 21300000, guid: 6171f7e9fe9426842a6067783ef8fa4e, type: 3}
+  - name: wood
+    sprite: {fileID: 21300000, guid: 9a5bfedbcfe0ae748923ead267cf8d61, type: 3}
+  textLight: {r: 0.84705883, g: 0.8, b: 0.67058825, a: 1}
+  textMuted: {r: 0.5176471, g: 0.5568628, b: 0.60784316, a: 1}
+  textGold: {r: 1, g: 0.8784314, b: 0.5411765, a: 1}
+  textWisp: {r: 0.37254903, g: 0.8117647, b: 0.72156864, a: 1}
+  textDark: {r: 0.10980392, g: 0.08235294, b: 0.1254902, a: 1}
+  textWarn: {r: 0.63529414, g: 0.3019608, b: 0.28235295, a: 1}
+  textGoldOnPage: {r: 0.5411765, g: 0.3529412, b: 0.10980392, a: 1}
+  textMutedOnPage: {r: 0.3529412, g: 0.2901961, b: 0.32156864, a: 1}

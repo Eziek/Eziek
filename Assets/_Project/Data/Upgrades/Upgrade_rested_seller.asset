@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a4504fb243c48459a9c9a0ae4e3416, type: 3}
+  m_Name: Upgrade_rested_seller
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Upgrades.UpgradeDefinition
+  id: rested_seller
+  nameKey: upgrade.rested_seller.name
+  descriptionKey: upgrade.rested_seller.desc
+  debugName: Zimowy jarmark
+  category: 7
+  icon: {fileID: 0}
+  levels:
+  - cost:
+    - type: 0
+      amount: 4000
+    value: 0.15
+  - cost:
+    - type: 0
+      amount: 12000
+    value: 0.3
+  requires:
+  - upgrade: {fileID: 11400000, guid: 24c7beee2ff2c4f4dacb020e71152486, type: 2}
+    minLevel: 1

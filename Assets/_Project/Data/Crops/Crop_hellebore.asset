@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_hellebore
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: hellebore
+  displayName: Ciemiernik
+  kind: 0
+  growSeconds: 220
+  stages:
+  - {fileID: 21300000, guid: 77035423f3e21a1419b4ac62c31ef623, type: 3}
+  - {fileID: 21300000, guid: 61da1884b39e1864c867024f8e9bb343, type: 3}
+  - {fileID: 21300000, guid: fc8c806772136154b8936b1b9dcbd155, type: 3}
+  - {fileID: 21300000, guid: 152a4c458cd52d24b9e223f776fb235f, type: 3}
+  - {fileID: 21300000, guid: 3aa742abf548e084fb6b3c60f86f42e0, type: 3}
+  - {fileID: 21300000, guid: c5878415130d9d74db53837fe84ec704, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  seedPrice: 9
+  sellPrice: 38
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 1900

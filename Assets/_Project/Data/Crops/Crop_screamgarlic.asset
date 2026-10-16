@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_screamgarlic
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: screamgarlic
+  displayName: "Wrzeszcz\u0105cy czosnek"
+  kind: 1
+  growSeconds: 420
+  stages:
+  - {fileID: 21300000, guid: 38def6dc0949bd049aac7431bbf1f296, type: 3}
+  - {fileID: 21300000, guid: e64bc0d351fcd464fb57327d98e3d21f, type: 3}
+  - {fileID: 21300000, guid: a8c149cab8a1e8f48b5dcd4253d5b69c, type: 3}
+  - {fileID: 21300000, guid: 8cbdc1b97b334474c95594e7310db703, type: 3}
+  - {fileID: 21300000, guid: 49f9e4a81e1ad194abc42c0adaf4fac8, type: 3}
+  - {fileID: 21300000, guid: 1f7c9a05a67439047a2d6389c2d9e01e, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 0d2ce82fdd93d0c48ba81467485d863d, type: 3}
+  seedPrice: 0
+  sellPrice: 70
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 1
+  parentA: garlic
+  parentB: mandrake
+  seedIcon: 
+  unlockPrice: 0

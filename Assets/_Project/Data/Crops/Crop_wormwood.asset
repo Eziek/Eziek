@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_wormwood
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: wormwood
+  displayName: "Pio\u0142un"
+  kind: 0
+  growSeconds: 180
+  stages:
+  - {fileID: 21300000, guid: e098df633cbf6f94aba4855c6c41f799, type: 3}
+  - {fileID: 21300000, guid: 0306079a0b755464086d5f431619e8bd, type: 3}
+  - {fileID: 21300000, guid: 27de6e396f2762a458c16603ed024f74, type: 3}
+  - {fileID: 21300000, guid: a39457e23044c3e489618c91466ffbf8, type: 3}
+  - {fileID: 21300000, guid: 35b6c34ac20abe345a362eb459d5b424, type: 3}
+  - {fileID: 21300000, guid: f0280aea79a95a14f896a0b57930788e, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  seedPrice: 8
+  sellPrice: 30
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 1800

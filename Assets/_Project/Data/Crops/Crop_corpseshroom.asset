@@ -15,11 +15,27 @@ MonoBehaviour:
   id: corpseshroom
   displayName: Trupi grzyb
   kind: 1
-  growSeconds: 10800
+  growSeconds: 120
   stages:
   - {fileID: 21300000, guid: a4ae46a672321564c88b0e9b40c5992b, type: 3}
+  - {fileID: 21300000, guid: 43dad456fc0a9d245bb773a162bc0723, type: 3}
   - {fileID: 21300000, guid: 680079ca87bcb6540ac2484f67ce2c9b, type: 3}
   - {fileID: 21300000, guid: d784eb6c1c0b08e46829c922d498e19b, type: 3}
+  - {fileID: 21300000, guid: 108c08ee78e080a4090ff73c9c6db1ff, type: 3}
   - {fileID: 21300000, guid: 27f02fac67d9b3d4c9df7176e4a4e6ec, type: 3}
-  seedPrice: 15
-  sellPrice: 45
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  seedPrice: 4
+  sellPrice: 14
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 0

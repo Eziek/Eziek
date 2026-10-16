@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_lanternfruit
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: lanternfruit
+  displayName: Lampion
+  kind: 1
+  growSeconds: 360
+  stages:
+  - {fileID: 21300000, guid: e5bf7806ea5c9e24caa51a4824825379, type: 3}
+  - {fileID: 21300000, guid: d92fb9e0cc758d14cb9979527a3e1228, type: 3}
+  - {fileID: 21300000, guid: 3cb4fd3a0053c194bb740f8ffaadbb2b, type: 3}
+  - {fileID: 21300000, guid: 51ae1f7b90079bb419e1ffec91eaf3dd, type: 3}
+  - {fileID: 21300000, guid: e9aaa96f14c4cd3408d05c8631946bb2, type: 3}
+  - {fileID: 21300000, guid: 52edb9eb721d72743b9d160506bf3339, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 7be038e7d4dcb134e81329b5c039cc6e, type: 3}
+  seedPrice: 11
+  sellPrice: 55
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 2600

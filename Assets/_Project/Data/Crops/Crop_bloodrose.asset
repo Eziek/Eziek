@@ -15,11 +15,27 @@ MonoBehaviour:
   id: bloodrose
   displayName: "Krwawa r\xF3\u017Ca"
   kind: 1
-  growSeconds: 28800
+  growSeconds: 300
   stages:
   - {fileID: 21300000, guid: 1d9dcb742384eca429672567e088eaae, type: 3}
+  - {fileID: 21300000, guid: 47c72113d7b408c4b81bc820205493bd, type: 3}
   - {fileID: 21300000, guid: 5715b3bb784131c419c6fcb187c75565, type: 3}
   - {fileID: 21300000, guid: 6e1fac9cf1045de49997132da5ed049a, type: 3}
+  - {fileID: 21300000, guid: 7b8fd3d39088c784db798ef448335d7b, type: 3}
   - {fileID: 21300000, guid: 1db7c6fcdc3bb6249be2bd78e98b2424, type: 3}
-  seedPrice: 50
-  sellPrice: 200
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  seedPrice: 12
+  sellPrice: 60
+  nightHarvestYield: 1
+  requiresFullMoon: 1
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 0

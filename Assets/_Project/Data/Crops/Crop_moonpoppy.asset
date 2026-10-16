@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_moonpoppy
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: moonpoppy
+  displayName: "Ksi\u0119\u017Cycowy mak"
+  kind: 1
+  growSeconds: 300
+  stages:
+  - {fileID: 21300000, guid: 7d3c9cbfd5186b2479824ba4921f3493, type: 3}
+  - {fileID: 21300000, guid: f2ef62f2e54451342a78a672d4a5584a, type: 3}
+  - {fileID: 21300000, guid: a09bc383da803684bad97033e1811178, type: 3}
+  - {fileID: 21300000, guid: 5394ab7a38f853d47952c78120ecea86, type: 3}
+  - {fileID: 21300000, guid: 7b6273665c0795f489e0eaabb1cd8550, type: 3}
+  - {fileID: 21300000, guid: a7b6e065f52e6924da826b1fcd945058, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 0b5d73f263fe208438a767112066210c, type: 3}
+  seedPrice: 0
+  sellPrice: 50
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 1
+  parentA: poppy
+  parentB: moonflower
+  seedIcon: 
+  unlockPrice: 0

@@ -1,0 +1,1961 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7aa376a9c932b4b8e0f900afb56882, type: 3}
+  m_Name: IslandArt
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.World.IslandArt
+  plotTile: {fileID: 21300000, guid: 3e8ca5f1cfc2b994eb2476d805e0d631, type: 3}
+  decorations:
+  - kind: 0
+    sprite: {fileID: 21300000, guid: cd74d7b2b85fbbb40a9a269a0c4f6ff1, type: 3}
+    sway: 1
+    nameKey: deco.tree_round
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 5
+    reward: 5
+    rewardAmount: 3
+    bonusChance: 0.1
+    bonus: 1
+    bonusAmount: 1
+    bonusToast: toast.deco.nest
+    anim: 1
+    frames:
+    - {fileID: 21300000, guid: 4e8cdd91bbb89ff4ba182179d5208046, type: 3}
+    - {fileID: 21300000, guid: e511be13d56614e449273728055d150d, type: 3}
+    - {fileID: 21300000, guid: 8c26a9f22c797c14bb5fcc203d15eded, type: 3}
+    - {fileID: 21300000, guid: 1b6349129e3aa5b4ba11c8f5046feb53, type: 3}
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 1
+    remains: 5
+  - kind: 4
+    sprite: {fileID: 21300000, guid: 3adfa6df285733e4cb699e3c98b4bb6d, type: 3}
+    sway: 1
+    nameKey: deco.spruce
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 4
+    reward: 5
+    rewardAmount: 2
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 1
+    remains: 6
+  - kind: 3
+    sprite: {fileID: 21300000, guid: a8480ce8924c3d5409d13847a0042f60, type: 3}
+    sway: 0
+    nameKey: deco.dead_tree
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 3
+    reward: 5
+    rewardAmount: 2
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    hasRemains: 1
+    remains: 7
+  - kind: 2
+    sprite: {fileID: 21300000, guid: 0273eb38b2edd8b449193c6ff49080ff, type: 3}
+    sway: 1
+    nameKey: deco.bush
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 2
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 1
+    bonus: 0
+    bonusAmount: 5
+    bonusToast: toast.deco.berries
+    anim: 3
+    frames:
+    - {fileID: 21300000, guid: 01712690ae462bd478027d9b6a4bd6ba, type: 3}
+    chips:
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 0
+    remains: 0
+  - kind: 1
+    sprite: {fileID: 21300000, guid: 7b182187a651eb8478f132046916c4e0, type: 3}
+    sway: 0
+    nameKey: deco.rock
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 6
+    reward: 6
+    rewardAmount: 3
+    bonusChance: 0.15
+    bonus: 0
+    bonusAmount: 15
+    bonusToast: toast.deco.coins
+    anim: 2
+    frames:
+    - {fileID: 21300000, guid: 94557d1244e3fd445a1250f3edc24229, type: 3}
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 1
+    remains: 8
+  - kind: 5
+    sprite: {fileID: 21300000, guid: a76e31775254cd14f81ab8766eebf484, type: 3}
+    sway: 0
+    nameKey: deco.stump
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    hasRemains: 0
+    remains: 0
+  - kind: 6
+    sprite: {fileID: 21300000, guid: 636e0f1223412d846a08f1443e2b0d40, type: 3}
+    sway: 0
+    nameKey: deco.stump
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    hasRemains: 0
+    remains: 0
+  - kind: 7
+    sprite: {fileID: 21300000, guid: b6cb2b834b99cdd4a992c1833bb7a87d, type: 3}
+    sway: 0
+    nameKey: deco.stump
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    hasRemains: 0
+    remains: 0
+  - kind: 8
+    sprite: {fileID: 21300000, guid: 0f814b993ab34554c8ffcacdc5356fbe, type: 3}
+    sway: 0
+    nameKey: deco.rubble
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 2
+    reward: 6
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 0
+  - kind: 9
+    sprite: {fileID: 21300000, guid: 6c90c905ec44e4945ad604f8849b5184, type: 3}
+    sway: 0
+    nameKey: deco.gravestone
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 1
+    removable: 1
+    essenceCost: 3
+    reward: 6
+    rewardAmount: 2
+    bonusChance: 0.1
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 2
+    frames:
+    - {fileID: 21300000, guid: 518453c501897e54597533fdc51b2975, type: 3}
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 1
+    remains: 12
+  - kind: 10
+    sprite: {fileID: 21300000, guid: 640a426f9455ba24b8102f7ce1701a3e, type: 3}
+    sway: 0
+    nameKey: deco.gravestone
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 1
+    removable: 1
+    essenceCost: 3
+    reward: 6
+    rewardAmount: 2
+    bonusChance: 0.1
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 2
+    frames:
+    - {fileID: 21300000, guid: 518453c501897e54597533fdc51b2975, type: 3}
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 1
+    remains: 12
+  - kind: 11
+    sprite: {fileID: 21300000, guid: 68efa64e2ac62464fa1d6591d772c763, type: 3}
+    sway: 0
+    nameKey: deco.gravestone
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 1
+    removable: 1
+    essenceCost: 3
+    reward: 6
+    rewardAmount: 2
+    bonusChance: 0.1
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 2
+    frames:
+    - {fileID: 21300000, guid: 518453c501897e54597533fdc51b2975, type: 3}
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 1
+    remains: 12
+  - kind: 12
+    sprite: {fileID: 21300000, guid: 518453c501897e54597533fdc51b2975, type: 3}
+    sway: 0
+    nameKey: deco.gravestone_broken
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 6
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 0
+  - kind: 13
+    sprite: {fileID: 21300000, guid: d8f1e3b15798c1a49b41bbf4152b23db, type: 3}
+    sway: 0
+    nameKey: deco.wooden_cross
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 14
+    sprite: {fileID: 21300000, guid: aee5b8b5a6b3dde4580869276feb0420, type: 3}
+    sway: 0
+    nameKey: deco.obelisk
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 4
+    reward: 6
+    rewardAmount: 3
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 15
+    sprite: {fileID: 21300000, guid: 20cc39c070251904f9d3fd873c39c0b2, type: 3}
+    sway: 0
+    nameKey: deco.open_grave
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 1
+    removable: 1
+    essenceCost: 2
+    reward: 6
+    rewardAmount: 1
+    bonusChance: 0.15
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 16
+    sprite: {fileID: 21300000, guid: c1f58f61c0896e94091005a8d72d1521, type: 3}
+    sway: 0
+    nameKey: deco.crypt
+    glowSprite: {fileID: 0}
+    landmark: 1
+    loreKey: lore.crypt
+    bonusLore: 0
+    removable: 0
+    essenceCost: 2
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips: []
+    hasRemains: 0
+    remains: 0
+  - kind: 17
+    sprite: {fileID: 21300000, guid: ce5d3905c6d10f94b94073fe43d67fd5, type: 3}
+    sway: 0
+    nameKey: deco.skull_pile
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 1
+    removable: 1
+    essenceCost: 2
+    reward: 6
+    rewardAmount: 1
+    bonusChance: 0.2
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 18
+    sprite: {fileID: 21300000, guid: 5cdbf26c11cebd8418314a7a7fc361a1, type: 3}
+    sway: 0
+    nameKey: deco.candles
+    glowSprite: {fileID: 21300000, guid: 2bbe244f3feebab4abf90a25dbc31228, type: 3}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 0
+    rewardAmount: 3
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 19
+    sprite: {fileID: 21300000, guid: 5bf640ddc45f85c47ac9622fba50e079, type: 3}
+    sway: 0
+    nameKey: deco.iron_gate
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 3
+    reward: 6
+    rewardAmount: 2
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 20
+    sprite: {fileID: 21300000, guid: b95dfa5c15bf9974bb030af5b953715a, type: 3}
+    sway: 1
+    nameKey: deco.thorns
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 21
+    sprite: {fileID: 21300000, guid: a9232ae0683d6a945bb06b7b539fc083, type: 3}
+    sway: 1
+    nameKey: deco.mangrove
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 5
+    reward: 5
+    rewardAmount: 3
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 1
+    remains: 7
+  - kind: 22
+    sprite: {fileID: 21300000, guid: 4c5b9443510a2bc48bd80b9b0542fc2a, type: 3}
+    sway: 0
+    nameKey: deco.lily_pads
+    glowSprite: {fileID: 21300000, guid: 413e7dfde9012da4b91d9c1a07376ebf, type: 3}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 0
+    rewardAmount: 4
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 23
+    sprite: {fileID: 21300000, guid: 8ab705e3edf912c45ba09a3229857c9b, type: 3}
+    sway: 0
+    nameKey: deco.rotten_log
+    glowSprite: {fileID: 21300000, guid: b9f85e45c25dcef409373f2590857556, type: 3}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 2
+    reward: 5
+    rewardAmount: 2
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 24
+    sprite: {fileID: 21300000, guid: d2b017b0d5008f840bd8679b3e349044, type: 3}
+    sway: 1
+    nameKey: deco.cattails
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 25
+    sprite: {fileID: 21300000, guid: 5ab87ed00e04c424a93da3a9881661c9, type: 3}
+    sway: 1
+    nameKey: deco.reeds
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 1
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: c52006e389ec51746aff90963e2c54e3, type: 3}
+    - {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 26
+    sprite: {fileID: 21300000, guid: 3d550e8f07c16494c9b07311b4d7b595, type: 3}
+    sway: 0
+    nameKey: deco.swamp_pool
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 3
+    reward: 6
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 27
+    sprite: {fileID: 21300000, guid: b6cbfed1c20ddac45916f1c709b6abe5, type: 3}
+    sway: 0
+    nameKey: deco.broken_wall
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 4
+    reward: 6
+    rewardAmount: 3
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 28
+    sprite: {fileID: 21300000, guid: 634428ceb09382a4f82d2780184f9f27, type: 3}
+    sway: 0
+    nameKey: deco.fallen_column
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 4
+    reward: 6
+    rewardAmount: 3
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 29
+    sprite: {fileID: 21300000, guid: 60e067a2e227d7a42ace610198efc66e, type: 3}
+    sway: 0
+    nameKey: deco.statue
+    glowSprite: {fileID: 0}
+    landmark: 1
+    loreKey: lore.statue
+    bonusLore: 0
+    removable: 0
+    essenceCost: 2
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips: []
+    hasRemains: 0
+    remains: 0
+  - kind: 30
+    sprite: {fileID: 21300000, guid: 544350ca2bd7a35448465b228ec1b7fa, type: 3}
+    sway: 0
+    nameKey: deco.stone_stairs
+    glowSprite: {fileID: 0}
+    landmark: 1
+    loreKey: lore.stairs
+    bonusLore: 0
+    removable: 0
+    essenceCost: 2
+    reward: 5
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips: []
+    hasRemains: 0
+    remains: 0
+  - kind: 31
+    sprite: {fileID: 21300000, guid: e1f66fa468028344ca503f9ef8348f6a, type: 3}
+    sway: 0
+    nameKey: deco.rubble
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 2
+    reward: 6
+    rewardAmount: 1
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 32
+    sprite: {fileID: 21300000, guid: 183426f9b55e3bc4691f2bdb789d39ea, type: 3}
+    sway: 0
+    nameKey: deco.brazier
+    glowSprite: {fileID: 21300000, guid: 9d55827658fda904699eec4c0046eb44, type: 3}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 2
+    reward: 6
+    rewardAmount: 2
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 33
+    sprite: {fileID: 21300000, guid: 72015f369561de5449b88e1a5690eb79, type: 3}
+    sway: 0
+    nameKey: deco.rune_tablet
+    glowSprite: {fileID: 21300000, guid: 98218565403dd2642b84bf94e780ca82, type: 3}
+    landmark: 0
+    loreKey: 
+    bonusLore: 1
+    removable: 1
+    essenceCost: 3
+    reward: 6
+    rewardAmount: 2
+    bonusChance: 0.3
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 34
+    sprite: {fileID: 21300000, guid: 5ddda9aa33c66b146b23dd511b1c0dd7, type: 3}
+    sway: 0
+    nameKey: deco.vine_pillar
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 3
+    reward: 6
+    rewardAmount: 2
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 35
+    sprite: {fileID: 21300000, guid: aa83915a0353d944e8e0eccb38041682, type: 3}
+    sway: 0
+    nameKey: deco.broken_pillar
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 3
+    reward: 6
+    rewardAmount: 2
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  - kind: 36
+    sprite: {fileID: 21300000, guid: dd74e9575cb9372418259eb556348dc4, type: 3}
+    sway: 0
+    nameKey: deco.ruined_arch
+    glowSprite: {fileID: 0}
+    landmark: 0
+    loreKey: 
+    bonusLore: 0
+    removable: 1
+    essenceCost: 4
+    reward: 6
+    rewardAmount: 3
+    bonusChance: 0
+    bonus: 0
+    bonusAmount: 0
+    bonusToast: 
+    anim: 0
+    frames: []
+    chips:
+    - {fileID: 21300000, guid: 066c78c886a44d54c9b5cf0c1f47220e, type: 3}
+    hasRemains: 0
+    remains: 8
+  lamps:
+  - {fileID: 11400000, guid: e312e6af3fb7fb14ca2091653c8334de, type: 2}
+  - {fileID: 11400000, guid: cad99cbb95e4879478c51450bdbab15c, type: 2}
+  - {fileID: 11400000, guid: 97464fe85ee09b54281ea948e56bf85d, type: 2}
+  - {fileID: 11400000, guid: 0b670b5f7b6bce74a9938a7ef8555a03, type: 2}
+  dust:
+  - {fileID: 21300000, guid: 7de13ce9d06f977439c5077ac8233d7e, type: 3}
+  - {fileID: 21300000, guid: b8f9f5136c8f94e4b89862cd35a5f6f3, type: 3}
+  - {fileID: 21300000, guid: d6a265a04d80af24bb0db59fb5fca742, type: 3}
+  crow:
+  - {fileID: 21300000, guid: 93c2ef3e0f757a54297667923b545751, type: 3}
+  - {fileID: 21300000, guid: ad0ff62df74fa9c4ea3d1cf25eef849d, type: 3}
+  crowGlow:
+  - {fileID: 21300000, guid: 1a781b73e26906143af016936501d62b, type: 3}
+  - {fileID: 21300000, guid: eeecf695467279d45a3ff3ce5033fa07, type: 3}
+  frog:
+  - {fileID: 21300000, guid: cfa844a95a4fa3844ae6b50fd4a019d5, type: 3}
+  - {fileID: 21300000, guid: b69ebf7d88893944f94d69fd46164ccf, type: 3}
+  frogGlow:
+  - {fileID: 21300000, guid: 0efab60da767e3c42817d0a537d04200, type: 3}
+  - {fileID: 21300000, guid: e6f7e416e876da1479aea77bb9d52a2e, type: 3}
+  bubbles:
+  - {fileID: 21300000, guid: f84fc46190c33bf43a43e7e540a7a476, type: 3}
+  - {fileID: 21300000, guid: cd727febc93b1d24a925fad4a18d58d0, type: 3}
+  - {fileID: 21300000, guid: af912824e28aabf4cb18ae4abb565e3c, type: 3}
+  pier: {fileID: 21300000, guid: abdcbda14d47b7c48a31bb7469453a33, type: 3}
+  netBuoy: {fileID: 21300000, guid: 2b83944044edfaf49a79642c231d9251, type: 3}
+  boat: {fileID: 21300000, guid: 72f38488c29d4934692bfa3b8b5bcfcb, type: 3}
+  boatGlow: {fileID: 21300000, guid: 7143e0bb89c7b3e428f805af3a788bee, type: 3}
+  altar: {fileID: 21300000, guid: a2b1addd0a0c06e46907184c61e8bc31, type: 3}
+  altarGlow: {fileID: 21300000, guid: 3d848a9d29fe49d4e9b5435ff3f9999b, type: 3}
+  lighthouse: {fileID: 11400000, guid: d885c2768713ae2449dcc2001fe24c03, type: 2}
+  waterFlora:
+  - {fileID: 21300000, guid: 2a4ccc9bf0a3fa04c8170ad1425f25e3, type: 3}
+  - {fileID: 21300000, guid: 7fab83f2dcc7dfd4fa8a4322de5276ad, type: 3}
+  - {fileID: 21300000, guid: fbe897194dc3f1749890acc6e649fb63, type: 3}
+  - {fileID: 21300000, guid: a25d392d7f857ce479380f8f34a05c05, type: 3}
+  - {fileID: 21300000, guid: cacb7f4f57971c941a9d49cff24fdf63, type: 3}
+  - {fileID: 21300000, guid: 37640ee9a99535f49af739f4ac9998ae, type: 3}
+  - {fileID: 21300000, guid: 7255cf65c283c014490579f8d06003cb, type: 3}
+  - {fileID: 21300000, guid: 9103aa2462026e64d9ae0698d5d0386f, type: 3}
+  - {fileID: 21300000, guid: 875b8d39caef23a4197c4881c91bb215, type: 3}
+  - {fileID: 21300000, guid: 040a3899375625142addd8995290a431, type: 3}
+  waterFloraGlow:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 3a9e4ab2883a8e644a1d01abc55759fc, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  story:
+  - id: chapel
+    phases:
+    - {fileID: 21300000, guid: 9faf8f88d65f4754f88a4710fc38472c, type: 3}
+    - {fileID: 21300000, guid: 626d24926d5b77b42a76913fc976fb52, type: 3}
+    - {fileID: 21300000, guid: 8065da024739d3144af7313b39e7a36a, type: 3}
+    - {fileID: 21300000, guid: 511d20478963e1245a093027a3932662, type: 3}
+    - {fileID: 21300000, guid: 06868c1abc73d1b42a4e2c6adc1b83d3, type: 3}
+    doneGlow: {fileID: 21300000, guid: 8ffdbea455992e341a1219a2a21c23b1, type: 3}
+  - id: watch
+    phases:
+    - {fileID: 21300000, guid: e765c56121035eb4f84e510e4dcbf5aa, type: 3}
+    - {fileID: 21300000, guid: 3b427cb619976044ea61779c84a4b7db, type: 3}
+    - {fileID: 21300000, guid: c8c17dad0555a7a45b898726454963ba, type: 3}
+    - {fileID: 21300000, guid: cd9ba4d5c94a6a543a6fea5ba9ecd4bb, type: 3}
+    - {fileID: 21300000, guid: 94d41d619bab3c94c8e4a4f89d6587a4, type: 3}
+    doneGlow: {fileID: 21300000, guid: 699e3a1632e3d5241892a64842339395, type: 3}
+  - id: sawmill
+    phases:
+    - {fileID: 21300000, guid: ec46150b29e905d44ae8fee313806130, type: 3}
+    - {fileID: 21300000, guid: 2aea1b402e84e204e8c359b048e634a3, type: 3}
+    - {fileID: 21300000, guid: e39e88d785887b64dbd98bd8d60464dc, type: 3}
+    - {fileID: 21300000, guid: 441503c1c59d52f4da7b36606f4ef3f8, type: 3}
+    - {fileID: 21300000, guid: 5621b7f5a9d90a148aac1984fa6e30d7, type: 3}
+    doneGlow: {fileID: 21300000, guid: 94ada1c351866ff4ebee4a0e01a9ad2d, type: 3}
+  - id: observatory
+    phases:
+    - {fileID: 21300000, guid: 18fd689c863c833428f6aa681f0a9698, type: 3}
+    - {fileID: 21300000, guid: 24894d09383c9b34d8a19a2dabd37a22, type: 3}
+    - {fileID: 21300000, guid: 3087edc5b8c2c104da5cdf64fd35f50e, type: 3}
+    - {fileID: 21300000, guid: 9a4b169b9bf7ddc4c962875e2fe1a666, type: 3}
+    - {fileID: 21300000, guid: 1ee403a90d2d32e4fa3f814673b97136, type: 3}
+    doneGlow: {fileID: 21300000, guid: acd0385291f48514badd784b103f55d5, type: 3}
+  trees:
+  - id: apple
+    stages:
+    - {fileID: 21300000, guid: 7ea1c1f8fa152c348b4e4b4c7a422eea, type: 3}
+    - {fileID: 21300000, guid: 9b977d43a317ab843800b13e9d9c4c5e, type: 3}
+    - {fileID: 21300000, guid: 317d4fc3314ae454d80de4744de3af2d, type: 3}
+    - {fileID: 21300000, guid: 310a2f34c38259640b401a9c605e009a, type: 3}
+    fruitingGlow: {fileID: 0}
+    fall:
+    - {fileID: 21300000, guid: 71c02c0d47b63c744884aafb0d98315f, type: 3}
+    - {fileID: 21300000, guid: c4308d477e0e5e9478f50ed50df2cb26, type: 3}
+    - {fileID: 21300000, guid: a484d96ed9cdbee4cb2d8ddbbf37f547, type: 3}
+    - {fileID: 21300000, guid: 8e95d3678c47c5542957556a4c0c6e2d, type: 3}
+    fruit: {fileID: 21300000, guid: 1ca356994848bfb48bba2ab6c7c4ef6a, type: 3}
+  - id: elder
+    stages:
+    - {fileID: 21300000, guid: 3838b7d7ba9102f4291c3639e8eaecf3, type: 3}
+    - {fileID: 21300000, guid: 54c1260e8cdc9e34c9b5398656410651, type: 3}
+    - {fileID: 21300000, guid: a8126f3d4039a10408cd8fe3ae65e9e1, type: 3}
+    - {fileID: 21300000, guid: 58b531f4bdff4f442a8840b0a871d4cb, type: 3}
+    fruitingGlow: {fileID: 0}
+    fall:
+    - {fileID: 21300000, guid: 82b8578e63a02f04d9aec9f7a35544d8, type: 3}
+    - {fileID: 21300000, guid: 565194e41f0b5c84e9077d0c96b8bfed, type: 3}
+    - {fileID: 21300000, guid: 267895e5cf3fc454cb2a7d29483d9ba2, type: 3}
+    - {fileID: 21300000, guid: cdb3a922955f6574e8da393dcef0a6f9, type: 3}
+    fruit: {fileID: 21300000, guid: 95e86ff9f64b96a46b81d7ec66d9b49a, type: 3}
+  - id: rowan
+    stages:
+    - {fileID: 21300000, guid: 3ef3b10fd61ce6b409a38bae6046c5ed, type: 3}
+    - {fileID: 21300000, guid: 2118021f7b9bf784ba80bd269db91bab, type: 3}
+    - {fileID: 21300000, guid: 01e7578f68c7f1c4099d61a049bc15c9, type: 3}
+    - {fileID: 21300000, guid: 0eca08ef872fb524c9ef972f7d917ac0, type: 3}
+    fruitingGlow: {fileID: 0}
+    fall:
+    - {fileID: 21300000, guid: 8e879b91a3a3f184690185759888807c, type: 3}
+    - {fileID: 21300000, guid: c028c9452b5d3824f88286a3ebc998db, type: 3}
+    - {fileID: 21300000, guid: 0fc9cfc50f813e34f8f54da5bf9df2d4, type: 3}
+    - {fileID: 21300000, guid: 26e2282ac1291904c92d4cb44e841880, type: 3}
+    fruit: {fileID: 21300000, guid: c005da064a4684e4c92d6573753d7034, type: 3}
+  - id: ghostpear
+    stages:
+    - {fileID: 21300000, guid: a88ba15e312ff6d44a470686cd0deff5, type: 3}
+    - {fileID: 21300000, guid: 07309427814e72e4a9e973e9cf623801, type: 3}
+    - {fileID: 21300000, guid: 47d274b68ded12740a2c592eab967260, type: 3}
+    - {fileID: 21300000, guid: 1e34a1925461a154d82475c5a76c61ad, type: 3}
+    fruitingGlow: {fileID: 21300000, guid: 79474b891ad21804aad41b545fa87a67, type: 3}
+    fall:
+    - {fileID: 21300000, guid: c64d552e1915ab443b4b98aec39a7ab4, type: 3}
+    - {fileID: 21300000, guid: 5ef7001664564104c9f48519e8340a6a, type: 3}
+    - {fileID: 21300000, guid: 6e7eb64b36afb7344832e1ad35c8e76e, type: 3}
+    - {fileID: 21300000, guid: a5b3b97a167fdf64e8fe4c2b9918d894, type: 3}
+    fruit: {fileID: 21300000, guid: 5d9976b59f33cf442a6d02fc4975d4fa, type: 3}
+  - id: moon
+    stages:
+    - {fileID: 21300000, guid: 4d32e9e2de5e8f44abc1349267266bc3, type: 3}
+    - {fileID: 21300000, guid: 884a4d8a9b20db041acace0a2623ad1a, type: 3}
+    - {fileID: 21300000, guid: 1e93a83ef868f22478e719cf3cf30ec6, type: 3}
+    - {fileID: 21300000, guid: f415c08c1b4f8ff4a86166ae28798979, type: 3}
+    fruitingGlow: {fileID: 21300000, guid: 793dfc8399f1fae4fbb89d484433d09a, type: 3}
+    fall:
+    - {fileID: 21300000, guid: 0d42789a06f5710458f2604107bf47cf, type: 3}
+    - {fileID: 21300000, guid: b7288d9b95b42d347af8c9c5acdbfc38, type: 3}
+    - {fileID: 21300000, guid: 0b88bfeb22955524da3fc8dcd2925ed3, type: 3}
+    - {fileID: 21300000, guid: f4e02145f0be4b94b96a130cc1919788, type: 3}
+    fruit: {fileID: 21300000, guid: 346230dee29cd2545a1349c012e92166, type: 3}
+  sapling: {fileID: 0}
+  swayTreeGlow: {fileID: 2100000, guid: 3a940d831ce4fe14b9894e6948eb88c7, type: 2}
+  birdCrow:
+  - {fileID: 21300000, guid: dbde8daca77a52647ab1c7a44ace886c, type: 3}
+  - {fileID: 21300000, guid: c458482eb4c09ea44bea25713a0a25ac, type: 3}
+  - {fileID: 21300000, guid: 94673eebc83f7d0498fba4b77c4557c4, type: 3}
+  - {fileID: 21300000, guid: 46c2eca93fcfc8c4a94131b7be0b52bf, type: 3}
+  birdFinch:
+  - {fileID: 21300000, guid: fbde2f2f2fb1c4a4caaff1c6ea26638c, type: 3}
+  - {fileID: 21300000, guid: e04235cd3e585e447b8a9e2374dcbde8, type: 3}
+  - {fileID: 21300000, guid: 46c6a36c4d9aa694e87087b6cd09e15e, type: 3}
+  - {fileID: 21300000, guid: 8f9db89f40056814c979a1261ef8bfd7, type: 3}
+  birds:
+  - id: magpie
+    frames:
+    - {fileID: 21300000, guid: f2d4a4dede65e50489185f54db04def6, type: 3}
+    - {fileID: 21300000, guid: a5e080191379d804dba25f434464e513, type: 3}
+    - {fileID: 21300000, guid: 61758e406817399418fb9ae3258fecd1, type: 3}
+    - {fileID: 21300000, guid: 9310dc1e038d24a4dae3193dddeed9c4, type: 3}
+  - id: bullfinch
+    frames:
+    - {fileID: 21300000, guid: af580f912defe864aa5c0064e5d0c169, type: 3}
+    - {fileID: 21300000, guid: c2dfcaedfacc68341b0abc4aea73dfb7, type: 3}
+    - {fileID: 21300000, guid: 567ef21f9ae722b4396696a5a29ea8b8, type: 3}
+    - {fileID: 21300000, guid: 248351dbc39c18540897d4ab6911b782, type: 3}
+  - id: tit
+    frames:
+    - {fileID: 21300000, guid: 278ab9cef9f7a3f45b0162abc944f252, type: 3}
+    - {fileID: 21300000, guid: a07dd10ba2786154ba7d60b66b7b2997, type: 3}
+    - {fileID: 21300000, guid: 739a4427d1daacd47923e37bbdb5b93a, type: 3}
+    - {fileID: 21300000, guid: 9240c64287669b740b34fdf7fd8ea2a6, type: 3}
+  - id: gull
+    frames:
+    - {fileID: 21300000, guid: 215358bd0376f7e4abb4853e38e1ade8, type: 3}
+    - {fileID: 21300000, guid: 10cb9bdf14228444ca6670c5f65d5149, type: 3}
+    - {fileID: 21300000, guid: 31b96bc10a544f6469415fe98e5ef804, type: 3}
+    - {fileID: 21300000, guid: a768e3e485657ba42a71afe6d5fcec6b, type: 3}
+  - id: heron
+    frames:
+    - {fileID: 21300000, guid: 0d057ed6a863613469c51489069ef9f8, type: 3}
+    - {fileID: 21300000, guid: 3f1113e9aafac964f9ee27f3b3f174e7, type: 3}
+    - {fileID: 21300000, guid: 1079933e6d14cbc43a5d087086f1df89, type: 3}
+    - {fileID: 21300000, guid: f5bb9b46e4a4e7d44a9f643af21b85d7, type: 3}
+  wispNest:
+  - {fileID: 21300000, guid: 7236c354445a95348a34dd1516c42870, type: 3}
+  - {fileID: 21300000, guid: 791588c5863e7a140817e13149017b6f, type: 3}
+  wispKinds:
+  - kind: 0
+    frames:
+    - {fileID: 21300000, guid: 0c6c29d25ddba484d881d35452b1ed57, type: 3}
+    - {fileID: 21300000, guid: 805730c29fe08dc4c8fa49ac6ed05745, type: 3}
+    - {fileID: 21300000, guid: fb3ede95ad35d6443b6b7c18de5b70ef, type: 3}
+    - {fileID: 21300000, guid: be448d5cdefb31c44b379631e5e01356, type: 3}
+    glow:
+    - {fileID: 21300000, guid: 66d17f565da95e045b131964eaed54b6, type: 3}
+    - {fileID: 21300000, guid: 590e06f77081c7f4a9a2bc84e34a136b, type: 3}
+    - {fileID: 21300000, guid: 7fe12dbb4de3b15448940c3f5ce0cabf, type: 3}
+    - {fileID: 21300000, guid: 4729790fb7df77540a1a07e2afb5c2ee, type: 3}
+    tool:
+    - {fileID: 21300000, guid: 8e6965f5f9b6cfb4e8c1d888eb07c97a, type: 3}
+    - {fileID: 21300000, guid: 4f6761ae1bf098048a526be08a19eb0e, type: 3}
+    toolGlow:
+    - {fileID: 0}
+    - {fileID: 0}
+  - kind: 1
+    frames:
+    - {fileID: 21300000, guid: d490c2decbbbd0a43ac4edaf3aeeeb93, type: 3}
+    - {fileID: 21300000, guid: e3a750f4aa6bc6c41ab9eeb6de7eeeb7, type: 3}
+    - {fileID: 21300000, guid: 80a3d2e407e63d54f8f045bd974213e0, type: 3}
+    - {fileID: 21300000, guid: 240b372d16ba2d145b4fb2f173e1812c, type: 3}
+    glow:
+    - {fileID: 21300000, guid: ad181a5341d1c4c49b88fc4744d97d7d, type: 3}
+    - {fileID: 21300000, guid: 0df82be55c7856240b94cf54559e8c14, type: 3}
+    - {fileID: 21300000, guid: 3c3fb02f2843b544180ecb02c888e9d8, type: 3}
+    - {fileID: 21300000, guid: 2579d3d9857575d499059245a908a616, type: 3}
+    tool:
+    - {fileID: 21300000, guid: 14e2ede553ecca242a4341a5a5334ba1, type: 3}
+    - {fileID: 21300000, guid: b8f25751cee2ab34fa4e80dc11b3ed0f, type: 3}
+    toolGlow:
+    - {fileID: 0}
+    - {fileID: 0}
+  - kind: 2
+    frames:
+    - {fileID: 21300000, guid: c2c25c077aa092844bdd219562158428, type: 3}
+    - {fileID: 21300000, guid: 20b599478e8b4bc438e8950a48bad2ce, type: 3}
+    - {fileID: 21300000, guid: 7d6289a14821f0f4fb2f53d8c9c2921f, type: 3}
+    - {fileID: 21300000, guid: f219e6ee4b8537341a4024d074a36031, type: 3}
+    glow:
+    - {fileID: 21300000, guid: 2a66954922af28842925e47cc632250f, type: 3}
+    - {fileID: 21300000, guid: adec1af3503ed094e8ef53668518e0d5, type: 3}
+    - {fileID: 21300000, guid: 5b77eaaa1eed74f45958aa4a800474d2, type: 3}
+    - {fileID: 21300000, guid: 2c90542ff83678847809be1c32ac3603, type: 3}
+    tool:
+    - {fileID: 21300000, guid: 7a403e88bc9edf040a1d100d2f254d5e, type: 3}
+    - {fileID: 21300000, guid: 2b8c41a091de69142983f8bb905765a9, type: 3}
+    toolGlow:
+    - {fileID: 0}
+    - {fileID: 0}
+  - kind: 3
+    frames:
+    - {fileID: 21300000, guid: 229360cb54dad004198e60cf44bb2478, type: 3}
+    - {fileID: 21300000, guid: 85d8c984584828c44aa194db8a703373, type: 3}
+    - {fileID: 21300000, guid: b57e12ef1f334584a8095955e70e64e3, type: 3}
+    - {fileID: 21300000, guid: a95fa08c5cc94c342b59c8042294626e, type: 3}
+    glow:
+    - {fileID: 21300000, guid: 647adb6ab675d274cb71e15bcf56c33f, type: 3}
+    - {fileID: 21300000, guid: 5cb40175ae33af348a2a1c6e2523dd88, type: 3}
+    - {fileID: 21300000, guid: 41d77ea52f3c26b49839e511fc862727, type: 3}
+    - {fileID: 21300000, guid: 191fa32e4017dc049a9789b3ff26562e, type: 3}
+    tool:
+    - {fileID: 21300000, guid: 4292687fa083c5944abe192b0ad97706, type: 3}
+    - {fileID: 21300000, guid: fdc9b2e6c1599324497a2b1ee4aed199, type: 3}
+    toolGlow:
+    - {fileID: 21300000, guid: a7ee04c8a3492a845a236f2c8b8bc6c1, type: 3}
+    - {fileID: 21300000, guid: c9a5ca2e35efa074b96ca7c4c4fcf6b6, type: 3}
+  - kind: 4
+    frames:
+    - {fileID: 21300000, guid: d30266a2261e14c4ca67dec06028ea63, type: 3}
+    - {fileID: 21300000, guid: fd8f7bd07c9238f4d9d5397d6ef4f607, type: 3}
+    - {fileID: 21300000, guid: 45c93e58aa89f1d47880140c2cd403f5, type: 3}
+    - {fileID: 21300000, guid: 3d5adf975954a134bada8f5157ce110b, type: 3}
+    glow:
+    - {fileID: 21300000, guid: c948dd022eaa97f48949dc77fc20cb18, type: 3}
+    - {fileID: 21300000, guid: 56c7631037043f04dbb577c8561374ff, type: 3}
+    - {fileID: 21300000, guid: 2fd0dd848f8349547881b1504f509242, type: 3}
+    - {fileID: 21300000, guid: c7b80d343e1703f43adaef337e7ff142, type: 3}
+    tool:
+    - {fileID: 21300000, guid: ce8d1033a651ca14baa933011bdf44d9, type: 3}
+    - {fileID: 21300000, guid: 2bc5951299a7a3540b9abcc66a1b45e5, type: 3}
+    toolGlow:
+    - {fileID: 21300000, guid: 7d7a4dd296b74904daef0918c0b23ff4, type: 3}
+    - {fileID: 21300000, guid: deb247232b4478748852f07eb8695667, type: 3}
+  - kind: 5
+    frames:
+    - {fileID: 21300000, guid: b7f62803bdc7b6f48b1f5c2705b35895, type: 3}
+    - {fileID: 21300000, guid: 231dae96d6405364da8804e880c4b1c6, type: 3}
+    - {fileID: 21300000, guid: c6158b4154407534198f0ff0d6a22e93, type: 3}
+    - {fileID: 21300000, guid: 722431240c77c15448d706a4c90b7e95, type: 3}
+    glow:
+    - {fileID: 21300000, guid: c36bac6b2fe5e8d40a88b4f6413ccaca, type: 3}
+    - {fileID: 21300000, guid: a161019e81b0a69478b21f6505c2966a, type: 3}
+    - {fileID: 21300000, guid: 031e0082c49a7eb4f9b00ccaf80924f5, type: 3}
+    - {fileID: 21300000, guid: c44f7cc6bbeea5c47a9acaa0821db385, type: 3}
+    tool:
+    - {fileID: 21300000, guid: 0d966a814db38084b95dd1868caf6ad7, type: 3}
+    - {fileID: 21300000, guid: f8ede5cad00a47042b16fcef28f13e8c, type: 3}
+    toolGlow:
+    - {fileID: 0}
+    - {fileID: 0}
+  hats:
+  - name: straw
+    sprite: {fileID: 21300000, guid: 421bd297a98f6e24ab358b1310ccef8d, type: 3}
+  - name: beanie
+    sprite: {fileID: 21300000, guid: 05efeaa572fbbab4ca83c2abe1dbde28, type: 3}
+  - name: nightcap
+    sprite: {fileID: 21300000, guid: 6a0ad11d2ab3e354ab649a798725b21b, type: 3}
+  - name: flower
+    sprite: {fileID: 21300000, guid: 1818de38e87319c4fab1362e6980bd9a, type: 3}
+  - name: mushroom
+    sprite: {fileID: 21300000, guid: d094f052fa56e4a45ab840a7538e3dc8, type: 3}
+  - name: feather
+    sprite: {fileID: 21300000, guid: 1c3fddb403a5f004f8e2d50978621f07, type: 3}
+  - name: tophat
+    sprite: {fileID: 21300000, guid: 4084fd3a0554ed846b1a84d5166ec5eb, type: 3}
+  - name: witch
+    sprite: {fileID: 21300000, guid: 1977256a103be49499341cd49f65df08, type: 3}
+  - name: pumpkin
+    sprite: {fileID: 21300000, guid: 96922734aa455ad4b9c43c9d1468e903, type: 3}
+  - name: horns
+    sprite: {fileID: 21300000, guid: 4b64035d3e1bb7e4ca19a1c74bc5bb19, type: 3}
+  - name: tricorne
+    sprite: {fileID: 21300000, guid: 3a7b589b7262cd94eb5a6428483f64f7, type: 3}
+  - name: skull
+    sprite: {fileID: 21300000, guid: b922783541131b640a9c750604297916, type: 3}
+  - name: candle
+    sprite: {fileID: 21300000, guid: 431c4de8bc93f4242bd539909c4669cc, type: 3}
+  - name: crown
+    sprite: {fileID: 21300000, guid: c359b60d827ef6d4ab1b7a2de2509503, type: 3}
+  - name: halo
+    sprite: {fileID: 21300000, guid: 970d5ed06424fc44c903e51838e1cd8a, type: 3}
+  hatGlows:
+  - name: flower
+    sprite: {fileID: 21300000, guid: 65b0aa05e17883e4c8138c512c3315b6, type: 3}
+  - name: pumpkin
+    sprite: {fileID: 21300000, guid: efdf851f3c081aa409a2261120aaa2e4, type: 3}
+  - name: candle
+    sprite: {fileID: 21300000, guid: 186ad7c4d52d3d843afd74bfa099c1d7, type: 3}
+  - name: crown
+    sprite: {fileID: 21300000, guid: bcc150770e1b5ac4f94adf0abef6d0e7, type: 3}
+  - name: halo
+    sprite: {fileID: 21300000, guid: efc0583c00cc3f64b9249f64b0454bf4, type: 3}
+  familiars:
+  - id: cat
+    frames:
+    - {fileID: 21300000, guid: aa63525fd2bb68f40a63287e849488f5, type: 3}
+    - {fileID: 21300000, guid: faa077d5622588345bdb4c3922279d54, type: 3}
+    - {fileID: 21300000, guid: df41396a4ff55124db74d8f8183e1659, type: 3}
+    - {fileID: 21300000, guid: 77fb4edfdf9ce9d46bd6de272ae292d7, type: 3}
+    - {fileID: 21300000, guid: 71dc9cabe02ea6a40a5f14b79861f5ae, type: 3}
+    - {fileID: 21300000, guid: 644be36bd9720ac488c39ecdfd9ba12d, type: 3}
+    - {fileID: 21300000, guid: 80bb9f41d3e1dd146beea088da8fbbe1, type: 3}
+    - {fileID: 21300000, guid: b877965b035c1b342b7e10b3c1424d83, type: 3}
+    - {fileID: 21300000, guid: 9cca4fbea087fce4d88ffef16b44c677, type: 3}
+    - {fileID: 21300000, guid: 8ef39eba8fa0f5744956869d5f957288, type: 3}
+    - {fileID: 21300000, guid: 3681f8cf7cfc0564781a34be970acf81, type: 3}
+    - {fileID: 21300000, guid: 69c38da6effca9641b1dba3c9c6d1326, type: 3}
+    glows:
+    - {fileID: 21300000, guid: e07774c6e4fb23f408f46bacc9358084, type: 3}
+    - {fileID: 21300000, guid: f4bb2364028f8694697b0f70ee1d94af, type: 3}
+    - {fileID: 0}
+    - {fileID: 21300000, guid: 3f75b26b560fb0e41b81bea712562ab3, type: 3}
+    - {fileID: 21300000, guid: aa434128d9861c447bc3835718d3e6ab, type: 3}
+    - {fileID: 21300000, guid: b5d78d70f311fe74aabd7238e0d37599, type: 3}
+    - {fileID: 21300000, guid: 8f6a78873cd1b05409c7860b40517c42, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 21300000, guid: bfc9bb5efede32e4e936e741b284b3eb, type: 3}
+  - id: raven
+    frames:
+    - {fileID: 21300000, guid: 4e5ddc587aa44c24eb2ff76e309ce218, type: 3}
+    - {fileID: 21300000, guid: 03591fda17e0181429b1376955a6e53e, type: 3}
+    - {fileID: 21300000, guid: 6944b0fa7dc576145a8249725ffc515e, type: 3}
+    - {fileID: 21300000, guid: d09d51353f995114ea1b01886eb49e6e, type: 3}
+    - {fileID: 21300000, guid: 9d40f6c0269e13840939bf5f18065e6b, type: 3}
+    - {fileID: 21300000, guid: e87d139a8d2d46147ad0cb188806f11a, type: 3}
+    - {fileID: 21300000, guid: 31a49d387d0f0ed438f1b3ed5224ec75, type: 3}
+    glows:
+    - {fileID: 21300000, guid: e77fef421be94ff478d44584121c6e24, type: 3}
+    - {fileID: 21300000, guid: 5270137eeb5d7394ca654c6510f43bf5, type: 3}
+    - {fileID: 21300000, guid: c4a74f9ca7a75c3428e140a7a54f1bc2, type: 3}
+    - {fileID: 21300000, guid: c5196aa733dcf7c4b8fd2aa18fd8db0b, type: 3}
+    - {fileID: 21300000, guid: ef93d02d0d4b99c4080469f0b4c3cdae, type: 3}
+    - {fileID: 21300000, guid: 1335df4725944e04c845464fd29e43ff, type: 3}
+    - {fileID: 21300000, guid: 9b96ca2cd854b1b46b2aaf365b531412, type: 3}
+  - id: toad
+    frames:
+    - {fileID: 21300000, guid: e6456f1c15047434b9dbf3345eb5ecef, type: 3}
+    - {fileID: 21300000, guid: 89149d9b074615f4399e6b290da8f648, type: 3}
+    - {fileID: 21300000, guid: c8e0c405ba56d214cb74b85e433dee03, type: 3}
+    - {fileID: 21300000, guid: 21c908c899e2ca64393f4b158a094bc5, type: 3}
+    - {fileID: 21300000, guid: d5d95ced4a0d4844fadf2d02da0093fa, type: 3}
+    - {fileID: 21300000, guid: 3a7624658d0c7ec45bd2df1e36b55f68, type: 3}
+    glows:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - id: bat
+    frames:
+    - {fileID: 21300000, guid: 8441f424fea702244a4225f986630220, type: 3}
+    - {fileID: 21300000, guid: a2b26d9cf08538c47971954d505b5096, type: 3}
+    - {fileID: 21300000, guid: 312bd31ff30353b4ea54fce18ef12ad1, type: 3}
+    - {fileID: 21300000, guid: aa790a351b39020458e99b627bb30447, type: 3}
+    - {fileID: 21300000, guid: 83b8a26b5c0f50341851e4a10f484b82, type: 3}
+    glows:
+    - {fileID: 21300000, guid: 4c79fad5b91ae6d439d8532df3d4a532, type: 3}
+    - {fileID: 21300000, guid: b985897e2555d4143a82898ea7e6972b, type: 3}
+    - {fileID: 21300000, guid: 21223bf5ecf08e5418721abee8b8ed62, type: 3}
+    - {fileID: 21300000, guid: 0028208d5ae2a4b45a4b6ee26bd3fb85, type: 3}
+    - {fileID: 21300000, guid: d9f240f29a485e944bd614e6a1c6f2c9, type: 3}
+  - id: moth
+    frames:
+    - {fileID: 21300000, guid: a45d6609ef9d5c8498c667a549612ecc, type: 3}
+    - {fileID: 21300000, guid: c725e666e847dea4b89e0a225eede994, type: 3}
+    - {fileID: 21300000, guid: 1e127376a5328e24884f3293ddb2c79c, type: 3}
+    - {fileID: 21300000, guid: 2abd9905f6d11534a82ebdaada1254ec, type: 3}
+    glows:
+    - {fileID: 21300000, guid: ee165b26079958e498c1e54a05c9c164, type: 3}
+    - {fileID: 21300000, guid: 6f9f1380c69ef3a41afbf9fe2b5d5c24, type: 3}
+    - {fileID: 21300000, guid: 14de80eb307173240b86b1c07f7fa099, type: 3}
+    - {fileID: 21300000, guid: d1af2ae1e34ed2e4e852117460e69ac2, type: 3}
+  - id: owl
+    frames:
+    - {fileID: 21300000, guid: c8ad6b99c97270d49b3ed248b113ec7b, type: 3}
+    - {fileID: 21300000, guid: e09df22e6b0005444887879c29e958f0, type: 3}
+    - {fileID: 21300000, guid: 8c61085c148b8d44cbbe70af1ec6c2cf, type: 3}
+    - {fileID: 21300000, guid: e97717c676d9e124f8184f91ba1db39c, type: 3}
+    - {fileID: 21300000, guid: 5d092c62ed538b043839540fe0d2151b, type: 3}
+    - {fileID: 21300000, guid: 0abafbd290738f8448c2a6e2f5394236, type: 3}
+    glows:
+    - {fileID: 21300000, guid: 7021066526ca9a848b90e9d25b5c54e4, type: 3}
+    - {fileID: 0}
+    - {fileID: 21300000, guid: 4cf1cdaa71df0e3488efd3f2e135c567, type: 3}
+    - {fileID: 21300000, guid: 262e88e875939f24da2d0abf096c483d, type: 3}
+    - {fileID: 21300000, guid: faee7b87901439341bae303177e0e378, type: 3}
+    - {fileID: 21300000, guid: 2c24f8334a7843546b742e57ba553e99, type: 3}
+  - id: snail
+    frames:
+    - {fileID: 21300000, guid: d9233b88120ca7b44a607564c451b99e, type: 3}
+    - {fileID: 21300000, guid: ab9ef3481ecafaa4fa7ef8d1682bc82b, type: 3}
+    - {fileID: 21300000, guid: 2f74d384f7a572249ae96b02c5dd3ac8, type: 3}
+    glows:
+    - {fileID: 21300000, guid: b7f5e408f7251ff4dbe0e1fcbbe7b999, type: 3}
+    - {fileID: 21300000, guid: 78dcf8ff656d0864882b906a0b208b9b, type: 3}
+    - {fileID: 0}
+  - id: fox
+    frames:
+    - {fileID: 21300000, guid: 5a061b08a675e0749aa85384d50c1805, type: 3}
+    - {fileID: 21300000, guid: e43e65a39d82fb845be27ad698713a38, type: 3}
+    - {fileID: 21300000, guid: 9b778c004b19d1a489b7db0391a6583a, type: 3}
+    - {fileID: 21300000, guid: c0847d387290f6f418ea65063f65d53b, type: 3}
+    - {fileID: 21300000, guid: 83751cc3b25184043b062e0b2d5aefe9, type: 3}
+    - {fileID: 21300000, guid: c2bcc8d9958706f489e195db2d7a81af, type: 3}
+    - {fileID: 21300000, guid: f634fefc5a2f3394ba838e869bc28a03, type: 3}
+    glows:
+    - {fileID: 21300000, guid: 5532fc9eed1aa9a45899d94e3fc53d62, type: 3}
+    - {fileID: 21300000, guid: e67be690be7ae664187362253b81feed, type: 3}
+    - {fileID: 21300000, guid: b416320ababfd08428cbdb6185541eea, type: 3}
+    - {fileID: 21300000, guid: e3d929aa04ada2d4dbeef847dc81f6b5, type: 3}
+    - {fileID: 21300000, guid: 05b6be948f2e3e5428d8f6f2d327c1b5, type: 3}
+    - {fileID: 21300000, guid: 66898a33a503e8f4c99f6862ee3108c4, type: 3}
+    - {fileID: 21300000, guid: 55ea6f6b66ef6a64cb85aa1b7c07424e, type: 3}
+  homes:
+  - name: cat
+    sprite: {fileID: 21300000, guid: 70c2633f796090247a211f29730c7aec, type: 3}
+  - name: raven
+    sprite: {fileID: 21300000, guid: e448b7967717ba04688eab3e352f584d, type: 3}
+  - name: toad
+    sprite: {fileID: 21300000, guid: 3b686b032426618469de0fbfaf8d9fc2, type: 3}
+  - name: bat
+    sprite: {fileID: 21300000, guid: 4fa5fea39e7672b47aea3c73da19aebd, type: 3}
+  - name: moth
+    sprite: {fileID: 21300000, guid: 722e93be5306e5540b875fc2725ff48c, type: 3}
+  - name: owl
+    sprite: {fileID: 21300000, guid: e645012db293a5b41ad03df3947981ab, type: 3}
+  - name: snail
+    sprite: {fileID: 21300000, guid: 0fa849c27a81a0944a324afc87f4ba43, type: 3}
+  - name: fox
+    sprite: {fileID: 21300000, guid: 0989c1cf7579ed24c899084dff2aabea, type: 3}
+  homeGlows:
+  - name: moth
+    sprite: {fileID: 21300000, guid: 8860eab11a2ac8e409e1ca4543dfdf35, type: 3}
+  - name: snail
+    sprite: {fileID: 21300000, guid: 871949095deca6d429b64258ad74b308, type: 3}
+  - name: fox
+    sprite: {fileID: 21300000, guid: 8e68f5f82372cfa4485a35f0583903ab, type: 3}
+  bonfire:
+  - {fileID: 21300000, guid: 90f473c3ba993de4eac612bc95ad1fdb, type: 3}
+  - {fileID: 21300000, guid: a0e77610576bac44e94736a1ad4f9f55, type: 3}
+  - {fileID: 21300000, guid: f5f364241fe5716428245b1524a8759d, type: 3}
+  bonfireGlow:
+  - {fileID: 21300000, guid: 2ee1328097b170246b8c2e6fd9d5022c, type: 3}
+  - {fileID: 21300000, guid: 8a4ad654b439b4043b2c11b77c8ebfd0, type: 3}
+  - {fileID: 21300000, guid: 047679dc4fe7d7a43b4b6f72c82d902b, type: 3}
+  dreamHouse: {fileID: 21300000, guid: a21b6ddda5d699b4dbcb7b0d8b9d6fc2, type: 3}
+  dreamHouseGlow: {fileID: 21300000, guid: 526f05a09d8b71949a0cecd5074de3b7, type: 3}
+  emberKiln:
+  - {fileID: 21300000, guid: 9b50e13384e97ec44a49d5441d1ccd43, type: 3}
+  - {fileID: 21300000, guid: c27082490b019a049908c3cde6635c36, type: 3}
+  - {fileID: 21300000, guid: 3611adb8830a45643834754c1812ed6e, type: 3}
+  emberKilnGlow:
+  - {fileID: 21300000, guid: 0a4d58e1f2cd0d043b44822c8f5caf0f, type: 3}
+  - {fileID: 21300000, guid: 96424cf97832a384f879a7e2fc5b5523, type: 3}
+  - {fileID: 21300000, guid: 2996c14d18ea3ae4191e2e62e2565a3a, type: 3}
+  emberCrystal: {fileID: 21300000, guid: 8c3dd8f6d2f80cd41861361dcd5ffd86, type: 3}
+  emberCrystalGlow: {fileID: 21300000, guid: a79ce6570857ed447b9d56699e5bfec2, type: 3}
+  storehouse: {fileID: 21300000, guid: 16029e4dacead834a9e08b608692823d, type: 3}
+  moth:
+  - {fileID: 21300000, guid: 2d1bc17da9ff25245bcadd1455d54b84, type: 3}
+  - {fileID: 21300000, guid: e6fee520d8617d247bd5c04fee085791, type: 3}
+  fishJump:
+  - {fileID: 21300000, guid: 99affd26f972a774f9b890d0bc24abb6, type: 3}
+  - {fileID: 21300000, guid: 6100e7f63cb2dc049be1cd52e990215a, type: 3}
+  cauldronIdle: {fileID: 21300000, guid: 2d919ba16c3c1d64380d4bb8f8d47da0, type: 3}
+  cauldronBrew:
+  - {fileID: 21300000, guid: 87a0562580ce1124bae02dc7e6259905, type: 3}
+  - {fileID: 21300000, guid: ecf7b72faf5cc6f49bad5fb18bc17bbd, type: 3}
+  - {fileID: 21300000, guid: 669e7b7894dd89848a34da185afa19cd, type: 3}
+  cauldronBrewGlow:
+  - {fileID: 21300000, guid: a50f0e4b7de939947bac2c69e9000a17, type: 3}
+  - {fileID: 21300000, guid: b65835981217dbc4c9e97f636463a359, type: 3}
+  - {fileID: 21300000, guid: 424a9bb35e56fe049bae705f1a8d907e, type: 3}
+  cauldronReady:
+  - {fileID: 21300000, guid: e449db92f2c480e4db850df416f42f6b, type: 3}
+  - {fileID: 21300000, guid: 00f22193fc261674e8f6e0df9b35f80b, type: 3}
+  cauldronReadyGlow:
+  - {fileID: 21300000, guid: de4af64c4ab8ac14cb4a471f4ee09c85, type: 3}
+  - {fileID: 21300000, guid: 1a9ed5c8a054b41478fc71597a645280, type: 3}
+  noticeBoard: {fileID: 21300000, guid: 24abac12de4173041882d5b0a296c3df, type: 3}
+  noticeBoardEmpty: {fileID: 21300000, guid: 69dd40d65c211c340a830b4c37936942, type: 3}
+  introArrow: {fileID: 21300000, guid: 524c5f5ac5557cc4282d870923826ad7, type: 3}
+  crateFill:
+  - {fileID: 21300000, guid: 5733f414f834f9a419b074ad8141b01c, type: 3}
+  - {fileID: 21300000, guid: b3e6557aad578e1498ac02f7a141270e, type: 3}
+  - {fileID: 21300000, guid: 967b5bbb0c7430e4085491155165f443, type: 3}
+  wispFrames:
+  - {fileID: 21300000, guid: 0c6c29d25ddba484d881d35452b1ed57, type: 3}
+  - {fileID: 21300000, guid: 805730c29fe08dc4c8fa49ac6ed05745, type: 3}
+  - {fileID: 21300000, guid: fb3ede95ad35d6443b6b7c18de5b70ef, type: 3}
+  - {fileID: 21300000, guid: be448d5cdefb31c44b379631e5e01356, type: 3}
+  wispGlow:
+  - {fileID: 21300000, guid: 66d17f565da95e045b131964eaed54b6, type: 3}
+  - {fileID: 21300000, guid: 590e06f77081c7f4a9a2bc84e34a136b, type: 3}
+  - {fileID: 21300000, guid: 7fe12dbb4de3b15448940c3f5ce0cabf, type: 3}
+  - {fileID: 21300000, guid: 4729790fb7df77540a1a07e2afb5c2ee, type: 3}
+  merchantFrames:
+  - {fileID: 21300000, guid: 4a63325388423cb48b83297c568be83d, type: 3}
+  - {fileID: 21300000, guid: 4f68d91e66c300f45ad7cf17c659853d, type: 3}
+  - {fileID: 21300000, guid: 0a1c9c1c750d0b74abea32ad298d8f10, type: 3}
+  - {fileID: 21300000, guid: c242a408b2065f9419a316d36ddae9b0, type: 3}
+  merchantGlow:
+  - {fileID: 21300000, guid: 888ec8f9a0abce842961f63a3518d7fb, type: 3}
+  - {fileID: 21300000, guid: e7fbb60f6f829614a930c432111c0925, type: 3}
+  - {fileID: 21300000, guid: a0e457b4e5e77984c9b05c277f559c0e, type: 3}
+  - {fileID: 21300000, guid: 01207aa5aced25845b72f8072e5c9659, type: 3}
+  rune: {fileID: 21300000, guid: 49cbe438d5e1e3b448ab01a79cd969fc, type: 3}
+  runeGlow: {fileID: 21300000, guid: fe3ae806d07d8ae4989de84636f8cc04, type: 3}
+  frameBuy: {fileID: 21300000, guid: a84b35abb867b4645b2e006a5c5eb0de, type: 3}
+  frameBuyHover: {fileID: 21300000, guid: 918423a8325df9643afd0fb6e602223f, type: 3}
+  frameDig: {fileID: 21300000, guid: e2637ebc7aa124d4e89a18197c1a072a, type: 3}
+  frameDigHover: {fileID: 21300000, guid: 841aa59c3bfcceb4dae4c1edb311049c, type: 3}
+  foam:
+  - {fileID: 21300000, guid: cc641afda64b9f94b9620c3bf148101c, type: 3}
+  - {fileID: 21300000, guid: 8ea747ea7185c6a41b415a58dbd2ab4e, type: 3}
+  swayCrop: {fileID: 2100000, guid: f904728a18ba77642a0f441a90374e7f, type: 2}
+  swayCropGlow: {fileID: 2100000, guid: 138d3f42d0de1c74aa55f3b490c07ef3, type: 2}
+  swayTree: {fileID: 2100000, guid: d8bc9830e1dac954ca5f7521cede9fe1, type: 2}
+  glow: {fileID: 2100000, guid: c186262341192f34182a9a3138962387, type: 2}
+  floatMat: {fileID: 2100000, guid: 48f4f4632e3dd2f43b0915e558502853, type: 2}
+  reflection: {fileID: 2100000, guid: 6c0cc7ecc3f8d7945a5790f800dd956b, type: 2}
+  atmosphere: {fileID: 2100000, guid: c0f18dce5aeabeb4785975499d04e1af, type: 2}
+  seasonal:
+  - summer: {fileID: 21300000, guid: 43d69eb85a124404294fc6ba26d00b34, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 381539819675fd24b86d293dc41ba0b5, type: 3}
+  - summer: {fileID: 21300000, guid: b626eaf31b63c59438b8b72203c8dddc, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 27571f74cdd06814aa8f9e9cb5c04877, type: 3}
+  - summer: {fileID: 21300000, guid: 2f7dfb562a504f14ba29921446f3561b, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 9a1c0d62f5ce0764490f6523f223eef7, type: 3}
+  - summer: {fileID: 21300000, guid: db8fdf15667c8a84292bb08e6a04bfac, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 12f91d47ff399fa4b8052e0ebb5a6124, type: 3}
+  - summer: {fileID: 21300000, guid: 5733f414f834f9a419b074ad8141b01c, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: dd128f5b8a2af32418668ede7fed341c, type: 3}
+  - summer: {fileID: 21300000, guid: b3e6557aad578e1498ac02f7a141270e, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: f1b46dfd1ff3ace44938efe838dea944, type: 3}
+  - summer: {fileID: 21300000, guid: 967b5bbb0c7430e4085491155165f443, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 1978e3840b426194eb24955e0f3a4a33, type: 3}
+  - summer: {fileID: 21300000, guid: 55f964b685aabbc4b9bc899a3f9596f6, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: bdf5a90b77d61c544b9b3283f548aefa, type: 3}
+  - summer: {fileID: 21300000, guid: c1f7180f17e34dd438f7be65c35a61cd, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: a9e918d405aba854dbbc58223aec930c, type: 3}
+  - summer: {fileID: 21300000, guid: 49cbe438d5e1e3b448ab01a79cd969fc, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 5e38bb14624f9344fa66bc08b56490be, type: 3}
+  - summer: {fileID: 21300000, guid: 7236c354445a95348a34dd1516c42870, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: ed5aa09e2280fd84f91004904f394b2e, type: 3}
+  - summer: {fileID: 21300000, guid: 791588c5863e7a140817e13149017b6f, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 78bc15bcb4d6d3e43b228ae20609faa8, type: 3}
+  - summer: {fileID: 21300000, guid: 988c4d3bf70f5324ca96052d9e168cfe, type: 3}
+    spring: {fileID: 21300000, guid: 1c53659cc72b78748a8e193d9b7b0e11, type: 3}
+    autumn: {fileID: 21300000, guid: bc5de18ea8612c24399a8aac18b5b0e7, type: 3}
+    winter: {fileID: 21300000, guid: f02bd14391c7dde42a190f36d90701f9, type: 3}
+  - summer: {fileID: 21300000, guid: fa1f9c4f71a5ee74f98b87dedb9e0255, type: 3}
+    spring: {fileID: 21300000, guid: 1c991f621c9739d4db7f0e13a9578bf7, type: 3}
+    autumn: {fileID: 21300000, guid: a2eb5188e09aa0e4c8174a58af809b2c, type: 3}
+    winter: {fileID: 21300000, guid: 830707fe4a4f7f948a6e1f6279fb88e4, type: 3}
+  - summer: {fileID: 21300000, guid: 108d962354ebf5e4f83695dd1bab4dcc, type: 3}
+    spring: {fileID: 21300000, guid: aeca4b83ec88790409c3e4fa35f49297, type: 3}
+    autumn: {fileID: 21300000, guid: 8d2aaf6f96493174c862bedfb0c93bba, type: 3}
+    winter: {fileID: 21300000, guid: 0072f61d34a31064bab9df2511e8826a, type: 3}
+  - summer: {fileID: 21300000, guid: 99dc4fe4f7f6ea3429b89f9294f4c122, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: d41c897e501a25c4aa0d9e962ad06ab3, type: 3}
+  - summer: {fileID: 21300000, guid: df2ff75e2103ce343b1e6d1f49e87df2, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: c6c91f2a3ce7c7c44b8e38329dbed413, type: 3}
+  - summer: {fileID: 21300000, guid: c3127094d89ada94b80bfa19ca0582dc, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: d43e1ffd7c2830141bb1a17aadfaa46e, type: 3}
+  - summer: {fileID: 21300000, guid: 7b9ff2516d9a17c4ca5c311f965bc069, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: d6b0a498b7207534680833c9316231b1, type: 3}
+  - summer: {fileID: 21300000, guid: 90f473c3ba993de4eac612bc95ad1fdb, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 2615959c8533bd14d854bd129c80582f, type: 3}
+  - summer: {fileID: 21300000, guid: a0e77610576bac44e94736a1ad4f9f55, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 4eb6ee6a8a793d1448aba7b3536db0d5, type: 3}
+  - summer: {fileID: 21300000, guid: f5f364241fe5716428245b1524a8759d, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: d6b0ca883b6783840ae752608620323f, type: 3}
+  - summer: {fileID: 21300000, guid: 0273eb38b2edd8b449193c6ff49080ff, type: 3}
+    spring: {fileID: 21300000, guid: 268529a2415db834181d3a61db38d156, type: 3}
+    autumn: {fileID: 21300000, guid: 03efb6a9594cd0c47b507d9949a96c31, type: 3}
+    winter: {fileID: 21300000, guid: 6341d5e6ec38ada47920b45088ae79fb, type: 3}
+  - summer: {fileID: 21300000, guid: 87a0562580ce1124bae02dc7e6259905, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 17de677690c2c93499237150e33823e2, type: 3}
+  - summer: {fileID: 21300000, guid: ecf7b72faf5cc6f49bad5fb18bc17bbd, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 92bb9acdb775c634b9f0c6a5935b0676, type: 3}
+  - summer: {fileID: 21300000, guid: 669e7b7894dd89848a34da185afa19cd, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 5574c8f1cdaaedf44867a495f0d2b623, type: 3}
+  - summer: {fileID: 21300000, guid: 2d919ba16c3c1d64380d4bb8f8d47da0, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 107150d66a1b6924ab0151090d92f696, type: 3}
+  - summer: {fileID: 21300000, guid: e449db92f2c480e4db850df416f42f6b, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: d259594cbfb18d048a166c73efcd8f9c, type: 3}
+  - summer: {fileID: 21300000, guid: 00f22193fc261674e8f6e0df9b35f80b, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 6800d03b71157dc49b8f4ee4851b3ab6, type: 3}
+  - summer: {fileID: 21300000, guid: ca3240f2c1269f542aa35116f5e748c3, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: bdbf4bc58a169f544850f39b2be78560, type: 3}
+  - summer: {fileID: 21300000, guid: a21b6ddda5d699b4dbcb7b0d8b9d6fc2, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: feb6ff0a85479ee498a09380500e3111, type: 3}
+  - summer: {fileID: 21300000, guid: 8c3dd8f6d2f80cd41861361dcd5ffd86, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 0a337706627bc1a4ebe8a4a3d596ed88, type: 3}
+  - summer: {fileID: 21300000, guid: 9b50e13384e97ec44a49d5441d1ccd43, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 40c851cabaa9ad74dadacdfc3d60debf, type: 3}
+  - summer: {fileID: 21300000, guid: c27082490b019a049908c3cde6635c36, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 93df379c8087c1043a0fa3ef31edbb7e, type: 3}
+  - summer: {fileID: 21300000, guid: 3611adb8830a45643834754c1812ed6e, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 8ea25827fd7f1ba458fb69966e500389, type: 3}
+  - summer: {fileID: 21300000, guid: 4fa5fea39e7672b47aea3c73da19aebd, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 34ce709936b682949bae9751a5a803ae, type: 3}
+  - summer: {fileID: 21300000, guid: 70c2633f796090247a211f29730c7aec, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 4d4f9ef5b8fc25e4e85442ba75397a2d, type: 3}
+  - summer: {fileID: 21300000, guid: 0989c1cf7579ed24c899084dff2aabea, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 7d06a967a0d824f4d9fe7d5e412d6e84, type: 3}
+  - summer: {fileID: 21300000, guid: 722e93be5306e5540b875fc2725ff48c, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: ff91684a6fa1b264f8ff332189cf4944, type: 3}
+  - summer: {fileID: 21300000, guid: e645012db293a5b41ad03df3947981ab, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 48b60c3c56c8d784a97a3cac21387dfe, type: 3}
+  - summer: {fileID: 21300000, guid: e448b7967717ba04688eab3e352f584d, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 7c4ebd6da8f46b04f9421609c3bb0698, type: 3}
+  - summer: {fileID: 21300000, guid: 0fa849c27a81a0944a324afc87f4ba43, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 22979bec514774841861da280a32afd3, type: 3}
+  - summer: {fileID: 21300000, guid: 3b686b032426618469de0fbfaf8d9fc2, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: ca71f53d11f0b924fa79b0cd2f9be2dc, type: 3}
+  - summer: {fileID: 21300000, guid: 24abac12de4173041882d5b0a296c3df, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: dff21708d45de1640b28648775bbf8d6, type: 3}
+  - summer: {fileID: 21300000, guid: 69dd40d65c211c340a830b4c37936942, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 868075fcc7ee8bf438fc307b35b6e901, type: 3}
+  - summer: {fileID: 21300000, guid: 7b182187a651eb8478f132046916c4e0, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 6e6072cf152ac1c479e042e085e944cf, type: 3}
+  - summer: {fileID: 21300000, guid: 16029e4dacead834a9e08b608692823d, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 7332ee17813462141ae61e216974b408, type: 3}
+  - summer: {fileID: 21300000, guid: cd74d7b2b85fbbb40a9a269a0c4f6ff1, type: 3}
+    spring: {fileID: 21300000, guid: 6e5af8ce48252414da81b555cc38059a, type: 3}
+    autumn: {fileID: 21300000, guid: 73017cb31f8434d4f9b65b101832c3d2, type: 3}
+    winter: {fileID: 21300000, guid: 0efb8986c57b9db478b8ca054eeb401a, type: 3}
+  - summer: {fileID: 21300000, guid: 3adfa6df285733e4cb699e3c98b4bb6d, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 610c919c90281844d9bcf26e6236f8cc, type: 3}
+  - summer: {fileID: 21300000, guid: 01712690ae462bd478027d9b6a4bd6ba, type: 3}
+    spring: {fileID: 21300000, guid: 50c78c2daed648b438fa4ba36aea75aa, type: 3}
+    autumn: {fileID: 21300000, guid: de5b28761fac748438e4ddbd01fe93dc, type: 3}
+    winter: {fileID: 21300000, guid: 18cc5fd41d5533449b62cc423b058671, type: 3}
+  - summer: {fileID: 21300000, guid: 504f57c87bd46ee47b56a563261a71cd, type: 3}
+    spring: {fileID: 21300000, guid: bc0070abcdd1c9a45b61250fe1c639d8, type: 3}
+    autumn: {fileID: 21300000, guid: 6a9ebb298f204b546984371da5d7713f, type: 3}
+    winter: {fileID: 21300000, guid: 608ba39da1f7a864e9353c67679f5a16, type: 3}
+  - summer: {fileID: 21300000, guid: 518453c501897e54597533fdc51b2975, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 73681557ef0e3a842970165d62f8fb94, type: 3}
+  - summer: {fileID: 21300000, guid: 94557d1244e3fd445a1250f3edc24229, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 02c64759e313fc44c8f9d6894e5d2516, type: 3}
+  - summer: {fileID: 21300000, guid: 0f814b993ab34554c8ffcacdc5356fbe, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 0f371c07f0631d5479a2d96601c6295a, type: 3}
+  - summer: {fileID: 21300000, guid: b6cb2b834b99cdd4a992c1833bb7a87d, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 593995249284919499010c2239850348, type: 3}
+  - summer: {fileID: 21300000, guid: a76e31775254cd14f81ab8766eebf484, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: fa30b8c1a0636894eb115dd2c895bd3f, type: 3}
+  - summer: {fileID: 21300000, guid: 636e0f1223412d846a08f1443e2b0d40, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 28400aeee3c57bc4c9f1bb6f2e7006d8, type: 3}
+  - summer: {fileID: 21300000, guid: 4e8cdd91bbb89ff4ba182179d5208046, type: 3}
+    spring: {fileID: 21300000, guid: 9a0ac9d905194214991af4a3d51730f3, type: 3}
+    autumn: {fileID: 21300000, guid: 7a7996bf81262a74eb5535296ffadb97, type: 3}
+    winter: {fileID: 21300000, guid: fb347fb3df4503a4aa5bad1b84827168, type: 3}
+  - summer: {fileID: 21300000, guid: e511be13d56614e449273728055d150d, type: 3}
+    spring: {fileID: 21300000, guid: 23dd421475f756f429af0247e2bf3ab4, type: 3}
+    autumn: {fileID: 21300000, guid: bedf22bf32cc7934ab9e7c65696778f1, type: 3}
+    winter: {fileID: 21300000, guid: febd7cd6efebb0542bcc7eb1d53d47c4, type: 3}
+  - summer: {fileID: 21300000, guid: 8c26a9f22c797c14bb5fcc203d15eded, type: 3}
+    spring: {fileID: 21300000, guid: 1cc56ed958b3a3241a15ddcee9a18011, type: 3}
+    autumn: {fileID: 21300000, guid: 7d0b5affa6741154fa0906e7194852f3, type: 3}
+    winter: {fileID: 21300000, guid: 53b1a92e0b3e54a448f23f09ff6ded47, type: 3}
+  - summer: {fileID: 21300000, guid: 1b6349129e3aa5b4ba11c8f5046feb53, type: 3}
+    spring: {fileID: 21300000, guid: 77cc0229ed7a3404ba419826c8a951d1, type: 3}
+    autumn: {fileID: 21300000, guid: 24dc092dfe5adcf40ad53beca5909e76, type: 3}
+    winter: {fileID: 21300000, guid: 0d8d72b2e3826cc4d8b7f1e8b5a4ec7d, type: 3}
+  - summer: {fileID: 21300000, guid: a2b1addd0a0c06e46907184c61e8bc31, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 781774e58d3b28740b12f0d2739b6446, type: 3}
+  - summer: {fileID: 21300000, guid: 72f38488c29d4934692bfa3b8b5bcfcb, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 0f1cc3e5a1084ec45af7042e72cd42d5, type: 3}
+  - summer: {fileID: 21300000, guid: b4921782891c40f48913847372c4ee38, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 6237e909244e7a54bb1aa3862d0c5e3e, type: 3}
+  - summer: {fileID: 21300000, guid: 2b83944044edfaf49a79642c231d9251, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 9f9c7289c2d02ed4eb05e3053bca9628, type: 3}
+  - summer: {fileID: 21300000, guid: abdcbda14d47b7c48a31bb7469453a33, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 126d125d575bc2248b45d69bb4dc97c7, type: 3}
+  - summer: {fileID: 21300000, guid: 9faf8f88d65f4754f88a4710fc38472c, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: c1109b0108b46de47852f35b3dc70abb, type: 3}
+  - summer: {fileID: 21300000, guid: 626d24926d5b77b42a76913fc976fb52, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 485d681fa7232014dbb035e621d3c25d, type: 3}
+  - summer: {fileID: 21300000, guid: 8065da024739d3144af7313b39e7a36a, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 59cf20a11120436478f4847a11ccb2d6, type: 3}
+  - summer: {fileID: 21300000, guid: 511d20478963e1245a093027a3932662, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: b4ef05e33e185e645904871c0a1ddc56, type: 3}
+  - summer: {fileID: 21300000, guid: 06868c1abc73d1b42a4e2c6adc1b83d3, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 989c35e76be96434aad0dcd2de5bc979, type: 3}
+  - summer: {fileID: 21300000, guid: 18fd689c863c833428f6aa681f0a9698, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: b38367359aed2e448b4615dbfc7c98c6, type: 3}
+  - summer: {fileID: 21300000, guid: 24894d09383c9b34d8a19a2dabd37a22, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 004c43c8814ef8a4fabd76d4d0d987bd, type: 3}
+  - summer: {fileID: 21300000, guid: 3087edc5b8c2c104da5cdf64fd35f50e, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 43400290ba44c164a8f6876e28431f65, type: 3}
+  - summer: {fileID: 21300000, guid: 9a4b169b9bf7ddc4c962875e2fe1a666, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: b362adecab9dac74c96ce0d1052adbad, type: 3}
+  - summer: {fileID: 21300000, guid: 1ee403a90d2d32e4fa3f814673b97136, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: e37be8e8faaa86a4eb33539955dfbd80, type: 3}
+  - summer: {fileID: 21300000, guid: ec46150b29e905d44ae8fee313806130, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: bc1733c69dc4a254c9591ea5f8f67fe3, type: 3}
+  - summer: {fileID: 21300000, guid: 2aea1b402e84e204e8c359b048e634a3, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 2ad4731fdd7e67741b636efb70830828, type: 3}
+  - summer: {fileID: 21300000, guid: e39e88d785887b64dbd98bd8d60464dc, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 4b74b33f72d17d140a8e322d057a6bf1, type: 3}
+  - summer: {fileID: 21300000, guid: 441503c1c59d52f4da7b36606f4ef3f8, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: e6ae2884063e1b44cb0873529c86c0f0, type: 3}
+  - summer: {fileID: 21300000, guid: 5621b7f5a9d90a148aac1984fa6e30d7, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 7749ae4004d6d2b4ab7d2e132e565328, type: 3}
+  - summer: {fileID: 21300000, guid: e765c56121035eb4f84e510e4dcbf5aa, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 609f8f167aac6184d920cf20f69ac3a0, type: 3}
+  - summer: {fileID: 21300000, guid: 3b427cb619976044ea61779c84a4b7db, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 610e2818eda98084e8139822dd06b000, type: 3}
+  - summer: {fileID: 21300000, guid: c8c17dad0555a7a45b898726454963ba, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 2bc92fe5d3cd95248aebe1121dc6027c, type: 3}
+  - summer: {fileID: 21300000, guid: cd9ba4d5c94a6a543a6fea5ba9ecd4bb, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 41362959e35be2743a1b99dce6a2538b, type: 3}
+  - summer: {fileID: 21300000, guid: 94d41d619bab3c94c8e4a4f89d6587a4, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 21979a4cce904f94c9f18a63a7bc8cac, type: 3}
+  - summer: {fileID: 21300000, guid: 7ea1c1f8fa152c348b4e4b4c7a422eea, type: 3}
+    spring: {fileID: 21300000, guid: 1c68f343a56b015498e8c1fa047b98db, type: 3}
+    autumn: {fileID: 21300000, guid: cdcef45ad44d925498437ebc7e2fed6c, type: 3}
+    winter: {fileID: 21300000, guid: 74b9856bc2cf91440a34d6728ce6c926, type: 3}
+  - summer: {fileID: 21300000, guid: 9b977d43a317ab843800b13e9d9c4c5e, type: 3}
+    spring: {fileID: 21300000, guid: 31ad649b36ff6024e8f0e57c17b4d560, type: 3}
+    autumn: {fileID: 21300000, guid: f34eab31bf111e244be5914419b06335, type: 3}
+    winter: {fileID: 21300000, guid: bc4f37a7a793c9343baf92c108a04145, type: 3}
+  - summer: {fileID: 21300000, guid: 317d4fc3314ae454d80de4744de3af2d, type: 3}
+    spring: {fileID: 21300000, guid: 83fe45202f322a04289113f0cfbc5298, type: 3}
+    autumn: {fileID: 21300000, guid: 45635abd0b189874f9f23201dfc1cf6d, type: 3}
+    winter: {fileID: 21300000, guid: d79e1660a6fc741469bc924f3e39468c, type: 3}
+  - summer: {fileID: 21300000, guid: 310a2f34c38259640b401a9c605e009a, type: 3}
+    spring: {fileID: 21300000, guid: 421d83065f14b3c41bb6b063a219a293, type: 3}
+    autumn: {fileID: 21300000, guid: 09892587e59505a408ff6a46bba301a4, type: 3}
+    winter: {fileID: 21300000, guid: ebbd252bffb75754d92f98ebb63ea899, type: 3}
+  - summer: {fileID: 21300000, guid: 71c02c0d47b63c744884aafb0d98315f, type: 3}
+    spring: {fileID: 21300000, guid: ef795b8463004ad408becbd20a3cdce3, type: 3}
+    autumn: {fileID: 21300000, guid: 3dcf0cf8aad72c54390179b8ac31c9b8, type: 3}
+    winter: {fileID: 21300000, guid: e365dffd4f27b5c4d9364b8231c38810, type: 3}
+  - summer: {fileID: 21300000, guid: c4308d477e0e5e9478f50ed50df2cb26, type: 3}
+    spring: {fileID: 21300000, guid: 67e31abe0609c8645ac7b0c4cd9cca94, type: 3}
+    autumn: {fileID: 21300000, guid: 278edc0af2a731f4e9bbc4877d8fd0ad, type: 3}
+    winter: {fileID: 21300000, guid: e5f1da3438dc5bc47b5bb8c7f2eb1355, type: 3}
+  - summer: {fileID: 21300000, guid: a484d96ed9cdbee4cb2d8ddbbf37f547, type: 3}
+    spring: {fileID: 21300000, guid: 5dead8e754aa1a947a147c687cff77a9, type: 3}
+    autumn: {fileID: 21300000, guid: 337bad7960ff2c2488e23f1fb363edbe, type: 3}
+    winter: {fileID: 21300000, guid: dae73e9ba8669f1458c3bf110b5c88ee, type: 3}
+  - summer: {fileID: 21300000, guid: 8e95d3678c47c5542957556a4c0c6e2d, type: 3}
+    spring: {fileID: 21300000, guid: 77f76707caaa1aa4eaaa24598b62c1d0, type: 3}
+    autumn: {fileID: 21300000, guid: 5241e6eefb9ee6f45b385ebe5f07eb32, type: 3}
+    winter: {fileID: 21300000, guid: 1cfbf6907db957d498fbabdce5667304, type: 3}
+  - summer: {fileID: 21300000, guid: 3838b7d7ba9102f4291c3639e8eaecf3, type: 3}
+    spring: {fileID: 21300000, guid: 8d6d930ced35515489ed9a98b68cc8c4, type: 3}
+    autumn: {fileID: 21300000, guid: 9afc389f26541ec4fb8f94052bf30431, type: 3}
+    winter: {fileID: 21300000, guid: 15b1ecfaea0455c4db2427f67f95087b, type: 3}
+  - summer: {fileID: 21300000, guid: 54c1260e8cdc9e34c9b5398656410651, type: 3}
+    spring: {fileID: 21300000, guid: 4ec3725065e6ca54fa0750eed5de0c0d, type: 3}
+    autumn: {fileID: 21300000, guid: 9167f7b43bc9a874c8740e96ce5cddf1, type: 3}
+    winter: {fileID: 21300000, guid: 71a9058ae53566543985904f34fba331, type: 3}
+  - summer: {fileID: 21300000, guid: a8126f3d4039a10408cd8fe3ae65e9e1, type: 3}
+    spring: {fileID: 21300000, guid: 14d35f8749608cf4fa2ccef3f7064ee3, type: 3}
+    autumn: {fileID: 21300000, guid: b1880a2b8cfadbb469f4e8092a8d0a7d, type: 3}
+    winter: {fileID: 21300000, guid: ff3fb81a518bf6145bfb624f8be5392b, type: 3}
+  - summer: {fileID: 21300000, guid: 58b531f4bdff4f442a8840b0a871d4cb, type: 3}
+    spring: {fileID: 21300000, guid: 93aba16c4da8bc1479737f51efec33e6, type: 3}
+    autumn: {fileID: 21300000, guid: 8e63efd9f48c9f5418bc601436e53789, type: 3}
+    winter: {fileID: 21300000, guid: 41c2799485753034d8eb35cbe04ac557, type: 3}
+  - summer: {fileID: 21300000, guid: 82b8578e63a02f04d9aec9f7a35544d8, type: 3}
+    spring: {fileID: 21300000, guid: b76b98f6b471de34b9f614bb83e22119, type: 3}
+    autumn: {fileID: 21300000, guid: 3b718a2ebb01206439a8ee04ec141625, type: 3}
+    winter: {fileID: 21300000, guid: c4b06f0aeadd00a4aa3c84b3bbe296ee, type: 3}
+  - summer: {fileID: 21300000, guid: 565194e41f0b5c84e9077d0c96b8bfed, type: 3}
+    spring: {fileID: 21300000, guid: 97d65074c000e184da533dee8b119ad7, type: 3}
+    autumn: {fileID: 21300000, guid: afb6147d11a4d554bb28c452a05027f6, type: 3}
+    winter: {fileID: 21300000, guid: b5108e537237cbe4d9764e40540acbed, type: 3}
+  - summer: {fileID: 21300000, guid: 267895e5cf3fc454cb2a7d29483d9ba2, type: 3}
+    spring: {fileID: 21300000, guid: 52a56250dd87e564fb1355e6c4869c59, type: 3}
+    autumn: {fileID: 21300000, guid: 709d47542e1cdcb478becdac14272092, type: 3}
+    winter: {fileID: 21300000, guid: 24f25604946acc942a52299c076a452f, type: 3}
+  - summer: {fileID: 21300000, guid: cdb3a922955f6574e8da393dcef0a6f9, type: 3}
+    spring: {fileID: 21300000, guid: 2e11e20629c99294994f086f03e42677, type: 3}
+    autumn: {fileID: 21300000, guid: c9753704bdf8d894a8eaca6b77a0d586, type: 3}
+    winter: {fileID: 21300000, guid: 936c72a68ee1c204da09ff6336fd0746, type: 3}
+  - summer: {fileID: 21300000, guid: a88ba15e312ff6d44a470686cd0deff5, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 9efac9a8143cad94e8eecb527d39f78f, type: 3}
+  - summer: {fileID: 21300000, guid: 07309427814e72e4a9e973e9cf623801, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 5cf48e8194f9d4849b8b357332c58aa5, type: 3}
+  - summer: {fileID: 21300000, guid: 47d274b68ded12740a2c592eab967260, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 4166e20c1d4595c4ab7151acf215c70f, type: 3}
+  - summer: {fileID: 21300000, guid: 1e34a1925461a154d82475c5a76c61ad, type: 3}
+    spring: {fileID: 21300000, guid: 3bc1fccbf2e59094ba382e042715fc16, type: 3}
+    autumn: {fileID: 21300000, guid: 6a6076708b3be3040bce9d06efc0488d, type: 3}
+    winter: {fileID: 21300000, guid: bbba4e49d381f914981776cfb275b023, type: 3}
+  - summer: {fileID: 21300000, guid: c64d552e1915ab443b4b98aec39a7ab4, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 088abce33ec36d540b5073297264e6c0, type: 3}
+  - summer: {fileID: 21300000, guid: 5ef7001664564104c9f48519e8340a6a, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: f4d85d4bec67c7446a5f7275060f0027, type: 3}
+  - summer: {fileID: 21300000, guid: 6e7eb64b36afb7344832e1ad35c8e76e, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 274d026de2de29741bd21b26adb6e6c2, type: 3}
+  - summer: {fileID: 21300000, guid: a5b3b97a167fdf64e8fe4c2b9918d894, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 1db63d553efdf78478a6c4c2445b81ed, type: 3}
+  - summer: {fileID: 21300000, guid: 4d32e9e2de5e8f44abc1349267266bc3, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 3eca50a17c121a64c92f71848b2cbe83, type: 3}
+  - summer: {fileID: 21300000, guid: 884a4d8a9b20db041acace0a2623ad1a, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: fe42aadb1e80a1f4da08d5ca4916bd09, type: 3}
+  - summer: {fileID: 21300000, guid: 1e93a83ef868f22478e719cf3cf30ec6, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: fde32db46e9a77b4183ca3f5891074f0, type: 3}
+  - summer: {fileID: 21300000, guid: f415c08c1b4f8ff4a86166ae28798979, type: 3}
+    spring: {fileID: 21300000, guid: 9ae6f9209116c784cbb6d47172111a1f, type: 3}
+    autumn: {fileID: 21300000, guid: 3bb6c3e7b605d2a4a8141659c74d0cc4, type: 3}
+    winter: {fileID: 21300000, guid: 739522b968749fb459a03440d9266751, type: 3}
+  - summer: {fileID: 21300000, guid: 0d42789a06f5710458f2604107bf47cf, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 6c8dbda821704a44492e115f7b4ec3b2, type: 3}
+  - summer: {fileID: 21300000, guid: b7288d9b95b42d347af8c9c5acdbfc38, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 40ab1facc352cd0489493a835a904a1e, type: 3}
+  - summer: {fileID: 21300000, guid: 0b88bfeb22955524da3fc8dcd2925ed3, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 760356691f2214d479ed8fbcea8f9a05, type: 3}
+  - summer: {fileID: 21300000, guid: f4e02145f0be4b94b96a130cc1919788, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 270240980d228c249b232b37f8b5a993, type: 3}
+  - summer: {fileID: 21300000, guid: 3ef3b10fd61ce6b409a38bae6046c5ed, type: 3}
+    spring: {fileID: 21300000, guid: 73d8cd3b8fdeaba49ab772917a855fd3, type: 3}
+    autumn: {fileID: 21300000, guid: e59c4d7e3e5f702429fb4210b1416c67, type: 3}
+    winter: {fileID: 21300000, guid: 80072cd4af5816c46ba1aa171785d1b6, type: 3}
+  - summer: {fileID: 21300000, guid: 2118021f7b9bf784ba80bd269db91bab, type: 3}
+    spring: {fileID: 21300000, guid: 21514cf8295be41489d80adf3f4faf46, type: 3}
+    autumn: {fileID: 21300000, guid: 916585e9b9a33ab43902f5ed7abbfdc8, type: 3}
+    winter: {fileID: 21300000, guid: 03e05e53f3a11b940a09eefd240ee489, type: 3}
+  - summer: {fileID: 21300000, guid: 01e7578f68c7f1c4099d61a049bc15c9, type: 3}
+    spring: {fileID: 21300000, guid: ebc3356ec1347d14185a07144d7b0bda, type: 3}
+    autumn: {fileID: 21300000, guid: 14425ea6aaf83344d93756690ff3ecf6, type: 3}
+    winter: {fileID: 21300000, guid: 1264232a06910084da44abadaec76a03, type: 3}
+  - summer: {fileID: 21300000, guid: 0eca08ef872fb524c9ef972f7d917ac0, type: 3}
+    spring: {fileID: 21300000, guid: 7fd9c78059153e540b951fc75613e5fb, type: 3}
+    autumn: {fileID: 21300000, guid: cff490542a6895a4a9305d509d26db82, type: 3}
+    winter: {fileID: 21300000, guid: 2a030079ad7c9ea458a8c750d387c62d, type: 3}
+  - summer: {fileID: 21300000, guid: 8e879b91a3a3f184690185759888807c, type: 3}
+    spring: {fileID: 21300000, guid: e3821323d57f32143b4303600e0e2ba6, type: 3}
+    autumn: {fileID: 21300000, guid: 149cdffe4fd5dbf499fd9e16ac8a4e65, type: 3}
+    winter: {fileID: 21300000, guid: ed845547e5a905a4abce49b76c101d6b, type: 3}
+  - summer: {fileID: 21300000, guid: c028c9452b5d3824f88286a3ebc998db, type: 3}
+    spring: {fileID: 21300000, guid: 87cd714990249d74c94cfb85109ff6d0, type: 3}
+    autumn: {fileID: 21300000, guid: 6555ece18066c7645be329d913762cfa, type: 3}
+    winter: {fileID: 21300000, guid: ac186f98ee84c5949b75509816e2e90c, type: 3}
+  - summer: {fileID: 21300000, guid: 0fc9cfc50f813e34f8f54da5bf9df2d4, type: 3}
+    spring: {fileID: 21300000, guid: c04ce4933b692974595abceff849a6ba, type: 3}
+    autumn: {fileID: 21300000, guid: 01263681e13879943b1b31f70d076ab9, type: 3}
+    winter: {fileID: 21300000, guid: d0be0308dbc4c064c8a340a8e4418ca1, type: 3}
+  - summer: {fileID: 21300000, guid: 26e2282ac1291904c92d4cb44e841880, type: 3}
+    spring: {fileID: 21300000, guid: 0dd52099e2e8e8146879531a1dcc9f1e, type: 3}
+    autumn: {fileID: 21300000, guid: df265f73a58ecae408b2e416aa15c924, type: 3}
+    winter: {fileID: 21300000, guid: cb8ca2189e050db4fbfaa2c373ede8d0, type: 3}
+  - summer: {fileID: 21300000, guid: aa83915a0353d944e8e0eccb38041682, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 94ebb8673642f3e41b7715ea62acfb80, type: 3}
+  - summer: {fileID: 21300000, guid: a8480ce8924c3d5409d13847a0042f60, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: a5710ae016db0f2449a929d9c2893ac9, type: 3}
+  - summer: {fileID: 21300000, guid: 6c90c905ec44e4945ad604f8849b5184, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: f20b6350a7b68cd4e9b9f03dfd55ac29, type: 3}
+  - summer: {fileID: 21300000, guid: 640a426f9455ba24b8102f7ce1701a3e, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: a8b6d5d395a04524ca5457de6f9b2280, type: 3}
+  - summer: {fileID: 21300000, guid: 68efa64e2ac62464fa1d6591d772c763, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 972cddcd12c5a764c8ab7b7c5ea823cc, type: 3}
+  - summer: {fileID: 21300000, guid: eb989a6dbdc30a54b9102c25c7ec07ea, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 94f0203efe73ba4499451eeda936a49e, type: 3}
+  - summer: {fileID: 21300000, guid: 5ab87ed00e04c424a93da3a9881661c9, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 462668e3884ef5541b7fba66b8ef4f51, type: 3}
+  - summer: {fileID: 21300000, guid: dd74e9575cb9372418259eb556348dc4, type: 3}
+    spring: {fileID: 0}
+    autumn: {fileID: 0}
+    winter: {fileID: 21300000, guid: 9fdaaf8f9fe4329419996eb0a46e1ccd, type: 3}

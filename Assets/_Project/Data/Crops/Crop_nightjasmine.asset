@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_nightjasmine
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: nightjasmine
+  displayName: "Nocny ja\u015Bmin"
+  kind: 1
+  growSeconds: 120
+  stages:
+  - {fileID: 21300000, guid: 5973c271dcef4ed43abe7125ae1f8bdd, type: 3}
+  - {fileID: 21300000, guid: 593bfedde7c6dba4a966de38491b8c9e, type: 3}
+  - {fileID: 21300000, guid: 732e5da2a849fc04cb25ec559c45f298, type: 3}
+  - {fileID: 21300000, guid: 9f8ef15950dde2c4ca5b1bd259cb9db5, type: 3}
+  - {fileID: 21300000, guid: 233ec9c675d071b4495dd94c4629fd6a, type: 3}
+  - {fileID: 21300000, guid: b0ee4a44b3fb5c3459db638d981b1ce7, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 95497e171ff9b934bafbc160aa060ddc, type: 3}
+  seedPrice: 4
+  sellPrice: 16
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 500

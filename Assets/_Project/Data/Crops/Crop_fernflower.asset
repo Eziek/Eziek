@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_fernflower
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: fernflower
+  displayName: Kwiat paproci
+  kind: 1
+  growSeconds: 420
+  stages:
+  - {fileID: 21300000, guid: b2cd2c38acc24c14fbc79cbbf7b35db9, type: 3}
+  - {fileID: 21300000, guid: dd7b4677c3d527b459adfea05926c60c, type: 3}
+  - {fileID: 21300000, guid: e4b4bf27e1e763e489dbc660af160e47, type: 3}
+  - {fileID: 21300000, guid: adb5f836ef5869b4c89d22fd27d458f3, type: 3}
+  - {fileID: 21300000, guid: 6e5e357ae9adcbb48b01b5609fbd1733, type: 3}
+  - {fileID: 21300000, guid: af1f0db215c9b6d4a872011baaf0faa7, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 2d5f779b58320644abda2aaceaa65781, type: 3}
+  seedPrice: 14
+  sellPrice: 70
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 3000

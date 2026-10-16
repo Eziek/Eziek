@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a4504fb243c48459a9c9a0ae4e3416, type: 3}
+  m_Name: Upgrade_eager_merchant
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Upgrades.UpgradeDefinition
+  id: eager_merchant
+  nameKey: upgrade.eager_merchant.name
+  descriptionKey: upgrade.eager_merchant.desc
+  debugName: Gorliwy handlarz
+  category: 7
+  icon: {fileID: 0}
+  levels:
+  - cost:
+    - type: 0
+      amount: 5000
+    value: 0.5
+  requires:
+  - upgrade: {fileID: 11400000, guid: 15a532d92640ab34aad9d2e5f1dc2b5e, type: 2}
+    minLevel: 1

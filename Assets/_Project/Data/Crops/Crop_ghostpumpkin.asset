@@ -15,11 +15,27 @@ MonoBehaviour:
   id: ghostpumpkin
   displayName: Upiorna dynia
   kind: 1
-  growSeconds: 21600
+  growSeconds: 360
   stages:
   - {fileID: 21300000, guid: f1cdf4c3c22876e4ba3fc901cafbfa0f, type: 3}
+  - {fileID: 21300000, guid: 44d21350cb600c842a2a16e2c4f6a08c, type: 3}
   - {fileID: 21300000, guid: eefcbbca6cd5cfe4c8c167a3088e8612, type: 3}
   - {fileID: 21300000, guid: 698642b4294afad48ba1fc6414cd9c0e, type: 3}
+  - {fileID: 21300000, guid: 00a19cf7d727a1142bbed542cd8f5ebb, type: 3}
   - {fileID: 21300000, guid: c9e2e17dc7325404caaed8769e2668b5, type: 3}
-  seedPrice: 30
-  sellPrice: 90
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: a8e45c383f0159f449902d26eeb95729, type: 3}
+  seedPrice: 8
+  sellPrice: 34
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 0

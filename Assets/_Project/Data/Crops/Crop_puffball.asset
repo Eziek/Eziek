@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b5855cb8e48a774bb98bd42e888f4a7, type: 3}
+  m_Name: Crop_puffball
+  m_EditorClassIdentifier: Assembly-CSharp::Wyspa.Farming.CropDefinition
+  id: puffball
+  displayName: Czarcia purchawka
+  kind: 1
+  growSeconds: 100
+  stages:
+  - {fileID: 21300000, guid: 4dc96f4f0e524d543a890ead6f5f152a, type: 3}
+  - {fileID: 21300000, guid: 7c0b528e1c64df940864ab07c8af2faa, type: 3}
+  - {fileID: 21300000, guid: 7d6fbfd16f512b54fa2f96b709f22dd1, type: 3}
+  - {fileID: 21300000, guid: 6dcf5d1794744c348a153d301f24040d, type: 3}
+  - {fileID: 21300000, guid: f31ba938c3a38ac45b28401f43deac34, type: 3}
+  - {fileID: 21300000, guid: 7adbf10d69513bb41b6998f15d715503, type: 3}
+  glowStages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: 989bd91d98dd85444a887d2e319e1588, type: 3}
+  seedPrice: 4
+  sellPrice: 14
+  nightHarvestYield: 1
+  requiresFullMoon: 0
+  hybrid: 0
+  parentA: 
+  parentB: 
+  seedIcon: 
+  unlockPrice: 450

@@ -21,3 +21,6 @@ MonoBehaviour:
   intensity: 1
   growthMultiplier: 1
   flicker: 0
+  sprite: {fileID: 21300000, guid: df2ff75e2103ce343b1e6d1f49e87df2, type: 3}
+  glowSprite: {fileID: 21300000, guid: eff33e86f740aad4da84f88ed3486ddb, type: 3}
+  lightOffset: {x: -0.03125, y: 0}
