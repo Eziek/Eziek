@@ -8,7 +8,8 @@ Historia decyzji jest w GDD §9 (punkty 1-136), a lista testów w `docs/TEST_PLA
 - **Nowe sterowanie** (GDD §9 p. 136, TEST_PLAN 55): pasek przycisków w rogu (`UI/MenuBar.cs`), panel informacji pod PPM /
   przytrzymaniem palca (`UiRoot.OpenInfoOrRing`, `UI/PlotInfo.cs`), ścinanie przytrzymaniem (`Input/IHoldAction`,
   `ClickRouter`, `World/ChopProgress.cs` jako kółko). Nie testowane w Unity ani na telefonie.
-- **URP musi mieć renderer 2D** (GDD §9 p. 135): z rendererem 3D woda i mgła się nie rysują. APK na Androida:
+- **URP musi mieć renderer 2D** (GDD §9 p. 135): z rendererem 3D woda i mgła się nie rysują. W repo już jest
+  (`Assets/Settings/Renderer2d.asset` w PC_RPAsset i Mobile_RPAsset, GPU Resident Drawer wyłączony; push gracza z Unity). APK na Androida:
   Wyspa → Wydanie → 3 (`docs/RELEASE.md` §3a). Auto-przybliżenie dopasowane do wyspy (`ViewController.AutoZoom`).
 - **NOWA KONCEPCJA (GDD §9 p. 134, TEST_PLAN 54): gra bez pracy i rytmu.** Żar płynie sam z czasu (+ piec, kryształy),
   rośliny dnia rosną w świetle, wszystko tylko przy włączonej grze (offline jak dawniej tylko rośliny nocy). Usunięte
