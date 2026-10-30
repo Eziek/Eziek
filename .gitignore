@@ -36,3 +36,6 @@ __pycache__/
 !/tools/cscheck/check.csproj
 /tools/cscheck/bin/
 /tools/cscheck/obj/
+
+# Blender: kopie zapasowe
+*.blend1
